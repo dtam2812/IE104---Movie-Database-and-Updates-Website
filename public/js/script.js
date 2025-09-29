@@ -6,6 +6,8 @@ const searchGroup = document.querySelector('.search-group');
 const searchNav = document.querySelector('.search-toggle');
 const searchBox = document.querySelector('.search');
 const logo = document.querySelector('.header-logo');
+const dropdown = document.querySelector('.menu-film-type.dropdown');
+const dropdownBtn = document.querySelector('.dropdown-toggle')
 
 menuToggle.addEventListener('click', () => {
     menuToggle.classList.toggle('toggled');
@@ -17,6 +19,10 @@ searchNav.addEventListener('click', () => {
   searchBox.classList.toggle('toggled'); 
   logo.classList.toggle('hidden');       
   menuToggle.classList.toggle('hidden'); 
+});
+
+dropdownBtn.addEventListener('click', () => {
+  dropdown.classList.toggle('toggled');
 });
 
 }
