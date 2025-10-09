@@ -6,7 +6,7 @@
     <title>Rophim</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../public/style/Home/desktop.css">
+    <link rel="stylesheet" href="../../public/style/Home/header-footer.css">
     <link rel="stylesheet" href="./style/Home/mobile.css">
     <link rel="stylesheet" href="./style/Home/tablet.css">
     <link rel="stylesheet" href="../../Services/reset.css">
@@ -18,7 +18,7 @@
     <script type="module">
         import { headerjs } from '../../public/js/script.js';
 
-        fetch('../partials/header.html')
+        fetch('../components/header.html')
             .then(res => res.text())
             .then(html => {
             document.getElementById('header').innerHTML = html;
@@ -31,11 +31,11 @@
   
         
     <!-- end-header -->
-
+    <!-- start-footer -->
     <div id="footer"></div>
 
     <script type="module">
-        fetch('../partials/footer.html')
+        fetch('../components/footer.html')
             .then(res => res.text())
             .then(html => {
             document.getElementById('footer').innerHTML = html;
@@ -44,5 +44,6 @@
             console.error('Fetch footer failed:', error);
             });
     </script>
+    <!-- end-footer -->
 </body>
 </html>
