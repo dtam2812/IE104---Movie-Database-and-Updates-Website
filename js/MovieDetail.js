@@ -1,4 +1,4 @@
-import { TMDB_API_KEY } from "./config.js";
+import { TMDB_API_KEY } from "../config.js";
 
 async function loadRecommendedMovies(movieId) {
   const container = document.getElementById("recommendations");
@@ -49,6 +49,7 @@ async function loadRecommendedMovies(movieId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const movieId = new URLSearchParams(window.location.search).get("id") || 1242404;
+  const movieId =
+    new URLSearchParams(window.location.search).get("id") || 1242404;
   loadRecommendedMovies(movieId);
 });
