@@ -11,7 +11,7 @@ a{
 .background{
     display: flex;
     background-color: grey;
-    justify-content: center;
+    justify-content: left;
     padding-top: 30px;
     
 }
