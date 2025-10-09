@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../public/style/Home/header-footer.css">
-    <link rel="stylesheet" href="../../Services/reset.css">
-    <link rel="stylesheet" href="../../public/style/Home/phimbo.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css"/>
+    <link rel="stylesheet" href="../../Services/reset.css"/>
+    <link rel="stylesheet" href="../../Style/PhimBo.css">
 </head>
 
 <body>
@@ -16,26 +16,319 @@
     <header id="header"></header>
     <!-- End header -->
 
+    <script type="module">
+      import { headerjs } from "../../js/Header.js";
+
+      fetch("../components/Header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+          headerjs(); // Gọi sau khi header đã render xong
+        })
+        .catch((error) => {
+          console.error("Fetch header failed:", error);
+        });
+    </script>
+
     <!-- Main -->
-    <main>
+    <main class="main">
+      <!-- name -->
+      <div class="main__header">
+        <h3 class="main__title">Phim bộ</h3>
+      </div>
+
+      <!-- filter -->
+      <div class="main__filter">
+        <div class="filter__toggle">
+          <i class="fa-solid fa-filter"></i>
+          <span>Bộ lọc</span>
+        </div>
+
+        <!-- filter active -->
+        <div class="filter__select hidden">
+          <!-- Quốc gia -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Quốc gia:</div>
+            <div class="filter__select-list">
+              <div class="filter__select-list-item filter__select--active">Tất cả</div>
+              <div class="filter__select-list-item">Anh</div>
+              <div class="filter__select-list-item">Canada</div>
+              <div class="filter__select-list-item">Hàn Quốc</div>
+              <div class="filter__select-list-item">Hồng Kông</div>
+              <div class="filter__select-list-item">Mỹ</div>
+              <div class="filter__select-list-item">Nhật Bản</div>
+              <div class="filter__select-list-item">Pháp</div>
+              <div class="filter__select-list-item">Thái Lan</div>
+              <div class="filter__select-list-item">Trung Quốc</div>
+              <div class="filter__select-list-item">Úc</div>
+              <div class="filter__select-list-item">Đài Loan</div>
+              <div class="filter__select-list-item">Đức</div>
+            </div>
+          </div>
+
+          <!-- Loại phim -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Loại phim:</div>
+            <div class="filter__select-list">
+              <div class="filter__select-list-item">Tất cả</div>
+              <div class="filter__select-list-item">Phim lẻ</div>
+              <div class="filter__select-list-item filter__select--active">Phim bộ</div>
+            </div>
+          </div>
+
+          <!-- Thể loại -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Thể loại:</div>
+            <div class="filter__select-list">
+              <div class="filter__select-list-item filter__select--active">Tất cả</div>
+              <div class="filter__select-list-item">Anime</div>
+              <div class="filter__select-list-item">Bí Ẩn</div>
+              <div class="filter__select-list-item">Chiến Tranh</div>
+              <div class="filter__select-list-item">Chiếu Rạp</div>
+              <div class="filter__select-list-item">Chuyển Thể</div>
+              <div class="filter__select-list-item">Chính Kịch</div>
+              <div class="filter__select-list-item">Chính Luận</div>
+              <div class="filter__select-list-item">Chính Trị</div>
+              <div class="filter__select-list-item">Chương Trình Truyền Hình</div>
+              <div class="filter__select-list-item">Cung Đấu</div>
+              <div class="filter__select-list-item">Cuối Tuần</div>
+              <div class="filter__select-list-item">Cách Mạng</div>
+            </div>
+          </div>
+
+          <!-- Sắp xếp -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Sắp xếp:</div>
+            <div class="filter__select-list">
+              <div class="filter__select-list-item filter__select--active">Mới nhất</div>
+              <div class="filter__select-list-item">Mới cập nhật</div>
+              <div class="filter__select-list-item">Điểm IMDb</div>
+              <div class="filter__select-list-item">Lượt xem</div>
+            </div>
+          </div>
+
+          <!-- filter button -->
+          <div class="filter__select-last-nav">
+            <button class="filter__select-btn">
+              <span>Lọc kết quả</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button class="filter__close-btn">Đóng</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- movie-list -->
+       <div class="main__content">
+        <!-- movie-item -->
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+          </div>
+        </div>
         
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế </h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+
+        <div class="content__movie-item">
+          <div class="content__movie-avatar">
+            <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
+          </div>
+
+          <div class="content__movie-text">
+            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
+            <h4 class="movie-item-name-english">The Resurrected</h4>
+          </div>
+        </div>
+       </div>
+
+      <!-- Phân trang -->
+      <div class="content__pagination">
+        <button class="pagination-left-arrow" disabled>
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="pagination__main">
+          <span>Trang</span>
+          <span class="pagination-page-current">1</span>
+          <span>/ 111</span>
+        </div>
+
+        <button class="pagination-right-arrow">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
     </main>
     
     <!-- Start footer -->
     <footer id="footer"></footer>
     <!-- End footer -->
 
+    <script type="module">
+      fetch("../components/Footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Fetch footer failed:", error);
+        });
+    </script>
 </body>
-
-<!-- Link header and footer -->
-<script type="module">
-  import { headerjs } from '../../public/js/script.js';
-  fetch('../components/header.html')
-    .then(r => r.text())
-    .then(html => { document.getElementById('header').innerHTML = html; headerjs(); });
-
-  fetch('../components/footer.html')
-    .then(r => r.text())
-    .then(html => { document.getElementById('footer').innerHTML = html; });
-</script>
 </html>
