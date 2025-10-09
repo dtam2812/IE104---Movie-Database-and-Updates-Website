@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rophim</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
+    <link rel="stylesheet" href="../../Style/MovieCard.css">
+    <link rel="stylesheet" href="../../Style/MovieDetail.css">
+    <link rel="stylesheet" href="../../Services/reset.css">
+</head>
+<body>
+   <!-- start-header -->
+     <div id="header"></div>
+
+    <script type="module">
+        import { headerjs } from '../../js/Header.js';
+
+        fetch('../components/Header.html')
+            .then(res => res.text())
+            .then(html => {
+            document.getElementById('header').innerHTML = html;
+            headerjs(); // Gọi sau khi header đã render xong
+            })
+            .catch(error => {
+            console.error('Fetch header failed:', error);
+            });
+    </script>
+  
+        
+    <!-- end-header -->
+
+    <!--start-movie-content-banner -->
+     <section class="movie-detail">
+        <div class="movie-detail-container">
+            <div class="top-detail-wrap">
+                 <div class="background-fade"></div>
+                 <div class="movie-content">
+                    <div class="movie-content-left">
+                        <img alt="" loading="lazy" src="https://static.nutscdn.com/vimg/300-0/ef826a2c732ac7c76a322f004111e18d.webp">
+                    </div>
+                    <div class="movie-content-right">
+                        <div class="movie-content-title">
+                            <h3>Steve</h3>
+                        </div>
+                        <div class="movie-content-type">
+                            <span>Chính kịch</span>
+                            <span>Hài</span>
+                            <span>Chuyển thể</span>
+                        </div>
+                        <div class="movie-content-review">
+                            <div class="movie-content-score">
+                                <p>IMDb <span>6.6</span></p>
+                            </div>  
+                            <div class="movie-content-age">
+                                <span><strong>T18</strong></span>
+                            </div>
+                        </div>
+                        <div class="movie-content-action">
+                            <a class="play-btn" href="#">
+                                <i class="fa-solid fa-play"></i>
+                                <span><strong>Trailer</strong></span>
+                            </a>
+                            <a class="like-btn" href="#">
+                                <i class="fa-solid fa-heart"></i>
+                            </a>
+                        </div>
+                        <div class="movie-content-overview"><span>Giới thiệu:</span><br>
+                        Trong một ngày căng thẳng, vị hiệu trưởng tận tâm của một trường cải tạo cơ hội cuối nỗ lực đưa các học sinh của mình vào khuôn khổ trong khi đối mặt với áp lực riêng.</div>
+                        <div class="movie-content-director">
+                            <p><span>Đạo diễn:</span>
+                               Tim Mielants, Daire Glynn</p>
+                        </div>
+                    </div>
+                 </div>
+                </div>
+             </div>
+        </div>
+     </section>
+    <!-- end-movie-content-banner -->
+
+    <!-- start-movie-info -->
+     <section class="movie-intro">
+        <div class="movie-intro-container">
+            <div class="movie-intro-top">
+                <div class="movie-intro-actor">
+                    <h3 class="title-actor">Diễn Viên</h3>
+                    <div class="circle-actor">
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/dm6V24NjjvjMiCtbMkc8Y2WPm2e.jpg" alt="Diễn viên 1">
+                            </a>
+                            <p class="actor-name">Cillian Murphy</p>
+                        </div>
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/pbsoexLxfXZZvITACzfOB1dsDip.jpg" alt="Diễn viên 2">
+                            </a>
+                            <p class="actor-name">Jay Lycurgo</p>
+                         </div>
+                        <div class="actor-item">
+                             <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/cmug3uUXKBo9fhCcJk3pkgt1nvM.jpg" alt="Diễn viên 3">
+                             </a>
+                            <p class="actor-name">Tracey Ullman</p>
+                        </div>
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/bd0qiJXHoLNpkCqABsh67AKRtjC.jpg" alt="Diễn viên 4">
+                            </a>
+                            <p class="actor-name">Emily Waston</p>
+                        </div>
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/5L3gQS6xKROcNnf5WEabDmzLIFn.jpg" alt="Diễn viên 1">
+                            </a>
+                            <p class="actor-name">Little Simz</p>
+                        </div>
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/mPqhmMPosUfEYCrkrGaqQ01wcYf.jpg" alt="Diễn viên 1">
+                            </a>
+                            <p class="actor-name">Douggie McMeekin</p>
+                        </div>
+                     </div>
+                       <a>Xem thêm ⮟</a>
+                </div>
+                <div class="movie-intro-overview">
+                    <h3>Thông tin</h3>
+                    <div class="movie-info">
+                        <div class="movie-info-title">Thời lượng:</div>
+                        <div class="movie-info-value">1h 32m</div>
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-info-title">Quốc gia:</div>
+                        <div class="movie-info-value">Ai-len</div>
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-info-title">Sản xuất:</div>
+                        <div class="movie-info-value">Big Things Films</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="movie-intro-bot">
+                <h3>Đề xuất</h3>
+                <div id="recommendations" class="movie-list"></div>
+            </div>
+        </div> 
+    </div>
+     </section>
+     <!-- end-movie-info -->    
+
+
+
+
+
+    <!-- start-footer -->
+    <div id="footer"></div>
+
+    <script type="module">
+        fetch('../components/Footer.html')
+            .then(res => res.text())
+            .then(html => {
+            document.getElementById('footer').innerHTML = html;
+            })
+            .catch(error => {
+            console.error('Fetch footer failed:', error);
+            });
+    </script>
+    <!-- end-footer -->
+     <script type="module" src="../../js/MovieDetail.js"></script>
+
+
+</body>
+</html>
