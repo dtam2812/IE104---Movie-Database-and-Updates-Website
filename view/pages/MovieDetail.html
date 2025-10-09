@@ -6,8 +6,9 @@
     <title>Rophim</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../public/style/Home/header-footer.css">
-    <link rel="stylesheet" href="../../public/style/Home/movie-detail.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
+    <link rel="stylesheet" href="../../Style/MovieCard.css">
+    <link rel="stylesheet" href="../../Style/MovieDetail.css">
     <link rel="stylesheet" href="../../Services/reset.css">
 </head>
 <body>
@@ -15,9 +16,9 @@
      <div id="header"></div>
 
     <script type="module">
-        import { headerjs } from '../../public/js/script.js';
+        import { headerjs } from '../../js/Header.js';
 
-        fetch('../components/header.html')
+        fetch('../components/Header.html')
             .then(res => res.text())
             .then(html => {
             document.getElementById('header').innerHTML = html;
@@ -111,9 +112,21 @@
                             </a>
                             <p class="actor-name">Emily Waston</p>
                         </div>
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/5L3gQS6xKROcNnf5WEabDmzLIFn.jpg" alt="Diễn viên 1">
+                            </a>
+                            <p class="actor-name">Little Simz</p>
+                        </div>
+                        <div class="actor-item">
+                            <a href="#">
+                                <img src="https://image.tmdb.org/t/p/w500/mPqhmMPosUfEYCrkrGaqQ01wcYf.jpg" alt="Diễn viên 1">
+                            </a>
+                            <p class="actor-name">Douggie McMeekin</p>
+                        </div>
                      </div>
-                       <a>Show more ⮟</a>
-                    </div>
+                       <a>Xem thêm ⮟</a>
+                </div>
                 <div class="movie-intro-overview">
                     <h3>Thông tin</h3>
                     <div class="movie-info">
@@ -131,8 +144,12 @@
                 </div>
             </div>
         </div>
-            <div class="movie-intro-bot"></div>
-        </div>
+            <div class="movie-intro-bot">
+                <h3>Đề xuất</h3>
+                <div id="recommendations" class="movie-list"></div>
+            </div>
+        </div> 
+    </div>
      </section>
      <!-- end-movie-info -->    
 
@@ -144,7 +161,7 @@
     <div id="footer"></div>
 
     <script type="module">
-        fetch('../components/footer.html')
+        fetch('../components/Footer.html')
             .then(res => res.text())
             .then(html => {
             document.getElementById('footer').innerHTML = html;
@@ -154,6 +171,8 @@
             });
     </script>
     <!-- end-footer -->
-    
+     <script type="module" src="../../js/MovieDetail.js"></script>
+
+
 </body>
 </html>
