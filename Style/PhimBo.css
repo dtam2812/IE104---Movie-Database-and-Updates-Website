@@ -45,11 +45,16 @@ main {
     color: var(--white);
     display: flex;
     align-items: center;
+    user-select: none;
 }
 
 .fa-filter {
     font-size: 12px;
     padding-right: 8px;
+}
+
+.fa-filter-active {
+    color: #e7c76d;
 }
 
 /* Filter select */

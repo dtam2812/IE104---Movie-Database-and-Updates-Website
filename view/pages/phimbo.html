@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css"/>
     <link rel="stylesheet" href="../../Services/reset.css"/>
     <link rel="stylesheet" href="../../Style/PhimBo.css">
+    <script src="../../js/PhimBo.js" defer></script>
 </head>
 
 <body>
@@ -49,8 +50,8 @@
           <!-- Quốc gia -->
           <div class="filter__select-nav">
             <div class="filter__select-name">Quốc gia:</div>
-            <div class="filter__select-list">
-              <div class="filter__select-list-item filter__select--active">Tất cả</div>
+            <div class="filter__select-list country">
+              <div class="filter__select-list-item filter__select--active all">Tất cả</div>
               <div class="filter__select-list-item">Anh</div>
               <div class="filter__select-list-item">Canada</div>
               <div class="filter__select-list-item">Hàn Quốc</div>
@@ -69,7 +70,7 @@
           <!-- Loại phim -->
           <div class="filter__select-nav">
             <div class="filter__select-name">Loại phim:</div>
-            <div class="filter__select-list">
+            <div class="filter__select-list movie-type">
               <div class="filter__select-list-item">Tất cả</div>
               <div class="filter__select-list-item">Phim lẻ</div>
               <div class="filter__select-list-item filter__select--active">Phim bộ</div>
@@ -79,8 +80,8 @@
           <!-- Thể loại -->
           <div class="filter__select-nav">
             <div class="filter__select-name">Thể loại:</div>
-            <div class="filter__select-list">
-              <div class="filter__select-list-item filter__select--active">Tất cả</div>
+            <div class="filter__select-list movie-genre">
+              <div class="filter__select-list-item filter__select--active all">Tất cả</div>
               <div class="filter__select-list-item">Anime</div>
               <div class="filter__select-list-item">Bí Ẩn</div>
               <div class="filter__select-list-item">Chiến Tranh</div>
@@ -99,7 +100,7 @@
           <!-- Sắp xếp -->
           <div class="filter__select-nav">
             <div class="filter__select-name">Sắp xếp:</div>
-            <div class="filter__select-list">
+            <div class="filter__select-list arrange">
               <div class="filter__select-list-item filter__select--active">Mới nhất</div>
               <div class="filter__select-list-item">Mới cập nhật</div>
               <div class="filter__select-list-item">Điểm IMDb</div>
@@ -122,178 +123,242 @@
        <div class="main__content">
         <!-- movie-item -->
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
         
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế </h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
 
         <div class="content__movie-item">
-          <div class="content__movie-avatar">
+          <a href="MovieDetail.html" class="content__movie-avatar">
             <img src="https://www.shutterstock.com/image-photo/cute-side-moment-ledus-600nw-2345448513.jpg" alt="" class="movie-item-img">
-          </div>
+          </a>
 
           <div class="content__movie-text">
-            <h4 class="movie-item-name">Hồi Hồn Kế</h4>
-            <h4 class="movie-item-name-english">The Resurrected</h4>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name">Hồi Hồn Kế Hồi Hồn Kế Hồi Hồn Kế</h4>
+            </a>
+            <a href="MovieDetail.html">
+              <h4 class="movie-item-name-english">The Resurrected The Resurrected The Resurrected</h4>
+            </a>
           </div>
         </div>
        </div>
