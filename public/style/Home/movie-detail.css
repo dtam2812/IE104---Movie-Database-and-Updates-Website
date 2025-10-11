@@ -44,7 +44,7 @@
 
 .movie-content{
     display: flex;
-    padding: 0  50px;
+    padding: 0px  50px;
     gap: 35px;
     margin-top: 50px;
     justify-content: center;
@@ -52,7 +52,7 @@
 }
 
 .movie-content-left img{
-    /* border-radius: 10px; */
+    height: 450px;
 
 }
 
@@ -192,7 +192,7 @@
 
 .movie-content-right{
     color: #fff;
-    max-width: 800px;
+    max-width: 700px;
     display: flex;
     flex-direction: column;
     gap: 25px;
