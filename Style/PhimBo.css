@@ -113,7 +113,6 @@ main {
     opacity: 1;
 }
 
-
 /* Filter button */
 .filter__select-last-nav {
     padding: 24px 16px;
@@ -152,8 +151,9 @@ main {
 /* Movie-list */
 .main__content {
     display: grid;
-    grid-template-columns: 158px 158px 158px 158px 158px 158px 158px 158px;
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-rows: repeat(2, auto);
+    gap: 20px;
 }
 
 /* Movie-item */
