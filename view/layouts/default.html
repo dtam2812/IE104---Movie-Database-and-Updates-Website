@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rophim</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
+    <link rel="stylesheet" href="../../Services/reset.css" />
+    <link rel="stylesheet" href="../../Style/StarterMovie.css" />
+    <link rel="stylesheet" href="../../Style/MovieGrid.css" />
+  </head>
+  <body>
+    <!-- start-header -->
+    <div id="header"></div>
+
+    <script type="module">
+      import { headerjs } from "../../js/Header.js";
+
+      fetch("../components/Header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+          headerjs(); // Gọi sau khi header đã render xong
+        })
+        .catch((error) => {
+          console.error("Fetch header failed:", error);
+        });
+    </script>
+
+    <!-- end-header -->
+
+    <!-- start-movie-hero -->
+    <main class="hero" aria-label="Movie carousel">
+      <div class="slides" id="slides"></div>
+      <div class="container">
+        <div class="stack">
+          <div class="left">
+            <img id="brand" alt="Tiêu đề" class="brand" />
+            <div class="en" id="en"></div>
+            <div class="row" id="meta"></div>
+            <div class="row" id="genres"></div>
+            <p class="desc" id="desc"></p>
+            <div class="controls">
+              <button class="play" id="playBtn" aria-label="Play">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M8 5v14l11-7-11-7z" fill="#191B24" />
+                </svg>
+              </button>
+              <div class="actions" role="group" aria-label="Actions">
+                <button aria-label="Favorite">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="#fff"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4 8.04 4 9.54 4.81 10.35 6.09 11.16 4.81 12.66 4 14.2 4 16.7 4 18.7 6 18.7 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    />
+                  </svg>
+                </button>
+                <div class="sep" aria-hidden="true"></div>
+                <button aria-label="Info">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="#fff"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11 17h2v-6h-2v6zm0-8h2V7h-2v2zm1-7C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="thumbs">
+        <div class="thumbs-inner" id="thumbs" aria-label="Thumbnails"></div>
+      </div>
+      <div class="bottom-grad" aria-hidden="true"></div>
+    </main>
+
+    <script type="module" src="../../js/StarterMovie.js"></script>
+    <!-- end-movie-hero -->
+
+    <!-- start-movie-grid -->
+    <!-- start-movie-grid -->
+    <div id="movieGridContainer"></div>
+
+    <script type="module">
+      import { movieGrid } from "../../js/MovieGrid.js";
+
+      // Tải MovieGrid.html và render vào container
+      fetch("../components/MovieGrid.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("movieGridContainer").innerHTML = html;
+
+          // Sau khi render xong, gọi hàm hiển thị phim
+          movieGrid.renderGrid("movieGridNew");
+          movieGrid.renderGrid("movieGridHot");
+          movieGrid.renderGrid("movieGridHighRate");
+          movieGrid.renderGrid("movieGridHotHit");
+        })
+        .catch((err) => console.error("Fetch MovieGrid failed:", err));
+    </script>
+    <!-- end-movie-grid -->
+
+    <!-- start-footer -->
+    <div id="footer"></div>
+
+    <script type="module">
+      fetch("../components/Footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Fetch footer failed:", error);
+        });
+    </script>
+    <!-- end-footer -->
+  </body>
+</html>
