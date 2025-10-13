@@ -78,8 +78,13 @@
 }
 
 .header .header-logo img {
-  height: 46px;
-  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  height: 120px;
+  width: 150px;
+
 }
 
 .menu .menu-film-type i {
@@ -96,6 +101,11 @@
 .menu .menu-film-type a:hover {
   color: #ffde8a;
 }
+
+.menu-film-type .dropdown-toggle{
+    cursor: pointer;
+}
+
 
 .menu-film-type.dropdown {
   position: relative;
@@ -409,13 +419,20 @@
 }
 
 .footer-logo img {
-  height: 60px;
-  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  height: 200px;
+  width: 250px;
+
 }
 
 .side-left .main-logo {
   display: inline-flex;
   align-items: center;
+  margin-top: -40px;
+  margin-bottom: -40px;
 }
 
 .main-logo .social-links {
@@ -423,7 +440,7 @@
   justify-content: center;
   gap: 16px;
   margin-bottom: 16px;
-  padding-left: 24px;
+  padding-left: 5px;
 }
 
 .main-logo .social-links a {
