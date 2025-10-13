@@ -75,12 +75,11 @@ body {
   inset: 0;
   background: linear-gradient(90deg);
 }
-.container {
+.hero .container {
   position: relative;
   z-index: 2;
   height: 100%;
   max-width: 1900px;
-  margin: 0 auto;
 }
 .stack {
   display: flex;
