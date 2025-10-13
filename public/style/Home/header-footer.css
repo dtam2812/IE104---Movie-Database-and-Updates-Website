@@ -98,6 +98,10 @@
     color: #FFDE8A;
 }
 
+.menu-film-type .dropdown-toggle{
+    cursor: pointer;
+}
+
 .menu-film-type.dropdown {
     position: relative;
 }
