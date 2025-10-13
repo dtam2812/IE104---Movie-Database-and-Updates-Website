@@ -23,16 +23,23 @@
 
     <script type="module">
       import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
 
       fetch("../components/Header.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("header").innerHTML = html;
-          headerjs(); // Gọi sau khi header đã render xong
+
+          // Sau khi header được load xong, mới load SearchBar
+          return fetch("../components/SearchBar.html");
         })
-        .catch((error) => {
-          console.error("Fetch header failed:", error);
-        });
+        .then((res) => res.text())
+        .then((searchHTML) => {
+          document.getElementById("search").innerHTML = searchHTML;
+          searchBar();
+          headerjs(); // chạy JS của header sau khi đã có SearchBar
+        })
+        .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
 
     <!-- end-header -->
