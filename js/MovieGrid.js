@@ -1,103 +1,5 @@
-const defaultMovies = [
-  {
-    id: 1,
-    title: "Mã 3",
-    subtitle: "Code 3",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/0612c593125c118ee8578de9fb16ea421a463ac0?width=393",
-    badges: [{ text: "P.Đề", type: "gray" }],
-  },
-  {
-    id: 2,
-    title: "Trưởng Thành Lên",
-    subtitle: "Adulthood",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/83bac1a6cd80f538055a0662b00fb831bc1321a7?width=393",
-    badges: [{ text: "P.Đề", type: "gray" }],
-  },
-  {
-    id: 3,
-    title: "Zombie Cưng Của Ba",
-    subtitle: "My Daughter is a Zombie",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/87a0b4da34b9c360c412fa376f2121dbd1121c74?width=393",
-    badges: [{ text: "P.Đề", type: "gray" }],
-  },
-  {
-    id: 4,
-    title: "Thanh Gươm Diệt Quỷ",
-    subtitle: "Demon Slayer",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/36f60662f2d9ec942171370c8eb08fd859213c52?width=393",
-    badges: [{ text: "T.Minh", type: "green" }],
-  },
-  {
-    id: 5,
-    title: "Lupin III",
-    subtitle: "The First",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/b15fe3cdca082ad1e63c54b4ccc79589ed29b671?width=393",
-    badges: [{ text: "L.Tiếng", type: "blue" }],
-  },
-  {
-    id: 6,
-    title: "Thanh Gươm Diệt Quỷ",
-    subtitle: "Demon Slayer",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/36f60662f2d9ec942171370c8eb08fd859213c52?width=393",
-    badges: [{ text: "T.Minh", type: "green" }],
-  },
-  {
-    id: 7,
-    title: "Lupin III",
-    subtitle: "The First",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/b15fe3cdca082ad1e63c54b4ccc79589ed29b671?width=393",
-    badges: [{ text: "L.Tiếng", type: "blue" }],
-  },
-  {
-    id: 8,
-    title: "Mã 3",
-    subtitle: "Code 3",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/0612c593125c118ee8578de9fb16ea421a463ac0?width=393",
-    badges: [{ text: "P.Đề", type: "gray" }],
-  },
-  {
-    id: 9,
-    title: "Trưởng Thành Lên",
-    subtitle: "Adulthood",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/83bac1a6cd80f538055a0662b00fb831bc1321a7?width=393",
-    badges: [{ text: "P.Đề", type: "gray" }],
-  },
-  {
-    id: 10,
-    title: "Zombie Cưng Của Ba",
-    subtitle: "My Daughter is a Zombie",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/87a0b4da34b9c360c412fa376f2121dbd1121c74?width=393",
-    badges: [{ text: "P.Đề", type: "gray" }],
-  },
-  {
-    id: 11,
-    title: "Thanh Gươm Diệt Quỷ",
-    subtitle: "Demon Slayer",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/36f60662f2d9ec942171370c8eb08fd859213c52?width=393",
-    badges: [{ text: "T.Minh", type: "green" }],
-  },
-  {
-    id: 12,
-    title: "Lupin III",
-    subtitle: "The First",
-    poster:
-      "https://api.builder.io/api/v1/image/assets/TEMP/b15fe3cdca082ad1e63c54b4ccc79589ed29b671?width=393",
-    badges: [{ text: "L.Tiếng", type: "blue" }],
-  },
-];
+import { TMDB_API_KEY } from "../config.js";
 
-// Hàm tạo card phim
 function createCard(movie) {
   const card = document.createElement("div");
   card.className = "card";
@@ -144,17 +46,58 @@ function createCard(movie) {
 }
 
 // Hàm render grid
-function renderGrid(gridId, movies = defaultMovies) {
+function renderGrid(gridId, movies = []) {
   const grid = document.getElementById(gridId);
   if (!grid) {
     console.warn(`⚠️ Không tìm thấy grid: #${gridId}`);
     return;
   }
   grid.innerHTML = "";
-  movies.forEach((movie) => {
-    grid.appendChild(createCard(movie));
-  });
+
+  if (!movies.length) {
+    grid.innerHTML = "<p>Không có phim nào để hiển thị.</p>";
+    return;
+  }
+
+  movies.forEach((movie) => grid.appendChild(createCard(movie)));
 }
 
-// Export để dùng bên ngoài
-export const movieGrid = { renderGrid, createCard };
+async function fetchTMDB(endpoint, badgeText, badgeColor) {
+  try {
+    const res = await fetch(
+      `https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=vi-VN&page=1`
+    );
+    const data = await res.json();
+    if (!data.results?.length) return [];
+
+    return data.results.slice(0, 12).map((m) => ({
+      id: m.id,
+      title: m.title || m.name,
+      subtitle: m.original_title || m.original_name || "",
+      poster: m.poster_path
+        ? `https://image.tmdb.org/t/p/w300${m.poster_path}`
+        : "https://via.placeholder.com/300x450?text=No+Image",
+      badges: [{ text: badgeText, type: badgeColor }],
+    }));
+  } catch (err) {
+    console.error("❌ Lỗi khi tải dữ liệu TMDB:", err);
+    return [];
+  }
+}
+
+// Hàm tải toàn bộ grid
+async function loadMovieGrids() {
+  const [newMovies, trendingSeries, highRated, popularTV] = await Promise.all([
+    fetchTMDB("movie/now_playing", "Mới", "gray"),
+    fetchTMDB("trending/tv/week", "Series", "blue"),
+    fetchTMDB("movie/top_rated", "T.Minh", "green"),
+    fetchTMDB("tv/popular", "Đình Đám", "gray"),
+  ]);
+
+  renderGrid("movieGridNew", newMovies);
+  renderGrid("movieGridHot", trendingSeries);
+  renderGrid("movieGridHighRate", highRated);
+  renderGrid("movieGridHotHit", popularTV);
+}
+
+export const movieGrid = { renderGrid, createCard, loadMovieGrids };

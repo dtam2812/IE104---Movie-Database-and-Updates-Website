@@ -1,0 +1,176 @@
+<!-- UserDetailMain.html -->
+<div class="container" role="main">
+  <aside class="sidebar" aria-label="Quản lý tài khoản">
+    <h3>Quản lý tài khoản</h3>
+    <div style="display: flex; gap: 12px; align-items: center; margin-top: 8px">
+      <div class="avatar" id="avatarWrap">
+        <img id="avatarImg" src="placeholder.svg" alt="Avatar người dùng" />
+      </div>
+      <div>
+        <div class="name" id="displayName">Người dùng</div>
+        <div style="color: var(--muted); font-size: 13px" id="emailShort">
+          you@example.com
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Sidebar navigation">
+      <button class="active" id="navAccount">Tài khoản</button>
+      <button id="navFavorites">Yêu thích</button>
+      <button id="navSettings">Cài đặt</button>
+    </nav>
+
+    <button class="logout" id="logoutBtn">⎋ Thoát</button>
+  </aside>
+
+  <section class="main">
+    <h1 class="title">Tài khoản</h1>
+    <div class="subtitle">Cập nhật thông tin tài khoản</div>
+
+    <div class="card" aria-labelledby="accountForm">
+      <form id="accountForm" novalidate>
+        <div class="grid">
+          <div>
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              aria-describedby="emailError"
+            />
+            <div id="emailError" class="error" aria-live="polite">
+              Vui lòng nhập email hợp lệ.
+            </div>
+          </div>
+          <div>
+            <label for="display">Tên hiển thị</label>
+            <input
+              id="display"
+              name="display"
+              type="text"
+              required
+              autocomplete="name"
+              aria-describedby="displayError"
+            />
+            <div id="displayError" class="error" aria-live="polite">
+              Tên không được để trống.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px">
+          <label>Giới tính</label>
+          <div class="radio-row" role="radiogroup" aria-label="Giới tính">
+            <label class="radio"
+              ><input type="radio" name="gender" value="male" /> Nam</label
+            >
+            <label class="radio"
+              ><input type="radio" name="gender" value="female" /> Nữ</label
+            >
+            <label class="radio"
+              ><input type="radio" name="gender" value="unspecified" checked />
+              Không xác định</label
+            >
+          </div>
+        </div>
+
+        <div class="actions">
+          <div style="display: flex; gap: 12px; align-items: center">
+            <label
+              for="avatarInput"
+              class="btn secondary"
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+              "
+              >📷 Ảnh có sẵn</label
+            >
+            <input
+              id="avatarInput"
+              type="file"
+              accept="image/*"
+              style="display: none"
+              aria-label="Tải ảnh đại diện"
+            />
+            <button type="submit" class="btn" id="submitBtn">Cập nhật</button>
+          </div>
+
+          <div style="flex: 1; margin-left: 20px">
+            <div class="hint">
+              Đổi mật khẩu, nhấn vào
+              <span class="muted-link" id="changePwd" role="button" tabindex="0"
+                >đây</span
+              >
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<div role="status" aria-live="polite" class="toast" id="toast">
+  Đã lưu <button id="toastClose" aria-label="Đóng">✕</button>
+</div>
+
+<!-- Password modal -->
+<div
+  class="modal-backdrop"
+  id="pwdModal"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+>
+  <div class="modal" role="document" aria-labelledby="pwdTitle">
+    <h3 id="pwdTitle">Đổi mật khẩu (Demo)</h3>
+    <p class="hint">
+      Tính năng đổi mật khẩu đang ở chế độ demo. Bạn có thể thêm tích hợp Auth
+      (Supabase) để kích hoạt chức năng này.
+    </p>
+    <div style="display: flex; gap: 8px; margin-top: 12px">
+      <input
+        id="pwdOld"
+        type="password"
+        placeholder="Mật khẩu cũ"
+        style="
+          flex: 1;
+          padding: 10px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          background: var(--glass);
+          color: var(--text);
+        "
+      />
+    </div>
+    <div style="display: flex; gap: 8px; margin-top: 8px">
+      <input
+        id="pwdNew"
+        type="password"
+        placeholder="Mật khẩu mới"
+        style="
+          flex: 1;
+          padding: 10px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          background: var(--glass);
+          color: var(--text);
+        "
+      />
+    </div>
+    <div
+      style="
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 12px;
+      "
+    >
+      <button id="pwdCancel" class="btn secondary">Hủy</button>
+      <button id="pwdSubmit" class="btn">Lưu</button>
+    </div>
+  </div>
+</div>

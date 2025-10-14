@@ -1,85 +1,87 @@
-import { movies } from '../data/movies.js';
+import { TMDB_API_KEY } from "../config.js";
 
-export function initMovieHero() {
-  const movieHeroContainer = document.getElementById('movie-hero');
+export async function initMovieHero() {
+  const movieHeroContainer = document.getElementById("movie-hero");
   if (!movieHeroContainer) return;
 
+  let movies = [];
   let currentIndex = 0;
   let intervalId = null;
 
-  // Create the movie hero HTML structure
+  // Lấy danh sách phim từ TMDB =
+  try {
+    const res = await fetch(
+      `https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_API_KEY}&language=vi-VN&page=1`
+    );
+    const data = await res.json();
+    movies = data.results.slice(0, 6); // chỉ lấy 6 phim đầu cho hero
+  } catch (err) {
+    console.error("Lỗi tải phim từ TMDB:", err);
+    movieHeroContainer.innerHTML = "<p>Không thể tải dữ liệu phim.</p>";
+    return;
+  }
+
+  if (!movies.length) {
+    movieHeroContainer.innerHTML = "<p>Không có dữ liệu phim.</p>";
+    return;
+  }
+
+  //Tạo HTML Hero
   function createMovieHeroHTML() {
     return `
       <div class="movie-hero-container">
         <div class="movie-hero-backgrounds">
-          ${movies.map((movie, index) => `
-            <div class="movie-background ${index === currentIndex ? 'active' : ''}" data-index="${index}">
+          ${movies
+            .map(
+              (movie, index) => `
+            <div class="movie-background ${
+              index === currentIndex ? "active" : ""
+            }">
               <div class="background-image">
-                <img src="${movie.backgroundImage}" alt="${movie.title}" />
+                <img src="https://image.tmdb.org/t/p/original${
+                  movie.backdrop_path
+                }" alt="${movie.title}" />
                 <div class="gradient-overlay-1"></div>
                 <div class="gradient-overlay-2"></div>
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
 
         <div class="movie-hero-content">
           <div class="movie-hero-info">
             <div class="movie-poster">
-              <img src="${movies[currentIndex].posterImage}" alt="${movies[currentIndex].title}" />
+              <img src="https://image.tmdb.org/t/p/w500${
+                movies[currentIndex].poster_path
+              }" alt="${movies[currentIndex].title}" />
             </div>
             
             <div class="movie-details">
-              <div class="movie-english-title">${movies[currentIndex].englishTitle}</div>
+              <div class="movie-english-title">${
+                movies[currentIndex].title
+              }</div>
               
               <div class="movie-badges">
-                ${movies[currentIndex].quality ? `
-                  <div class="badge quality-badge">
-                    <span>${movies[currentIndex].quality}</span>
-                  </div>
-                ` : ''}
-                
-                <div class="badge age-badge">
-                  <span>${movies[currentIndex].ageRating}</span>
+                <div class="badge imdb-badge">
+                  <span class="imdb-label">TMDB</span>
+                  <span class="imdb-rating">${movies[
+                    currentIndex
+                  ].vote_average.toFixed(1)}</span>
                 </div>
-                
-                ${movies[currentIndex].imdbRating ? `
-                  <div class="badge imdb-badge">
-                    <span class="imdb-label">IMDb</span>
-                    <span class="imdb-rating">${movies[currentIndex].imdbRating}</span>
-                  </div>
-                ` : ''}
-                
                 <div class="badge year-badge">
-                  <span>${movies[currentIndex].year}</span>
+                  <span>${movies[currentIndex].release_date.slice(0, 4)}</span>
                 </div>
-                
-                ${movies[currentIndex].season ? `
-                  <div class="badge season-badge">
-                    <span>${movies[currentIndex].season}</span>
-                  </div>
-                ` : ''}
-                
                 <div class="badge duration-badge">
-                  <span>${movies[currentIndex].duration}</span>
+                  <span>${movies[
+                    currentIndex
+                  ].original_language.toUpperCase()}</span>
                 </div>
-              </div>
-              
-              <div class="movie-genres">
-                ${movies[currentIndex].genres.slice(0, 4).map(genre => `
-                  <div class="genre-badge">
-                    <span>${genre}</span>
-                  </div>
-                `).join('')}
-                ${movies[currentIndex].genres.length > 4 ? `
-                  <div class="genre-badge">
-                    <span>+${movies[currentIndex].genres.length - 4}</span>
-                  </div>
-                ` : ''}
               </div>
               
               <div class="movie-description">
-                <p>${movies[currentIndex].description}</p>
+                <p>${movies[currentIndex].overview || "Chưa có mô tả."}</p>
               </div>
               
               <div class="movie-actions">
@@ -88,7 +90,6 @@ export function initMovieHero() {
                     <path d="M8 5v14l11-7z"/>
                   </svg>
                 </button>
-                
                 <div class="action-buttons">
                   <button class="action-button heart-button">
                     <svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -111,11 +112,19 @@ export function initMovieHero() {
 
         <div class="movie-thumbnails">
           <div class="thumbnails-container">
-            ${movies.map((movie, index) => `
-              <button class="thumbnail-button ${index === currentIndex ? 'active' : ''}" data-index="${index}">
-                <img src="${movie.thumbnailImage}" alt="${movie.title}" />
+            ${movies
+              .map(
+                (movie, index) => `
+              <button class="thumbnail-button ${
+                index === currentIndex ? "active" : ""
+              }" data-index="${index}">
+                <img src="https://image.tmdb.org/t/p/w200${
+                  movie.poster_path
+                }" alt="${movie.title}" />
               </button>
-            `).join('')}
+            `
+              )
+              .join("")}
           </div>
         </div>
 
@@ -124,88 +133,43 @@ export function initMovieHero() {
     `;
   }
 
-  // Update the movie display
+  //  Cập nhật slide
   function updateMovieDisplay() {
-    const backgrounds = movieHeroContainer.querySelectorAll('.movie-background');
-    const thumbnails = movieHeroContainer.querySelectorAll('.thumbnail-button');
-    const poster = movieHeroContainer.querySelector('.movie-poster img');
-    const englishTitle = movieHeroContainer.querySelector('.movie-english-title');
-    const badges = movieHeroContainer.querySelector('.movie-badges');
-    const genres = movieHeroContainer.querySelector('.movie-genres');
-    const description = movieHeroContainer.querySelector('.movie-description p');
+    const backgrounds =
+      movieHeroContainer.querySelectorAll(".movie-background");
+    const thumbnails = movieHeroContainer.querySelectorAll(".thumbnail-button");
+    const poster = movieHeroContainer.querySelector(".movie-poster img");
+    const title = movieHeroContainer.querySelector(".movie-english-title");
+    const badges = movieHeroContainer.querySelector(".movie-badges");
+    const description = movieHeroContainer.querySelector(
+      ".movie-description p"
+    );
 
-    const currentMovie = movies[currentIndex];
+    const movie = movies[currentIndex];
 
-    // Update backgrounds
-    backgrounds.forEach((bg, index) => {
-      bg.classList.toggle('active', index === currentIndex);
-    });
+    backgrounds.forEach((bg, i) =>
+      bg.classList.toggle("active", i === currentIndex)
+    );
+    thumbnails.forEach((t, i) =>
+      t.classList.toggle("active", i === currentIndex)
+    );
 
-    // Update thumbnails
-    thumbnails.forEach((thumb, index) => {
-      thumb.classList.toggle('active', index === currentIndex);
-    });
-
-    // Update movie details
-    if (poster) poster.src = currentMovie.posterImage;
-    if (englishTitle) englishTitle.textContent = currentMovie.englishTitle;
-    
-    if (badges) {
-      badges.innerHTML = `
-        ${currentMovie.quality ? `
-          <div class="badge quality-badge">
-            <span>${currentMovie.quality}</span>
-          </div>
-        ` : ''}
-        
-        <div class="badge age-badge">
-          <span>${currentMovie.ageRating}</span>
-        </div>
-        
-        ${currentMovie.imdbRating ? `
-          <div class="badge imdb-badge">
-            <span class="imdb-label">IMDb</span>
-            <span class="imdb-rating">${currentMovie.imdbRating}</span>
-          </div>
-        ` : ''}
-        
-        <div class="badge year-badge">
-          <span>${currentMovie.year}</span>
-        </div>
-        
-        ${currentMovie.season ? `
-          <div class="badge season-badge">
-            <span>${currentMovie.season}</span>
-          </div>
-        ` : ''}
-        
-        <div class="badge duration-badge">
-          <span>${currentMovie.duration}</span>
-        </div>
-      `;
-    }
-
-    if (genres) {
-      genres.innerHTML = `
-        ${currentMovie.genres.slice(0, 4).map(genre => `
-          <div class="genre-badge">
-            <span>${genre}</span>
-          </div>
-        `).join('')}
-        ${currentMovie.genres.length > 4 ? `
-          <div class="genre-badge">
-            <span>+${currentMovie.genres.length - 4}</span>
-          </div>
-        ` : ''}
-      `;
-    }
-
-    if (description) {
-      description.textContent = currentMovie.description;
-    }
+    poster.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+    title.textContent = movie.title;
+    badges.innerHTML = `
+      <div class="badge imdb-badge">
+        <span class="imdb-label">TMDB</span>
+        <span class="imdb-rating">${movie.vote_average.toFixed(1)}</span>
+      </div>
+      <div class="badge year-badge"><span>${movie.release_date.slice(
+        0,
+        4
+      )}</span></div>
+    `;
+    description.textContent = movie.overview || "Chưa có mô tả.";
   }
 
-  // Start auto-rotation
+  // Xử lý auto-rotation
   function startAutoRotation() {
     intervalId = setInterval(() => {
       currentIndex = (currentIndex + 1) % movies.length;
@@ -213,51 +177,23 @@ export function initMovieHero() {
     }, 5000);
   }
 
-  // Stop auto-rotation
   function stopAutoRotation() {
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
-    }
+    clearInterval(intervalId);
   }
 
-  // Handle thumbnail click
-  function handleThumbnailClick(event) {
-    const button = event.target.closest('.thumbnail-button');
-    if (button) {
-      const index = parseInt(button.dataset.index);
-      currentIndex = index;
-      updateMovieDisplay();
-      stopAutoRotation();
-      startAutoRotation();
-    }
-  }
-
-  // Initialize the component
-  function init() {
-    movieHeroContainer.innerHTML = createMovieHeroHTML();
+  function handleThumbnailClick(e) {
+    const btn = e.target.closest(".thumbnail-button");
+    if (!btn) return;
+    currentIndex = parseInt(btn.dataset.index);
     updateMovieDisplay();
-    startAutoRotation();
-
-    // Add event listeners
-    movieHeroContainer.addEventListener('click', handleThumbnailClick);
-
-    // Pause on hover
-    movieHeroContainer.addEventListener('mouseenter', stopAutoRotation);
-    movieHeroContainer.addEventListener('mouseleave', startAutoRotation);
-  }
-
-  // Cleanup function
-  function destroy() {
     stopAutoRotation();
-    movieHeroContainer.removeEventListener('click', handleThumbnailClick);
-    movieHeroContainer.removeEventListener('mouseenter', stopAutoRotation);
-    movieHeroContainer.removeEventListener('mouseleave', startAutoRotation);
+    startAutoRotation();
   }
 
-  // Initialize
-  init();
-
-  // Return cleanup function
-  return destroy;
+  // Khởi tạo
+  movieHeroContainer.innerHTML = createMovieHeroHTML();
+  movieHeroContainer.addEventListener("click", handleThumbnailClick);
+  movieHeroContainer.addEventListener("mouseenter", stopAutoRotation);
+  movieHeroContainer.addEventListener("mouseleave", startAutoRotation);
+  startAutoRotation();
 }
