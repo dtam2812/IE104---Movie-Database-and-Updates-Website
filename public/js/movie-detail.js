@@ -2,14 +2,14 @@ import { TMDB_API_KEY } from "./config.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
+const TRANSLATE_URL = "https://libretranslate.com/translate";
 
-// ===========================
+
 // Hàm render chi tiết phim
-// ===========================
 async function fetchMovieDetails(movieId) {
   try {
     const res = await fetch(
-      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=vi-VN&append_to_response=credits`
+      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US&page=1&append_to_response=credits`
     );
     const movie = await res.json();
 
@@ -69,6 +69,7 @@ async function fetchMovieDetails(movieId) {
         </div>
       `
       );
+      console.log(movie);
     });
 
     // Thông tin phụ
@@ -94,7 +95,7 @@ async function fetchMovieDetails(movieId) {
       </div>
     `;
   } catch (error) {
-    console.error("❌ Lỗi khi tải chi tiết phim:", error);
+    console.error("Lỗi khi tải chi tiết phim:", error);
   }
 }
 
@@ -144,7 +145,7 @@ async function loadRecommendedMovies(movieId) {
       container.insertAdjacentHTML("beforeend", movieBox);
     });
   } catch (error) {
-    console.error("❌ Lỗi tải phim đề xuất:", error);
+    console.error("Lỗi tải phim đề xuất:", error);
     container.innerHTML = "<p>Không thể tải phim đề xuất.</p>";
   }
 }

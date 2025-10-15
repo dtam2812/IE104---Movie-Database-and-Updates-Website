@@ -231,6 +231,7 @@
 .circle-actor {
   display: flex;
   gap: 20px;
+  align-items: start;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -270,7 +271,7 @@
 }
 
 .movie-intro-overview{
-    line-height: 2.5    ;
+    line-height: 2.5;
 }
 
 .movie-intro-overview h3{
@@ -293,6 +294,100 @@
   justify-content: center;
   align-items: start;
   margin-top: 16px;
+}
+
+@media only screen and (max-width: 1120px) {
+.movie-content{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.movie-content-left img{
+    width: 140px;
+    height: 190px;
+    margin-top: -100px;
+}
+
+.movie-content-title h3{
+    font-size: 20px;
+    margin-top: -10px;
+}
+
+.movie-content-review{
+    justify-content: center;    
+}
+
+.movie-content-type{
+    justify-content: center;
+}
+
+.movie-content-type span{
+    font-size: 12px;
+    padding: 5px 10px;
+}
+
+.movie-content-action{
+    justify-content: center;
+}
+
+.movie-content-overview{
+    font-size: 12px;
+}
+
+.play-btn{
+    font-size: 12px;
+    padding: 2% 60px;
+}
+
+.movie-content-score{
+    font-size: 12px;
+    padding: 0px 3px;
+}
+
+.movie-content-score p {
+    font-size: 10px;
+}
+
+.movie-content-age{
+    font-size: 12px;
+    padding: 0px 3px;
+}
+
+.movie-content-director{
+    font-size: 12px;
+}
 
 }
 
+@media only screen and (max-width: 600px){
+.movie-list{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.movie-info-title,.movie-info-value{
+    font-size: 8px;
+}
+
+.movie-intro-top{
+    gap: 10px;
+}
+
+.actor-item a{
+    width: 50px;
+    height: 50px;
+}
+
+.actor-item p{
+    font-size: 8px;
+}
+
+.title-actor{
+    font-size: 13px;
+}
+
+}
