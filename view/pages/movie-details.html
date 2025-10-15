@@ -81,79 +81,93 @@
      </section>
     <!-- end-movie-content-banner -->
 
-    <!-- start-movie-info -->
-     <section class="movie-intro">
-        <div class="movie-intro-container">
-            <div class="movie-intro-top">
-                <div class="movie-intro-actor">
-                    <h3 class="title-actor">Diễn Viên</h3>
-                    <div class="circle-actor">
-                        <div class="actor-item">
-                            <a href="#">
-                                <img src="https://image.tmdb.org/t/p/w500/dm6V24NjjvjMiCtbMkc8Y2WPm2e.jpg" alt="Diễn viên 1">
-                            </a>
-                            <p class="actor-name">Cillian Murphy</p>
-                        </div>
-                        <div class="actor-item">
-                            <a href="#">
-                                <img src="https://image.tmdb.org/t/p/w500/pbsoexLxfXZZvITACzfOB1dsDip.jpg" alt="Diễn viên 2">
-                            </a>
-                            <p class="actor-name">Jay Lycurgo</p>
-                         </div>
-                        <div class="actor-item">
-                             <a href="#">
-                                <img src="https://image.tmdb.org/t/p/w500/cmug3uUXKBo9fhCcJk3pkgt1nvM.jpg" alt="Diễn viên 3">
-                             </a>
-                            <p class="actor-name">Tracey Ullman</p>
-                        </div>
-                        <div class="actor-item">
-                            <a href="#">
-                                <img src="https://image.tmdb.org/t/p/w500/bd0qiJXHoLNpkCqABsh67AKRtjC.jpg" alt="Diễn viên 4">
-                            </a>
-                            <p class="actor-name">Emily Waston</p>
-                        </div>
-                        <div class="actor-item">
-                            <a href="#">
-                                <img src="https://image.tmdb.org/t/p/w500/5L3gQS6xKROcNnf5WEabDmzLIFn.jpg" alt="Diễn viên 1">
-                            </a>
-                            <p class="actor-name">Little Simz</p>
-                        </div>
-                        <div class="actor-item">
-                            <a href="#">
-                                <img src="https://image.tmdb.org/t/p/w500/mPqhmMPosUfEYCrkrGaqQ01wcYf.jpg" alt="Diễn viên 1">
-                            </a>
-                            <p class="actor-name">Douggie McMeekin</p>
-                        </div>
-                     </div>
-                       <a>Xem thêm ⮟</a>
-                </div>
-                <div class="movie-intro-overview">
-                    <h3>Thông tin</h3>
-                    <div class="movie-info">
-                        <div class="movie-info-title">Thời lượng:</div>
-                        <div class="movie-info-value">1h 32m</div>
-                    </div>
-                    <div class="movie-info">
-                        <div class="movie-info-title">Quốc gia:</div>
-                        <div class="movie-info-value">Ai-len</div>
-                    </div>
-                    <div class="movie-info">
-                        <div class="movie-info-title">Sản xuất:</div>
-                        <div class="movie-info-value">Big Things Films</div>
-                    </div>
-                </div>
-            </div>  
+   <!-- start-movie-info -->
+<section class="movie-intro">
+  <!--Thanh Tabs (chỉ hiện trên Mobile)-->
+  <div class="movie-tabs">
+    <button class="tab active" data-tab="info">Thông tin</button>
+    <button class="tab" data-tab="actor">Diễn viên</button>
+    <button class="tab" data-tab="recommend">Đề xuất</button>
+  </div>
+
+  <!--Tab 1: Thông tin-->
+  <div class="tab-content active" id="info">
+    <div class="movie-intro-container">
+      <div class="movie-intro-overview">
+        <h3>Thông tin</h3>
+        <div class="movie-info">
+          <div class="movie-info-title">Thời lượng:</div>
+          <div class="movie-info-value">1h 32m</div>
         </div>
-            <div class="movie-intro-bot">
-                <h3>Đề xuất</h3>
-                <div id="recommendations" class="movie-list"></div>
-            </div>
-        </div> 
+        <div class="movie-info">
+          <div class="movie-info-title">Quốc gia:</div>
+          <div class="movie-info-value">Ai-len</div>
+        </div>
+        <div class="movie-info">
+          <div class="movie-info-title">Sản xuất:</div>
+          <div class="movie-info-value">Big Things Films</div>
+        </div>
+      </div>
     </div>
-     </section>
-     <!-- end-movie-info -->    
+  </div>
 
+  <!--Tab 2: Diễn viên-->
+  <div class="tab-content" id="actor">
+    <div class="movie-intro-container">
+      <div class="movie-intro-actor">
+        <h3 class="title-actor">Diễn Viên</h3>
+        <div class="circle-actor">
+          <div class="actor-item">
+            <a href="#">
+              <img src="https://image.tmdb.org/t/p/w500/dm6V24NjjvjMiCtbMkc8Y2WPm2e.jpg" alt="Cillian Murphy">
+            </a>
+            <p class="actor-name">Cillian Murphy</p>
+          </div>
+          <div class="actor-item">
+            <a href="#">
+              <img src="https://image.tmdb.org/t/p/w500/pbsoexLxfXZZvITACzfOB1dsDip.jpg" alt="Jay Lycurgo">
+            </a>
+            <p class="actor-name">Jay Lycurgo</p>
+          </div>
+          <div class="actor-item">
+            <a href="#">
+              <img src="https://image.tmdb.org/t/p/w500/cmug3uUXKBo9fhCcJk3pkgt1nvM.jpg" alt="Tracey Ullman">
+            </a>
+            <p class="actor-name">Tracey Ullman</p>
+          </div>
+          <div class="actor-item">
+            <a href="#">
+              <img src="https://image.tmdb.org/t/p/w500/bd0qiJXHoLNpkCqABsh67AKRtjC.jpg" alt="Emily Waston">
+            </a>
+            <p class="actor-name">Emily Waston</p>
+          </div>
+          <div class="actor-item">
+            <a href="#">
+              <img src="https://image.tmdb.org/t/p/w500/5L3gQS6xKROcNnf5WEabDmzLIFn.jpg" alt="Little Simz">
+            </a>
+            <p class="actor-name">Little Simz</p>
+          </div>
+          <div class="actor-item">
+            <a href="#">
+              <img src="https://image.tmdb.org/t/p/w500/mPqhmMPosUfEYCrkrGaqQ01wcYf.jpg" alt="Douggie McMeekin">
+            </a>
+            <p class="actor-name">Douggie McMeekin</p>
+          </div>
+        </div>
+        <a>Xem thêm ⮟</a>
+      </div>
+    </div>
+  </div>
 
+  <!--Tab 3: Đề xuất-->
+  <div class="tab-content" id="recommend">
+    <div class="movie-intro-bot">
+      <h3>Đề xuất</h3>
+      <div id="recommendations" class="movie-list"></div>
+    </div>
+  </div>
+</section>
+<!-- end-movie-info -->
 
 
 

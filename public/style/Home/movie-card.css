@@ -121,3 +121,43 @@ a{
     color: #aaa;
 }
 
+
+@media only screen and (max-width: 600px){
+.movie-card img{
+    width: 175px;
+    height: 263px;
+
+}
+
+.movie-box {
+    width: 160px; /* nhỏ lại nhẹ để không bị tràn */
+  }
+
+  .movie-card {
+    width: 100%;
+    height: 240px; /* khung cố định */
+    padding-bottom: 0; /* bỏ tỉ lệ 150% cũ */
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-info-top {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 3;
+  }
+
+  .card-info-top .card-info-ep-top {
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 4px;
+  }
+}

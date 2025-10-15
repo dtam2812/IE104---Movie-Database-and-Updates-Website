@@ -151,6 +151,36 @@ async function loadRecommendedMovies(movieId) {
 }
 
 // ===========================
+// Xử lý chuyển tab (Mobile)
+// ===========================
+function initTabs() {
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetTab = this.getAttribute('data-tab');
+
+      // Remove active class từ tất cả tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Remove active class từ tất cả tab contents
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      // Thêm active class cho tab được click
+      this.classList.add('active');
+
+      // Hiển thị nội dung tương ứng
+      const targetContent = document.getElementById(targetTab);
+      if (targetContent) {
+        targetContent.classList.add('active');
+      }
+    });
+  });
+}
+
+
+// ===========================
 // Khi trang load
 // ===========================
 document.addEventListener("DOMContentLoaded", () => {
@@ -159,4 +189,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchMovieDetails(movieId);
   loadRecommendedMovies(movieId);
+  initTabs();
 });
