@@ -34,4 +34,43 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// popup modal
+const memberBtn = document.querySelector('#btn-member');
+if (memberBtn) {
+    memberBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        let modal = document.querySelector('.modal');
+        if (!modal) {
+            const html = await (await fetch('../../view/components/AuthModal.html')).text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            document.body.appendChild(doc.querySelector('.modal'));
+
+            // Load CSS
+            doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+                const href = link.href;
+                if (!document.querySelector(`link[href="${href}"]`)) {
+                    document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'stylesheet', href }));
+                }
+            });
+
+            // Fix import fiel 
+            const { Auth_Modaljs } = await import('./AuthModal.js'); 
+            Auth_Modaljs();
+            setTimeout(() => window.openLRFModal('login'), 50);
+        } else {
+            window.openLRFModal('login');
+        }
+    });
+}
+
+  document.addEventListener('userLoggedIn', (e) => {
+  const guest = document.getElementById('user_guest');
+  const logged = document.getElementById('main_user');
+
+  if (guest && logged) {
+      guest.classList.add('hidden');
+      logged.classList.remove('hidden');
+  }
+  });
+
 } 

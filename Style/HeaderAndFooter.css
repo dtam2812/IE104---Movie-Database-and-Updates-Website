@@ -172,6 +172,58 @@
   background-color: #fff;
 }
 
+#user_guest .header-user {
+    padding: .3rem .6rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+#main_user .header-user {
+    padding: .3rem .6rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+.header-user .line-center
+{
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+#user_logged .header-user .user-avatar {
+    width: 42px;
+    height: 42px;
+}
+
+.user-avatar img {
+  width: 40px;          
+  border-radius: 50%;   
+  object-fit: cover;   
+  border: 2px solid #fff; 
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+}
+
+@media only screen and (min-width: 1392px) 
+{
+  #main_user .user-name 
+  {
+    display: none;
+  }
+}
+
+
 /* .mobile */
 @media only screen and (max-width: 1391px) {
   .header .header-container {
@@ -352,6 +404,12 @@
     border-radius: 48px;
     flex: 1 1;
     text-align: center;
+    align-items: center;
+  }
+
+ .search-group.toggled #main_user .user-name 
+ {
+    display: flex;
     align-items: center;
   }
 
