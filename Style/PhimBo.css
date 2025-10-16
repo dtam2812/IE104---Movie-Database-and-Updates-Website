@@ -154,7 +154,6 @@ main {
 .main__content {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-template-rows: repeat(4, auto);
     gap: 20px;
 }
 
@@ -162,6 +161,10 @@ main {
 .content__movie-item {
     display: flex;
     flex-direction: column;
+}
+
+.content__movie-item:nth-child(n + 19) {
+    display: none;
 }
 
 .content__movie-avatar {
@@ -238,14 +241,13 @@ main {
     gap: 8px;
 }
 
-.pagination-left-arrow {
-    background-color: #282A3A;
+.pagination-left-arrow, .pagination-right-arrow {
+    background-color: #2f3346;
     border-radius: 48px;
     width: 50px;
     height: 50px;
     padding: 11.2px;
-    cursor: default;
-    color: #afafb2;
+    color: var(--white);
 }
 
 .pagination__main {
@@ -269,17 +271,15 @@ main {
     text-align: center;
 }
 
-.pagination-right-arrow {
-    background-color: #2f3346;
-    border-radius: 48px;
-    width: 50px;
-    height: 50px;
-    padding: 11.2px;
-    color: var(--white);
+.disable {
+    background-color: #282A3A;
+    color: #afafb2;
+    cursor: not-allowed !important;
 }
 
-.pagination-right-arrow:hover {
+.pagination-right-arrow:hover, .pagination-left-arrow:hover {
     opacity: 0.9;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) and (max-width: 1023px){
@@ -291,7 +291,6 @@ main {
 @media (max-width: 767px) {
     .main__content {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        grid-template-rows: repeat(6, auto);
     }
 
     main {

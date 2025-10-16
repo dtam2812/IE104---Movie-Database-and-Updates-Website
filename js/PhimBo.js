@@ -80,3 +80,82 @@ filterCloseBtn.addEventListener('click', function(e) {
     const filterSelect = document.querySelector('.filter__select')
     filterSelect.classList.toggle('hidden')
 })
+
+// Movie
+let movieApi = 'https://api.themoviedb.org/3/tv/popular?api_key=8d7f1f7ef4ead0588ee2c66d06f75799&language=vi-VN&page=1'
+render()
+
+// render
+function render() {
+    fetch(movieApi)
+    .then(res => res.json())
+    .then(data => {
+        const result = data.results
+        let html = ''
+        for (let i = 0; i < result.length; i++) {
+            html += `
+            <div class="content__movie-item">
+                <a href="MovieDetail.html" class="content__movie-avatar">
+                    <img src="https://image.tmdb.org/t/p/w300${result[i].poster_path}" alt="" class="movie-item-img">
+                </a>
+
+                <div class="content__movie-text">
+                    <a href="MovieDetail.html">
+                        <h4 class="movie-item-name">${result[i].name}</h4>
+                    </a>
+                    <a href="MovieDetail.html">
+                        <h4 class="movie-item-name-english">${result[i].original_name}</h4>
+                    </a>
+                </div>
+            </div>
+            `
+        }
+        document.querySelector('.main__content').innerHTML = html
+    })
+    .catch(error => console.log(error))
+}
+
+// pagination
+const tempApi = new URL(movieApi)
+const leftPag = document.querySelector('.pagination-left-arrow') 
+const rightPag = document.querySelector('.pagination-right-arrow')
+
+// right click
+rightPag.addEventListener('click', function(e) {
+    const currentPageNumber = Number(tempApi.searchParams.get('page'))
+    let currentPage = document.querySelector('.pagination-page-current')
+    currentPage.textContent = currentPageNumber + 1
+
+    tempApi.searchParams.set('page', currentPageNumber + 1)
+    movieApi = tempApi.toString()
+
+    if(currentPage.textContent > 1) {
+        leftPag.classList.remove('disable')
+    }
+
+    render()
+})
+
+// left click
+leftPag.addEventListener('click', function(e) {
+    const currentPageNumber = Number(tempApi.searchParams.get('page'))
+    
+    if(currentPageNumber > 1) {
+        let currentPage = document.querySelector('.pagination-page-current')
+        currentPage.textContent = currentPageNumber - 1
+    
+        tempApi.searchParams.set('page', currentPageNumber - 1)
+        movieApi = tempApi.toString()
+        
+        // Nếu page = 1 thì không cho click sang trái 
+        if(tempApi.searchParams.get('page') == 1) {
+            leftPag.classList.add('disable')
+        }
+    
+        render()
+    }
+})
+
+
+
+
