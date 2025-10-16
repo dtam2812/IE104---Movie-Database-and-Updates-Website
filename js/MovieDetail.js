@@ -21,25 +21,25 @@ async function loadRecommendedMovies(movieId) {
         : "https://via.placeholder.com/300x450?text=No+Image";
 
       const movieBox = `
-        <div class="movie-box">
-          <a class="movie-card" href="./movie-details.html?id=${movie.id}">
-            <div class="card-info-top">
-              <div class="card-info-ep-top"><span>Movie</span></div>
+          <div class="movie-box">
+            <a class="movie-card" href="./movie-details.html?id=${movie.id}">
+              <div class="card-info-top">
+                <div class="card-info-ep-top"><span>Movie</span></div>
+              </div>
+              <div>
+                <img src="${poster}" alt="${movie.title}">
+              </div>
+            </a>
+            <div class="info">
+              <h4 class="vietnam-title">
+                <a href="./movie-details.html?id=${movie.id}">${movie.title}</a>
+              </h4>
+              <h4 class="other-title">
+                <a href="#">${movie.original_title}</a>
+              </h4>
             </div>
-            <div>
-              <img src="${poster}" alt="${movie.title}">
-            </div>
-          </a>
-          <div class="info">
-            <h4 class="vietnam-title">
-              <a href="./movie-details.html?id=${movie.id}">${movie.title}</a>
-            </h4>
-            <h4 class="other-title">
-              <a href="#">${movie.original_title}</a>
-            </h4>
           </div>
-        </div>
-      `;
+        `;
       container.insertAdjacentHTML("beforeend", movieBox);
     });
   } catch (error) {
