@@ -8,7 +8,7 @@
         <span></span>
       </div>
     </div>
-    <a class="header-logo" href="#">
+    <a class="header-logo" href="../../view/pages/HomePage.html">
       <img
         src="../../public/assets/image/Screenshot 2025-10-13 121408-Photoroom.png"
         alt=""
@@ -46,8 +46,8 @@
         </div>
         <div class="menu-film-type dropdown">
           <a class="dropdown-toggle" title="Quốc gia"
-            >Quốc gia<i class="fa-solid fa-caret-down ms-2"></i
-          ></a>
+            >Quốc gia<i class="fa-solid fa-caret-down ms-2"></i>
+          </a>
           <ul class="dropdown-menu">
             <li><a href="#">Mỹ</a></li>
             <li><a href="#">Nhật Bản</a></li>
@@ -84,19 +84,43 @@
     
       <!-- đã đăng nhập -->
       <div id="main_user" class="user_logged hidden"> 
-        <a class="header-user"> 
-          <div class="line-center"> 
-            <div class="user-avatar"> 
-              <img src="../../public/assets/image/vn_flag.svg"> 
-            </div> 
-            <div class="user-name line-center"> 
-              <span>Trịnh Tràn Phương Tuấn</span>
-            </div> 
-          </div> 
-        </a> 
+        <div class="user-dropdown-menu">
+          <a class="header-user"> 
+            <div class="line-center"> 
+              <div class="user-avatar"> 
+                <img src="../../public/assets/image/vn_flag.svg"> 
+              </div> 
+              <i class="fa-solid fa-caret-down">
+              </i>
+              </div>  
+          </a> 
+          <ul class ="dropdown-list">
+           <div class="dropdown-header">
+                <div class="user-name line-center"> 
+                  <span>Trịnh Trần Phương Tuấn</span>
+                </div>
+           </div> 
+           <hr> 
+           <div class="ui-mobile">   
+            <a class="dropdown-item" href="#">
+              <div class="line-center">
+                <i class="fa-solid fa-user"></i>
+                <span>Tài khoản</span>
+              </div>
+            </a>
+            <hr>
+            <a id="Log-out-Btn" class="dropdown-item" href="#">
+              <div class="line-center">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Đăng xuất</span>
+              </div>
+            </a>
+          </div>
+          </ul>
+        </div>
       </div>
+    </div>
      <!-- đã đăng nhập -->
 
   </div>
-</div>
 </section>
