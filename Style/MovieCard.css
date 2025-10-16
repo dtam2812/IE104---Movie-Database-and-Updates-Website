@@ -16,8 +16,7 @@ a{
     
 }
 
-.movie-box{
-    width: 200px;
+.movie-box {
     display: flex;
     flex-direction: column;
     gap: 12px;

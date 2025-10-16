@@ -94,23 +94,34 @@ function render() {
         let html = ''
         for (let i = 0; i < result.length; i++) {
             html += `
-            <div class="content__movie-item">
-                <a href="MovieDetail.html" class="content__movie-avatar">
-                    <img src="https://image.tmdb.org/t/p/w300${result[i].poster_path}" alt="" class="movie-item-img">
+            <div class="movie-box">
+                <a class="movie-card" href="./PhimBoDetail.html">
+                    <div class="card-info-top">
+                        <div class="card-info-ep-top">
+                            <span>TV Show</span>
+                        </div>
+                    </div>
+                    <div class="card-info-bot">
+                        <div class="card-info-ep-bot">
+                            <span>PĐ.<strong>10</strong></span>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://image.tmdb.org/t/p/w300${result[i].poster_path}" alt="">
+                    </div>
                 </a>
-
-                <div class="content__movie-text">
-                    <a href="MovieDetail.html">
-                        <h4 class="movie-item-name">${result[i].name}</h4>
-                    </a>
-                    <a href="MovieDetail.html">
-                        <h4 class="movie-item-name-english">${result[i].original_name}</h4>
-                    </a>
+                <div class="info">
+                    <h4 class="vietnam-title">
+                        <a title="Đột Kích Đài Truyền Hình" href="./PhimBoDetail.html">${result[i].name}</a>
+                    </h4>
+                    <h4 class="other-title">
+                        <a title="Hoso Kyoku Senkyo" href="./PhimBoDetail.html">${result[i].original_name}</a>
+                    </h4>
                 </div>
             </div>
             `
         }
-        document.querySelector('.main__content').innerHTML = html
+        document.querySelector('.movie').innerHTML = html
     })
     .catch(error => console.log(error))
 }
