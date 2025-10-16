@@ -98,26 +98,40 @@ async function fetchMovieDetails(movieId) {
     console.error("Lỗi khi tải chi tiết phim:", error);
   }
 }
-
-// ===========================
 // Hàm load phim đề xuất
-// ===========================
 async function loadRecommendedMovies(movieId) {
   const container = document.getElementById("recommendations");
   container.innerHTML = ""; // reset nội dung
 
   try {
-    const res = await fetch(
-      `${BASE_URL}/movie/${movieId}/recommendations?api_key=${TMDB_API_KEY}&language=vi-VN&page=1`
-    );
-    const data = await res.json();
+    const totalPages = 3; // Số trang muốn lấy 
+    const allMovies = [];
 
-    if (!data.results?.length) {
+    // Fetch nhiều trang cùng lúc
+    const fetchPromises = [];
+    for (let page = 1; page <= totalPages; page++) {
+      fetchPromises.push(
+        fetch(`${BASE_URL}/movie/${movieId}/recommendations?api_key=${TMDB_API_KEY}&language=vi-VN&page=${page}`)
+          .then(res => res.json())
+      );
+    }
+
+    const results = await Promise.all(fetchPromises);
+    
+    // Gộp tất cả kết quả
+    results.forEach(data => {
+      if (data.results && data.results.length > 0) {
+        allMovies.push(...data.results);
+      }
+    });
+
+    if (!allMovies.length) {
       container.innerHTML = "<p>Không có phim đề xuất.</p>";
       return;
     }
 
-    data.results.slice(0, 12).forEach((movie) => {
+    // Hiển thị phim (lấy tối đa 12 phim từ 3 trang)
+    allMovies.slice(0, 12).forEach((movie) => {
       const poster = movie.poster_path
         ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
         : "https://via.placeholder.com/300x450?text=No+Image";
@@ -150,9 +164,8 @@ async function loadRecommendedMovies(movieId) {
   }
 }
 
-// ===========================
+
 // Xử lý chuyển tab (Mobile)
-// ===========================
 function initTabs() {
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
@@ -179,10 +192,7 @@ function initTabs() {
   });
 }
 
-
-// ===========================
 // Khi trang load
-// ===========================
 document.addEventListener("DOMContentLoaded", () => {
   const movieId =
     new URLSearchParams(window.location.search).get("id") || 1242404;

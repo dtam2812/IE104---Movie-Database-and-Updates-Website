@@ -327,7 +327,6 @@ html, body {
   width: 100%;
   padding: 0 8px;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 /* ===== TAB CONTENT - Desktop hiển thị tất cả ===== */
