@@ -141,7 +141,7 @@ async function fetchMovies() {
             description: m.overview || "Không có mô tả.",
           };
         } catch (err) {
-          console.warn(`⚠️ Lỗi chi tiết phim ${m.id}:`, err);
+          console.warn(`Lỗi chi tiết phim ${m.id}:`, err);
           return null;
         }
       })
@@ -152,13 +152,11 @@ async function fetchMovies() {
     if (movies.length > 0) {
       update();
       timer = setInterval(next, 5000);
-      console.log("🎬 Đã tải", movies.length, "phim trending");
-      movies.forEach((m) => console.log(`${m.title} — ${m.duration}`));
     } else {
       console.warn("Không có phim để hiển thị.");
     }
   } catch (err) {
-    console.error("❌ Fetch TMDB failed:", err);
+    console.error("Fetch TMDB failed:", err);
   }
 }
 
