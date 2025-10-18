@@ -307,31 +307,31 @@ html, body {
 }
 
 .movie-intro-bot{
-    padding: 30px;
     background-color: #191B24;
     color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px
 } 
 
 .movie-intro-bot h3{
-    display: flex;
-    margin-left: 20px;
-    justify-content: left;
-    font-size: 20px;
+  display: flex;
+  font-size: 24px;
+    
 }
 
 .movie-list{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(6, 1fr);  
+  gap: 10px;
   justify-content: center;
-  align-items: start;
+  align-items: center;
   margin-top: 16px;
   width: 100%;
-  padding: 0 40px;
   box-sizing: border-box;
-  max-width: 1800px;
-  margin-left: auto;
-  margin-right: auto;
+  /* max-width: 1800px; */
 }
 
 .movie-box {
@@ -348,113 +348,88 @@ html, body {
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
-/* ===== TAB CONTENT - Desktop hiển thị tất cả ===== */
+/*TAB CONTENT - Desktop hiển thị tất cả*/
 .tab-content {
     display: block;
 }
 
-/* ===== Breakpoint: Desktop lớn (1600px+) ===== */
-@media only screen and (min-width: 1790px) {
-  .movie-list {
-    grid-template-columns: repeat(8, 1fr);
-    gap: 24px;
-    padding: 0 50px;
-    max-width: 2000px;
-  }
-}
 
-/* ===== Breakpoint: Desktop (1200px - 1600px) ===== */
-@media only screen and (max-width: 1600px) and (min-width: 1350px) {
-  .movie-list {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 20px;
-    padding: 0 30px;
-  }
-}
 
-/* ===== Breakpoint: Tablet lớn (1024px - 1120px) ===== */
-@media only screen and (max-width: 1120px) {
-  .movie-list {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
-    padding: 0 20px;
-  }
-}
 
-/* ===== Breakpoint: Tablet (768px - 1024px) ===== */
+/*Breakpoint: Tablet*/
 @media only screen and (max-width: 1090px) {
-  .movie-content{
+.movie-content{
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 10px;
-  }
+}
 
-  .movie-content-left img{
+.movie-content-left img{
     width: 140px;
     height: 190px;
     margin-top: -100px;
-  }
+}
 
-  .movie-content-title h3{
+.movie-content-title h3{
     font-size: 20px;
     margin-top: -10px;
-  }
+}
 
-  .movie-content-review{
+.movie-content-review{
     justify-content: center;    
-  }
+}
 
-  .movie-content-type{
+.movie-content-type{
     justify-content: center;
-  }
+}
 
-  .movie-content-type span{
+.movie-content-type span{
     font-size: 12px;
     padding: 5px 10px;
-  }
+}
 
-  .movie-content-action{
+.movie-content-action{
     justify-content: center;
-  }
+}
 
-  .movie-content-overview{
+.movie-content-overview{
     font-size: 12px;
-  }
+}
 
-  .play-btn{
+.play-btn{
     font-size: 12px;
     padding: 2% 60px;
-  }
+}
 
-  .movie-content-score{
+.movie-content-score{
     font-size: 12px;
     padding: 0px 3px;
-  }
+}
 
-  .movie-content-score p {
+.movie-content-score p {
     font-size: 10px;
-  }
+}
 
-  .movie-content-age{
+.movie-content-age{
     font-size: 12px;
     padding: 0px 3px;
-  }
+}
 
-  .movie-content-director{
+.movie-content-director{
     font-size: 12px;
-  }
+}
 
   /* MOBILE: Hiển thị Tabs */
-  .movie-tabs{
+.movie-tabs{
     display: flex;
     gap: 20px;
     padding: 20px 30px;
     background-color: #191B24;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
+}
 
-  .movie-tabs .tab {
+.movie-tabs .tab {
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.6);
@@ -463,14 +438,14 @@ html, body {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-  }
+}
 
-  .movie-tabs .tab.active {
+.movie-tabs .tab.active {
     color: #fff;
     font-weight: 600;
-  }
+}
 
-  .movie-tabs .tab.active::after {
+.movie-tabs .tab.active::after {
     content: "";
     position: absolute;
     bottom: -20px;
@@ -478,98 +453,89 @@ html, body {
     width: 100%;
     height: 2px;
     background-color: #fecf59;
-  }
+}
 
   /* Ẩn/hiện tab content*/
-  .tab-content {
+.tab-content {
     display: none;
-  }
+}
 
-  .tab-content.active {
+.tab-content.active {
     display: block;
-  }
+}
 
   /* Mobile: Stack thông tin và diễn viên dọc */
-  .movie-intro-top{
+.movie-intro-top{
     flex-direction: column;
     gap: 30px;
-  }
+}
 
-  .movie-intro-overview {
+.movie-intro-overview {
     font-size: 20px;
-  }
+}
 
-  .movie-intro-bot {
+.movie-intro-bot {
     padding: 20px 15px;
     font-size: 18px;
-  }
+}
 
-  .movie-list{
+.movie-list{
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     padding: 0 15px;
-  }
+}
 }
 
-/*Breakpoint: Mobile lớn*/
-@media only screen and (max-width: 850px) {
-  .movie-list {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    padding: 0 15px;
-  }
-}
 
 /*Breakpoint: Mobile trung bình */
-@media only screen and (max-width: 630px) {
-  .movie-intro-bot {
+@media only screen and (max-width: 500px) {
+.movie-intro-bot {
     padding: 15px 10px; 
     overflow-x: hidden;
-  }
+}
 
-  .movie-list {
+.movie-list {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     padding: 0 10px;
-  }
-
+}
   .movie-box img {
     border-radius: 8px;
-  }
+}
 
   /* Giảm font size cho title */
-  .vietnam-title a {
+.vietnam-title a {
     font-size: 11px;
     line-height: 1.3;
-  }
+}
 
-  .other-title {
+.other-title {
     font-size: 10px;
     margin-top: 3px;
-  }
+}
 
-  .movie-box .info {
+.movie-box .info {
     min-height: 38px;
-  }
+}
 
-  .movie-intro-top{
+.movie-intro-top{
     gap: 10px;
-  }
+}
 
-  .actor-item a{
+.actor-item a{
     width: 100px;
     height: 100px;
-  } 
+} 
 
-  .actor-item p{
+.actor-item p{
     font-size: 10px;
-  }
+}
 
   /* Tabs trên mobile nhỏ hơn */
-  .movie-tabs{
+.movie-tabs{
     padding: 15px 20px;
     gap: 15px;
-  }
+}
 
   .movie-tabs .tab{
     font-size: 14px;

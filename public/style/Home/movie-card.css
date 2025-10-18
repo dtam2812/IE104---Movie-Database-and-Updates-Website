@@ -130,13 +130,13 @@ a{
 }
 
 .movie-box {
-    width: 160px; /* nhỏ lại nhẹ để không bị tràn */
+    width: 160px; 
   }
 
   .movie-card {
     width: 100%;
-    height: 240px; /* khung cố định */
-    padding-bottom: 0; /* bỏ tỉ lệ 150% cũ */
+    height: 240px; 
+    padding-bottom: 0; 
     position: relative;
     border-radius: 10px;
     overflow: hidden;
