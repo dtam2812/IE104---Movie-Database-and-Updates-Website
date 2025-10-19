@@ -1,4 +1,4 @@
-import { TMDB_API_KEY } from "./config.js";
+import { TMDB_API_KEY } from "../config.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
@@ -127,6 +127,7 @@ async function loadRecommendedMovies(movieId) {
       container.innerHTML = "<p>Không có phim đề xuất.</p>";
       return;
     }
+
     // Hiển thị phim (lấy tối đa 12 phim từ 3 trang)
     allMovies.slice(0, 12).forEach((movie) => {
       const poster = movie.poster_path
