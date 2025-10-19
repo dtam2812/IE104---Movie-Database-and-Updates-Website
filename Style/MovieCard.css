@@ -1,123 +1,205 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-a{
-    text-decoration: none;
+a {
+  text-decoration: none;
 }
 
-.background{
-    display: flex;
-    background-color: grey;
-    justify-content: left;
-    padding-top: 30px;
-    
+.background {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  background-color: grey;
+  padding: 30px;
 }
 
-.movie-box{
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
+.movie-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
 }
 
-.movie-card .card-info-top{
-    position: absolute;
-    /* width: fit-content; */
-    top: 0;
-    right: 0;
-    z-index: 3; 
-    overflow: hidden;
-    box-shadow: 0 0 5px 2px #0000001a;
+.movie-card .card-info-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  overflow: hidden;
+  box-shadow: 0 0 5px 2px #0000001a;
 }
 
-.card-info-top .card-info-ep-top{
-    gap: 3.5px;
-    padding: 5px 8px;
-    font-size: 11px;
-    font-weight: bold;
-    background-color: black;
-    color: #fff;
-    margin-top: 5px;
-    margin-right: 10px;
-    border-radius: 5px;
+.card-info-top .card-info-ep-top {
+  gap: 3.5px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  background-color: black;
+  color: #fff;
+  margin-top: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
-
-/* .movie-card .card-info-bot{
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 0 5px 2px #0000001a;
+.movie-card {
+  width: 100%;
+  padding-bottom: 150%;
+  height: 0;
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: block;
+  background-color: var(--bg-3);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px 2px #0000001a;
 }
 
-.card-info-bot .card-info-ep-bot{
-    flex: 1 1;
-    gap: 3.5px;
-    justify-content: center;
-    padding: 3.5px 8px;
-    font-size: 11px;
-    font-weight: 400;
-    background-color: #5e6070;
-    color: #fff;
-} */
-
-.movie-card{
-    width: 100%;
-    padding-bottom: 150%;
-    height: 0;
-    position: relative;
-    border-radius: .5rem;
-    overflow: hidden;
-    display: block;
-    background-color: var(--bg-3);
-    transition: all 0.3s ease;
-    box-shadow: 0 0 5px 2px #0000001a;
+.movie-card img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
 }
 
-.movie-card img{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    object-fit: cover;
-
+.movie-card:hover {
+  transform: translateY(-5%);
 }
 
-.movie-card:hover{
-    transform: translateY(-5%);
+.movie-box .info {
+  min-height: 42px;
+  text-align: center;
 }
 
-.movie-box .info{
-    min-height: 42px;
-    text-align: center;
+.vietnam-title a {
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
 }
 
-.vietnam-title a{
-    cursor: pointer;
-    color: #fff;
-    font-size: 14px;
+.other-title {
+  font-size: 13px;
+  margin-top: 5px;
 }
 
-.other-title{
+.other-title a {
+  color: #aaa;
+}
+
+@media only screen and (min-width: 1920px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media only screen and (max-width: 1600px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media only screen and (max-width: 980px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 25px;
+  }
+  .vietnam-title a {
     font-size: 13px;
-    margin-top: 5px;
+  }
+  .other-title {
+    font-size: 12px;
+  }
 }
 
-.other-title a{
-    color: #aaa;
+@media only screen and (max-width: 768px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 16px;
+    padding: 20px;
+  }
 }
 
+@media only screen and (max-width: 640px) {
+  .background {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+  .vietnam-title a {
+    font-size: 12px;
+  }
+  .other-title {
+    font-size: 11px;
+  }
+  .card-info-ep-top {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
+
+@media only screen and (max-width: 510px) {
+  .background {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+  .vietnam-title a {
+    font-size: 11px;
+  }
+  .other-title {
+    font-size: 10px;
+  }
+  .card-info-ep-top {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  .movie-box .info {
+    min-height: 38px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .background {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .background {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 8px;
+  }
+  .vietnam-title a {
+    font-size: 10px;
+  }
+  .other-title {
+    font-size: 9px;
+  }
+}
