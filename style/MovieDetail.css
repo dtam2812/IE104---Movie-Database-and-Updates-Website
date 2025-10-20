@@ -204,7 +204,7 @@ html, body {
 
 .movie-intro-container{
     display: flex;
-    padding: 30px 30px;
+    padding: 10px 10px;
     background-color: #191B24;
     width: 100%;
 }
@@ -212,10 +212,11 @@ html, body {
 .movie-intro-actor{
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     color: white;
     flex: 2;
-    min-width: 400px;
+    min-width: 100px;
+    padding: 20px 20px;
 }
 
 .movie-intro-actor a{
@@ -244,7 +245,7 @@ html, body {
 .circle-actor {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
+  gap: 10px;
   justify-items: center;
   align-items: start;
 }
@@ -288,6 +289,7 @@ html, body {
     flex: 1;
     min-width: 250px;
     color: white;
+    padding: 20px 20px;
 }
 
 .movie-intro-overview h3{
@@ -311,13 +313,17 @@ html, body {
 .movie-list{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  gap: 30px;
   justify-items: center;
   width: 100%;
   max-width: 2000px; 
   padding: 0 30px;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+.movie-box{
+    margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 1090px){
@@ -442,7 +448,7 @@ html, body {
 @media only screen and (max-width: 1600px){
 .movie-list{
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 10px;
+    gap: 30px;
 }
 }
 
@@ -452,11 +458,11 @@ html, body {
 }
 }
 
-@media only screen and (max-width: 1200px){
+/* @media only screen and (max-width: 1200px){
 .movie-list{
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
-}
+} */
 
 @media only screen and (max-width: 980px){
 .movie-list{
@@ -467,7 +473,7 @@ html, body {
 @media only screen and (max-width: 768px){
 .movie-list{
     grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-    gap: 16px;
+    gap: 30px;
 }
 }
 
@@ -493,6 +499,12 @@ html, body {
 
 .movie-intro-top{
     gap: 10px;
+}
+
+.circle-actor{
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 12px;
+  justify-items: center;
 }
 
 .actor-item a{

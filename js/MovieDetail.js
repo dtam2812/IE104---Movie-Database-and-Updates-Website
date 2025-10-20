@@ -56,7 +56,7 @@ async function fetchMovieDetails(movieId) {
     // Diễn viên
     const actorContainer = document.querySelector(".circle-actor");
     actorContainer.innerHTML = "";
-    movie.credits?.cast?.slice(0, 6).forEach((actor) => {
+    movie.credits?.cast?.slice(0, 10).forEach((actor) => {
       const img = actor.profile_path
         ? `${IMG_URL}${actor.profile_path}`
         : "https://via.placeholder.com/100?text=No+Img";
