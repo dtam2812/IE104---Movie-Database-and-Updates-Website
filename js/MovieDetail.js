@@ -90,6 +90,24 @@ async function fetchMovieDetails(movieId) {
           movie.production_companies?.[0]?.name || "Không rõ"
         }</div>
       </div>
+      <div class="movie-info">
+        <div class="movie-info-title">Ngân sách:</div>
+        <div class="movie-info-value">${
+          movie.budget ? movie.budget.toLocaleString() + " $" : "Không rõ"
+        }</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-info-title">Doanh thu:</div>
+        <div class="movie-info-value">${
+          movie.revenue ? movie.revenue.toLocaleString() + " $" : "Không rõ"
+        }</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-info-title">Trạng thái:</div>
+        <div class="movie-info-value">${
+          movie.status || "Không rõ"
+        }</div>
+      </div>
     `;
   } catch (error) {
     console.error("Lỗi khi tải chi tiết phim:", error);

@@ -11,15 +11,19 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 let currentPage = 1;
 let currentType = "movie";
 let movieCardTemplate = "";
+let castCardTemplate = "";
 
-// 🔹 Load MovieCardRender.html trước
-fetch("../components/MovieCardRender.html")
-  .then((res) => res.text())
-  .then((html) => {
-    movieCardTemplate = html;
-    loadResults(); // chỉ gọi sau khi có template
+// 🔹 Load cả 2 template (MovieCard + CastCard)
+Promise.all([
+  fetch("../components/MovieCardRender.html").then((res) => res.text()),
+  fetch("../components/CastCardRender.html").then((res) => res.text()),
+])
+  .then(([movieHTML, castHTML]) => {
+    movieCardTemplate = movieHTML;
+    castCardTemplate = castHTML;
+    loadResults();
   })
-  .catch((err) => console.error("Không tải được MovieCardRender:", err));
+  .catch((err) => console.error("Không tải được component:", err));
 
 // 🔹 Lắng nghe nút lọc
 filterButtons.forEach((btn) => {
@@ -34,7 +38,7 @@ filterButtons.forEach((btn) => {
 
 // 🔹 Hàm gọi API
 async function loadResults() {
-  if (!movieCardTemplate) return;
+  if (!movieCardTemplate || !castCardTemplate) return;
 
   grid.innerHTML = "<p>Đang tải...</p>";
   try {
@@ -49,6 +53,7 @@ async function loadResults() {
 
     const res = await fetch(url);
     const data = await res.json();
+    console.log(data);
     renderResults(data.results);
     renderPagination(data.page, data.total_pages);
   } catch (err) {
@@ -57,7 +62,7 @@ async function loadResults() {
   }
 }
 
-// 🔹 Render từng card bằng component
+// 🔹 Render kết quả
 function renderResults(results) {
   grid.innerHTML = "";
   if (!results || results.length === 0) {
@@ -66,24 +71,39 @@ function renderResults(results) {
   }
 
   results.forEach((item) => {
-    const poster = item.poster_path
-      ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-      : item.profile_path
-      ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
-      : "https://via.placeholder.com/300x450?text=No+Image";
+    if (currentType === "movie") {
+      const poster = item.poster_path
+        ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
+        : "https://via.placeholder.com/300x450?text=No+Image";
 
-    const title = item.title || item.name || "Không rõ";
-    const original_title = item.original_title || item.original_name || "";
-    const type = currentType === "movie" ? "Movie" : "Actor";
+      const title = item.title || "Không rõ";
+      const original_title = item.original_title || "";
 
-    let cardHTML = movieCardTemplate
-      .replace(/{{id}}/g, item.id)
-      .replace(/{{poster}}/g, poster)
-      .replace(/{{title}}/g, title)
-      .replace(/{{original_title}}/g, original_title)
-      .replace(/{{type}}/g, type);
+      let cardHTML = movieCardTemplate
+        .replace(/{{id}}/g, item.id)
+        .replace(/{{poster}}/g, poster)
+        .replace(/{{title}}/g, title)
+        .replace(/{{original_title}}/g, original_title);
 
-    grid.insertAdjacentHTML("beforeend", cardHTML);
+      grid.insertAdjacentHTML("beforeend", cardHTML);
+    } else {
+      // 🔹 Nếu không có profile_path thì dùng ảnh trong thư mục public
+      const profile =
+        item.profile_path && item.profile_path !== "null"
+          ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
+          : "../assets/image/8f1ca2029e2efceebd22fa05cca423d7.jpg";
+
+      const name = item.name || "Không rõ";
+      const original_name = item.original_name || "";
+
+      let cardHTML = castCardTemplate
+        .replace(/{{id}}/g, item.id)
+        .replace(/{{profile_path}}/g, profile)
+        .replace(/{{name}}/g, name)
+        .replace(/{{original_name}}/g, original_name);
+
+      grid.insertAdjacentHTML("beforeend", cardHTML);
+    }
   });
 }
 
