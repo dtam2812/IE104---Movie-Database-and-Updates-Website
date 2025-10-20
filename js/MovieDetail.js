@@ -56,7 +56,7 @@ async function fetchMovieDetails(movieId) {
     // Diễn viên
     const actorContainer = document.querySelector(".circle-actor");
     actorContainer.innerHTML = "";
-    movie.credits?.cast?.slice(0, 10).forEach((actor) => {
+    movie.credits?.cast?.slice(0, 6).forEach((actor) => {
       const img = actor.profile_path
         ? `${IMG_URL}${actor.profile_path}`
         : "https://via.placeholder.com/100?text=No+Img";
@@ -91,6 +91,24 @@ async function fetchMovieDetails(movieId) {
         <div class="movie-info-title">Sản xuất:</div>
         <div class="movie-info-value">${
           movie.production_companies?.[0]?.name || "Không rõ"
+        }</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-info-title">Ngân sách:</div>
+        <div class="movie-info-value">${
+          movie.budget ? movie.budget.toLocaleString() + " $" : "Không rõ"
+        }</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-info-title">Doanh thu:</div>
+        <div class="movie-info-value">${
+          movie.revenue ? movie.revenue.toLocaleString() + " $" : "Không rõ"
+        }</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-info-title">Trạng thái:</div>
+        <div class="movie-info-value">${
+          movie.status || "Không rõ"
         }</div>
       </div>
     `;
