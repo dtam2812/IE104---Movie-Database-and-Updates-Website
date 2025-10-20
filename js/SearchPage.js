@@ -112,20 +112,41 @@ function renderPagination(page, total) {
   pagination.innerHTML = "";
   if (total <= 1) return;
 
-  const createBtn = (num) => {
-    const btn = document.createElement("button");
-    btn.classList.add("page-btn");
-    if (num === page) btn.classList.add("active");
-    btn.textContent = num;
-    btn.addEventListener("click", () => {
-      currentPage = num;
+  const container = document.createElement("div");
+  container.classList.add("pagination-container");
+
+  // 🔹 Nút Previous
+  const prevBtn = document.createElement("button");
+  prevBtn.classList.add("page-arrow");
+  prevBtn.innerHTML = "&#8592;"; // ←
+  prevBtn.disabled = page === 1;
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
       loadResults();
-    });
-    pagination.appendChild(btn);
-  };
+    }
+  });
 
-  const start = Math.max(1, page - 1);
-  const end = Math.min(total, page + 1);
+  // 🔹 Nút Next
+  const nextBtn = document.createElement("button");
+  nextBtn.classList.add("page-arrow");
+  nextBtn.innerHTML = "&#8594;"; // →
+  nextBtn.disabled = page === total;
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < total) {
+      currentPage++;
+      loadResults();
+    }
+  });
 
-  for (let i = start; i <= end; i++) createBtn(i);
+  // 🔹 Text "Trang X / Y"
+  const pageInfo = document.createElement("span");
+  pageInfo.classList.add("page-info");
+  pageInfo.textContent = `Trang ${page} / ${total}`;
+
+  // 🔹 Gộp các phần tử
+  container.appendChild(prevBtn);
+  container.appendChild(pageInfo);
+  container.appendChild(nextBtn);
+  pagination.appendChild(container);
 }

@@ -104,9 +104,7 @@ async function fetchMovieDetails(movieId) {
       </div>
       <div class="movie-info">
         <div class="movie-info-title">Trạng thái:</div>
-        <div class="movie-info-value">${
-          movie.status || "Không rõ"
-        }</div>
+        <div class="movie-info-value">${movie.status || "Không rõ"}</div>
       </div>
     `;
   } catch (error) {

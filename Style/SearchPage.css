@@ -94,3 +94,69 @@ h2 {
   background: #fff;
   color: #000;
 }
+
+.pagination-modern {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin: 40px auto;
+}
+
+.page-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background-color: #1f1f25;
+  color: #ccc;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.page-circle:hover:not(:disabled) {
+  background-color: #2d2d34;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.page-circle:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.page-info-box {
+  background-color: #1f1f25;
+  color: #fff;
+  border-radius: 12px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.05) inset;
+}
+
+.page-text {
+  color: #f0f0f0;
+}
+
+.page-current {
+  background-color: #292932;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.page-divider {
+  opacity: 0.6;
+}
+
+.page-total {
+  color: #ccc;
+}
