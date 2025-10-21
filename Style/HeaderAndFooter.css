@@ -84,7 +84,6 @@
   margin-top: 10px;
   height: 120px;
   width: 150px;
-
 }
 
 .menu .menu-film-type i {
@@ -98,20 +97,17 @@
   font-size: 14px;
 }
 
-.menu-film-type a:hover
-{
+.menu-film-type a:hover {
   color: #ffde8a;
 }
 
-.menu-film-type a:hover i 
-{
+.menu-film-type a:hover i {
   color: #ffde8a;
 }
 
-.menu-film-type .dropdown-toggle{
-    cursor: pointer;
+.menu-film-type .dropdown-toggle {
+  cursor: pointer;
 }
-
 
 .menu-film-type.dropdown {
   position: relative;
@@ -154,25 +150,24 @@
   gap: 18px;
 }
 
-#user_guest 
-{
+#user_guest {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
+  gap: 0.5rem;
+  cursor: pointer;
 }
 
-#user_guest .button-login
-{
+#user_guest .button-login {
   background-color: #ffffff;
   color: #191b24;
 }
 
 #user_guest .button-user {
   font-size: 1em;
-  padding: .6rem 1.4rem;
+  padding: 0.6rem 1.4rem;
   border-radius: 3rem;
-  border: 1px solid rgba(255, 255, 255, .5);
-  opacity: .9;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  opacity: 0.9;
   font-weight: 500;
   white-space: nowrap;
   min-width: 145px;
@@ -184,52 +179,49 @@
 }
 
 #main_user .header-user {
-    padding: .3rem .6rem;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    text-decoration: none !important;
+  padding: 0.3rem 0.6rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none !important;
 }
 
-.user-dropdown-menu
-{
+.user-dropdown-menu {
   position: relative;
 }
 
-.line-center
-{
-    display: flex;
-    align-items: center;
-    gap: 13px;
+.line-center {
+  display: flex;
+  align-items: center;
+  gap: 13px;
 }
 
 #user_logged .header-user .user-avatar {
-    width: 42px;
-    height: 42px;
+  width: 42px;
+  height: 42px;
 }
 
 .user-avatar img {
-  width: 40px;          
-  border-radius: 50%;   
-  object-fit: cover;   
-  border: 2px solid #fff; 
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
 }
 
 .user-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
 }
 
-.dropdown-list
-{
+.dropdown-list {
   display: none;
   position: absolute;
   inset: 0px 0px auto auto;
   transform: translate3d(-9.5px, 49px, 0px);
   background-color: #272c43 !important;
-  border-radius: .6rem;
+  border-radius: 0.6rem;
   margin: 2px 0;
   text-align: left;
   max-width: 320px;
@@ -237,57 +229,49 @@
   padding: 0px;
 }
 
-.show
-{
-    display: block !important;
+.show {
+  display: block !important;
 }
 
-.dropdown-header
-{
+.dropdown-header {
   font-size: 13px;
-  padding: .6rem 1rem;
+  padding: 0.6rem 1rem;
 }
 
-.dropdown-header.user-name 
-{
-    font-size: 14px;
-    font-weight: 500;
-    color: #fff;
+.dropdown-header.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
 }
 
-.dropdown-list hr
-{
+.dropdown-list hr {
   color: rgba(255, 255, 255, 0.05);
-  margin-top: .4rem;
-  margin-bottom: .4rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
   opacity: 0.15;
 }
 
-.dropdown-list .ui.mobile 
-{
+.dropdown-list .ui.mobile {
   display: flex;
   flex-direction: column;
 }
 
-.dropdown-item
-{
+.dropdown-item {
   color: #fff;
-  padding: .6rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 13px;
   display: flex;
   align-items: center;
-  gap: .6rem;
+  gap: 0.6rem;
   width: 100%;
   font-weight: 400;
   cursor: pointer;
 }
 
-.dropdown-item:hover
-{
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.1);
+.dropdown-item:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
 }
-
 
 /* .mobile */
 @media only screen and (max-width: 1391px) {
@@ -441,7 +425,7 @@
   .search-group #main_menu {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: .5rem;
+    grid-gap: 0.5rem;
     gap: 1rem;
     width: 100%;
     padding: 0;
@@ -458,53 +442,46 @@
     font-weight: 500;
   }
 
-  .search-group #user_guest
-  {
+  .search-group #user_guest {
     gap: 0.5rem;
     width: 100%;
   }
 
-  .search-group #user_guest .button-user
-  {
+  .search-group #user_guest .button-user {
     flex: 1;
-    padding: .5rem .8rem;
+    padding: 0.5rem 0.8rem;
     min-width: 125px;
   }
-
 
   .search-group #main_user {
     gap: 0.5rem;
   }
 
-  .user_logged
-  {
+  .user_logged {
     align-items: self-start;
     padding: 1.5rem;
     margin: -1.5rem -1.5rem;
     width: calc(100% + 3rem);
     height: auto;
-    background-color: rgba(0, 0, 0, .2);
-    border-radius: .75rem .75rem 0 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem 0.75rem 0 0;
   }
 
-  .user_logged .header-user
-  {
+  .user_logged .header-user {
     padding: 0 !important;
     position: absolute;
     top: 0;
     left: 0;
   }
-   
-  .user_logged .header-user i
-  {
+
+  .user_logged .header-user i {
     display: none;
   }
 
-  .user-dropdown-menu .dropdown-list
-  {
+  .user-dropdown-menu .dropdown-list {
     display: flex !important;
     flex-direction: column;
-    gap: .8rem;
+    gap: 0.8rem;
     transform: none !important;
     position: relative !important;
     top: auto !important;
@@ -518,41 +495,35 @@
     color: #fff !important;
   }
 
-  .dropdown-list .dropdown-header
-  {
-    padding: .6rem 3.5rem;  
+  .dropdown-list .dropdown-header {
+    padding: 0.6rem 3.5rem;
   }
 
-  .dropdown-list .ui-mobile 
-  {
+  .dropdown-list .ui-mobile {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     padding: 0;
   }
 
-  .dropdown-list .dropdown-item
-  {
-    padding: .6rem !important;
+  .dropdown-list .dropdown-item {
+    padding: 0.6rem !important;
     display: inline-block;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: .4rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.4rem;
   }
 
-  .dropdown-list .dropdown-item .line-center 
-  {
+  .dropdown-list .dropdown-item .line-center {
     width: 100%;
     font-size: 12px;
-    gap: .5rem;
+    gap: 0.5rem;
   }
 
-  .user-dropdown-menu .dropdown-list hr
-  {
+  .user-dropdown-menu .dropdown-list hr {
     display: none;
   }
 
- .search-group.toggled #main_user .user-name 
- {
+  .search-group.toggled #main_user .user-name {
     display: flex;
     align-items: center;
   }
@@ -627,7 +598,6 @@
   margin-top: 10px;
   height: 200px;
   width: 250px;
-
 }
 
 .side-left .main-logo {
