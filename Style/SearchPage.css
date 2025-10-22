@@ -160,3 +160,20 @@ h2 {
 .page-total {
   color: #ccc;
 }
+
+/* Responsive cho màn hình nhỏ hơn 768px (mobile) */
+@media (max-width: 768px) {
+  .results-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .result-card img {
+    height: 200px;
+  }
+
+  .result-title {
+    font-size: 14px;
+  }
+}

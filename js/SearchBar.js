@@ -31,7 +31,7 @@ export function searchBar() {
     }, 400);
   });
 
-  // ✅ Khi nhấn Enter
+  // Khi nhấn Enter
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault(); // Ngăn reload trang
@@ -96,9 +96,9 @@ export function searchBar() {
           if (item.media_type === "movie")
             window.location.href = `/view/pages/MovieDetail.html?id=${item.id}`;
           else if (item.media_type === "tv")
-            window.location.href = `/pages/TvDetail.html?id=${item.id}`;
+            window.location.href = `/view/pages/TvDetail.html?id=${item.id}`;
           else if (item.media_type === "person")
-            window.location.href = `/pages/ActorDetail.html?id=${item.id}`;
+            window.location.href = `/view/pages/CastDetail.html?id=${item.id}`;
         });
 
         dropdown.appendChild(card);

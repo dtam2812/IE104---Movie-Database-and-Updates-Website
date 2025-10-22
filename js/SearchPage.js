@@ -13,7 +13,7 @@ let currentType = "movie";
 let movieCardTemplate = "";
 let castCardTemplate = "";
 
-// 🔹 Load cả 2 template (MovieCard + CastCard)
+// Load cả 2 template (MovieCard + CastCard)
 Promise.all([
   fetch("../components/MovieCardRender.html").then((res) => res.text()),
   fetch("../components/CastCardRender.html").then((res) => res.text()),
@@ -25,7 +25,7 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được component:", err));
 
-// 🔹 Lắng nghe nút lọc
+// Lắng nghe nút lọc
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) => b.classList.remove("active"));
@@ -36,7 +36,7 @@ filterButtons.forEach((btn) => {
   });
 });
 
-// 🔹 Hàm gọi API
+// Hàm gọi API
 async function loadResults() {
   if (!movieCardTemplate || !castCardTemplate) return;
 
@@ -62,7 +62,7 @@ async function loadResults() {
   }
 }
 
-// 🔹 Render kết quả
+// Render kết quả
 function renderResults(results) {
   grid.innerHTML = "";
   if (!results || results.length === 0) {
@@ -107,7 +107,7 @@ function renderResults(results) {
   });
 }
 
-// 🔹 Phân trang
+// Phân trang
 function renderPagination(page, total) {
   pagination.innerHTML = "";
   if (total <= 1) return;
@@ -115,7 +115,7 @@ function renderPagination(page, total) {
   const container = document.createElement("div");
   container.classList.add("pagination-container");
 
-  // 🔹 Nút Previous
+  // Nút Previous
   const prevBtn = document.createElement("button");
   prevBtn.classList.add("page-arrow");
   prevBtn.innerHTML = "&#8592;"; // ←
@@ -127,7 +127,7 @@ function renderPagination(page, total) {
     }
   });
 
-  // 🔹 Nút Next
+  // Nút Next
   const nextBtn = document.createElement("button");
   nextBtn.classList.add("page-arrow");
   nextBtn.innerHTML = "&#8594;"; // →
@@ -139,12 +139,12 @@ function renderPagination(page, total) {
     }
   });
 
-  // 🔹 Text "Trang X / Y"
+  // Text "Trang X / Y"
   const pageInfo = document.createElement("span");
   pageInfo.classList.add("page-info");
   pageInfo.textContent = `Trang ${page} / ${total}`;
 
-  // 🔹 Gộp các phần tử
+  // Gộp các phần tử
   container.appendChild(prevBtn);
   container.appendChild(pageInfo);
   container.appendChild(nextBtn);

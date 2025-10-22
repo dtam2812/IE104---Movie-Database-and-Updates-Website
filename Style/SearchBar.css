@@ -11,6 +11,7 @@
   transform: translateY(-50%);
   color: #aaa;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .search-input {
@@ -42,7 +43,7 @@
 }
 
 .search-dropdown::-webkit-scrollbar {
-  display: none; /* Ẩn scrollbar trên Chrome, Edge, Safari */
+  display: none; /* Ẩn scrollbar */
 }
 
 .search-dropdown.active {

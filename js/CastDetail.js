@@ -16,7 +16,7 @@ const perPage = 10;
 let allMovies = [];
 let movieCardTemplate = "";
 
-// ========= Load template MovieCardRender.html =========
+// Load template MovieCardRender
 fetch("../components/MovieCardRender.html")
   .then((res) => res.text())
   .then((html) => {
@@ -26,7 +26,7 @@ fetch("../components/MovieCardRender.html")
   })
   .catch((err) => console.error("Không tải được MovieCardRender:", err));
 
-// ========= Lấy chi tiết diễn viên =========
+// Lấy chi tiết diễn viên
 async function loadPersonDetail() {
   try {
     const res = await fetch(
@@ -53,7 +53,7 @@ async function loadPersonDetail() {
   }
 }
 
-// ========= Lấy danh sách phim đã tham gia =========
+// Lấy danh sách phim đã tham gia
 async function loadPersonMovies() {
   try {
     const res = await fetch(
@@ -74,7 +74,7 @@ async function loadPersonMovies() {
   }
 }
 
-// ========= Render phim theo trang =========
+//  Render phim theo trang
 function renderMoviesPage() {
   if (!movieCardTemplate) return;
 
@@ -108,7 +108,7 @@ function renderMoviesPage() {
   renderPaginationModern(currentPage, totalPages);
 }
 
-// ========= Render pagination kiểu hiện đại =========
+//  Render pagination kiểu hiện đại
 function renderPaginationModern(page, total) {
   const oldPagination = document.querySelector(".pagination-modern");
   if (oldPagination) oldPagination.remove();

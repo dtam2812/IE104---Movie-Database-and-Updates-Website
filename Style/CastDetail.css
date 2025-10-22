@@ -235,3 +235,9 @@ body {
 .page-total {
   color: #ccc;
 }
+
+@media (max-width: 768px) {
+  .person-detail-container {
+    display: block;
+  }
+}
