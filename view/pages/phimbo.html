@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Phim Bộ</title>
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css"/>
@@ -52,19 +52,12 @@
           <div class="filter__select-nav">
             <div class="filter__select-name">Quốc gia:</div>
             <div class="filter__select-list country">
-              <div class="filter__select-list-item filter__select--active all">Tất cả</div>
-              <div class="filter__select-list-item">Anh</div>
-              <div class="filter__select-list-item">Canada</div>
-              <div class="filter__select-list-item">Hàn Quốc</div>
-              <div class="filter__select-list-item">Hồng Kông</div>
-              <div class="filter__select-list-item">Mỹ</div>
-              <div class="filter__select-list-item">Nhật Bản</div>
-              <div class="filter__select-list-item">Pháp</div>
-              <div class="filter__select-list-item">Thái Lan</div>
-              <div class="filter__select-list-item">Trung Quốc</div>
-              <div class="filter__select-list-item">Úc</div>
-              <div class="filter__select-list-item">Đài Loan</div>
-              <div class="filter__select-list-item">Đức</div>
+              <div class="filter__select-list-item filter__select--active all" data-country="all">Tất cả</div>
+              <div class="filter__select-list-item" data-country="US">Mỹ</div>
+              <div class="filter__select-list-item" data-country="JP">Nhật Bản</div>
+              <div class="filter__select-list-item" data-country="KR">Hàn Quốc</div>
+              <div class="filter__select-list-item" data-country="CN">Trung Quốc</div>
+              <div class="filter__select-list-item" data-country="GB">Anh</div>
             </div>
           </div>
 
@@ -72,40 +65,44 @@
           <div class="filter__select-nav">
             <div class="filter__select-name">Loại phim:</div>
             <div class="filter__select-list movie-type">
-              <div class="filter__select-list-item">Tất cả</div>
-              <div class="filter__select-list-item">Phim lẻ</div>
-              <div class="filter__select-list-item filter__select--active">Phim bộ</div>
+              <div class="filter__select-list-item" data-type="all">Tất cả</div>
+              <div class="filter__select-list-item" data-type="movie">Phim lẻ</div>
+              <div class="filter__select-list-item filter__select--active" data-type="tv">Phim bộ</div>
             </div>
           </div>
 
           <!-- Thể loại -->
           <div class="filter__select-nav">
-            <div class="filter__select-name">Thể loại:</div>
-            <div class="filter__select-list movie-genre">
-              <div class="filter__select-list-item filter__select--active all">Tất cả</div>
-              <div class="filter__select-list-item">Anime</div>
-              <div class="filter__select-list-item">Bí Ẩn</div>
-              <div class="filter__select-list-item">Chiến Tranh</div>
-              <div class="filter__select-list-item">Chiếu Rạp</div>
-              <div class="filter__select-list-item">Chuyển Thể</div>
-              <div class="filter__select-list-item">Chính Kịch</div>
-              <div class="filter__select-list-item">Chính Luận</div>
-              <div class="filter__select-list-item">Chính Trị</div>
-              <div class="filter__select-list-item">Chương Trình Truyền Hình</div>
-              <div class="filter__select-list-item">Cung Đấu</div>
-              <div class="filter__select-list-item">Cuối Tuần</div>
-              <div class="filter__select-list-item">Cách Mạng</div>
-            </div>
+              <div class="filter__select-name">Thể loại:</div>
+              <div class="filter__select-list movie-genre">
+                  <div class="filter__select-list-item filter__select--active all" data-genre="all">Tất cả</div>
+                  <div class="filter__select-list-item" data-genre="10759">Hành động & Phiêu lưu</div>
+                  <div class="filter__select-list-item" data-genre="16">Hoạt hình</div>
+                  <div class="filter__select-list-item" data-genre="35">Hài</div>
+                  <div class="filter__select-list-item" data-genre="80">Hình sự</div>
+                  <div class="filter__select-list-item" data-genre="99">Phim tài liệu</div>
+                  <div class="filter__select-list-item" data-genre="18">Chính kịch</div>
+                  <div class="filter__select-list-item" data-genre="10751">Gia đình</div>
+                  <div class="filter__select-list-item" data-genre="10762">Thiếu nhi</div>
+                  <div class="filter__select-list-item" data-genre="9648">Bí ẩn</div>
+                  <div class="filter__select-list-item" data-genre="10763">Thời sự</div>
+                  <div class="filter__select-list-item" data-genre="10764">Truyền hình thực tế</div>
+                  <div class="filter__select-list-item" data-genre="10765">Khoa học viễn tưởng & Giả tưởng</div>
+                  <div class="filter__select-list-item" data-genre="10766">Phim dài tập</div>
+                  <div class="filter__select-list-item" data-genre="10767">Talk show</div>
+                  <div class="filter__select-list-item" data-genre="10768">Chiến tranh & Chính trị</div>
+                  <div class="filter__select-list-item" data-genre="37">Viễn Tây</div>
+              </div>
           </div>
 
           <!-- Sắp xếp -->
           <div class="filter__select-nav">
             <div class="filter__select-name">Sắp xếp:</div>
             <div class="filter__select-list arrange">
-              <div class="filter__select-list-item filter__select--active">Mới nhất</div>
-              <div class="filter__select-list-item">Mới cập nhật</div>
-              <div class="filter__select-list-item">Điểm IMDb</div>
-              <div class="filter__select-list-item">Lượt xem</div>
+              <div class="filter__select-list-item filter__select--active" data-arrange="new">Mới nhất</div>
+              <div class="filter__select-list-item" data-arrange="update">Mới cập nhật</div>
+              <div class="filter__select-list-item" data-arrange="imdb">Điểm IMDb</div>
+              <div class="filter__select-list-item" data-arrange="view">Lượt xem</div>
             </div>
           </div>
 
