@@ -1,0 +1,175 @@
+:root {
+  --bg: #191b24;
+  --card-bg: #2f3346;
+  --text: #fff;
+  --text-dim: #aaa;
+  --badge-gray: #5e6070;
+  --badge-blue: #1667cf;
+  --badge-green: #2ca35d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+.section {
+  max-width: 100%;
+  padding: 0 20px;
+  margin-bottom: 40px;
+}
+
+.header-grid {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 44px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-shadow: 0 2px 1px rgba(0, 0, 0, 0.3);
+  margin: 0;
+}
+
+.grid-wrap {
+  position: relative;
+  margin: 0 50px;
+  overflow: hidden;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 cột cố định */
+  grid-auto-rows: auto;
+  gap: 32px;
+  justify-content: center;
+  align-items: start;
+}
+
+/* Chỉ hiển thị tối đa 2 hàng (ẩn phần dư nếu có) */
+.grid-wrap.limited {
+  max-height: calc((320px + 160px) * 2); /* poster + khoảng cách */
+  overflow: hidden;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.poster-wrap {
+  position: relative;
+  border-radius: 8px;
+  background: var(--card-bg);
+  overflow: hidden;
+  aspect-ratio: 197/295;
+}
+
+.poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.badges {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  border-radius: 4.8px 4.8px 0 0;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.badge {
+  padding: 3px 8px;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge-gray {
+  background: var(--badge-gray);
+}
+
+.badge-blue {
+  background: var(--badge-blue);
+}
+
+.badge-green {
+  background: var(--badge-green);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 42px;
+}
+
+.movie-title {
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+.movie-subtitle {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  text-align: center;
+  margin: 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  .poster-wrap {
+    aspect-ratio: 160/240;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+}

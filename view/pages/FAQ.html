@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hỏi đáp</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../Services/reset.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
+    <link rel="stylesheet" href="../../Style/LegalPages.css">
+
+</head>
+<body>
+    <!-- start-header -->
+    <div id="header"></div>
+
+    <script type="module">
+        import { headerjs } from '../../js/header.js';
+
+        fetch('../components/header.html')
+            .then(res => res.text())
+            .then(html => {
+            document.getElementById('header').innerHTML = html;
+            headerjs(); // Gọi sau khi header đã render xong
+            })
+            .catch(error => {
+            console.error('Fetch header failed:', error);
+            });
+    </script>
+    <!-- end-header -->
+     <main>
+        <section class="legal_section">
+            <div class = "legal_container">
+                <div class="row_heading">   
+                    <h1>Một số câu hỏi được người dung quan tâm nhất tại UIT FILM &dash; Phim hay cả rổ</h1>
+                </div>
+                <div class = "row_content">
+                    <ul class="question-list">
+                        <li><a href="#Q1">1.UIT FILM là gì và có những đặc điểm nổi bật nào?</a></li>
+                        <li><a href="#Q2">2.UIT FILM có miễn phí hoàn toàn không?</a></li>
+                        <li><a href="#Q3">3.UIT FILM có bao gồm các bộ phim chiếu rạp không?</a></li>
+                        <li><a href="#Q4">4.Tốc độ tải phim trên UIT FILM như thế nào?</a></li>
+                        <li><a href="#Q5">5.Chất lượng phim trên UIT FILM có tốt không?</a></li>
+                        <li><a href="#Q6">6.UIT FILM có thể xem trên các thiết bị nào?</a></li>
+                        <li><a href="#Q7">7.UIT FILM có hỗ trợ thuyết minh và phụ đề không?</a></li>
+                        <li><a href="#Q8">8.UIT FILM có quảng cáo trong quá trình xem phim không?</a></li>
+                        <li><a href="#Q9">9.Có thể tìm thấy phim của những quốc gia nào trên UIT FILM?</a></li>
+                        <li><a href="#Q10">10.Những thể loại phim nào phổ biến nhất trên UIT FILM?</a></li>
+                        <li><a href="#Q11">11.UIT FILM có cập nhật phim mới không?</a></li>
+                        <li><a href="#Q12">12.UIT FILM có phim lẻ và phim bộ không?</a></li>
+                        <li><a href="#Q13">13.UIT FILM có hỗ trợ phim hoạt hình không?</a></li>
+                        <li><a href="#Q14">14.Có thể tìm kiếm phim dễ dàng trên UIT FILM không?</a></li>
+                        <li><a href="#Q15">15.UIT FILM có cung cấp phim 4K không?</a></li>
+                        <li><a href="#Q16">16.UIT FILM có hỗ trợ lồng tiếng giọng địa phương không?</a></li>
+                        <li><a href="#Q17">17.UIT FILM có các bộ phim được xem nhiều nhất không?</a></li>
+                        <li><a href="#Q18">18.Tại sao nên chọn UIT FILM thay vì các trang web khác?</a></li>
+                        <li><a href="#Q19">19.Có cần đăng ký tài khoản để xem phim trên UIT FILM không?</a></li>
+                        <li><a href="#Q20">20.UIT FILM có bảo vệ quyền riêng tư cho người dùng không?</a></li>
+                    </ul>
+                </div>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q1">1. UIT FILM là gì và có những đặc điểm nổi bật nào?</h2>
+                    <p>UIT FILM là một trang web xem phim online miễn phí tại Việt Nam, cung cấp kho phim chất lượng HD và 4K, không quảng cáo và có tốc độ tải mượt mà. 
+                    Trang web này có giao diện thân thiện với người dùng và thường xuyên cập nhật các bộ phim mới nhất từ nhiều quốc gia</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q2">2. UIT FILM có miễn phí hoàn toàn không?</h2>
+                    <p>UIT FILM hoàn toàn miễn phí. Người dùng không cần trả phí hay đăng ký tài khoản để xem phim, 
+                    giúp khán giả thoải mái lựa chọn và trải nghiệm hàng ngàn bộ phim chất lượng cao mà không tốn bất kỳ khoản phí nào.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q3">3. UIT FILM có bao gồm các bộ phim chiếu rạp không?</h2>
+                    <p>UIT FILM cung cấp nhiều bộ phim chiếu rạp đình đám từ Việt Nam và quốc tế. 
+                    Các bộ phim này được cập nhật nhanh chóng để đáp ứng nhu cầu xem phim của khán giả.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question"id = "Q4">4. Tốc độ tải phim trên UIT FILM như thế nào?</h2>
+                    <p>UIT FILM có tốc độ tải nhanh, ổn định nhờ hệ thống máy chủ hiện đại, giúp người xem trải nghiệm phim online mà không bị gián đoạn bởi tình trạng chậm hoặc lag.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q5">5. Chất lượng phim trên UIT FILM có tốt không?</h2>
+                    <p>UIT FILM cung cấp chất lượng phim từ HD đến 4K, giúp người dùng thưởng thức hình ảnh sắc nét, sống động và chân thực nhất có thể.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q6">6. UIT FILM có thể xem trên các thiết bị nào?</h2>
+                    <p>UIT FILM có thể được truy cập trên các thiết bị như máy tính, điện thoại di động và máy tính bảng, giúp người dùng xem phim mọi lúc, mọi nơi.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q7">7. UIT FILM có hỗ trợ thuyết minh và phụ đề không?</h2>
+                    <p>Có, UIT FILM hỗ trợ nhiều tùy chọn thuyết minh và phụ đề đa ngôn ngữ, phù hợp với nhu cầu của đa dạng người xem và giúp cải thiện khả năng học ngoại ngữ.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q8">8. UIT FILM có quảng cáo trong quá trình xem phim không?</h2>
+                    <p>UIT FILM hoàn toàn không có quảng cáo trong quá trình xem phim, giúp khán giả tận hưởng phim liền mạch mà không bị gián đoạn.</p>
+                    <p>&nbsp;</p>
+                    <h2 class ="faq_heading_question" id = "Q9">9. Có thể tìm thấy phim của những quốc gia nào trên UIT FILM?</h2>
+                    <p>UIT FILM cung cấp phim từ nhiều quốc gia, bao gồm Việt Nam, Hàn Quốc, Trung Quốc, Nhật Bản, Thái Lan, Âu Mỹ và nhiều quốc gia khác, với đa dạng thể loại cho người xem lựa chọn.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q10">10. Những thể loại phim nào phổ biến nhất trên UIT FILM?</h2>
+                    <p>Các thể loại phim được yêu thích trên UIT FILM gồm: hành động, tình cảm, khoa học viễn tưởng, cổ trang, hoạt hình, kinh dị, võ thuật và tâm lý.
+                    UIT FILM có kho phim phong phú đáp ứng sở thích của mọi đối tượng khán giả.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q11">11. UIT FILM có cập nhật phim mới không?</h2>
+                    <p>Có, UIT FILM cập nhật các bộ phim mới liên tục 24/24, đảm bảo người dùng không bỏ lỡ các bộ phim hot nhất từ các rạp chiếu hay trên truyền hình.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q12">12. UIT FILM có phim lẻ và phim bộ không?</h2>
+                    <p>Đúng vậy, UIT FILM cung cấp cả phim lẻ và phim bộ, bao gồm các bộ phim truyền hình dài tập và phim điện ảnh nổi tiếng từ nhiều quốc gia.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q13">13. UIT FILM có hỗ trợ phim hoạt hình không?</h2>
+                    <p>Có, UIT FILM có một kho phim hoạt hình phong phú, bao gồm các phim hoạt hình nổi tiếng từ Âu Mỹ và phim anime Nhật Bản, phục vụ cả trẻ em lẫn người lớn.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q14">14. Có thể tìm kiếm phim dễ dàng trên UIT FILM không?</h2>
+                    <p>Giao diện của UIT FILM được thiết kế thân thiện và tối ưu, giúp người dùng dễ dàng tìm kiếm phim theo tên phim, thể loại, quốc gia và các danh mục khác.</p>          
+                    <p>&nbsp;</p>
+                    <h2 class ="faq_heading_question"id = "Q15">15. UIT FILM có cung cấp phim 4K không?</h2>
+                    <p>UIT FILM là một trong số ít trang web tại Việt Nam cung cấp các bộ phim chất lượng 4K, giúp người xem trải nghiệm hình ảnh sắc nét như tại rạp chiếu phim</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q16">16. UIT FILM có hỗ trợ lồng tiếng giọng địa   phương không?</h2>
+                    <p>UIT FILM cung cấp tùy chọn lồng tiếng giọng miền Bắc, Trung và Nam, giúp người xem dễ dàng lựa chọn theo sở thích cá nhân.</p>
+                    <p>&nbsp;</p>
+                    <h2 class = "faq_heading_question" id = "Q17">17. UIT FILM có các bộ phim được xem nhiều nhất không?</h2>
+                    <p>UIT FILM thường xuyên cập nhật danh sách những bộ phim được xem nhiều nhất, bao gồm cả phim hot trong nước và phim nổi tiếng quốc tế, giúp người xem dễ dàng lựa chọn những bộ phim thịnh hành.</p>
+                    <p>&nbsp;</p>
+                    <h2 class ="faq_heading_question" id = "Q18">18. Tại sao nên chọn UIT FILM thay vì các trang web khác?</h2>
+                    <p>UIT FILM không chỉ miễn phí, không quảng cáo, mà còn có kho phim phong phú với chất lượng HD và 4K. 
+                    Tốc độ tải nhanh và giao diện dễ sử dụng là những ưu điểm khiến UIT FILM trở thành lựa chọn hàng đầu cho người yêu thích phim online.</p>
+                    <p>&nbsp;</p>
+                    <h2 class ="faq_heading_question" id = "Q19">19. Có cần đăng ký tài khoản để xem phim trên UIT FILM không?</h2>
+                    <p>Người dùng không cần đăng ký tài khoản mà vẫn có thể xem phim thoải mái. UIT FILM giúp tối ưu hóa trải nghiệm người dùng, không cần thông tin đăng nhập.</p>
+                    <p>&nbsp;</p>
+                    <h2 class ="faq_heading_question" id = "Q20">20. UIT FILM có bảo vệ quyền riêng tư cho người dùng không?</h2>  
+                    <p>UIT FILM đảm bảo quyền riêng tư của người dùng, không yêu cầu cung cấp thông tin cá nhân và không sử dụng dữ liệu của người dùng cho các mục đích quảng cáo.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- start-footer -->
+    <div id="footer"></div>
+
+    <script type="module">
+        fetch('../components/footer.html')
+            .then(res => res.text())
+            .then(html => {
+            document.getElementById('footer').innerHTML = html;
+            })
+            .catch(error => {
+            console.error('Fetch footer failed:', error);
+            });
+    </script>
+    <!-- end-footer -->
+
+    
+</body>
+</html>
