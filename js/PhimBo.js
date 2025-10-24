@@ -35,7 +35,48 @@ selectListItemCountry.forEach(function(current) {
 
 
 // Loại phim
+// Loại phim
 const itemMovieType = document.querySelectorAll('.filter__select-list.movie-type .filter__select-list-item')
+
+// Genres chỉ dành cho phim lẻ
+const movieOnlyGenres = ['28', '12', '14', '36', '27', '10402', '10749', '878', '53', '10752']
+// Genres chỉ dành cho phim bộ
+const tvOnlyGenres = ['10759', '10762', '10763', '10764', '10765', '10766', '10767', '10768']
+
+// Hàm ẩn/hiện genres theo loại phim
+function updateGenreVisibility(type) {
+    const allGenreItems = document.querySelectorAll('.filter__select-list.movie-genre .filter__select-list-item')
+    
+    allGenreItems.forEach(function(item) {
+        const genreId = item.getAttribute('data-genre')
+        
+        if(genreId === 'all') return // Không ẩn "Tất cả"
+        
+        if(type === 'movie') {
+            // Ẩn genres của phim bộ
+            if(tvOnlyGenres.includes(genreId)) {
+                item.style.display = 'none'
+                item.classList.remove('filter__select--active')
+            } else {
+                item.style.display = 'block'
+            }
+        } else if(type === 'tv') {
+            // Ẩn genres của phim lẻ
+            if(movieOnlyGenres.includes(genreId)) {
+                item.style.display = 'none'
+                item.classList.remove('filter__select--active')
+            } else {
+                item.style.display = 'block'
+            }
+        } else {
+            // type = 'all': hiện tất cả
+            item.style.display = 'block'
+        }
+    })
+}
+
+// Khởi tạo ban đầu (trang Phim bộ nên ẩn genres của phim lẻ)
+updateGenreVisibility('tv')
 
 itemMovieType.forEach(function(current) {
     current.addEventListener('click', function(e) {
@@ -44,6 +85,10 @@ itemMovieType.forEach(function(current) {
         if(current != itemMovieTypeActive) {
             current.classList.add('filter__select--active')
             itemMovieTypeActive.classList.remove('filter__select--active')
+            
+            // Cập nhật hiển thị genres
+            const selectedType = current.getAttribute('data-type')
+            updateGenreVisibility(selectedType)
         }
     })
 })
@@ -195,8 +240,8 @@ filterBtn.addEventListener('click', function(e) {
     const arrangeType = arrangeSelected.getAttribute('data-arrange')
     
     // Tạo API mới
-    // Xác định loại phim (movie hoặc tv)
-    let apiType = 'tv' // Mặc định là TV
+    // Xác định loại phim (Phim bộ hoặc phim lẻ)
+    let apiType = 'tv' // Mặc định là phim bộ
     if(movieType === 'movie') {
         apiType = 'movie'
     } else if(movieType === 'tv') {
