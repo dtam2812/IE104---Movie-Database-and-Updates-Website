@@ -1,8 +1,11 @@
+/* ----- Giao diện tổng thể ----- */
 body {
   background-color: #121212;
   color: white;
+  font-family: "Inter", sans-serif;
 }
 
+/* ----- Khu vực kết quả tìm kiếm ----- */
 .search-result-container {
   padding: 100px 40px;
 }
@@ -17,6 +20,7 @@ h2 {
   font-size: large;
 }
 
+/* ----- Nút lọc phim ----- */
 .filter-buttons {
   display: flex;
   gap: 10px;
@@ -38,6 +42,7 @@ h2 {
   color: #000;
 }
 
+/* ----- Grid chứa kết quả phim ----- */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -72,44 +77,35 @@ h2 {
   white-space: normal;
 }
 
+/* =============================== */
+/* 🔹 FIX PHÂN TRANG (PAGINATION) 🔹 */
+/* =============================== */
+
 .pagination {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
-  gap: 10px;
+  margin-top: 40px;
 }
 
-.page-btn {
-  background: #222;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.page-btn.active {
-  background: #fff;
-  color: #000;
-}
-
-.pagination-modern {
+.pagination-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 24px;
-  margin: 40px auto;
+  justify-content: center;
+  gap: 16px;
+  background-color: #1a1a1a;
+  padding: 10px 24px;
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-.page-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
+/* Nút mũi tên trái/phải */
+.page-arrow {
   background-color: #1f1f25;
   color: #ccc;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   font-size: 20px;
   display: flex;
   align-items: center;
@@ -118,50 +114,31 @@ h2 {
   transition: all 0.25s ease;
 }
 
-.page-circle:hover:not(:disabled) {
+.page-arrow:hover:not(:disabled) {
   background-color: #2d2d34;
   color: #fff;
   transform: scale(1.05);
 }
 
-.page-circle:disabled {
-  opacity: 0.3;
+.page-arrow:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-.page-info-box {
-  background-color: #1f1f25;
+/* Ô hiển thị số trang */
+.page-info {
   color: #fff;
-  border-radius: 12px;
-  padding: 8px 18px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   font-size: 16px;
-  font-family: "Inter", sans-serif;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.05) inset;
-}
-
-.page-text {
-  color: #f0f0f0;
-}
-
-.page-current {
+  font-weight: 500;
   background-color: #292932;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
 }
 
-.page-divider {
-  opacity: 0.6;
-}
-
-.page-total {
-  color: #ccc;
-}
-
-/* Responsive cho màn hình nhỏ hơn 768px (mobile) */
+/* =============================== */
+/* 🔹 Responsive cho Mobile 🔹 */
+/* =============================== */
 @media (max-width: 768px) {
   .results-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -175,5 +152,21 @@ h2 {
 
   .result-title {
     font-size: 14px;
+  }
+
+  .pagination-container {
+    gap: 10px;
+    padding: 8px 16px;
+  }
+
+  .page-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .page-info {
+    font-size: 14px;
+    padding: 6px 12px;
   }
 }

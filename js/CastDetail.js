@@ -39,8 +39,10 @@ async function loadPersonDetail() {
       return;
     }
 
+    console.log(data);
+
     personName.textContent = data.name || "Đang cập nhật";
-    alsoKnownAs.textContent = data.also_known_as?.join(", ") || "Đang cập nhật";
+    alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
     biography.textContent = data.biography || "Đang cập nhật";
     gender.textContent =
       data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
