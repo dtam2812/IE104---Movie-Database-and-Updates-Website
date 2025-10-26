@@ -47,25 +47,25 @@ html, body {
 }
 
 .movie-content{
-    display: flex;
-    padding: 0px 50px;
-    gap: 35px;
-    margin-top: 50px;
-    justify-content: center;
-    margin-top: 150px;
+  display: flex;
+  padding: 0 50px;
+  gap: 35px;
+  justify-content: center;
+  align-items: flex-start; 
+  margin-top: 150px;
 }
 
 .movie-content-left img{
-    height: 450px;
+  height: 450px;
 }
 
 .movie-content-title h3{
-    font-size: 30px;
+  font-size: 30px;
 }
 
 .movie-content-type{
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 
 .movie-content-type span{
@@ -87,188 +87,204 @@ html, body {
 }
 
 .play-btn{
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    font-size: 18px;
-    gap: 16px;
-    padding: 12px 28px;
-    border-radius: 32px;
-    background-color: #fecf59;
-    background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
-    cursor: pointer;
-    transition: all 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 18px;
+  gap: 16px;
+  padding: 12px 28px;
+  border-radius: 32px;
+  background-color: #fecf59;
+  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .play-btn:hover {
-    background: linear-gradient(39deg, #ffd84d, #ffe9a8);
-    border-color: #fff4c2;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5); 
+  background: linear-gradient(39deg, #ffd84d, #ffe9a8);
+  border-color: #fff4c2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5); 
 }
 
 .like-btn{
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 500;
-    font-size: 18px;
-    gap: 16px;
-    padding: 12px 12px;
-    border-radius: 100%;
-    background-color: #fecf59;
-    background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
-    cursor: pointer;
-    transition: all 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 18px;
+  gap: 16px;
+  padding: 12px 12px;
+  border-radius: 100%;
+  background-color: #fecf59;
+  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .like-btn:hover {
-    background: linear-gradient(39deg, #ffd84d, #ffe9a8);
-    border-color: #fff4c2;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5); 
+  background: linear-gradient(39deg, #ffd84d, #ffe9a8);
+  border-color: #fff4c2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5); 
 }
 
 .movie-content-review{
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .movie-content-score{
-    display: inline-flex;
-    align-items: center;
-    background-color: transparent;
-    border: 1px solid #f0d25c;
-    font-weight: 500;
-    line-height: 24px;
-    padding: 2px 6px;
-    border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid #f0d25c;
+  font-weight: 500;
+  line-height: 24px;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 .movie-content-score p{
-    color: #f0d25c;
-    position: relative;
-    font-weight: 500;
-    padding-right: 4px;
-    font-size: 15px;
-    line-height: 1;
+  color: #f0d25c;
+  position: relative;
+  font-weight: 500;
+  padding-right: 4px;
+  font-size: 15px;
+  line-height: 1;
 }
 
 .movie-content-score span{
-    color: #fff;
+  color: #fff;
 }
 
 .movie-content-age{
-    display: inline-flex;
-    align-items: center;
-    background-color: #fff;
-    border: 1px solid #f0d25c;
-    font-weight: 500;
-    line-height: 24px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: black;
+  display: inline-flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #f0d25c;
+  font-weight: 500;
+  line-height: 24px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: black;
 }
 
 .movie-content-overview{
-    line-height: 20px;
-    max-width: 700px;
-    color: #fff;
+  line-height: 20px;
+  max-width: 700px;
+  color: #fff;
 }
 
 .movie-content-overview span{
-   font-weight: bold;
+  font-weight: bold;
 }
 
 .movie-content-director span{
-   font-weight: bold;
-}
-
-.movie-tabs{
-    display: none;
+  font-weight: bold;
 }
 
 .movie-content-action{
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .movie-content-right{
-    color: #fff;
-    max-width: 700px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+  color: #fff;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
-.movie-intro-container{
-    display: flex;
-    padding: 10px 10px;
-    background-color: #191B24;
-    width: 100%;
+/* ====== TABS STYLES ====== */
+.movie-tabs{
+  display: none; 
 }
 
-.movie-intro-actor{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    color: white;
-    flex: 2;
-    min-width: 100px;
-    padding: 20px 20px;
+/* ====== TAB CONTENT - DESKTOP: Hiển thị tất cả ====== */
+.movie-intro {
+  background-color: #191B24;
 }
 
-.movie-intro-actor .view-more{
-    color: white;
-    z-index: 10;
+/* Desktop: Hiển thị tất cả tabs */
+.tab-content{
+  display: block;
 }
 
-.movie-intro-actor h3{
-    color: white;
-    font-size: 24px;
+/* GRID LAYOUT CHUNG */
+.grid-layout {
+  background-color: #191B24;
+  color: white;
+  padding: 30px;
+  min-height: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
 }
 
-.movie-intro-top{
-    display: flex;
-    flex-direction: row;
-    gap: 100px;
-    color: white;
-    width: 100%;
+.grid-layout h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+  border-bottom: 2px solid #fecf59;
+  padding-bottom: 10px;
 }
 
-.movie-info{
-    display: flex;
-    gap: 5px;
-    font-size: 20px;
+/* Desktop: Layout 2x2 cho 4 tab đầu */
+.movie-intro {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 20px;
+  padding: 30px;
+  background-color: #191B24;
+}
+
+/* Tab Đề xuất full width */
+#recommend {
+  grid-column: 1 / -1;
+}
+
+/*TAB 1: DIỄN VIÊN*/
+.actor-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .circle-actor {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 35px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px 30px;
   justify-items: center;
   align-items: start;
 }
 
+.circle-actor.expanded {
+  max-height: none;
+}
+
 .actor-item {
   text-align: center;
+  width: 100%;
+  max-width: 200px;
 }
 
 .actor-item a {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 110px;
-  height: 110px;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.2);
   transition: transform 0.3s ease, border 0.3s ease;    
 }
 
 .actor-item a:hover {
-  transform: scale(1.08);
+  transform: scale(1.05);
   border-color: #ffd84d;
 }
 
@@ -280,56 +296,77 @@ html, body {
 }
 
 .actor-item p {
-  margin-top: 8px;
-  font-size: 14px;
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 500;
   color: #fff;
 }
 
-.movie-intro-overview{
-    line-height: 2.5;
-    flex: 1;
-    min-width: 250px;
-    color: white;
-    padding: 20px 20px;
+.view-more {
+  color: #fecf59;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+  margin-top: 10px;
 }
 
-.movie-intro-overview h3{
-    margin-bottom: 10px;
-    font-size: 24px;
+.view-more:hover {
+  color: #ffd84d;
 }
 
-.movie-intro-bot{
-  background-color: #191B24;
-  color: white;
+/* TAB 2: THÔNG TIN*/
+.info-grid {
   display: flex;
   flex-direction: column;
-  padding: 30px 30px;
+  gap: 15px;
+}
+
+.movie-info {
+  display: flex;
+  gap: 10px;
+  font-size: 18px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.movie-info-title {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 150px;
+}
+
+.movie-info-value {
+  color: #fff;
+}
+
+/*TAB 3: CÁC MÙA PHIM */
+.season-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.season-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.season-list.expanded {
+  max-height: none;
 } 
 
-.movie-intro-bot h3{
-  font-size: 24px;
-  margin-bottom: 16px;
-}
-
-#season-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; 
-  gap: 16px;
-  margin-top: 20px;
-}
-
-/* Khung từng mùa */
 .season-box {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   background-color: transparent;
-  border: 1px solid white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
-  padding: 12px 16px;
-  gap: 40px;
-  width: fit-content; 
-  max-width: 650px; 
+  padding: 20px;
+  gap: 20px;
+  width: 100%; 
+  max-width: 1300px; 
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
@@ -338,23 +375,23 @@ html, body {
   border-color: #f5c518;
 }
 
-/* Ảnh mùa phim  */
 .season-box img {
-  width: 50%;
-  height: 50%;
+  width: auto;
+  height: 400px;
   object-fit: cover;
   border-radius: 6px;
+  flex-shrink: 0;
 }
 
-/* Thông tin mùa phim */
 .season-info {
   color: #e0e0e0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 12px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.4;
+  flex: 1;
 }
 
 .season-info h4 {
@@ -362,34 +399,11 @@ html, body {
   font-weight: 600;
   color: #fff;
   margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
-.imdb-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  border: 1.5px solid #f5c518;
-  border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #f5c518; 
-  background-color: transparent;
-  width: fit-content;
-}
-
-.imdb-badge span {
-  color: #fff; 
-  font-weight: 500;
-}
-
-/* Mô tả */
 .season-info p {
   margin: 2px 0;
-  font-size: 18px;
+  font-size: 16px;
   color: #bbb;
 }
 
@@ -397,295 +411,342 @@ html, body {
   color: #fff;
 }
 
+.season-info .imdb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid #f5c518;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f5c518; 
+  background-color: transparent;
+  width: fit-content;
+}
 
-.movie-list{
+.season-info .imdb-badge span{
+    color: white;
+}
+
+/* ====== TAB 4: NHÀ SẢN XUẤT ====== */
+.producer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.producer-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 30px;
+  justify-items: center;
+  align-items: center;
+}
+
+.producer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.3s ease;
+}
+
+.producer-item:hover {
+  transform: scale(1.05);
+}
+
+.producer-item img {
+  width: 100%;
+  max-width: 150px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  background-color: transparent;
+}
+
+.producer-item p {
+  font-size: 16px;
+  color: #fff;
+  font-weight: 500;
+}
+
+/*TAB 5: ĐỀ XUẤT */
+.recommend-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.movie-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 30px;
   justify-items: center;
   width: 100%;
-  max-width: 2000px; 
-  padding: 0 30px;
-  margin: 0 auto;
-  box-sizing: border-box;
 }
 
-.movie-box{
-    margin-bottom: 10px;
+.movie-box {
+  margin-bottom: 10px;
 }
 
-@media only screen and (max-width: 1090px){
-.movie-content{
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
+/* ============================================
+   RESPONSIVE - MOBILE
+   ============================================ */
+@media only screen and (max-width: 1090px) {
+  /* MOBILE: Hiện tabs */
+.movie-tabs {
+  display: flex !important;
+  gap: 20px;
+  padding: 20px 30px;
+  background-color: #191B24;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
 }
 
-.movie-content-left img{
-    width: 140px;
-    height: 190px;
-    margin-top: -100px;
+.movie-tabs .tab {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  white-space: nowrap;
 }
 
-.movie-content-title h3{
-    font-size: 20px;
-    margin-top: -10px;
+.movie-tabs .tab.active {
+  color: #fff;
+  font-weight: 600;
 }
 
-.movie-content-review{
-    justify-content: center;    
+.movie-tabs .tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #fecf59;
 }
 
-.movie-content-type{
-    justify-content: center;
+.movie-tabs .tab:hover {
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.movie-content-type span{
-    font-size: 12px;
-    padding: 5px 10px;
+  /* MOBILE: Chuyển layout từ grid sang block */
+.movie-intro {
+  display: block !important; 
+  padding: 0;
+  background-color: #191B24;
 }
 
-.movie-content-action{
-    justify-content: center;
+  /* MOBILE: Ẩn tất cả tab content */
+.tab-content {
+  display: none !important; 
 }
 
-.movie-content-overview{
-    font-size: 12px;
+  /* MOBILE: Chỉ hiện tab có class active */
+.tab-content.active {
+  display: block !important; 
 }
 
-.play-btn{
-    font-size: 12px;
-    padding: 2% 60px;
+.grid-layout {
+  border: none;
+  border-radius: 0;
 }
 
-.movie-content-score{
-    font-size: 12px;
-    padding: 0px 3px;
+.movie-content {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
 }
 
-.movie-content-score p{
-    font-size: 10px;
+.movie-content-left img {
+  width: auto;
+  height: 220px;
+  margin-top: -100px;
 }
 
-.movie-content-age{
-    font-size: 12px;
-    padding: 0px 3px;
+.movie-content-title h3 {
+  font-size: 20px;
+  margin-top: -10px;
 }
 
-.movie-content-director{
-    font-size: 12px;
+.movie-content-review {
+  justify-content: center;    
 }
 
-.movie-tabs{
-    display: flex;
-    gap: 20px;
-    padding: 20px 30px;
-    background-color: #191B24;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.movie-content-type {
+  justify-content: center;
 }
 
-.movie-tabs .tab{
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 16px;
-    padding: 10px 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
+.movie-content-type span {
+  font-size: 12px;
+  padding: 5px 10px;
 }
 
-.movie-tabs .tab.active{
-    color: #fff;
-    font-weight: 600;
+.movie-content-action {
+  justify-content: center;
 }
 
-.movie-tabs .tab.active::after{
-    content: "";
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #fecf59;
+.movie-content-overview {
+  font-size: 12px;
 }
 
-.movie-info-title, .movie-info-value{
-    font-size: 18px;
+.play-btn {
+  font-size: 12px;
+  padding: 2% 60px;
 }
 
-.tab-content{
-    display: none;
+.movie-content-score {
+  font-size: 12px;
+  padding: 0px 3px;
 }
 
-.tab-content.active{
-    display: block;
+.movie-content-score p {
+  font-size: 10px;
 }
 
-.movie-intro-top{
-    flex-direction: column;
-    gap: 30px;
+.movie-content-age {
+  font-size: 12px;
+  padding: 0px 3px;
 }
 
-.movie-intro-overview{
-    font-size: 20px;
+.movie-content-director {
+  font-size: 12px;
 }
 
-.movie-intro-bot{
-    font-size: 18px;
-}
-}
-
-@media only screen and (max-width: 1600px){
-.movie-list{
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 30px;
-}
+.grid-layout {
+  padding: 20px;
 }
 
-@media only screen and (max-width: 1400px){
-.movie-list{
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-}
+.grid-layout h3 {
+  font-size: 20px;
 }
 
-@media only screen and (max-width: 1200px){
-.movie-list{
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+.movie-info-title, .movie-info-value {
+  font-size: 16px;
 }
 }
 
-@media only screen and (max-width: 980px){
-.movie-list{
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+@media only screen and (max-width: 980px) {
+.movie-list {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
 }
 
-.movie-intro-container{
-    flex-direction: column;
-}
-}
-
-@media only screen and (max-width: 772px){
-
-.movie-list{
-    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-    gap: 30px;
-}
+.circle-actor {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 25px;
 }
 
-@media only screen and (max-width: 600px){
-.movie-list{
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 15px;
-    padding: 0 15px;
+.producer-info {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
 }
 }
 
-@media only screen and (max-width: 544px){
-.movie-intro-bot{
-    overflow-x: hidden;
-    padding: 20px 15px;
+@media only screen and (max-width: 600px) {
+.movie-list {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
 }
 
-.movie-list{
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    padding: 0 12px;
+.grid-layout {
+  padding: 15px;
 }
 
-.movie-intro-top{
-    gap: 10px;
+.movie-tabs {
+  padding: 15px 20px;
+  gap: 15px;
 }
 
-.circle-actor{
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px;
-  justify-items: center;
-}
-
-.actor-item a{
-    width: 100px;
-    height: 100px;
-} 
-
-.actor-item p{
-    font-size: 10px;
-}
-
-.movie-tabs{
-    padding: 15px 20px;
-    gap: 15px;
-}
-
-.movie-tabs .tab{
-    font-size: 14px;
-    padding: 8px 0;
+.movie-tabs .tab {
+  font-size: 14px;
+  padding: 8px 0;
 }
 
 .season-box {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .season-box img {
-    width: 100px;
-    height: auto;
+  width: 120px;
+  height: 180px;
+}
+
+.season-info {
+  align-items: center;
 }
 
 .season-info h4 {
-    justify-content: center;
-    font-size: 16px;
-}
-
-.imdb-badge {
-    font-size: 12px;
-    padding: 1px 4px;
+  font-size: 18px;
 }
 
 .season-info p {
-    font-size: 13px;
-    line-height: 1.4;
+  font-size: 14px;
+}
+
+.producer-info {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
 }
 }
 
-@media only screen and (max-width: 400px){
-.movie-list{
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 0 10px;
-}
-}
-
-@media only screen and (max-width: 375px){
-.circle-actor{
+@media only screen and (max-width: 544px) {
+.circle-actor {
   grid-template-columns: repeat(2, 1fr); 
   gap: 12px;
   justify-items: center;
 }
 
-.actor-item a{
+.actor-item a {
+  width: 100px;
+  height: 100px;
+} 
+
+.actor-item p {
+  font-size: 12px;
+}
+
+.movie-info-title, .movie-info-value {
+  font-size: 14px;
+}
+
+.grid-layout h3 {
+  font-size: 18px;
+}
+}
+
+@media only screen and (max-width: 375px) {
+.circle-actor {
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 10px;
+}
+
+.actor-item a {
   width: 80px; 
   height: 80px;
 }
 
-.actor-item p{
+.actor-item p {
   font-size: 10px;
 }
 
-.movie-list{
+.movie-list {
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  padding: 0 8px;
 }
 
-.movie-intro-overview h3{
+.grid-layout h3 {
   font-size: 16px;
 }
 
-.movie-info-title, .movie-info-value{
-  font-size: 14px;
+.movie-info-title, .movie-info-value {
+  font-size: 12px;
 }
 }
