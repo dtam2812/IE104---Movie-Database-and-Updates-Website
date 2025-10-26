@@ -1,4 +1,4 @@
-import { TMDB_API_KEY } from "./config.js";
+import { TMDB_API_KEY } from "../config.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
@@ -12,10 +12,9 @@ async function fetchMovieDetails(movieId) {
     const movie = await res.json();
 
     // --- Ảnh poster ---
-    document.querySelector(".movie-content-left img").src =
-      movie.poster_path
-        ? `${IMG_URL}${movie.poster_path}`
-        : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
+    document.querySelector(".movie-content-left img").src = movie.poster_path
+      ? `${IMG_URL}${movie.poster_path}`
+      : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
     // --- Tiêu đề ---
     document.querySelector(".movie-content-title h3").textContent =
@@ -56,7 +55,6 @@ async function fetchMovieDetails(movieId) {
 
     // --- Thông tin phim ---
     renderInfo(movie);
-
   } catch (error) {
     console.error("Lỗi khi tải chi tiết phim:", error);
   }
@@ -66,7 +64,7 @@ async function fetchMovieDetails(movieId) {
 function renderActors(actors) {
   const actorContainer = document.querySelector("#actors .circle-actor");
   const viewMoreBtn = document.querySelector("#actors .view-more");
-  
+
   if (!actorContainer) {
     console.error("Không tìm thấy .circle-actor container");
     return;
@@ -82,15 +80,17 @@ function renderActors(actors) {
 
   // Lưu toàn bộ danh sách diễn viên vào data attribute
   actorContainer.dataset.allActors = JSON.stringify(actors);
-  
+
   // Hiển thị 5 diễn viên đầu tiên
   const actorsToShow = actors.slice(0, 5);
-  
+
   actorsToShow.forEach((actor) => {
     const img = actor.profile_path
       ? `${IMG_URL}${actor.profile_path}`
-      : `https://ui-avatars.com/api/?name=${encodeURIComponent(actor.name)}&size=300&background=1a1a2e&color=0891b2`;
-    
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          actor.name
+        )}&size=300&background=1a1a2e&color=0891b2`;
+
     actorContainer.insertAdjacentHTML(
       "beforeend",
       `<div class="actor-item">
@@ -115,7 +115,7 @@ function renderActors(actors) {
 
 function renderInfo(movie) {
   const infoGrid = document.querySelector("#info .info-grid");
-  
+
   if (!infoGrid) {
     console.error("Không tìm thấy .info-grid container");
     return;
@@ -132,12 +132,12 @@ function renderInfo(movie) {
     <div class="movie-info">
       <div class="movie-info-title">Quốc gia:</div>
       <div class="movie-info-value">${
-          movie.production_countries?.[0]?.iso_3166_1 
-            ? `<img src="https://flagcdn.com/48x36/${movie.production_countries[0].iso_3166_1.toLowerCase()}.png" 
+        movie.production_countries?.[0]?.iso_3166_1
+          ? `<img src="https://flagcdn.com/48x36/${movie.production_countries[0].iso_3166_1.toLowerCase()}.png" 
                 alt="${movie.production_countries[0].name}" 
                 style="width: 32px; height: 24px; vertical-align: middle;">`
-            : "Không rõ"
-        }</div>
+          : "Không rõ"
+      }</div>
     </div>
     <div class="movie-info">
       <div class="movie-info-title">Nhà sản xuất:</div>
@@ -159,9 +159,7 @@ function renderInfo(movie) {
     </div>
     <div class="movie-info">
       <div class="movie-info-title">Trạng thái:</div>
-      <div class="movie-info-value">${
-        movie.status || "Không rõ"
-      }</div>
+      <div class="movie-info-value">${movie.status || "Không rõ"}</div>
     </div>
   `;
   console.log(movie);
@@ -338,7 +336,8 @@ function initViewMore(buttonSelector, contentSelector) {
 
 // ========== KHỞI CHẠY ========== //
 document.addEventListener("DOMContentLoaded", () => {
-  const movieId = new URLSearchParams(window.location.search).get("id") || 1242404;
+  const movieId =
+    new URLSearchParams(window.location.search).get("id") || 1242404;
 
   fetchMovieDetails(movieId);
   loadRecommendedMovies(movieId);
