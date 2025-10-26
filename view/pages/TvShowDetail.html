@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rophim</title>
+
+    <!-- CSS -->
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -12,11 +14,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
-    <link rel="stylesheet" href="../../Style/MovieCard.css" />
-    <link rel="stylesheet" href="../../Style/MovieDetail.css" />
+    <link rel="stylesheet" href="../../style/HeaderAndFooter.css" />
+    <link rel="stylesheet" href="../../style/TvShowDetail.css" />
+    <link rel="stylesheet" href="../../style/MovieCard.css" />
     <link rel="stylesheet" href="../../Services/reset.css" />
   </head>
+
   <body>
     <!-- start-header -->
     <div id="header"></div>
@@ -34,8 +37,8 @@
           console.error("Fetch header failed:", error);
         });
     </script>
-
     <!-- end-header -->
+
     <!-- start-movie-content-banner -->
     <section class="movie-detail">
       <div class="movie-detail-container">
@@ -102,6 +105,8 @@
       <div class="movie-tabs">
         <button class="tab active" data-tab="actors">Diễn viên</button>
         <button class="tab" data-tab="info">Thông tin</button>
+        <button class="tab" data-tab="seasons">Các mùa phim</button>
+        <button class="tab" data-tab="producers">Nhà sản xuất</button>
         <button class="tab" data-tab="recommend">Đề xuất</button>
       </div>
 
@@ -131,27 +136,7 @@
               />
               <p>Tracey Ullman</p>
             </div>
-            <div class="actor-item">
-              <img
-                src="https://image.tmdb.org/t/p/w500/bd0qiJXHoLNpkCqABsh67AKRtjC.jpg"
-                alt="Emily Waston"
-              />
-              <p>Emily Waston</p>
-            </div>
-            <div class="actor-item">
-              <img
-                src="https://image.tmdb.org/t/p/w500/5L3gQS6xKROcNnf5WEabDmzLIFn.jpg"
-                alt="Little Simz"
-              />
-              <p>Little Simz</p>
-            </div>
-            <div class="actor-item">
-              <img
-                src="https://image.tmdb.org/t/p/w500/mPqhmMPosUfEYCrkrGaqQ01wcYf.jpg"
-                alt="Douggie McMeekin"
-              />
-              <p>Douggie McMeekin</p>
-            </div>
+            <!-- ... -->
           </div>
           <a class="view-more">Xem thêm ⮟</a>
         </div>
@@ -162,33 +147,58 @@
         <div class="grid-layout info-grid">
           <h3>Thông tin phim</h3>
           <div class="movie-info">
-            <div class="movie-info-title">Thời lượng:</div>
-            <div class="movie-info-value">1h 32m</div>
+            <div class="movie-info-title">Số mùa:</div>
+            <div class="movie-info-value">-</div>
+          </div>
+          <div class="movie-info">
+            <div class="movie-info-title">Tổng số tập:</div>
+            <div class="movie-info-value">-</div>
           </div>
           <div class="movie-info">
             <div class="movie-info-title">Quốc gia:</div>
-            <div class="movie-info-value">Ai-len</div>
-          </div>
-          <div class="movie-info">
-            <div class="movie-info-title">Nhà sản xuất:</div>
-            <div class="movie-info-value">Big Things Films</div>
-          </div>
-          <div class="movie-info">
-            <div class="movie-info-title">Ngân sách:</div>
-            <div class="movie-info-value">$100,000</div>
-          </div>
-          <div class="movie-info">
-            <div class="movie-info-title">Doanh thu:</div>
-            <div class="movie-info-value">$100,000</div>
+            <div class="movie-info-value">-</div>
           </div>
           <div class="movie-info">
             <div class="movie-info-title">Trạng thái:</div>
-            <div class="movie-info-value">Đang phát hành</div>
+            <div class="movie-info-value">-</div>
+          </div>
+          <div class="movie-info">
+            <div class="movie-info-title">Ngày phát sóng đầu:</div>
+            <div class="movie-info-value">-</div>
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: Đề xuất -->
+      <!-- TAB 3: Các mùa phim -->
+      <div class="tab-content" id="seasons">
+        <div class="grid-layout season-grid">
+          <h3>Các mùa phim</h3>
+          <div id="season-container" class="season-list">
+            <div class="season-box">
+              <img src="https://placehold.co/150x220?text=Poster" alt="Mùa 1" />
+              <div class="season-info">
+                <h4>Mùa 1</h4>
+                <p class="imdb-badge">IMDb <span>6.6</span></p>
+                <p><strong>Giới thiệu:</strong></p>
+                <p><strong>Ngày phát sóng:</strong> 2025-09-25</p>
+                <p><strong>Số tập:</strong> 8</p>
+                <p><strong>Giới thiệu:</strong></p>
+              </div>
+            </div>
+          </div>
+          <a class="view-more" id="season-view-more">Xem thêm ⮟</a>
+        </div>
+      </div>
+
+      <!-- TAB 4: Nhà sản xuất -->
+      <div class="tab-content" id="producers">
+        <div class="grid-layout producer-grid">
+          <h3>Nhà sản xuất</h3>
+          <div class="producer-info"></div>
+        </div>
+      </div>
+
+      <!-- TAB 5: Đề xuất -->
       <div class="tab-content" id="recommend">
         <div class="grid-layout recommend-grid">
           <h3>Đề xuất</h3>
@@ -213,6 +223,7 @@
         });
     </script>
     <!-- end-footer -->
-    <script type="module" src="../../js/MovieDetail.js"></script>
+
+    <script type="module" src="../../js/TvShowDetail.js"></script>
   </body>
 </html>
