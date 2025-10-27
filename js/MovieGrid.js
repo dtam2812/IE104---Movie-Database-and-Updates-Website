@@ -1,57 +1,47 @@
 import { TMDB_API_KEY } from "../config.js";
 
+// create a movie card element
 function createCard(movie) {
-  const card = document.createElement("div");
-  card.className = "card";
+  const poster =
+    movie.poster || "https://via.placeholder.com/300x450?text=No+Image";
+  const originalTitle = movie.subtitle || "Không rõ";
+  const badgeText = movie.badges?.[0]?.text || "Movie";
 
-  const posterWrap = document.createElement("div");
-  posterWrap.className = "poster-wrap";
+  const div = document.createElement("div");
+  div.className = "movie-box";
 
-  const img = document.createElement("img");
-  img.src = movie.poster;
-  img.alt = movie.title;
-  img.className = "poster";
-  img.loading = "lazy";
+  div.innerHTML = `
+    <a class="movie-card" href="./movie-details.html?id=${movie.id}">
+      <div class="card-info-top">
+        <div class="card-info-ep-top">
+          <span>${badgeText}</span>
+        </div>
+      </div>
+      <div>
+        <img src="${poster}" alt="${movie.title}">
+      </div>
+    </a>
+    <div class="info">
+      <h4 class="vietnam-title">
+        <a href="./movie-details.html?id=${movie.id}">${movie.title}</a>
+      </h4>
+      <h4 class="other-title">
+        <a href="#">${originalTitle}</a>
+      </h4>
+    </div>
+  `;
 
-  const badges = document.createElement("div");
-  badges.className = "badges";
-  movie.badges.forEach((b) => {
-    const badge = document.createElement("div");
-    badge.className = `badge badge-${b.type}`;
-    badge.textContent = b.text;
-    badges.appendChild(badge);
-  });
-
-  posterWrap.appendChild(img);
-  posterWrap.appendChild(badges);
-
-  const info = document.createElement("div");
-  info.className = "info";
-
-  const title = document.createElement("h3");
-  title.className = "movie-title";
-  title.textContent = movie.title;
-
-  const subtitle = document.createElement("p");
-  subtitle.className = "movie-subtitle";
-  subtitle.textContent = movie.subtitle;
-
-  info.appendChild(title);
-  info.appendChild(subtitle);
-
-  card.appendChild(posterWrap);
-  card.appendChild(info);
-
-  return card;
+  return div;
 }
 
-// Hàm render grid
+// render a grid of movies into a container
 function renderGrid(gridId, movies = []) {
   const grid = document.getElementById(gridId);
   if (!grid) {
-    console.warn(`⚠️ Không tìm thấy grid: #${gridId}`);
+    console.warn(`Không tìm thấy grid: #${gridId}`);
     return;
   }
+
   grid.innerHTML = "";
 
   if (!movies.length) {
@@ -62,6 +52,7 @@ function renderGrid(gridId, movies = []) {
   movies.forEach((movie) => grid.appendChild(createCard(movie)));
 }
 
+// Load movies from TMDB API
 async function fetchTMDB(endpoint, badgeText, badgeColor) {
   try {
     const res = await fetch(
@@ -80,12 +71,12 @@ async function fetchTMDB(endpoint, badgeText, badgeColor) {
       badges: [{ text: badgeText, type: badgeColor }],
     }));
   } catch (err) {
-    console.error("❌ Lỗi khi tải dữ liệu TMDB:", err);
+    console.error("Lỗi khi tải dữ liệu TMDB:", err);
     return [];
   }
 }
 
-// Hàm tải toàn bộ grid
+// composite function to load all grids
 async function loadMovieGrids() {
   const [newMovies, trendingSeries, highRated, popularTV] = await Promise.all([
     fetchTMDB("movie/now_playing", "Mới", "gray"),

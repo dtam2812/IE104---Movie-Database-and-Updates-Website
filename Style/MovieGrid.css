@@ -60,6 +60,7 @@ body {
   gap: 32px;
   justify-content: center;
   align-items: start;
+  transition: max-height 0.3s ease;
 }
 
 /* Chỉ hiển thị tối đa 2 hàng (ẩn phần dư nếu có) */
@@ -172,4 +173,75 @@ body {
   .title {
     font-size: 20px;
   }
+}
+
+.movie-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.movie-card {
+  width: 100%;
+  padding-bottom: 150%;
+  height: 0;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+  background-color: var(--card-bg);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+.movie-card img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+}
+
+.movie-card:hover {
+  transform: translateY(-4%);
+}
+
+.card-info-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+}
+
+.card-info-ep-top {
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  margin-top: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.vietnam-title a {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.other-title {
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.other-title a {
+  color: #aaa;
+}
+
+.grid .movie-box {
+  width: 100%;
 }
