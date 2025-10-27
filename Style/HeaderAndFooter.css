@@ -15,8 +15,6 @@
   gap: 32px;
   z-index: 100;
   background: rgba(0, 0, 0, 0.25);
-  font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
-    sans-serif;
 }
 
 .header {
@@ -97,8 +95,12 @@
   font-size: 14px;
 }
 
-.menu-film-type a:hover {
+.menu .menu-film-type a:hover {
   color: #ffde8a;
+}
+
+.menu-film-type .dropdown-toggle {
+  cursor: pointer;
 }
 
 .menu-film-type a:hover i {
@@ -148,6 +150,13 @@
   display: flex;
   align-items: center;
   gap: 18px;
+}
+
+.user .span {
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 #user_guest {
@@ -432,12 +441,12 @@
     z-index: 4;
   }
 
-  .search-group #main_menu .menu-film-type {
-    padding: 0.6rem;
+  .search-group #main_menu .menu-item {
+    padding: 0.6rem 0;
     line-height: normal;
   }
 
-  .search-group #main_menu .menu-film-type a {
+  .search-group #main_menu .menu-item a {
     display: block;
     font-weight: 500;
   }
@@ -573,7 +582,7 @@
   width: fit-content;
   align-items: center;
   max-width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .intro-logo .logo-vn {
@@ -630,7 +639,7 @@
 }
 
 .main-logo .social-links a:hover {
-  background-color: #ffde8a;
+  background-color: red;
   transform: translateY(-5px);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
@@ -641,7 +650,7 @@
 }
 
 .footer-menu a:hover {
-  color: #ffde8a;
+  color: red;
 }
 
 .notice,
