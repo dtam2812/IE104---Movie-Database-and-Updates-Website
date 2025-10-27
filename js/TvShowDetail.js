@@ -10,6 +10,7 @@ async function fetchTvDetails(tvId) {
       `${BASE_URL}/tv/${tvId}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=credits,content_ratings`
     );
     const tv = await res.json();
+    console.log(tv);
 
     // --- Ảnh poster ---
     document.querySelector(".movie-content-left img").src = tv.poster_path

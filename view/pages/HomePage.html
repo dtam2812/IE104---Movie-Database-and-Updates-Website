@@ -30,15 +30,13 @@
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("header").innerHTML = html;
-
-          // Sau khi header được load xong, mới load SearchBar
+          headerjs();
           return fetch("../components/SearchBar.html");
         })
         .then((res) => res.text())
         .then((searchHTML) => {
-          document.getElementById("search").innerHTML = searchHTML;
+          document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
-          headerjs(); // chạy JS của header sau khi đã có SearchBar
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>

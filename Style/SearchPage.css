@@ -1,13 +1,14 @@
-/* ----- Giao diện tổng thể ----- */
+/* ----- Tổng thể ----- */
 body {
   background-color: #121212;
   color: white;
   font-family: "Inter", sans-serif;
 }
 
-/* ----- Khu vực kết quả tìm kiếm ----- */
+/* ----- Kết quả tìm kiếm ----- */
 .search-result-container {
   padding: 100px 40px;
+  min-height: 80vh; /* ✅ giữ footer không bị nhảy */
 }
 
 h2 {
@@ -20,7 +21,7 @@ h2 {
   font-size: large;
 }
 
-/* ----- Nút lọc phim ----- */
+/* ----- Nút lọc ----- */
 .filter-buttons {
   display: flex;
   gap: 10px;
@@ -35,21 +36,34 @@ h2 {
   padding: 8px 16px;
   cursor: pointer;
   transition: background 0.2s ease;
+  font-weight: bold;
 }
 
 .filter-btn.active {
   background: #fff;
   color: #000;
+  font-weight: bold;
 }
 
-/* ----- Grid chứa kết quả phim ----- */
+/* ----- Grid ----- */
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(6, 1fr); /* 💻 Laptop: 6 phim / hàng */
   gap: 20px;
   padding: 20px;
+  min-height: 400px; /* ✅ Giữ layout không co lại nếu không có kết quả */
+  align-content: start;
 }
 
+.placeholder-text {
+  text-align: center;
+  width: 100%;
+  color: #ccc;
+  font-size: 18px;
+  grid-column: 1 / -1;
+}
+
+/* ----- Card ----- */
 .result-card {
   text-align: center;
   background: #111;
@@ -77,10 +91,7 @@ h2 {
   white-space: normal;
 }
 
-/* =============================== */
-/* 🔹 FIX PHÂN TRANG (PAGINATION) 🔹 */
-/* =============================== */
-
+/* ----- Pagination ----- */
 .pagination {
   display: flex;
   justify-content: center;
@@ -98,7 +109,6 @@ h2 {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-/* Nút mũi tên trái/phải */
 .page-arrow {
   background-color: #1f1f25;
   color: #ccc;
@@ -125,7 +135,6 @@ h2 {
   cursor: not-allowed;
 }
 
-/* Ô hiển thị số trang */
 .page-info {
   color: #fff;
   font-size: 16px;
@@ -136,10 +145,20 @@ h2 {
   letter-spacing: 0.5px;
 }
 
-/* =============================== */
-/* 🔹 Responsive cho Mobile 🔹 */
-/* =============================== */
-@media (max-width: 768px) {
+/* ===========================
+   Responsive 
+=========================== */
+
+/* ----- Tablet (<= 1024px): 4 phim / hàng ----- */
+@media (max-width: 1024px) {
+  .results-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+}
+
+/* ----- Mobile (<= 600px): 2 phim / hàng ----- */
+@media (max-width: 600px) {
   .results-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;

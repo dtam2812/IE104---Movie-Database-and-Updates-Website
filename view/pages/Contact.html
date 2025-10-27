@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <link rel="stylesheet" href="../../Style/LegalPages.css">
+    <link rel="stylesheet" href="../../Style/SearchBar.css" />
+    <link rel="stylesheet" href="../../Services/reset.css" />
 
 </head>
 <body>
@@ -16,17 +18,22 @@
     <div id="header"></div>
 
     <script type="module">
-        import { headerjs } from '../../js/header.js';
+      import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
 
-        fetch('../components/header.html')
-            .then(res => res.text())
-            .then(html => {
-            document.getElementById('header').innerHTML = html;
-            headerjs(); // Gọi sau khi header đã render xong
-            })
-            .catch(error => {
-            console.error('Fetch header failed:', error);
-            });
+      fetch("../components/Header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+          headerjs();
+          return fetch("../components/SearchBar.html");
+        })
+        .then((res) => res.text())
+        .then((searchHTML) => {
+          document.querySelector(".search-box").innerHTML = searchHTML;
+          searchBar();
+        })
+        .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
     <!-- end-header -->
     <main>

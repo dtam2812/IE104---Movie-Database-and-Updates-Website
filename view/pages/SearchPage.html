@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tìm kiếm</title>
+    <title>Kết quả tìm kiếm</title>
+
+    <!-- Icon & CSS -->
     <link
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
@@ -12,17 +14,18 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+
+    <!-- Style -->
+    <link rel="stylesheet" href="../../Style/reset.css" />
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
-    <link rel="stylesheet" href="../../Style/SearchPage.css" />
+    <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <link rel="stylesheet" href="../../Style/MovieCard.css" />
     <link rel="stylesheet" href="../../Style/CastCard.css" />
-    <link rel="stylesheet" href="../../Style/SearchBar.css" />
-    <link rel="stylesheet" href="../../Services/reset.css" />
+    <link rel="stylesheet" href="../../Style/SearchPage.css" />
   </head>
   <body>
-    <!-- start-header -->
+    <!-- Header -->
     <div id="header"></div>
-
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
@@ -39,11 +42,10 @@
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
         })
-        .catch((error) => console.error("Fetch header/search failed:", error));
+        .catch((err) => console.error("Lỗi tải header/search:", err));
     </script>
 
-    <!-- end-header -->
-
+    <!-- Nội dung -->
     <div class="search-result-container">
       <h2>Kết quả tìm kiếm cho "<span id="query-text"></span>"</h2>
 
@@ -52,25 +54,25 @@
         <button class="filter-btn" data-type="person">Diễn viên</button>
       </div>
 
-      <div id="results-grid" class="results-grid"></div>
+      <div id="results-grid" class="results-grid">
+        <p class="placeholder-text">Đang tải...</p>
+      </div>
+
       <div id="pagination" class="pagination"></div>
     </div>
 
-    <!-- start-footer -->
+    <!-- Footer -->
     <div id="footer"></div>
-
     <script type="module">
       fetch("../components/Footer.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("footer").innerHTML = html;
         })
-        .catch((error) => {
-          console.error("Fetch footer failed:", error);
-        });
+        .catch((err) => console.error("Lỗi tải footer:", err));
     </script>
-    <!-- end-footer -->
 
+    <!-- Script -->
     <script type="module" src="../../js/SearchPage.js"></script>
   </body>
 </html>

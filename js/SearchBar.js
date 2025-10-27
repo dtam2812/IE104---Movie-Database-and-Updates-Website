@@ -96,7 +96,7 @@ export function searchBar() {
           if (item.media_type === "movie")
             window.location.href = `/view/pages/MovieDetail.html?id=${item.id}`;
           else if (item.media_type === "tv")
-            window.location.href = `/view/pages/TvDetail.html?id=${item.id}`;
+            window.location.href = `/view/pages/TvShowDetail.html?id=${item.id}`;
           else if (item.media_type === "person")
             window.location.href = `/view/pages/CastDetail.html?id=${item.id}`;
         });
