@@ -60,6 +60,33 @@ async function fetchMovieDetails(movieId) {
   }
 }
 
+
+// ========== TẠO HTML CHO 1 DIỄN VIÊN ========== //
+function createActorHTML(actor) {
+  const img = actor.profile_path
+    ? `${IMG_URL}${actor.profile_path}`
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        actor.name
+      )}&size=300&background=1a1a2e&color=0891b2`;
+
+  return `
+    <div class="cast-box">
+      <a class="cast-card" href="CastDetail.html?id=${actor.id}">
+        <div class="cast-img">
+          <img src="${img}" alt="${actor.name}" />
+        </div>
+      </a>
+      <div class="info">
+        <h4 class="name">
+          <a href="CastDetail.html?id=${actor.id}">${actor.name}</a>
+        </h4>
+        <h4 class="other-name">
+          <a href="#">${actor.original_name}</a>
+        </h4>
+      </div>
+    </div>`;
+}
+
 // ========== RENDER CÁC PHẦN ========== //
 function renderActors(actors) {
   const actorContainer = document.querySelector("#actors .circle-actor");
@@ -85,22 +112,8 @@ function renderActors(actors) {
   const actorsToShow = actors.slice(0, 5);
 
   actorsToShow.forEach((actor) => {
-    const img = actor.profile_path
-      ? `${IMG_URL}${actor.profile_path}`
-      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          actor.name
-        )}&size=300&background=1a1a2e&color=0891b2`;
-
-    actorContainer.insertAdjacentHTML(
-      "beforeend",
-      `<div class="actor-item">
-         <a href="#">
-           <img src="${img}" alt="${actor.name}" />
-         </a>
-         <p>${actor.name}</p>
-       </div>`
-    );
-  });
+  actorContainer.insertAdjacentHTML("beforeend", createActorHTML(actor));
+});
 
   // Ẩn nút "Xem thêm" nếu có 5 diễn viên hoặc ít hơn
   if (viewMoreBtn) {
@@ -281,21 +294,8 @@ function initViewMore(buttonSelector, contentSelector) {
       const actorsToShow = allActors.slice(0, 5);
 
       actorsToShow.forEach((actor) => {
-        const img = actor.profile_path
-          ? `${IMG_URL}${actor.profile_path}`
-          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              actor.name
-            )}&size=300&background=1a1a2e&color=0891b2`;
-        content.insertAdjacentHTML(
-          "beforeend",
-          `<div class="actor-item">
-            <a href="#">
-              <img src="${img}" alt="${actor.name}" />
-            </a>
-            <p>${actor.name}</p>
-          </div>`
-        );
-      });
+      content.insertAdjacentHTML("beforeend", createActorHTML(actor));
+});
       const remaining = allActors.length - 5;
       this.textContent =
         remaining > 0 ? `Xem thêm (${remaining}) ⮟` : "Xem thêm ⮟";
@@ -312,21 +312,8 @@ function initViewMore(buttonSelector, contentSelector) {
       const allActors = JSON.parse(content.dataset.allActors || "[]");
       content.innerHTML = "";
       allActors.forEach((actor) => {
-        const img = actor.profile_path
-          ? `${IMG_URL}${actor.profile_path}`
-          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              actor.name
-            )}&size=300&background=1a1a2e&color=0891b2`;
-        content.insertAdjacentHTML(
-          "beforeend",
-          `<div class="actor-item">
-            <a href="#">
-              <img src="${img}" alt="${actor.name}" />
-            </a>
-            <p>${actor.name}</p>
-          </div>`
-        );
-      });
+      content.insertAdjacentHTML("beforeend", createActorHTML(actor));
+});
 
       content.classList.add("expanded");
       this.textContent = "Thu gọn ⮝";

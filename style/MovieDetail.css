@@ -120,14 +120,10 @@ body {
   font-weight: 500;
   font-size: 18px;
   gap: 16px;
-  padding: 12px 12px;
+  padding: 17px 17px;
   border-radius: 100%;
   background-color: #fecf59;
-  background: linear-gradient(
-    39deg,
-    rgba(254, 207, 89, 1),
-    rgba(255, 241, 204, 1)
-  );
+  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -273,44 +269,6 @@ body {
   max-height: none;
 }
 
-.actor-item {
-  text-align: center;
-  width: 100%;
-  max-width: 200px;
-}
-
-.actor-item a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s ease, border 0.3s ease;
-}
-
-.actor-item a:hover {
-  transform: scale(1.05);
-  border-color: #ffd84d;
-}
-
-.actor-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.actor-item p {
-  margin-top: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-}
-
 .view-more {
   color: #fecf59;
   text-align: center;
@@ -358,19 +316,20 @@ body {
 
 .movie-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 30px;
-  justify-items: center;
-  width: 100%;
+  grid-template-columns: repeat(6, 1fr); /* 6 cột cố định */
+  grid-auto-rows: auto;
+  gap: 32px;
+  justify-content: center;
+  align-items: start;
+  transition: max-height 0.3s ease;
+  padding: 15px 15px;
 }
 
 .movie-box {
   margin-bottom: 10px;
 }
 
-/* ============================================
-   RESPONSIVE - MOBILE
-   ============================================ */
+/*RESPONSIVE - MOBILE*/
 @media only screen and (max-width: 1090px) {
   /* MOBILE: Hiện tabs */
   .movie-tabs {
@@ -517,10 +476,6 @@ body {
     gap: 20px;
   }
 
-  .circle-actor {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 25px;
-  }
 }
 
 @media only screen and (max-width: 600px) {
@@ -551,15 +506,6 @@ body {
     justify-items: center;
   }
 
-  .actor-item a {
-    width: 100px;
-    height: 100px;
-  }
-
-  .actor-item p {
-    font-size: 12px;
-  }
-
   .movie-info-title,
   .movie-info-value {
     font-size: 14px;
@@ -576,15 +522,6 @@ body {
     gap: 10px;
   }
 
-  .actor-item a {
-    width: 80px;
-    height: 80px;
-  }
-
-  .actor-item p {
-    font-size: 10px;
-  }
-
   .movie-list {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
@@ -599,3 +536,4 @@ body {
     font-size: 12px;
   }
 }
+

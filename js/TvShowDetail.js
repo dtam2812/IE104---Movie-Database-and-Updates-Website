@@ -81,6 +81,58 @@ async function fetchTvDetails(tvId) {
   }
 }
 
+// ========== TẠO HTML CHO 1 DIỄN VIÊN ========== //
+function createActorHTML(actor) {
+  const img = actor.profile_path
+    ? `${IMG_URL}${actor.profile_path}`
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        actor.name
+      )}&size=300&background=1a1a2e&color=0891b2`;
+
+  return `
+    <div class="cast-box">
+      <a class="cast-card" href="CastDetail.html?id=${actor.id}">
+        <div class="cast-img">
+          <img src="${img}" alt="${actor.name}" />
+        </div>
+      </a>
+      <div class="info">
+        <h4 class="name">
+          <a href="CastDetail.html?id=${actor.id}">${actor.name}</a>
+        </h4>
+        <h4 class="other-name">
+          <a href="#">${actor.original_name}</a>
+        </h4>
+      </div>
+    </div>`;
+}
+
+// ========== TẠO HTML CHO 1 MÙA PHIM ========== //
+function createSeasonHTML(season) {
+  const poster = season.poster_path
+    ? `${IMG_URL}${season.poster_path}`
+    : "https://placehold.co/150x220?text=No+Poster";
+
+  const rating = season.vote_average || null;
+
+  return `
+    <div class="season-box">
+      <img src="${poster}" alt="${season.name}">
+      <div class="season-info">
+        <h4>${season.name}</h4>
+        ${
+          rating
+            ? `<p class="imdb-badge">IMDb <span>${rating.toFixed(1)}</span></p>`
+            : ""
+        }
+        <p><strong>Ngày phát sóng:</strong> ${season.air_date || "N/A"}</p>
+        <p><strong>Số tập:</strong> ${season.episode_count || "N/A"}</p>
+        <p><strong>Giới thiệu:</strong> ${season.overview || "N/A"}</p>
+      </div>
+    </div>
+  `;
+}
+
 // ========== RENDER CÁC PHẦN ========== //
 function renderActors(actors) {
   const actorContainer = document.querySelector("#actors .circle-actor");
@@ -106,22 +158,9 @@ function renderActors(actors) {
   const actorsToShow = actors.slice(0, 5);
 
   actorsToShow.forEach((actor) => {
-    const img = actor.profile_path
-      ? `${IMG_URL}${actor.profile_path}`
-      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          actor.name
-        )}&size=300&background=1a1a2e&color=0891b2`;
+  actorContainer.insertAdjacentHTML("beforeend", createActorHTML(actor));
+});
 
-    actorContainer.insertAdjacentHTML(
-      "beforeend",
-      `<div class="actor-item">
-          <a href="#">
-            <img src="${img}" alt="${actor.name}">
-          </a>
-          <p>${actor.name}</p>
-        </div>`
-    );
-  });
 
   // Ẩn nút "Xem thêm" nếu có 5 diễn viên hoặc ít hơn
   if (viewMoreBtn) {
@@ -201,40 +240,16 @@ function renderSeasons(seasons) {
 
   // Lưu toàn bộ danh sách mùa phim vào data attribute
   container.dataset.allSeasons = JSON.stringify(validSeasons);
-  // Hiển thị 2 mùa đầu tiên
+  // Hiển thị 3 mùa đầu tiên
   const seasonsToShow = validSeasons.slice(0, 3);
 
   seasonsToShow.forEach((season) => {
-    const poster = season.poster_path
-      ? `${IMG_URL}${season.poster_path}`
-      : "https://placehold.co/150x220?text=No+Poster";
-
-    const rating = season.vote_average || null;
-
-    const html = `
-        <div class="season-box">
-          <img src="${poster}" alt="${season.name}">
-          <div class="season-info">
-            <h4>${season.name}</h4>
-            ${
-              rating
-                ? `<p class="imdb-badge">IMDb <span>${rating.toFixed(
-                    1
-                  )}</span></p>`
-                : ""
-            }
-            <p><strong>Ngày phát sóng:</strong> ${season.air_date || "N/A"}</p>
-            <p><strong>Số tập:</strong> ${season.episode_count || "N/A"}</p>
-            <p><strong>Giới thiệu:</strong> ${season.overview || "N/A"}</p>
-          </div>
-        </div>
-      `;
-    container.insertAdjacentHTML("beforeend", html);
-  });
+  container.insertAdjacentHTML("beforeend", createSeasonHTML(season));
+});
 
   // Ẩn nút "Xem thêm" nếu có 2 mùa hoặc ít hơn
   if (viewMoreBtn) {
-    if (validSeasons.length <= 2) {
+    if (validSeasons.length <= 3) {
       viewMoreBtn.style.display = "none";
     } else {
       viewMoreBtn.style.display = "block";
@@ -324,7 +339,7 @@ async function loadRecommendedTvShows(tvId) {
 
       const html = `
           <div class="movie-box">
-            <a class="movie-card" href="TvShowDetail.html?id=${show.id}">
+            <a class="movie-card" href="TvShowDetail.html?id=${show.id}&type=tv">
               <div class="card-info-top">
                 <div class="card-info-ep-top"><span>TV Show</span></div>
               </div>
@@ -398,21 +413,9 @@ function initViewMore(buttonSelector, contentSelector) {
         const actorsToShow = allActors.slice(0, 5);
 
         actorsToShow.forEach((actor) => {
-          const img = actor.profile_path
-            ? `${IMG_URL}${actor.profile_path}`
-            : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                actor.name
-              )}&size=300&background=1a1a2e&color=0891b2`;
-          content.insertAdjacentHTML(
-            "beforeend",
-            `<div class="actor-item">
-                <a href="#">
-                  <img src="${img}" alt="${actor.name}">
-                </a>
-                <p>${actor.name}</p>
-              </div>`
-          );
-        });
+        content.insertAdjacentHTML("beforeend", createActorHTML(actor));
+});
+
         const remaining = allActors.length - 5;
         this.textContent =
           remaining > 0 ? `Xem thêm (${remaining}) ⮟` : "Xem thêm ⮟";
@@ -422,34 +425,8 @@ function initViewMore(buttonSelector, contentSelector) {
         const seasonsToShow = allSeasons.slice(0, 3);
 
         seasonsToShow.forEach((season) => {
-          const poster = season.poster_path
-            ? `${IMG_URL}${season.poster_path}`
-            : "https://placehold.co/150x220?text=No+Poster";
-
-          const rating = season.vote_average || null;
-
-          const html = `
-          <div class="season-box">
-            <img src="${poster}" alt="${season.name}">
-            <div class="season-info">
-              <h4>${season.name}</h4>
-              ${
-                rating
-                  ? `<p class="imdb-badge">IMDb <span>${rating.toFixed(
-                      1
-                    )}</span></p>`
-                  : ""
-              }
-              <p><strong>Ngày phát sóng:</strong> ${
-                season.air_date || "N/A"
-              }</p>
-              <p><strong>Số tập:</strong> ${season.episode_count || "N/A"}</p>
-              <p><strong>Giới thiệu:</strong> ${season.overview || "N/A"}</p>
-            </div>
-          </div>
-        `;
-          content.insertAdjacentHTML("beforeend", html);
-        });
+        content.insertAdjacentHTML("beforeend", createSeasonHTML(season));
+});
 
         const remaining = allSeasons.length - 3;
         this.textContent =
@@ -469,57 +446,14 @@ function initViewMore(buttonSelector, contentSelector) {
         const allActors = JSON.parse(content.dataset.allActors || "[]");
         content.innerHTML = "";
         allActors.forEach((actor) => {
-          const img = actor.profile_path
-            ? `${IMG_URL}${actor.profile_path}`
-            : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                actor.name
-              )}&size=300&background=1a1a2e&color=0891b2`;
-          content.insertAdjacentHTML(
-            "beforeend",
-            `<div class="actor-item">
-                <a href="#">
-                  <img src="${img}" alt="${actor.name}">
-                </a>
-                <p>${actor.name}</p>
-              </div>`
-          );
-        });
+        content.insertAdjacentHTML("beforeend", createActorHTML(actor));
+});
       } else if (isSeasonSection) {
         const allSeasons = JSON.parse(content.dataset.allSeasons || "[]");
         content.innerHTML = "";
         allSeasons.forEach((season) => {
-          const poster = season.poster_path
-            ? `${IMG_URL}${season.poster_path}`
-            : "https://placehold.co/150x220?text=No+Poster";
-
-          const rating = season.vote_average || null;
-
-          const html = `
-              <div class="season-box">
-                <img src="${poster}" alt="${season.name}">
-                <div class="season-info">
-                  <h4>${season.name}</h4>
-                  ${
-                    rating
-                      ? `<p class="imdb-badge">IMDb <span>${rating.toFixed(
-                          1
-                        )}</span></p>`
-                      : ""
-                  }
-                  <p><strong>Ngày phát sóng:</strong> ${
-                    season.air_date || "N/A"
-                  }</p>
-                  <p><strong>Số tập:</strong> ${
-                    season.episode_count || "N/A"
-                  }</p>
-                  <p><strong>Giới thiệu:</strong> ${
-                    season.overview || "N/A"
-                  }</p>
-                </div>
-              </div>
-            `;
-          content.insertAdjacentHTML("beforeend", html);
-        });
+  content.insertAdjacentHTML("beforeend", createSeasonHTML(season));
+});
       }
 
       content.classList.add("expanded");

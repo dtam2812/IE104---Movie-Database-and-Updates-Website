@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="../../style/HeaderAndFooter.css" />
     <link rel="stylesheet" href="../../style/TvShowDetail.css" />
     <link rel="stylesheet" href="../../style/MovieCard.css" />
+    <link rel="stylesheet" href="../../Style/Trailer.css" />
+    <link rel="stylesheet" href="../../Style/CastCard.css" />
     <link rel="stylesheet" href="../../Services/reset.css" />
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <link rel="stylesheet" href="../../Services/reset.css" />
@@ -81,7 +83,7 @@
               </div>
 
               <div class="movie-content-action">
-                <a class="play-btn" href="#">
+                <a id="trailer-btn" class="play-btn" href="#">
                   <i class="fa-solid fa-play"></i>
                   <span><strong>Trailer</strong></span>
                 </a>
@@ -122,28 +124,6 @@
         <div class="grid-layout actor-grid">
           <h3>Diễn viên</h3>
           <div class="circle-actor">
-            <div class="actor-item">
-              <img
-                src="https://image.tmdb.org/t/p/w500/dm6V24NjjvjMiCtbMkc8Y2WPm2e.jpg"
-                alt="Cillian Murphy"
-              />
-              <p>Cillian Murphy</p>
-            </div>
-            <div class="actor-item">
-              <img
-                src="https://image.tmdb.org/t/p/w500/pbsoexLxfXZZvITACzfOB1dsDip.jpg"
-                alt="Jay Lycurgo"
-              />
-              <p>Jay Lycurgo</p>
-            </div>
-            <div class="actor-item">
-              <img
-                src="https://image.tmdb.org/t/p/w500/cmug3uUXKBo9fhCcJk3pkgt1nvM.jpg"
-                alt="Tracey Ullman"
-              />
-              <p>Tracey Ullman</p>
-            </div>
-            <!-- ... -->
           </div>
           <a class="view-more">Xem thêm ⮟</a>
         </div>
@@ -216,6 +196,19 @@
       </div>
     </section>
 
+    <div id="trailer-modal" class="trailer-modal">
+      <div class="trailer-content">
+          <span id="close-trailer" class="close">&times;</span>
+            <iframe
+              id="trailer-frame"
+              width="100%"
+              height="500"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+      </div>
+    </div>
     <!-- start-footer -->
     <div id="footer"></div>
 
@@ -232,5 +225,6 @@
     <!-- end-footer -->
 
     <script type="module" src="../../js/TvShowDetail.js"></script>
+    <script type="module" src="../../js/Trailer.js"></script>
   </body>
 </html>
