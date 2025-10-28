@@ -11,7 +11,7 @@ function createCard(movie) {
   div.className = "movie-box";
 
   div.innerHTML = `
-    <a class="movie-card" href="./movie-details.html?id=${movie.id}">
+    <a class="movie-card" href="./MovieDetail.html?id=${movie.id}">
       <div class="card-info-top">
         <div class="card-info-ep-top">
           <span>${badgeText}</span>
@@ -23,7 +23,7 @@ function createCard(movie) {
     </a>
     <div class="info">
       <h4 class="vietnam-title">
-        <a href="./movie-details.html?id=${movie.id}">${movie.title}</a>
+        <a href="./MovieDetail.html?id=${movie.id}">${movie.title}</a>
       </h4>
       <h4 class="other-title">
         <a href="#">${originalTitle}</a>
