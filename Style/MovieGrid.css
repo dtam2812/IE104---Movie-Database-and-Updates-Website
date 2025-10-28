@@ -61,7 +61,7 @@ body {
   justify-content: center;
   align-items: start;
   transition: max-height 0.3s ease;
-  padding: 15 px 15px;
+  padding: 15px 15px;
 }
 
 /* Chỉ hiển thị tối đa 2 hàng (ẩn phần dư nếu có) */
