@@ -6,15 +6,17 @@ const trailerModal = document.getElementById("trailer-modal");
 const trailerFrame = document.getElementById("trailer-frame");
 const closeTrailer = document.getElementById("close-trailer");
 
-// ====== Lấy ID và loại nội dung ====== //
+// Lấy ID và loại nội dung
 const params = new URLSearchParams(window.location.search);
 const contentId = params.get("id");
 const type = params.get("type") || "movie"; // "movie" hoặc "tv"
 
-// ====== Hàm lấy trailer ====== //
+// Hàm lấy trailer
 async function getTrailerKey() {
   try {
-    const res = await fetch(`${BASE_URL}/${type}/${contentId}/videos?api_key=${TMDB_API_KEY}&language=en-US`);
+    const res = await fetch(
+      `${BASE_URL}/${type}/${contentId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
+    );
     const data = await res.json();
 
     if (!data.results || data.results.length === 0) {
@@ -23,13 +25,17 @@ async function getTrailerKey() {
     }
 
     // Ưu tiên trailer chính thức
-    const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+    const trailer = data.results.find(
+      (v) => v.type === "Trailer" && v.site === "YouTube"
+    );
 
     //  Nếu không có, thử teaser
-    const teaser = data.results.find(v => v.type === "Teaser" && v.site === "YouTube");
+    const teaser = data.results.find(
+      (v) => v.type === "Teaser" && v.site === "YouTube"
+    );
 
     //  Nếu vẫn không có, lấy clip đầu tiên trên YouTube
-    const fallback = data.results.find(v => v.site === "YouTube");
+    const fallback = data.results.find((v) => v.site === "YouTube");
 
     const best = trailer || teaser || fallback;
 
@@ -38,7 +44,6 @@ async function getTrailerKey() {
       return null;
     }
 
-    console.log(`🎬 Video chọn: ${best.name} [${best.type}]`);
     return best.key;
   } catch (err) {
     console.error("Lỗi lấy trailer:", err);
@@ -46,7 +51,7 @@ async function getTrailerKey() {
   }
 }
 
-// ====== Mở trailer ====== //
+//Mở trailer
 trailerBtn.addEventListener("click", async () => {
   const key = await getTrailerKey();
   if (!key) {
@@ -59,7 +64,7 @@ trailerBtn.addEventListener("click", async () => {
   document.body.style.overflow = "hidden";
 });
 
-// ====== Đóng trailer ====== //
+//Đóng trailer
 function closeModal() {
   trailerModal.style.display = "none";
   trailerFrame.src = ""; // dừng video
