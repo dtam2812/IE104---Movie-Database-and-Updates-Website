@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="../../style/HeaderAndFooter.css" />
     <link rel="stylesheet" href="../../style/TvShowDetail.css" />
     <link rel="stylesheet" href="../../style/MovieCard.css" />
+    <link rel="stylesheet" href="../../Style/Trailer.css" />
     <link rel="stylesheet" href="../../Style/CastCard.css" />
     <link rel="stylesheet" href="../../Services/reset.css" />
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
@@ -82,7 +83,7 @@
               </div>
 
               <div class="movie-content-action">
-                <a class="play-btn" href="#">
+                <a id="trailer-btn" class="play-btn" href="#">
                   <i class="fa-solid fa-play"></i>
                   <span><strong>Trailer</strong></span>
                 </a>
@@ -195,6 +196,19 @@
       </div>
     </section>
 
+    <div id="trailer-modal" class="trailer-modal">
+      <div class="trailer-content">
+          <span id="close-trailer" class="close">&times;</span>
+            <iframe
+              id="trailer-frame"
+              width="100%"
+              height="500"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+      </div>
+    </div>
     <!-- start-footer -->
     <div id="footer"></div>
 
@@ -211,5 +225,6 @@
     <!-- end-footer -->
 
     <script type="module" src="../../js/TvShowDetail.js"></script>
+    <script type="module" src="../../js/Trailer.js"></script>
   </body>
 </html>

@@ -60,6 +60,7 @@ async function fetchMovieDetails(movieId) {
   }
 }
 
+
 // ========== TẠO HTML CHO 1 DIỄN VIÊN ========== //
 function createActorHTML(actor) {
   const img = actor.profile_path

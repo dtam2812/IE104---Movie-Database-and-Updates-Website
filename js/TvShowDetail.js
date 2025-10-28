@@ -339,7 +339,7 @@ async function loadRecommendedTvShows(tvId) {
 
       const html = `
           <div class="movie-box">
-            <a class="movie-card" href="TvShowDetail.html?id=${show.id}">
+            <a class="movie-card" href="TvShowDetail.html?id=${show.id}&type=tv">
               <div class="card-info-top">
                 <div class="card-info-ep-top"><span>TV Show</span></div>
               </div>

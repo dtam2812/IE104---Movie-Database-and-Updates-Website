@@ -120,14 +120,10 @@ body {
   font-weight: 500;
   font-size: 18px;
   gap: 16px;
-  padding: 12px 12px;
+  padding: 17px 17px;
   border-radius: 100%;
   background-color: #fecf59;
-  background: linear-gradient(
-    39deg,
-    rgba(254, 207, 89, 1),
-    rgba(255, 241, 204, 1)
-  );
+  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -540,3 +536,4 @@ body {
     font-size: 12px;
   }
 }
+
