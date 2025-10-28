@@ -13,9 +13,6 @@ let allResults = [];
 let cachedResults = {};
 let currentPages = { all: 1, movie: 1, tv: 1, person: 1 };
 
-// ✅ Lưu kết quả ban đầu của tab "all" page 1
-let initialAllResults = null;
-
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 let castCardTemplate = "";
@@ -38,30 +35,7 @@ async function loadResults(type = "all") {
   const currentPage = currentPages[type];
   const cacheKey = `${type}_${currentPage}`;
 
-  console.log("🔍 loadResults called:", {
-    type,
-    currentPage,
-    hasInitialCache: !!initialAllResults,
-  });
-
-  // ✅ Nếu là tab "all" page 1 và đã có kết quả ban đầu → dùng luôn
-  if (type === "all" && currentPage === 1 && initialAllResults) {
-    console.log("🔁 Using cached initial results:", initialAllResults.length);
-    console.log(
-      "🎯 Titles:",
-      initialAllResults.map((r) => r.title || r.name)
-    );
-    allResults = initialAllResults;
-    renderResults();
-    renderPagination(
-      currentPage,
-      cachedResults["all_1"]?.totalPages || 1,
-      type
-    );
-    return;
-  }
-
-  // ✅ Kiểm tra cache cho các tab khác
+  // 🚫 KHÔNG dùng cache cho "all"
   if (type !== "all" && cachedResults[cacheKey]) {
     allResults = cachedResults[cacheKey].results;
     renderResults();
@@ -109,19 +83,6 @@ async function loadResults(type = "all") {
         (a, b) => (b.popularity || 0) - (a.popularity || 0)
       );
       totalPages = Math.max(movieData.total_pages, tvData.total_pages);
-
-      console.log("📊 Total results before slice:", results.length);
-      console.log(
-        "🎬 First 18 titles:",
-        results.slice(0, 18).map((r) => r.title || r.name)
-      );
-
-      // ✅ Lưu kết quả ban đầu của page 1
-      if (currentPage === 1) {
-        initialAllResults = results.slice(0, 18);
-        cachedResults["all_1"] = { results: initialAllResults, totalPages };
-        console.log("💾 Saved initial results:", initialAllResults.length);
-      }
     } else {
       const endpoint = {
         movie: "search/movie",
@@ -157,16 +118,11 @@ async function loadResults(type = "all") {
   }
 }
 
-// ✅ Reset về trang 1 khi chuyển tab
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     currentFilter = btn.dataset.type;
-
-    // Reset về trang 1 khi chuyển tab
-    currentPages[currentFilter] = 1;
-
     loadResults(currentFilter);
   });
 });
@@ -215,41 +171,71 @@ function renderTvCard(item) {
 }
 
 function renderPersonCard(item) {
-  const cardDiv = document.createElement("div");
-  cardDiv.className = "cast-card";
-  cardDiv.onclick = () =>
-    (window.location.href = `../pages/cast.html?id=${item.id}`);
+  const profilePath = item.profile_path
+    ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
+    : "";
 
-  const imageDiv = document.createElement("div");
-  imageDiv.className = "cast-image";
+  // Nếu có template, dùng nó
+  if (castCardTemplate) {
+    const html = castCardTemplate
+      .replace(/{{id}}/g, item.id)
+      .replace(/{{profile_path}}/g, profilePath)
+      .replace(/{{name}}/g, item.name || "Không rõ")
+      .replace(/{{original_name}}/g, item.original_name || "");
 
-  if (item.profile_path) {
-    const img = document.createElement("img");
-    img.src = `https://image.tmdb.org/t/p/w300${item.profile_path}`;
-    img.alt = item.name;
-    imageDiv.appendChild(img);
+    grid.insertAdjacentHTML("beforeend", html);
   } else {
-    const fallback = document.createElement("div");
-    fallback.className = "avatar-fallback";
-    fallback.textContent = (item.name?.[0] || "?").toUpperCase();
-    imageDiv.appendChild(fallback);
+    // Fallback: tạo bằng JavaScript
+    const cardDiv = document.createElement("div");
+    cardDiv.className = "cast-box";
+
+    const link = document.createElement("a");
+    link.className = "cast-card";
+    link.href = `../pages/cast.html?id=${item.id}`;
+
+    const imageDiv = document.createElement("div");
+    imageDiv.className = "cast-img";
+
+    if (profilePath) {
+      const img = document.createElement("img");
+      img.src = profilePath;
+      img.alt = item.name;
+      imageDiv.appendChild(img);
+    } else {
+      const fallback = document.createElement("div");
+      fallback.className = "avatar-fallback";
+      fallback.textContent = (item.name?.[0] || "?").toUpperCase();
+      imageDiv.appendChild(fallback);
+    }
+
+    link.appendChild(imageDiv);
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "info";
+
+    const nameH4 = document.createElement("h4");
+    nameH4.className = "name";
+    const nameLink = document.createElement("a");
+    nameLink.href = `../pages/cast.html?id=${item.id}`;
+    nameLink.textContent = item.name || "Không rõ";
+    nameH4.appendChild(nameLink);
+
+    const otherNameH4 = document.createElement("h4");
+    otherNameH4.className = "other-name";
+    const otherNameLink = document.createElement("a");
+    otherNameLink.href = "#";
+    otherNameLink.textContent = item.original_name || "";
+    otherNameH4.appendChild(otherNameLink);
+
+    infoDiv.appendChild(nameH4);
+    if (item.original_name) {
+      infoDiv.appendChild(otherNameH4);
+    }
+
+    cardDiv.appendChild(link);
+    cardDiv.appendChild(infoDiv);
+    grid.appendChild(cardDiv);
   }
-
-  const infoDiv = document.createElement("div");
-  infoDiv.className = "cast-info";
-  const name = document.createElement("h3");
-  name.textContent = item.name || "Không rõ";
-  infoDiv.appendChild(name);
-
-  if (item.original_name) {
-    const orig = document.createElement("p");
-    orig.className = "original-name";
-    orig.textContent = item.original_name;
-    infoDiv.appendChild(orig);
-  }
-
-  cardDiv.append(imageDiv, infoDiv);
-  grid.appendChild(cardDiv);
 }
 
 function renderPagination(page, total, type) {

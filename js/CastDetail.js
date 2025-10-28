@@ -15,16 +15,20 @@ let currentPage = 1;
 const perPage = 10;
 let allMovies = [];
 let movieCardTemplate = "";
+let tvCardTemplate = "";
 
-// Load template MovieCardRender
-fetch("../components/MovieCardRender.html")
-  .then((res) => res.text())
-  .then((html) => {
-    movieCardTemplate = html;
+// Load cả hai template
+Promise.all([
+  fetch("../components/MovieCardRender.html").then((res) => res.text()),
+  fetch("../components/TvShowCardRender.html").then((res) => res.text()),
+])
+  .then(([movieHtml, tvHtml]) => {
+    movieCardTemplate = movieHtml;
+    tvCardTemplate = tvHtml;
     loadPersonDetail();
     loadPersonMovies();
   })
-  .catch((err) => console.error("Không tải được MovieCardRender:", err));
+  .catch((err) => console.error("Không tải được template:", err));
 
 // Lấy chi tiết diễn viên
 async function loadPersonDetail() {
@@ -38,8 +42,6 @@ async function loadPersonDetail() {
       personName.textContent = "Không tìm thấy diễn viên";
       return;
     }
-
-    console.log(data);
 
     personName.textContent = data.name || "Đang cập nhật";
     alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
@@ -55,7 +57,7 @@ async function loadPersonDetail() {
   }
 }
 
-// Lấy danh sách phim đã tham gia
+// Lấy danh sách phim + tv show đã tham gia
 async function loadPersonMovies() {
   try {
     const res = await fetch(
@@ -64,7 +66,7 @@ async function loadPersonMovies() {
     const data = await res.json();
 
     if (!data || !data.cast) {
-      moviesGrid.innerHTML = "<p>Không có phim nào được tìm thấy.</p>";
+      moviesGrid.innerHTML = "<p>Không có dữ liệu được tìm thấy.</p>";
       return;
     }
 
@@ -76,9 +78,9 @@ async function loadPersonMovies() {
   }
 }
 
-//  Render phim theo trang
+// Render phim và tv theo trang
 function renderMoviesPage() {
-  if (!movieCardTemplate) return;
+  if (!movieCardTemplate || !tvCardTemplate) return;
 
   moviesGrid.innerHTML = "";
   const totalPages = Math.ceil(allMovies.length / perPage);
@@ -91,15 +93,19 @@ function renderMoviesPage() {
     return;
   }
 
-  currentMovies.forEach((movie) => {
-    const poster = movie.poster_path
-      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
+  currentMovies.forEach((item) => {
+    const poster = item.poster_path
+      ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
       : "https://via.placeholder.com/300x450?text=No+Image";
-    const title = movie.title || movie.name || "Không rõ";
-    const original_title = movie.original_title || movie.original_name || "";
+    const title = item.title || item.name || "Không rõ";
+    const original_title = item.original_title || item.original_name || "";
 
-    let cardHTML = movieCardTemplate
-      .replace(/{{id}}/g, movie.id)
+    // Chọn template phù hợp
+    let template =
+      item.media_type === "tv" ? tvCardTemplate : movieCardTemplate;
+
+    let cardHTML = template
+      .replace(/{{id}}/g, item.id)
       .replace(/{{poster}}/g, poster)
       .replace(/{{title}}/g, title)
       .replace(/{{original_title}}/g, original_title);
@@ -110,7 +116,7 @@ function renderMoviesPage() {
   renderPaginationModern(currentPage, totalPages);
 }
 
-//  Render pagination kiểu hiện đại
+// pagination
 function renderPaginationModern(page, total) {
   const oldPagination = document.querySelector(".pagination-modern");
   if (oldPagination) oldPagination.remove();
@@ -120,7 +126,6 @@ function renderPaginationModern(page, total) {
   const container = document.createElement("div");
   container.classList.add("pagination-modern");
 
-  // Nút Prev
   const prevBtn = document.createElement("button");
   prevBtn.classList.add("page-circle");
   prevBtn.innerHTML = "&#8592;";
@@ -133,7 +138,6 @@ function renderPaginationModern(page, total) {
     }
   });
 
-  // Hộp thông tin Trang
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
@@ -143,7 +147,6 @@ function renderPaginationModern(page, total) {
     <span class="page-total">${total}</span>
   `;
 
-  // Nút Next
   const nextBtn = document.createElement("button");
   nextBtn.classList.add("page-circle");
   nextBtn.innerHTML = "&#8594;";
