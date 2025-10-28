@@ -16,7 +16,7 @@ function createCard(movie) {
         <div class="card-info-ep-top">
           <span>${badgeText}</span>
         </div>
-      </div>
+      </div>  
       <div>
         <img src="${poster}" alt="${movie.title}">
       </div>
@@ -67,7 +67,7 @@ async function fetchTMDB(endpoint, badgeText, badgeColor) {
       subtitle: m.original_title || m.original_name || "",
       poster: m.poster_path
         ? `https://image.tmdb.org/t/p/w300${m.poster_path}`
-        : "https://via.placeholder.com/300x450?text=No+Image",
+        : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster",
       badges: [{ text: badgeText, type: badgeColor }],
     }));
   } catch (err) {
@@ -79,10 +79,10 @@ async function fetchTMDB(endpoint, badgeText, badgeColor) {
 // composite function to load all grids
 async function loadMovieGrids() {
   const [newMovies, trendingSeries, highRated, popularTV] = await Promise.all([
-    fetchTMDB("movie/now_playing", "Mới", "gray"),
-    fetchTMDB("trending/tv/week", "Series", "blue"),
-    fetchTMDB("movie/top_rated", "T.Minh", "green"),
-    fetchTMDB("tv/popular", "Đình Đám", "gray"),
+    fetchTMDB("movie/now_playing", "Movie", "gray"),
+    fetchTMDB("trending/tv/week", "TvShow", "blue"),
+    fetchTMDB("movie/top_rated", "Movie", "green"),
+    fetchTMDB("tv/popular", "TvShow", "gray"),
   ]);
 
   renderGrid("movieGridNew", newMovies);
