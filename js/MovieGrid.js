@@ -9,6 +9,7 @@ function createCard(movie) {
 
   const div = document.createElement("div");
   div.className = "movie-box";
+  
 
   div.innerHTML = `
     <a class="movie-card" href="./MovieDetail.html?id=${movie.id}">
