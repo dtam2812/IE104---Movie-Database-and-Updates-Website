@@ -1,0 +1,539 @@
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.movie-detail {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.movie-detail-container {
+  width: 100%;
+  height: 700px;
+  background-color: black;
+}
+
+.top-detail-wrap {
+  position: relative;
+  width: 100%;
+  height: 700px;
+  background-color: black;
+  overflow: hidden;
+  opacity: 0.9;
+}
+
+.background-fade {
+  background: url(https://static.nutscdn.com/vimg/1920-0/c710b34eb7fa37b24f464e6d74c77614.webp);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  z-index: -10;
+}
+
+.background-fade::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 700px;
+  background: linear-gradient(to bottom, transparent, #000);
+  z-index: 1;
+}
+
+.movie-content {
+  display: flex;
+  padding: 0px 50px;
+  gap: 35px;
+  margin-top: 50px;
+  justify-content: center;
+  margin-top: 150px;
+}
+
+.movie-content-left img {
+  height: 450px;
+}
+
+.movie-content-title h3 {
+  font-size: 30px;
+}
+
+.movie-content-type {
+  display: flex;
+  gap: 10px;
+}
+
+.movie-content-type span {
+  padding: 8px 15px;
+  font-size: 13px;
+  border-radius: 10px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.movie-content-type span:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.play-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 18px;
+  gap: 16px;
+  padding: 12px 28px;
+  border-radius: 32px;
+  background-color: #fecf59;
+  background: linear-gradient(
+    39deg,
+    rgba(254, 207, 89, 1),
+    rgba(255, 241, 204, 1)
+  );
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-btn:hover {
+  background: linear-gradient(39deg, #ffd84d, #ffe9a8);
+  border-color: #fff4c2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5);
+}
+
+.like-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 18px;
+  gap: 16px;
+  padding: 17px 17px;
+  border-radius: 100%;
+  background-color: #fecf59;
+  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.like-btn:hover {
+  background: linear-gradient(39deg, #ffd84d, #ffe9a8);
+  border-color: #fff4c2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5);
+}
+
+.movie-content-review {
+  display: flex;
+  gap: 20px;
+}
+
+.movie-content-score {
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid #f0d25c;
+  font-weight: 500;
+  line-height: 24px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.movie-content-score p {
+  color: #f0d25c;
+  position: relative;
+  font-weight: 500;
+  padding-right: 4px;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.movie-content-score span {
+  color: #fff;
+}
+
+.movie-content-age {
+  display: inline-flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #f0d25c;
+  font-weight: 500;
+  line-height: 24px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: black;
+}
+
+.movie-content-overview {
+  line-height: 20px;
+  max-width: 700px;
+  color: #fff;
+}
+
+.movie-content-overview span {
+  font-weight: bold;
+}
+
+.movie-content-director span {
+  font-weight: bold;
+}
+
+.movie-content-action {
+  display: flex;
+  gap: 20px;
+}
+
+.movie-content-right {
+  color: #fff;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ====== TABS STYLES ====== */
+.movie-tabs {
+  display: none;
+}
+
+/* ====== TAB CONTENT - DESKTOP: Hiển thị tất cả ====== */
+.movie-intro {
+  background-color: #191b24;
+}
+
+/* Desktop: Hiển thị tất cả tabs */
+.tab-content {
+  display: block;
+}
+
+/* GRID LAYOUT CHUNG */
+.grid-layout {
+  background-color: #191b24;
+  color: white;
+  padding: 30px;
+  min-height: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.grid-layout h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+  border-bottom: 2px solid #fecf59;
+  padding-bottom: 10px;
+}
+
+/* Desktop: Layout 2x2 cho 4 tab đầu */
+.movie-intro {
+  display: grid;
+  grid-template-columns: 7fr 3fr;
+  gap: 20px;
+  padding: 30px;
+  background-color: #191b24;
+}
+
+/* Tab Đề xuất full width */
+#recommend {
+  grid-column: 1 / -1;
+}
+
+/*TAB 1: DIỄN VIÊN*/
+.actor-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.circle-actor {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px 30px;
+  justify-items: center;
+  align-items: start;
+}
+
+.circle-actor.expanded {
+  max-height: none;
+}
+
+.view-more {
+  color: #fecf59;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+  margin-top: 10px;
+}
+
+.view-more:hover {
+  color: #ffd84d;
+}
+
+/* TAB 2: THÔNG TIN*/
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.movie-info {
+  display: flex;
+  gap: 10px;
+  font-size: 18px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.movie-info-title {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 150px;
+}
+
+.movie-info-value {
+  color: #fff;
+}
+
+/*TAB 3: ĐỀ XUẤT */
+.recommend-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.movie-list {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 cột cố định */
+  grid-auto-rows: auto;
+  gap: 32px;
+  justify-content: center;
+  align-items: start;
+  transition: max-height 0.3s ease;
+  padding: 15px 15px;
+}
+
+.movie-box {
+  margin-bottom: 10px;
+}
+
+/*RESPONSIVE - MOBILE*/
+@media only screen and (max-width: 1090px) {
+  /* MOBILE: Hiện tabs */
+  .movie-tabs {
+    display: flex !important;
+    gap: 20px;
+    padding: 20px 30px;
+    background-color: #191b24;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+  }
+
+  .movie-tabs .tab {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .movie-tabs .tab.active {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .movie-tabs .tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #fecf59;
+  }
+
+  .movie-tabs .tab:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* MOBILE: Chuyển layout từ grid sang block */
+  .movie-intro {
+    display: block !important;
+    padding: 0;
+    background-color: #191b24;
+  }
+
+  /* MOBILE: Ẩn tất cả tab content */
+  .tab-content {
+    display: none !important;
+  }
+
+  /* MOBILE: Chỉ hiện tab có class active */
+  .tab-content.active {
+    display: block !important;
+  }
+
+  .grid-layout {
+    border: none;
+    border-radius: 0;
+  }
+
+  .movie-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .movie-content-left img {
+    width: auto;
+    height: 220px;
+    margin-top: -100px;
+  }
+
+  .movie-content-title h3 {
+    font-size: 20px;
+    margin-top: -10px;
+  }
+
+  .movie-content-review {
+    justify-content: center;
+  }
+
+  .movie-content-type {
+    justify-content: center;
+  }
+
+  .movie-content-type span {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .movie-content-action {
+    justify-content: center;
+  }
+
+  .movie-content-overview {
+    font-size: 12px;
+  }
+
+  .play-btn {
+    font-size: 12px;
+    padding: 2% 60px;
+  }
+
+  .movie-content-score {
+    font-size: 12px;
+    padding: 0px 3px;
+  }
+
+  .movie-content-score p {
+    font-size: 10px;
+  }
+
+  .movie-content-age {
+    font-size: 12px;
+    padding: 0px 3px;
+  }
+
+  .movie-content-director {
+    font-size: 12px;
+  }
+
+  .grid-layout {
+    padding: 20px;
+  }
+
+  .grid-layout h3 {
+    font-size: 20px;
+  }
+
+  .movie-info-title,
+  .movie-info-value {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 980px) {
+  .movie-list {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+}
+
+@media only screen and (max-width: 600px) {
+  .movie-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .grid-layout {
+    padding: 15px;
+  }
+
+  .movie-tabs {
+    padding: 15px 20px;
+    gap: 15px;
+  }
+
+  .movie-tabs .tab {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+}
+
+@media only screen and (max-width: 544px) {
+  .circle-actor {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    justify-items: center;
+  }
+
+  .movie-info-title,
+  .movie-info-value {
+    font-size: 14px;
+  }
+
+  .grid-layout h3 {
+    font-size: 18px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .circle-actor {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .movie-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .grid-layout h3 {
+    font-size: 16px;
+  }
+
+  .movie-info-title,
+  .movie-info-value {
+    font-size: 12px;
+  }
+}
+

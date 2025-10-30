@@ -63,12 +63,6 @@ body {
 .overlay-v {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.8) 60%,
-    rgba(0, 0, 0, 1) 100%
-  );
 }
 .overlay-h {
   position: absolute;
@@ -106,24 +100,27 @@ body {
 .left {
   max-width: 800px;
   width: 100%;
-  margin-left: 32px;
+  margin-bottom: 100px;
 }
 .brand {
-  max-width: min(100%, 500px);
-  height: 550px;
+  max-width: min(100%, 800px);
   overflow: hidden;
   border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  background: #000;
   position: relative;
+}
+@media (min-width: 800px) {
+  .brand {
+    border-radius: 16px;
+  }
 }
 .en {
   color: var(--tag);
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 600;
 }
 @media (min-width: 640px) {
   .en {
-    font-size: 15px;
+    font-size: 60px;
   }
 }
 .row {
@@ -132,66 +129,112 @@ body {
   gap: 6px;
 }
 .badge {
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 15px;
+  margin: 8px 10px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
 }
+
+.badge:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.badge b,
+.badge span {
+  font-size: 16px;
+  line-height: 1.3;
+}
+
 .badge b {
   color: #000;
 }
+
 .badge.white {
-  background: #fff;
-  border-color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #000;
+  backdrop-filter: blur(4px);
+  opacity: 0.8;
 }
+
+.badge.white b {
+  color: #fff;
+}
+
 .badge.grad {
   background: linear-gradient(222deg, #ffd875 0%, #fff 100%);
   border: none;
 }
+
 .badge.outline-yellow {
-  border-color: #f0d25c;
+  border: 1px solid rgba(255, 216, 117, 0.6);
   background: transparent;
+  color: #ffd875;
 }
+
 .badge .imdb {
-  color: #f0d25c;
-  font-size: 10px;
+  color: #ffd875;
+  font-size: 11px;
+  font-weight: 700;
   margin-right: 4px;
 }
-.badge span,
-.badge b {
-  font-size: 12px;
-}
+
 .desc {
-  margin-top: 4px;
+  margin-top: 12px;
   color: #fff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
 }
 .controls {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-top: 8px;
+  margin-top: 20px;
 }
 .play {
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: linear-gradient(39deg, var(--yellow) 0%, var(--yellow2) 100%);
   display: inline-flex;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0 5px 10px 5px rgba(255, 218, 125, 0.1);
-  transform: translateZ(0);
-  transition: transform 0.15s;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
+  gap: 16px;
+  padding: 8px 16px;
+  border-radius: 32px;
+  background-color: #fecf59;
+  background: linear-gradient(
+    39deg,
+    rgba(254, 207, 89, 1),
+    rgba(255, 241, 204, 1)
+  );
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
+
 @media (min-width: 768px) {
   .play {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 40px;
   }
 }
 .play:hover {
-  transform: scale(1.05);
+  background: linear-gradient(39deg, #ffd84d, #ffe9a8);
+  border-color: #fff4c2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(254, 207, 89, 0.5);
 }
 .actions {
   display: flex;
@@ -209,10 +252,12 @@ body {
   border-radius: 999px;
   display: grid;
   place-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 @media (min-width: 768px) {
   .actions button {
-    height: 50px;
+    height: 40px;
     min-width: 68px;
   }
 }

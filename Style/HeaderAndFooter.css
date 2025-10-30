@@ -274,7 +274,7 @@
 }
 
 /* .mobile */
-@media only screen and (max-width: 1391px) {
+@media only screen and (max-width: 1514px) {
   .header .header-container {
     display: flex;
     align-items: center;
