@@ -1,7 +1,8 @@
-// Cấu hình
+// Cấu hình API 
 const API_KEY = '8d7f1f7ef4ead0588ee2c66d06f75799'
 const BASE_URL = 'https://api.themoviedb.org/3'
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w300'
+const PLACEHOLDER_IMAGE = 'https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster'
 const LANGUAGE = 'vi-VN'
 
 // Lưu thông tin filter hiện tại
@@ -12,44 +13,51 @@ let currentGenre = []
 let currentArrange = 'new'
 let totalPages = 100
 
-// Template HTML
+// Template Card cho movie và tvShows
 let movieCardTemplate = ''
+let tvShowCardTemplate = ''
 
 // Genres chỉ dành cho phim lẻ và phim bộ
 const movieOnlyGenres = ['28', '12', '14', '36', '27', '10402', '10749', '878', '53', '10752']
 const tvOnlyGenres = ['10759', '10762', '10763', '10764', '10765', '10766', '10767', '10768']
 
 // Khai báo các DOM hay dùng
-const filterToggle = document.querySelector('.filter__toggle')
-const filterSelect = document.querySelector('.filter__select')
-const faFilter = document.querySelector('.fa-solid.fa-filter')
-const filterCloseBtn = document.querySelector('.filter__close-btn')
-const filterBtn = document.querySelector('.filter__select-btn')
-const movieContainer = document.querySelector('.movie')
-const pageCurrentSpan = document.querySelector('.pagination-page-current')
-const pageTotalSpan = document.querySelector('.pagination__main span:last-child')
-const leftPag = document.querySelector('.pagination-left-arrow')
-const rightPag = document.querySelector('.pagination-right-arrow')
 
-const selectListItemCountry = document.querySelectorAll('.filter__select-list.country .filter__select-list-item')
-const selectListItemCountryAll = document.querySelector('.filter__select-list.country .all')
-const itemMovieType = document.querySelectorAll('.filter__select-list.movie-type .filter__select-list-item')
-const itemMovieGenre = document.querySelectorAll('.filter__select-list.movie-genre .filter__select-list-item')
-const itemMovieGenreAll = document.querySelector('.filter__select-list.movie-genre .all')
-const itemArrange = document.querySelectorAll('.filter__select-list.arrange .filter__select-list-item')
+// Các DOM bên trong bộ lọc
+const filterToggle = document.querySelector('.filter__toggle')  // Nút "Bộ lọc"
+const filterSelect = document.querySelector('.filter__select')  // Toàn bộ bộ lọc khi mở
+const faFilter = document.querySelector('.fa-solid.fa-filter')  // Icon filter bên cạnh chữ "Bộ lọc"
+const filterCloseBtn = document.querySelector('.filter__close-btn')  // Nút "Đóng" 
+const filterBtn = document.querySelector('.filter__select-btn')  // Nút "Lọc kết quả"
 
-// Filter toggle
+const selectListItemCountry = document.querySelectorAll('.filter__select-list.country .filter__select-list-item')  // Danh sách các item trong mục "Quốc gia"
+const selectListItemCountryAll = document.querySelector('.filter__select-list.country .all')  // Item "Tất cả" trong mục "Quốc gia"
+const itemMovieType = document.querySelectorAll('.filter__select-list.movie-type .filter__select-list-item')  // Danh sách các item trong mục "Loại phim"
+const itemMovieGenre = document.querySelectorAll('.filter__select-list.movie-genre .filter__select-list-item')  // Danh sách các item trong mục "Thể loại"
+const itemMovieGenreAll = document.querySelector('.filter__select-list.movie-genre .all')  // Item "Tất cả" trong mục "Thể loại"
+const itemArrange = document.querySelectorAll('.filter__select-list.arrange .filter__select-list-item')  // Danh sách các item trong mục "Sắp xếp"
+
+// Các DOM phần khung phim và phân trang
+const movieContainer = document.querySelector('.movie')  // Khung chứa các phim
+const pageCurrentSpan = document.querySelector('.pagination-page-current')  // Số trang hiện tại
+const pageTotalSpan = document.querySelector('.pagination__main span:last-child')  // Tổng số trang
+const leftPag = document.querySelector('.pagination-left-arrow')  // Nút chuyển về trang trước
+const rightPag = document.querySelector('.pagination-right-arrow')  // Nút chuyển ra trang sau
+
+
+// Ẩn hiện filter toggle
 filterToggle.addEventListener('click', () => {
     filterSelect.classList.toggle('hidden')
     faFilter.classList.toggle('fa-filter-active')
 })
 
+// Đóng filter toggle khi click nút "Lọc kết quả"
 filterCloseBtn.addEventListener('click', () => {
     filterSelect.classList.add('hidden')
     faFilter.classList.remove('fa-filter-active')
 })
 
-// Quốc gia
+// Active 1 item duy nhất trong mục "Quốc gia"
 selectListItemCountry.forEach(current => {
     current.addEventListener('click', () => {
         const currentActive = document.querySelector('.filter__select-list.country .filter__select--active')
@@ -60,15 +68,16 @@ selectListItemCountry.forEach(current => {
     })
 })
 
-// Loại phim
+// Hàm thay đổi các item "Thể loại" tương ứng với từng "Loại phim"
 function updateGenreVisibility(type) {
-    const allGenreItems = document.querySelectorAll('.filter__select-list.movie-genre .filter__select-list-item')
+    const allGenreItems = document.querySelectorAll('.filter__select-list.movie-genre .filter__select-list-item') 
     
     allGenreItems.forEach(item => {
         const genreId = item.getAttribute('data-genre')
         
         if(genreId === 'all') return
         
+        // Nếu "Loại phim" là phim lẻ thì ẩn các item chỉ có ở phim bộ, là phim bộ thì ẩn các item chỉ có ở phim lẻ, là tất cả thì hiện hết
         if(type === 'movie') {
             if(tvOnlyGenres.includes(genreId)) {
                 item.classList.add('hidden')
@@ -88,11 +97,19 @@ function updateGenreVisibility(type) {
         }
     })
     
-    if(!document.querySelector('.filter__select-list.movie-genre .filter__select--active')) {
+    checkGenreLastActive()
+}
+
+// Hàm active item "Tất cả" nếu không còn item nào active trong mục "Thể loại"
+function checkGenreLastActive() {
+    const lastActive = document.querySelector('.filter__select-list.movie-genre .filter__select--active')
+
+    if(!lastActive) {
         itemMovieGenreAll.classList.add('filter__select--active')
     }
 }
 
+// Active 1 item duy nhất trong mục "Loại phim"
 itemMovieType.forEach(current => {
     current.addEventListener('click', () => {
         const itemMovieTypeActive = document.querySelector('.filter__select-list.movie-type .filter__select--active')
@@ -107,7 +124,7 @@ itemMovieType.forEach(current => {
     })
 })
 
-// Thể loại
+// Active item "Tất cả" sẽ xoá active của các item khác trong "Thể loại"
 itemMovieGenreAll.addEventListener('click', () => {
     itemMovieGenre.forEach(current => {
         current.classList.remove('filter__select--active')
@@ -115,19 +132,17 @@ itemMovieGenreAll.addEventListener('click', () => {
     itemMovieGenreAll.classList.add('filter__select--active')
 })
 
+// Cho phép active nhiều item trừ item "Tất cả" trong mục "Thể loại"
 itemMovieGenre.forEach(current => {
     current.addEventListener('click', () => {
         itemMovieGenreAll.classList.remove('filter__select--active')
         current.classList.toggle('filter__select--active')
 
-        const lastActive = document.querySelector('.filter__select-list.movie-genre .filter__select--active')
-        if(!lastActive) {
-            itemMovieGenreAll.classList.add('filter__select--active')
-        }
+        checkGenreLastActive()
     })
 })
 
-// Sắp xếp
+// Active 1 item trong mục "Sắp xếp"
 itemArrange.forEach(current => {
     current.addEventListener('click', () => {
         const itemArrangeActive = document.querySelector('.filter__select-list.arrange .filter__select--active')
@@ -139,9 +154,10 @@ itemArrange.forEach(current => {
     })
 })
 
-// Nav
+// Hàm lấy params từ URL
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search)
+
     return {
         type: params.get('type'),
         genre: params.get('genre'),
@@ -149,27 +165,27 @@ function getUrlParams() {
     }
 }
 
-// Reset về mặc định
+// Reset tất cả các mục trong filter về mặc định
 function resetFiltersToDefault() {
-    // Quốc gia
+    // Active item "Tất cả" trong mục "Quốc gia"
     selectListItemCountry.forEach(item => {
         item.classList.remove('filter__select--active')
     })
     selectListItemCountryAll.classList.add('filter__select--active')
     
-    // Loại phim
+    // Active item "Tất cả" trong mục "Loại phim"
     itemMovieType.forEach(item => {
         item.classList.remove('filter__select--active')
     })
     document.querySelector('.filter__select-list.movie-type [data-type="all"]').classList.add('filter__select--active')
     
-    // Thể loại
+    // Active item "Tất cả" trong mục "Thể loại"
     itemMovieGenre.forEach(item => {
         item.classList.remove('filter__select--active')
     })
     itemMovieGenreAll.classList.add('filter__select--active')
     
-    // Sắp xếp
+    // Active item "Mới nhất" trong mục "Sắp xếp"
     itemArrange.forEach(item => {
         item.classList.remove('filter__select--active')
     })
@@ -185,13 +201,13 @@ function resetFiltersToDefault() {
     updateGenreVisibility('all')
 }
 
-// Áp dụng params từ URL
+// Hàm áp dụng params từ URL
 function applyUrlParams() {
     const params = getUrlParams()
 
     resetFiltersToDefault()
     
-    // Set loại phim (movie/tv/all)
+    // Active theo "Loại phim" tương ứng lấy từ URL
     if(params.type) {
         currentMovieType = params.type
 
@@ -207,7 +223,7 @@ function applyUrlParams() {
         updateGenreVisibility(params.type)
     }
     
-    // Set thể loại
+    // Active theo "Thể loại" tương ứng lấy từ URL
     if(params.genre) {
         currentGenre = [params.genre]
 
@@ -219,7 +235,7 @@ function applyUrlParams() {
         }
     }
     
-    // Set quốc gia
+    // Active theo "Quốc gia" tương ứng lấy từ URL
     if(params.country) {
         currentCountry = params.country
 
@@ -232,12 +248,19 @@ function applyUrlParams() {
     }
 }
 
-// Load template
+// Khởi tạo danh sách phim
 async function initApp() {
     try {
-        const response = await fetch('../components/MovieCardRender.html')
-        movieCardTemplate = await response.text()
+        // Load 2 khung hiển thị cho phim lẻ và phim bộ
+        const [movieResponse, tvResponse] = await Promise.all([
+            fetch('../components/MovieCardRender.html'),
+            fetch('../components/TvShowCardRender.html')
+        ])
+        
+        movieCardTemplate = await movieResponse.text()
+        tvShowCardTemplate = await tvResponse.text()
 
+        // Nếu là mục "Bộ lọc" thì mở filter toggle
         const params = getUrlParams()
         const isFilterNav = params.type === 'all' && !params.genre && !params.country
 
@@ -256,16 +279,20 @@ async function initApp() {
 
 initApp()
 
-// Render phim
+// Render phim theo "Loại phim"
 async function render() {
-    if(currentMovieType === 'all') {
-        await renderBothMovieAndTV()
-    } else {
-        await renderOneType()
+    try {
+        if(currentMovieType === 'all') {
+            await renderBothMovieAndTV()
+        } else {
+            await renderOneType()
+        }
+    } catch (error) {
+        console.log('Lỗi render:', error)
     }
 }
 
-// Render 1 loại
+// Render 1 loại là phim lẻ hoặc phim bộ
 async function renderOneType() {
     try {
         const apiUrl = createApiUrl(currentMovieType, currentPage)
@@ -276,13 +303,14 @@ async function renderOneType() {
         const movieList = data.results
         totalPages = Math.min(data.total_pages, 100)
         updatePageNumber()
-        displayMovies(movieList, currentMovieType)
+        displayMovies(movieList)
     } catch (error) {
         console.log('Lỗi:', error)
+        throw error
     }
 }
 
-// Render 2 loại
+// Render cả phim lẻ và phim bộ
 async function renderBothMovieAndTV() {
     try {
         const movieApiUrl = createApiUrl('movie', currentPage)
@@ -296,35 +324,30 @@ async function renderBothMovieAndTV() {
         const movieData = await movieResponse.json()
         const tvData = await tvResponse.json()
         
-        const allMovies = []
-        
-        // Lấy 10 phim lẻ
-        for(let i = 0; i < Math.min(10, movieData.results.length); i++) {
-            allMovies.push({
-                ...movieData.results[i],
-                movieType: 'movie'
-            })
-        }
-        
-        // Lấy 10 phim bộ
-        for(let i = 0; i < Math.min(10, tvData.results.length); i++) {
-            allMovies.push({
-                ...tvData.results[i],
-                movieType: 'tv'
-            })
+        // Lấy 10 phim đầu mỗi loại rồi trộn theo thuật toán xào bài Fisher-Yates
+        const movie10 = movieData.results.slice(0, 10)
+        const tv10 = tvData.results.slice(0, 10)
+        const mergeAll = [...movie10, ...tv10]
+
+        for(let i = mergeAll.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = mergeAll[i];
+            mergeAll[i] = mergeAll[j];
+            mergeAll[j] = temp;
         }
         
         const maxPages = Math.max(movieData.total_pages, tvData.total_pages)
         totalPages = Math.min(maxPages, 100)
 
         updatePageNumber()
-        displayMovies(allMovies, 'all')
+        displayMovies(mergeAll)
     } catch (error) {
         console.log('Lỗi:', error)
+        throw error
     }
 }
 
-// Tạo API
+// Tạo API theo bộ lọc người dùng chọn
 function createApiUrl(type, page) {
     let url = `${BASE_URL}/discover/${type}?api_key=${API_KEY}&language=${LANGUAGE}&page=${page}`
     
@@ -351,34 +374,34 @@ function createApiUrl(type, page) {
     return url
 }
 
-// Movie-card-render
-function displayMovies(movieList, type) {
+// Movie-card-render 
+function displayMovies(movieList) {
     let html = ''
     
     for(let i = 0; i < movieList.length; i++) {
         const movie = movieList[i]
         
-        let isMovie = false
-        if(type === 'all') {
-            isMovie = (movie.movieType === 'movie')
-        } else {
-            isMovie = (type === 'movie')
-        }
-        
+        // Xác định phim lẻ hay phim bộ
+        const isMovie = movie.title !== undefined
         const movieId = movie.id
         const movieName = isMovie ? movie.title : movie.name
         const originalName = isMovie ? movie.original_title : movie.original_name
-        const posterPath = IMAGE_URL + movie.poster_path
         
-        let cardHtml = movieCardTemplate
+        // Xử lý poster: Nếu không có thì dùng placeholder
+        const posterPath = movie.poster_path 
+            ? IMAGE_URL + movie.poster_path 
+            : PLACEHOLDER_IMAGE
+        
+        // Chọn khung phù hợp
+        const template = isMovie ? movieCardTemplate : tvShowCardTemplate
+        
+        // Replace các giá trị
+        let cardHtml = template
             .replace(/{{id}}/g, movieId)
             .replace(/{{poster}}/g, posterPath)
             .replace(/{{title}}/g, movieName)
             .replace(/{{original_title}}/g, originalName)
-        
-        if(!isMovie) {
-            cardHtml = cardHtml.replace('<span>Movie</span>', '<span>TV Show</span>')
-        }
+            .replace(/{{name}}/g, movieName) // Khung cho phim bộ
         
         html += cardHtml
     }
@@ -387,23 +410,25 @@ function displayMovies(movieList, type) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+// Cập nhật số trang 
 function updatePageNumber() {
+    pageCurrentSpan.textContent = currentPage
     pageTotalSpan.textContent = `/ ${totalPages}`
     updatePaginationButtons()
 }
 
-// Lọc phim
+// DOM khi người dùng click nút "Lọc kết quả"
 filterBtn.addEventListener('click', async () => {
-    // Quốc gia
+    // Lọc theo mục "Quốc gia" đã chọn
     const selectedCountry = document.querySelector('.filter__select-list.country .filter__select--active')
     const countryCode = selectedCountry.getAttribute('data-country')
     currentCountry = countryCode === 'all' ? '' : countryCode
     
-    // Loại phim
+    // Lọc theo mục "Loại phim" đã chọn
     const selectedType = document.querySelector('.filter__select-list.movie-type .filter__select--active')
     currentMovieType = selectedType.getAttribute('data-type')
     
-    // Thể loại
+    // Lọc theo mục "Thể loại" đã chọn
     const selectedGenres = document.querySelectorAll('.filter__select-list.movie-genre .filter__select--active')
     currentGenre = []
     selectedGenres.forEach(item => {
@@ -413,7 +438,7 @@ filterBtn.addEventListener('click', async () => {
         }
     })
     
-    // Sắp xếp
+    // Lọc theo mục "Sắp xếp" đã chọn
     const selectedArrange = document.querySelector('.filter__select-list.arrange .filter__select--active')
     currentArrange = selectedArrange.getAttribute('data-arrange')
     
@@ -421,14 +446,14 @@ filterBtn.addEventListener('click', async () => {
     currentPage = 1
     pageCurrentSpan.textContent = '1'
     
-    // Đóng bộ lọc
+    // Đóng filter
     filterSelect.classList.add('hidden')
     faFilter.classList.remove('fa-filter-active')
 
     await render()
 })
 
-// Phân trang
+// Kiểm tra xem nút sang trái sang phải có được click không
 function updatePaginationButtons() {
     if(currentPage <= 1) {
         leftPag.classList.add('disable')
@@ -443,6 +468,7 @@ function updatePaginationButtons() {
     }
 }
 
+// Click nút sang trang tiếp theo
 rightPag.addEventListener('click', async () => {
     if(currentPage < totalPages) {
         currentPage++
@@ -451,6 +477,7 @@ rightPag.addEventListener('click', async () => {
     }
 })
 
+// Click quay về trang trước 
 leftPag.addEventListener('click', async () => {
     if(currentPage > 1) {
         currentPage--
