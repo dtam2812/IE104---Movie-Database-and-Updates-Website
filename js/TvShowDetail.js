@@ -247,6 +247,8 @@ function renderSeasons(seasons) {
   container.insertAdjacentHTML("beforeend", createSeasonHTML(season));
 });
 
+  
+
   // Ẩn nút "Xem thêm" nếu có 2 mùa hoặc ít hơn
   if (viewMoreBtn) {
     if (validSeasons.length <= 3) {

@@ -630,7 +630,7 @@
 }
 
 .main-logo .social-links a:hover {
-  background-color: #ffde8a;
+  background-color: red;
   transform: translateY(-5px);
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
@@ -655,6 +655,10 @@
     padding: 0px 16px;
   }
 
+  .footer-logo img {
+    margin-bottom: -50px;
+  }
+
   .footer-elements {
     font-size: 12px;
     padding: 16px 0px;
@@ -677,6 +681,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
+    margin-top: 20px;
     margin-right: 0px;
   }
 
