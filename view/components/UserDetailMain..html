@@ -1,176 +1,171 @@
-<!-- UserDetailMain.html -->
-<div class="container" role="main">
-  <aside class="sidebar" aria-label="Quản lý tài khoản">
-    <h3>Quản lý tài khoản</h3>
-    <div style="display: flex; gap: 12px; align-items: center; margin-top: 8px">
-      <div class="avatar" id="avatarWrap">
-        <img id="avatarImg" src="placeholder.svg" alt="Avatar người dùng" />
-      </div>
-      <div>
-        <div class="name" id="displayName">Người dùng</div>
-        <div style="color: var(--muted); font-size: 13px" id="emailShort">
-          you@example.com
-        </div>
-      </div>
+<!-- components/UserDetailMain.html -->
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>Tài khoản</h3>
+    <div class="avatar">
+      <img
+        src="https://www.rophim.li/images/avatars/pack4/16.jpg"
+        alt="Avatar"
+      />
+    </div>
+    <div class="name">Nguyễn Văn A</div>
+
+    <div class="nav">
+      <button class="active" data-section="personal-info">
+        <i class="bx bx-user"></i>
+        Thông tin cá nhân
+      </button>
+      <button data-section="favorites">
+        <i class="bx bx-heart"></i>
+        Yêu thích
+      </button>
+      <button data-section="settings">
+        <i class="bx bx-cog"></i>
+        Cài đặt
+      </button>
     </div>
 
-    <nav class="nav" aria-label="Sidebar navigation">
-      <button class="active" id="navAccount">Tài khoản</button>
-      <button id="navFavorites">Yêu thích</button>
-      <button id="navSettings">Cài đặt</button>
-    </nav>
+    <button class="logout">
+      <i class="bx bx-log-out"></i>
+      Đăng xuất
+    </button>
+  </div>
 
-    <button class="logout" id="logoutBtn">⎋ Thoát</button>
-  </aside>
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Personal Information Section -->
+    <div class="content-section active" id="personal-info-section">
+      <h1 class="title">Thông tin cá nhân</h1>
+      <p class="subtitle">Quản lý thông tin cá nhân và tài khoản của bạn</p>
 
-  <section class="main">
-    <h1 class="title">Tài khoản</h1>
-    <div class="subtitle">Cập nhật thông tin tài khoản</div>
-
-    <div class="card" aria-labelledby="accountForm">
-      <form id="accountForm" novalidate>
+      <div class="card">
         <div class="grid">
-          <div>
-            <label for="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autocomplete="email"
-              aria-describedby="emailError"
-            />
-            <div id="emailError" class="error" aria-live="polite">
-              Vui lòng nhập email hợp lệ.
-            </div>
+          <div class="form-group">
+            <label for="name">Họ và tên</label>
+            <input type="text" id="name" value="Nguyễn Văn A" />
           </div>
-          <div>
-            <label for="display">Tên hiển thị</label>
-            <input
-              id="display"
-              name="display"
-              type="text"
-              required
-              autocomplete="name"
-              aria-describedby="displayError"
-            />
-            <div id="displayError" class="error" aria-live="polite">
-              Tên không được để trống.
-            </div>
-          </div>
-        </div>
 
-        <div style="margin-top: 18px">
-          <label>Giới tính</label>
-          <div class="radio-row" role="radiogroup" aria-label="Giới tính">
-            <label class="radio"
-              ><input type="radio" name="gender" value="male" /> Nam</label
-            >
-            <label class="radio"
-              ><input type="radio" name="gender" value="female" /> Nữ</label
-            >
-            <label class="radio"
-              ><input type="radio" name="gender" value="unspecified" checked />
-              Không xác định</label
-            >
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" value="nguyenvana@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="text" id="phone" value="0123456789" />
+          </div>
+
+          <div class="form-group">
+            <label for="birthday">Ngày sinh</label>
+            <input type="text" id="birthday" value="01/01/1990" />
+          </div>
+
+          <div class="form-group">
+            <label>Giới tính</label>
+            <div class="radio-row">
+              <label class="radio">
+                <input type="radio" name="gender" checked />
+                Nam
+              </label>
+              <label class="radio">
+                <input type="radio" name="gender" />
+                Nữ
+              </label>
+              <label class="radio">
+                <input type="radio" name="gender" />
+                Khác
+              </label>
+            </div>
           </div>
         </div>
 
         <div class="actions">
-          <div style="display: flex; gap: 12px; align-items: center">
-            <label
-              for="avatarInput"
-              class="btn secondary"
-              style="
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                cursor: pointer;
-              "
-              >📷 Ảnh có sẵn</label
-            >
-            <input
-              id="avatarInput"
-              type="file"
-              accept="image/*"
-              style="display: none"
-              aria-label="Tải ảnh đại diện"
-            />
-            <button type="submit" class="btn" id="submitBtn">Cập nhật</button>
+          <button class="btn save-personal-info">Lưu thay đổi</button>
+          <button class="btn secondary cancel-personal-info">Hủy</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="title">Đổi mật khẩu</h3>
+        <div class="grid">
+          <div class="form-group">
+            <label for="current-password">Mật khẩu hiện tại</label>
+            <input type="password" id="current-password" />
           </div>
 
-          <div style="flex: 1; margin-left: 20px">
-            <div class="hint">
-              Đổi mật khẩu, nhấn vào
-              <span class="muted-link" id="changePwd" role="button" tabindex="0"
-                >đây</span
-              >
+          <div class="form-group">
+            <label for="new-password">Mật khẩu mới</label>
+            <input type="password" id="new-password" />
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Xác nhận mật khẩu</label>
+            <input type="password" id="confirm-password" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn update-password">Cập nhật mật khẩu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites Section -->
+    <div class="content-section" id="favorites-section">
+      <h1 class="title">Phim yêu thích</h1>
+      <p class="subtitle">Danh sách các phim bạn đã yêu thích</p>
+
+      <div class="card">
+        <div class="favorites-list">
+          <p class="empty-state">Chưa có phim nào trong danh sách yêu thích</p>
+          <!-- Favorites content will be loaded here dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div class="content-section" id="settings-section">
+      <h1 class="title">Cài đặt</h1>
+      <p class="subtitle">Tùy chỉnh cài đặt tài khoản của bạn</p>
+
+      <div class="card">
+        <div class="grid">
+          <div class="form-group">
+            <label for="language">Ngôn ngữ</label>
+            <select id="language">
+              <option value="vi">Tiếng Việt</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="theme">Giao diện</label>
+            <select id="theme">
+              <option value="dark">Tối</option>
+              <option value="light">Sáng</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="notifications">Thông báo</label>
+            <div class="radio-row">
+              <label class="radio">
+                <input type="radio" name="notifications" checked />
+                Bật
+              </label>
+              <label class="radio">
+                <input type="radio" name="notifications" />
+                Tắt
+              </label>
             </div>
           </div>
         </div>
-      </form>
-    </div>
-  </section>
-</div>
 
-<div role="status" aria-live="polite" class="toast" id="toast">
-  Đã lưu <button id="toastClose" aria-label="Đóng">✕</button>
-</div>
-
-<!-- Password modal -->
-<div
-  class="modal-backdrop"
-  id="pwdModal"
-  role="dialog"
-  aria-modal="true"
-  aria-hidden="true"
->
-  <div class="modal" role="document" aria-labelledby="pwdTitle">
-    <h3 id="pwdTitle">Đổi mật khẩu (Demo)</h3>
-    <p class="hint">
-      Tính năng đổi mật khẩu đang ở chế độ demo. Bạn có thể thêm tích hợp Auth
-      (Supabase) để kích hoạt chức năng này.
-    </p>
-    <div style="display: flex; gap: 8px; margin-top: 12px">
-      <input
-        id="pwdOld"
-        type="password"
-        placeholder="Mật khẩu cũ"
-        style="
-          flex: 1;
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid var(--border);
-          background: var(--glass);
-          color: var(--text);
-        "
-      />
-    </div>
-    <div style="display: flex; gap: 8px; margin-top: 8px">
-      <input
-        id="pwdNew"
-        type="password"
-        placeholder="Mật khẩu mới"
-        style="
-          flex: 1;
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid var(--border);
-          background: var(--glass);
-          color: var(--text);
-        "
-      />
-    </div>
-    <div
-      style="
-        display: flex;
-        gap: 8px;
-        justify-content: flex-end;
-        margin-top: 12px;
-      "
-    >
-      <button id="pwdCancel" class="btn secondary">Hủy</button>
-      <button id="pwdSubmit" class="btn">Lưu</button>
+        <div class="actions">
+          <button class="btn save-settings">Lưu cài đặt</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

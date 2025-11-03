@@ -198,6 +198,44 @@ body {
   color: #fff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   font-size: 20px;
+  position: relative;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  transition: all 0.3s ease;
+}
+
+.desc.expanded {
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  overflow: visible;
+}
+
+.desc-toggle {
+  color: var(--yellow);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.desc-toggle:hover {
+  color: var(--yellow2);
+}
+@media (min-width: 641px) {
+  .desc-toggle {
+    display: none !important;
+  }
+
+  .desc {
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    overflow: visible;
+  }
 }
 .controls {
   display: flex;
@@ -243,6 +281,7 @@ body {
   border-radius: 999px;
   padding: 2px;
 }
+
 .actions button {
   height: 44px;
   min-width: 56px;
@@ -254,6 +293,19 @@ body {
   place-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+
+.actions button.favorite svg {
+  transition: fill 0.3s ease, transform 0.2s ease;
+}
+
+.actions button.favorite.active svg {
+  fill: #ff4d4d;
+  transform: scale(1.2);
+}
+
+.actions button.favorite:active svg {
+  transform: scale(0.9);
 }
 @media (min-width: 768px) {
   .actions button {
@@ -285,6 +337,11 @@ body {
   .thumbs {
     bottom: 80px;
     padding: 0 24px;
+  }
+}
+@media (max-width: 640px) {
+  .thumbs-inner .thumb:nth-child(n + 6) {
+    display: none;
   }
 }
 @media (min-width: 768px) {

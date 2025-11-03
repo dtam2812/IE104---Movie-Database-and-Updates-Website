@@ -71,7 +71,28 @@ function renderContent() {
   if (m.genres.length > 4)
     genresEl.append(badge(`<span>+${m.genres.length - 4}</span>`));
 
+  descEl.classList.remove("expanded"); // reset khi đổi phim
   descEl.textContent = m.description;
+
+  // Xóa nút cũ nếu có
+  const oldToggle = descEl.nextElementSibling;
+  if (oldToggle && oldToggle.classList.contains("desc-toggle")) {
+    oldToggle.remove();
+  }
+
+  // Nếu mô tả dài, thêm nút toggle
+  if (m.description.length > 200) {
+    const toggleBtn = document.createElement("span");
+    toggleBtn.className = "desc-toggle";
+    toggleBtn.textContent = "Xem thêm";
+
+    toggleBtn.onclick = () => {
+      const expanded = descEl.classList.toggle("expanded");
+      toggleBtn.textContent = expanded ? "Thu gọn" : "Xem thêm";
+    };
+
+    descEl.after(toggleBtn);
+  }
 }
 
 function renderThumbs() {
@@ -159,6 +180,12 @@ async function fetchMovies() {
     console.error("Fetch TMDB failed:", err);
   }
 }
+// Toggle màu đỏ cho nút favorite
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".favorite");
+  if (!btn) return;
+  btn.classList.toggle("active");
+});
 
 // Start
 fetchMovies();
