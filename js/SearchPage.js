@@ -35,7 +35,6 @@ async function loadResults(type = "all") {
   const currentPage = currentPages[type];
   const cacheKey = `${type}_${currentPage}`;
 
-  // 🚫 KHÔNG dùng cache cho "all"
   if (type !== "all" && cachedResults[cacheKey]) {
     allResults = cachedResults[cacheKey].results;
     renderResults();
@@ -48,7 +47,6 @@ async function loadResults(type = "all") {
     let totalPages = 1;
 
     if (type === "all") {
-      console.log("🔄 Fetching BOTH movie + tv...");
       const [movieRes, tvRes] = await Promise.all([
         fetch(
           `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
@@ -66,9 +64,6 @@ async function loadResults(type = "all") {
         movieRes.json(),
         tvRes.json(),
       ]);
-
-      console.log("🎬 Movies:", movieData.results?.length);
-      console.log("📺 TV shows:", tvData.results?.length);
 
       const movies = (movieData.results || []).map((item) => ({
         ...item,
@@ -106,14 +101,10 @@ async function loadResults(type = "all") {
     }
 
     allResults = results.slice(0, 18);
-    console.log(
-      "✅ Final merged results:",
-      allResults.map((r) => r.media_type)
-    );
     renderResults();
     renderPagination(currentPage, totalPages, type);
   } catch (err) {
-    console.error("❌ Lỗi load:", err);
+    console.error(err);
     grid.innerHTML = "<p>Lỗi tải dữ liệu.</p>";
   }
 }
@@ -173,69 +164,15 @@ function renderTvCard(item) {
 function renderPersonCard(item) {
   const profilePath = item.profile_path
     ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
-    : "";
+    : "https://via.placeholder.com/300x450?text=No+Image";
 
-  // Nếu có template, dùng nó
-  if (castCardTemplate) {
-    const html = castCardTemplate
-      .replace(/{{id}}/g, item.id)
-      .replace(/{{profile_path}}/g, profilePath)
-      .replace(/{{name}}/g, item.name || "Không rõ")
-      .replace(/{{original_name}}/g, item.original_name || "");
+  const html = castCardTemplate
+    .replace(/{{id}}/g, item.id)
+    .replace(/{{profile_path}}/g, profilePath)
+    .replace(/{{name}}/g, item.name || "Không rõ")
+    .replace(/{{original_name}}/g, item.original_name || "");
 
-    grid.insertAdjacentHTML("beforeend", html);
-  } else {
-    // Fallback: tạo bằng JavaScript
-    const cardDiv = document.createElement("div");
-    cardDiv.className = "cast-box";
-
-    const link = document.createElement("a");
-    link.className = "cast-card";
-    link.href = `../pages/cast.html?id=${item.id}`;
-
-    const imageDiv = document.createElement("div");
-    imageDiv.className = "cast-img";
-
-    if (profilePath) {
-      const img = document.createElement("img");
-      img.src = profilePath;
-      img.alt = item.name;
-      imageDiv.appendChild(img);
-    } else {
-      const fallback = document.createElement("div");
-      fallback.className = "avatar-fallback";
-      fallback.textContent = (item.name?.[0] || "?").toUpperCase();
-      imageDiv.appendChild(fallback);
-    }
-
-    link.appendChild(imageDiv);
-
-    const infoDiv = document.createElement("div");
-    infoDiv.className = "info";
-
-    const nameH4 = document.createElement("h4");
-    nameH4.className = "name";
-    const nameLink = document.createElement("a");
-    nameLink.href = `../pages/cast.html?id=${item.id}`;
-    nameLink.textContent = item.name || "Không rõ";
-    nameH4.appendChild(nameLink);
-
-    const otherNameH4 = document.createElement("h4");
-    otherNameH4.className = "other-name";
-    const otherNameLink = document.createElement("a");
-    otherNameLink.href = "#";
-    otherNameLink.textContent = item.original_name || "";
-    otherNameH4.appendChild(otherNameLink);
-
-    infoDiv.appendChild(nameH4);
-    if (item.original_name) {
-      infoDiv.appendChild(otherNameH4);
-    }
-
-    cardDiv.appendChild(link);
-    cardDiv.appendChild(infoDiv);
-    grid.appendChild(cardDiv);
-  }
+  grid.insertAdjacentHTML("beforeend", html);
 }
 
 function renderPagination(page, total, type) {
