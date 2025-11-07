@@ -13,10 +13,10 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
-    <link rel="stylesheet" href="../../Services/reset.css" />
-    <link rel="stylesheet" href="../../Style/UserDetail.css" />
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <link rel="stylesheet" href="../../Services/reset.css" />
+    <link rel="stylesheet" href="../../Style/UserDetail.css" />
+  </head>
   <body>
     <!-- start-header -->
     <div id="header"></div>
@@ -39,7 +39,6 @@
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
-    <!-- end-header -->
 
     <!-- main user detail -->
     <div id="userDetailMain"></div>
@@ -51,9 +50,7 @@
         })
         .catch((err) => console.error("UserDetailMain load error:", err));
     </script>
-    <!-- End main user detail -->
 
-    <script type="module" src="../../js/UserDetail.js"></script>
     <!-- start-footer -->
     <div id="footer"></div>
 
@@ -67,7 +64,25 @@
           console.error("Fetch footer failed:", error);
         });
     </script>
-    <!-- end-footer -->
 
+    <!-- Toast -->
+    <div class="toast">
+      Thay đổi đã được lưu
+      <button>Đóng</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-backdrop">
+      <div class="modal">
+        <h3>Xác nhận</h3>
+        <p>Bạn có chắc chắn muốn thay đổi thông tin?</p>
+        <div class="actions">
+          <button class="btn">Xác nhận</button>
+          <button class="btn secondary">Hủy</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../js/UserDetail.js"></script>
   </body>
 </html>
