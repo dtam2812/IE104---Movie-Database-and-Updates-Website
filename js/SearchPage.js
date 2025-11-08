@@ -133,10 +133,11 @@ function renderResults() {
   });
 }
 
+// Chỉ xử lý poster phim / TV / avatar diễn viên
 function renderMovieCard(item) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-    : "https://via.placeholder.com/300x450?text=No+Image";
+    : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
   const html = movieCardTemplate
     .replace(/{{id}}/g, item.id)
@@ -150,7 +151,7 @@ function renderMovieCard(item) {
 function renderTvCard(item) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-    : "https://via.placeholder.com/300x450?text=No+Image";
+    : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
   const html = tvCardTemplate
     .replace(/{{id}}/g, item.id)
@@ -164,7 +165,9 @@ function renderTvCard(item) {
 function renderPersonCard(item) {
   const profilePath = item.profile_path
     ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
-    : "https://via.placeholder.com/300x450?text=No+Image";
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        item.name || "Unknown"
+      )}&size=300&background=1a1a2e&color=0891b2`;
 
   const html = castCardTemplate
     .replace(/{{id}}/g, item.id)

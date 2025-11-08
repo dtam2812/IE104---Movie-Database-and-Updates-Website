@@ -1,5 +1,8 @@
 import { TMDB_API_KEY } from "../config.js";
 
+const BASE_URL = "https://api.themoviedb.org/3";
+const IMG_URL = "https://image.tmdb.org/t/p/w300";
+
 const params = new URLSearchParams(window.location.search);
 const personId = params.get("id");
 
@@ -17,24 +20,24 @@ let allMovies = [];
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
-// Load cả hai template
+/* ================== LOAD TEMPLATE ================== */
 Promise.all([
   fetch("../components/MovieCardRender.html").then((res) => res.text()),
   fetch("../components/TvShowCardRender.html").then((res) => res.text()),
 ])
-  .then(([movieHtml, tvHtml]) => {
-    movieCardTemplate = movieHtml;
-    tvCardTemplate = tvHtml;
+  .then(([movieHTML, tvHTML]) => {
+    movieCardTemplate = movieHTML;
+    tvCardTemplate = tvHTML;
     loadPersonDetail();
     loadPersonMovies();
   })
   .catch((err) => console.error("Không tải được template:", err));
 
-// Lấy chi tiết diễn viên
+/* ================== LOAD THÔNG TIN DIỄN VIÊN ================== */
 async function loadPersonDetail() {
   try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
     );
     const data = await res.json();
 
@@ -43,25 +46,36 @@ async function loadPersonDetail() {
       return;
     }
 
+    // --- Gán dữ liệu ---
     personName.textContent = data.name || "Đang cập nhật";
     alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
     biography.textContent = data.biography || "Đang cập nhật";
     gender.textContent =
       data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
     birthday.textContent = data.birthday || "Đang cập nhật";
-    personImage.src = data.profile_path
-      ? `https://image.tmdb.org/t/p/w300${data.profile_path}`
-      : "../assets/image/8f1ca2029e2efceebd22fa05cca423d7.jpg";
+
+    // --- Ảnh diễn viên ---
+    const profile = data.profile_path
+      ? `${IMG_URL}${data.profile_path}`
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          data.name || "Unknown"
+        )}&size=300&background=1a1a2e&color=0891b2`;
+
+    personImage.src = profile;
+    personImage.onerror = () => {
+      personImage.src =
+        "https://ui-avatars.com/api/?name=Unknown&size=300&background=1a1a2e&color=0891b2";
+    };
   } catch (err) {
     console.error("Lỗi khi tải chi tiết diễn viên:", err);
   }
 }
 
-// Lấy danh sách phim + tv show đã tham gia
+/* ================== LOAD DANH SÁCH PHIM/TIVI ================== */
 async function loadPersonMovies() {
   try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
     );
     const data = await res.json();
 
@@ -70,7 +84,7 @@ async function loadPersonMovies() {
       return;
     }
 
-    // Sắp xếp theo độ phổ biến
+    // --- Sắp xếp giảm dần theo độ phổ biến ---
     allMovies = data.cast.sort((a, b) => b.popularity - a.popularity);
     renderMoviesPage();
   } catch (err) {
@@ -78,7 +92,7 @@ async function loadPersonMovies() {
   }
 }
 
-// Render phim và tv theo trang
+/* ================== RENDER DANH SÁCH ================== */
 function renderMoviesPage() {
   if (!movieCardTemplate || !tvCardTemplate) return;
 
@@ -89,18 +103,20 @@ function renderMoviesPage() {
   const currentMovies = allMovies.slice(start, end);
 
   if (currentMovies.length === 0) {
-    moviesGrid.innerHTML = "<p>Không có phim nào được tìm thấy.</p>";
+    moviesGrid.innerHTML = "<p>Không có kết quả.</p>";
     return;
   }
 
   currentMovies.forEach((item) => {
+    // --- Fallback ảnh ---
     const poster = item.poster_path
-      ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-      : "https://via.placeholder.com/300x450?text=No+Image";
+      ? `${IMG_URL}${item.poster_path}`
+      : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
+
     const title = item.title || item.name || "Không rõ";
     const original_title = item.original_title || item.original_name || "";
 
-    // Chọn template phù hợp
+    // --- Chọn template (phim hoặc TV show) ---
     let template =
       item.media_type === "tv" ? tvCardTemplate : movieCardTemplate;
 
@@ -113,10 +129,16 @@ function renderMoviesPage() {
     moviesGrid.insertAdjacentHTML("beforeend", cardHTML);
   });
 
+  // fallback ảnh lỗi
+  moviesGrid.querySelectorAll("img").forEach((img) => {
+    img.onerror = () =>
+      (img.src = "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster");
+  });
+
   renderPaginationModern(currentPage, totalPages);
 }
 
-// pagination
+/* ================== PHÂN TRANG ================== */
 function renderPaginationModern(page, total) {
   const oldPagination = document.querySelector(".pagination-modern");
   if (oldPagination) oldPagination.remove();
@@ -126,6 +148,7 @@ function renderPaginationModern(page, total) {
   const container = document.createElement("div");
   container.classList.add("pagination-modern");
 
+  // Nút Prev
   const prevBtn = document.createElement("button");
   prevBtn.classList.add("page-circle");
   prevBtn.innerHTML = "&#8592;";
@@ -138,6 +161,7 @@ function renderPaginationModern(page, total) {
     }
   });
 
+  // Thông tin trang
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
@@ -147,6 +171,7 @@ function renderPaginationModern(page, total) {
     <span class="page-total">${total}</span>
   `;
 
+  // Nút Next
   const nextBtn = document.createElement("button");
   nextBtn.classList.add("page-circle");
   nextBtn.innerHTML = "&#8594;";
