@@ -1,5 +1,8 @@
 import { TMDB_API_KEY } from "../config.js";
 
+const BASE_URL = "https://api.themoviedb.org/3";
+const IMG_URL = "https://image.tmdb.org/t/p/w300";
+
 const params = new URLSearchParams(window.location.search);
 const query = params.get("query") || "";
 document.getElementById("query-text").textContent = query;
@@ -13,7 +16,7 @@ let currentType = "movie";
 let movieCardTemplate = "";
 let castCardTemplate = "";
 
-// Load cả 2 template (MovieCard + CastCard)
+// ================== LOAD COMPONENT TEMPLATE ================== //
 Promise.all([
   fetch("../components/MovieCardRender.html").then((res) => res.text()),
   fetch("../components/CastCardRender.html").then((res) => res.text()),
@@ -25,7 +28,7 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được component:", err));
 
-// Lắng nghe nút lọc
+// ================== LỌC NỘI DUNG (MOVIE / CAST) ================== //
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) => b.classList.remove("active"));
@@ -36,7 +39,7 @@ filterButtons.forEach((btn) => {
   });
 });
 
-// Hàm gọi API
+// ================== HÀM GỌI API ================== //
 async function loadResults() {
   if (!movieCardTemplate || !castCardTemplate) return;
 
@@ -44,25 +47,24 @@ async function loadResults() {
   try {
     const url =
       currentType === "movie"
-        ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        ? `${BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
             query
           )}&page=${currentPage}`
-        : `https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        : `${BASE_URL}/search/person?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
             query
           )}&page=${currentPage}`;
 
     const res = await fetch(url);
     const data = await res.json();
-    console.log(data);
     renderResults(data.results);
     renderPagination(data.page, data.total_pages);
   } catch (err) {
-    console.error("Error loading search:", err);
+    console.error("Lỗi khi tải dữ liệu tìm kiếm:", err);
     grid.innerHTML = "<p>Lỗi tải dữ liệu.</p>";
   }
 }
 
-// Render kết quả
+// ================== RENDER KẾT QUẢ ================== //
 function renderResults(results) {
   grid.innerHTML = "";
   if (!results || results.length === 0) {
@@ -72,9 +74,10 @@ function renderResults(results) {
 
   results.forEach((item) => {
     if (currentType === "movie") {
+      // --- Ảnh poster ---
       const poster = item.poster_path
-        ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-        : "https://via.placeholder.com/300x450?text=No+Image";
+        ? `${IMG_URL}${item.poster_path}`
+        : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
       const title = item.title || "Không rõ";
       const original_title = item.original_title || "";
@@ -87,11 +90,12 @@ function renderResults(results) {
 
       grid.insertAdjacentHTML("beforeend", cardHTML);
     } else {
-      // 🔹 Nếu không có profile_path thì dùng ảnh trong thư mục public
-      const profile =
-        item.profile_path && item.profile_path !== "null"
-          ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
-          : "../assets/image/8f1ca2029e2efceebd22fa05cca423d7.jpg";
+      // --- Ảnh diễn viên ---
+      const profile = item.profile_path
+        ? `${IMG_URL}${item.profile_path}`
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+            item.name || "Unknown"
+          )}&size=300&background=1a1a2e&color=0891b2`;
 
       const name = item.name || "Không rõ";
       const original_name = item.original_name || "";
@@ -107,7 +111,7 @@ function renderResults(results) {
   });
 }
 
-// Phân trang
+// ================== PHÂN TRANG ================== //
 function renderPagination(page, total) {
   pagination.innerHTML = "";
   if (total <= 1) return;
@@ -118,23 +122,11 @@ function renderPagination(page, total) {
   // Nút Previous
   const prevBtn = document.createElement("button");
   prevBtn.classList.add("page-arrow");
-  prevBtn.innerHTML = "&#8592;"; // ←
+  prevBtn.innerHTML = "&#8592;";
   prevBtn.disabled = page === 1;
   prevBtn.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
-      loadResults();
-    }
-  });
-
-  // Nút Next
-  const nextBtn = document.createElement("button");
-  nextBtn.classList.add("page-arrow");
-  nextBtn.innerHTML = "&#8594;"; // →
-  nextBtn.disabled = page === total;
-  nextBtn.addEventListener("click", () => {
-    if (currentPage < total) {
-      currentPage++;
       loadResults();
     }
   });
@@ -144,7 +136,18 @@ function renderPagination(page, total) {
   pageInfo.classList.add("page-info");
   pageInfo.textContent = `Trang ${page} / ${total}`;
 
-  // Gộp các phần tử
+  // Nút Next
+  const nextBtn = document.createElement("button");
+  nextBtn.classList.add("page-arrow");
+  nextBtn.innerHTML = "&#8594;";
+  nextBtn.disabled = page === total;
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < total) {
+      currentPage++;
+      loadResults();
+    }
+  });
+
   container.appendChild(prevBtn);
   container.appendChild(pageInfo);
   container.appendChild(nextBtn);

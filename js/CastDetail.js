@@ -1,5 +1,8 @@
 import { TMDB_API_KEY } from "../config.js";
 
+const BASE_URL = "https://api.themoviedb.org/3";
+const IMG_URL = "https://image.tmdb.org/t/p/w300";
+
 const params = new URLSearchParams(window.location.search);
 const personId = params.get("id");
 
@@ -16,7 +19,7 @@ const perPage = 10;
 let allMovies = [];
 let movieCardTemplate = "";
 
-// Load template MovieCardRender
+/* ----------------------------- Load template ----------------------------- */
 fetch("../components/MovieCardRender.html")
   .then((res) => res.text())
   .then((html) => {
@@ -26,11 +29,11 @@ fetch("../components/MovieCardRender.html")
   })
   .catch((err) => console.error("Không tải được MovieCardRender:", err));
 
-// Lấy chi tiết diễn viên
+/* ----------------------------- Chi tiết diễn viên ----------------------------- */
 async function loadPersonDetail() {
   try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
     );
     const data = await res.json();
 
@@ -39,7 +42,7 @@ async function loadPersonDetail() {
       return;
     }
 
-    console.log(data);
+    console.log("Thông tin diễn viên:", data);
 
     personName.textContent = data.name || "Đang cập nhật";
     alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
@@ -47,19 +50,30 @@ async function loadPersonDetail() {
     gender.textContent =
       data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
     birthday.textContent = data.birthday || "Đang cập nhật";
-    personImage.src = data.profile_path
-      ? `https://image.tmdb.org/t/p/w300${data.profile_path}`
-      : "../assets/image/8f1ca2029e2efceebd22fa05cca423d7.jpg";
+
+    // --- Ảnh diễn viên ---
+    if (data.profile_path) {
+      personImage.src = `${IMG_URL}${data.profile_path}`;
+    } else {
+      personImage.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        data.name || "Unknown"
+      )}&size=300&background=1a1a2e&color=0891b2`;
+    }
+
+    // fallback nếu lỗi
+    personImage.onerror = () => {
+      personImage.src = "../assets/image/default-avatar.jpg";
+    };
   } catch (err) {
     console.error("Lỗi khi tải chi tiết diễn viên:", err);
   }
 }
 
-// Lấy danh sách phim đã tham gia
+/* ----------------------------- Danh sách phim ----------------------------- */
 async function loadPersonMovies() {
   try {
     const res = await fetch(
-      `https://api.themoviedb.org/3/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
     );
     const data = await res.json();
 
@@ -68,7 +82,7 @@ async function loadPersonMovies() {
       return;
     }
 
-    // Sắp xếp theo độ phổ biến
+    // Sắp xếp theo độ phổ biến giảm dần
     allMovies = data.cast.sort((a, b) => b.popularity - a.popularity);
     renderMoviesPage();
   } catch (err) {
@@ -76,7 +90,7 @@ async function loadPersonMovies() {
   }
 }
 
-//  Render phim theo trang
+/* ----------------------------- Render phim ----------------------------- */
 function renderMoviesPage() {
   if (!movieCardTemplate) return;
 
@@ -92,9 +106,11 @@ function renderMoviesPage() {
   }
 
   currentMovies.forEach((movie) => {
+    // --- Ảnh poster ---
     const poster = movie.poster_path
-      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
-      : "https://via.placeholder.com/300x450?text=No+Image";
+      ? `${IMG_URL}${movie.poster_path}`
+      : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
+
     const title = movie.title || movie.name || "Không rõ";
     const original_title = movie.original_title || movie.original_name || "";
 
@@ -107,10 +123,16 @@ function renderMoviesPage() {
     moviesGrid.insertAdjacentHTML("beforeend", cardHTML);
   });
 
+  // fallback nếu ảnh lỗi
+  moviesGrid.querySelectorAll("img").forEach((img) => {
+    img.onerror = () =>
+      (img.src = "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster");
+  });
+
   renderPaginationModern(currentPage, totalPages);
 }
 
-//  Render pagination kiểu hiện đại
+/* ----------------------------- Phân trang hiện đại ----------------------------- */
 function renderPaginationModern(page, total) {
   const oldPagination = document.querySelector(".pagination-modern");
   if (oldPagination) oldPagination.remove();
@@ -133,7 +155,7 @@ function renderPaginationModern(page, total) {
     }
   });
 
-  // Hộp thông tin Trang
+  // Hộp thông tin trang
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
