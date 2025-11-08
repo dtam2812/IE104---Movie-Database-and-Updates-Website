@@ -1,14 +1,12 @@
-/* ----- Tổng thể ----- */
 body {
   background-color: #121212;
   color: white;
   font-family: "Inter", sans-serif;
 }
 
-/* ----- Kết quả tìm kiếm ----- */
 .search-result-container {
   padding: 100px 40px;
-  min-height: 80vh; /* ✅ giữ footer không bị nhảy */
+  min-height: 80vh;
 }
 
 h2 {
@@ -21,7 +19,6 @@ h2 {
   font-size: large;
 }
 
-/* ----- Nút lọc ----- */
 .filter-buttons {
   display: flex;
   gap: 10px;
@@ -42,16 +39,14 @@ h2 {
 .filter-btn.active {
   background: #fff;
   color: #000;
-  font-weight: bold;
 }
 
-/* ----- Grid ----- */
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 💻 Laptop: 6 phim / hàng */
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
   padding: 20px;
-  min-height: 400px; /* ✅ Giữ layout không co lại nếu không có kết quả */
+  min-height: 400px;
   align-content: start;
 }
 
@@ -63,7 +58,6 @@ h2 {
   grid-column: 1 / -1;
 }
 
-/* ----- Card ----- */
 .result-card {
   text-align: center;
   background: #111;
@@ -87,35 +81,23 @@ h2 {
   padding: 10px;
   font-size: 16px;
   line-height: 1.4;
-  word-wrap: break-word;
-  white-space: normal;
 }
 
-/* ----- Pagination ----- */
-.pagination {
+.pagination-modern {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
-}
-
-.pagination-container {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background-color: #1a1a1a;
-  padding: 10px 24px;
-  border-radius: 30px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  gap: 24px;
+  margin: 40px auto;
 }
 
-.page-arrow {
+.page-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
   background-color: #1f1f25;
   color: #ccc;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
   font-size: 20px;
   display: flex;
   align-items: center;
@@ -124,32 +106,50 @@ h2 {
   transition: all 0.25s ease;
 }
 
-.page-arrow:hover:not(:disabled) {
+.page-circle:hover:not(:disabled) {
   background-color: #2d2d34;
   color: #fff;
   transform: scale(1.05);
 }
 
-.page-arrow:disabled {
-  opacity: 0.4;
+.page-circle:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
-.page-info {
+.page-info-box {
+  background-color: #1f1f25;
   color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: #292932;
-  padding: 8px 16px;
   border-radius: 12px;
-  letter-spacing: 0.5px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.05) inset;
 }
 
-/* ===========================
-   Responsive 
-=========================== */
+.page-text {
+  color: #f0f0f0;
+}
 
-/* ----- Tablet (<= 1024px): 4 phim / hàng ----- */
+.page-current {
+  background-color: #292932;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.page-divider {
+  opacity: 0.6;
+}
+
+.page-total {
+  color: #ccc;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
   .results-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -157,7 +157,6 @@ h2 {
   }
 }
 
-/* ----- Mobile (<= 600px): 2 phim / hàng ----- */
 @media (max-width: 600px) {
   .results-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -173,18 +172,13 @@ h2 {
     font-size: 14px;
   }
 
-  .pagination-container {
-    gap: 10px;
-    padding: 8px 16px;
-  }
-
-  .page-arrow {
+  .page-circle {
     width: 36px;
     height: 36px;
     font-size: 18px;
   }
 
-  .page-info {
+  .page-info-box {
     font-size: 14px;
     padding: 6px 12px;
   }

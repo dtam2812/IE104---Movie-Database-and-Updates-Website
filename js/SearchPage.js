@@ -10,13 +10,13 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 
 let currentFilter = "all";
 let allResults = [];
-let cachedResults = {};
 let currentPages = { all: 1, movie: 1, tv: 1, person: 1 };
 
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 let castCardTemplate = "";
 
+// Nạp template card
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
   fetch("../components/TvShowCardRender.html").then((r) => r.text()),
@@ -30,17 +30,10 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được component:", err));
 
+// Hàm load dữ liệu từ TMDB
 async function loadResults(type = "all") {
-  grid.innerHTML = "<p>Đang tải...</p>";
+  grid.innerHTML = "<p class='placeholder-text'>Đang tải...</p>";
   const currentPage = currentPages[type];
-  const cacheKey = `${type}_${currentPage}`;
-
-  if (type !== "all" && cachedResults[cacheKey]) {
-    allResults = cachedResults[cacheKey].results;
-    renderResults();
-    renderPagination(currentPage, cachedResults[cacheKey].totalPages, type);
-    return;
-  }
 
   try {
     let results = [];
@@ -97,32 +90,34 @@ async function loadResults(type = "all") {
         media_type: type,
       }));
       totalPages = data.total_pages;
-      cachedResults[cacheKey] = { results: results.slice(0, 18), totalPages };
     }
 
     allResults = results.slice(0, 18);
     renderResults();
-    renderPagination(currentPage, totalPages, type);
+    renderPaginationModern(currentPage, totalPages, type);
   } catch (err) {
     console.error(err);
-    grid.innerHTML = "<p>Lỗi tải dữ liệu.</p>";
+    grid.innerHTML = "<p class='placeholder-text'>Lỗi tải dữ liệu.</p>";
   }
 }
 
+// Xử lý click tab
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     currentFilter = btn.dataset.type;
+    currentPages[currentFilter] = 1;
     loadResults(currentFilter);
   });
 });
 
+// Render kết quả
 function renderResults() {
   grid.innerHTML = "";
 
   if (!allResults.length) {
-    grid.innerHTML = "<p>Không tìm thấy kết quả.</p>";
+    grid.innerHTML = "<p class='placeholder-text'>Không tìm thấy kết quả.</p>";
     return;
   }
 
@@ -133,7 +128,7 @@ function renderResults() {
   });
 }
 
-// Chỉ xử lý poster phim / TV / avatar diễn viên
+// Render card
 function renderMovieCard(item) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
@@ -178,39 +173,49 @@ function renderPersonCard(item) {
   grid.insertAdjacentHTML("beforeend", html);
 }
 
-function renderPagination(page, total, type) {
-  pagination.innerHTML = "";
+// Modern Pagination
+function renderPaginationModern(page, total, type) {
+  const oldPagination = document.querySelector(".pagination-modern");
+  if (oldPagination) oldPagination.remove();
+
   if (total <= 1) return;
 
   const container = document.createElement("div");
-  container.classList.add("pagination-container");
+  container.classList.add("pagination-modern");
 
   const prevBtn = document.createElement("button");
-  prevBtn.classList.add("page-arrow");
+  prevBtn.classList.add("page-circle");
   prevBtn.innerHTML = "&#8592;";
   prevBtn.disabled = page === 1;
-  prevBtn.onclick = () => {
+  prevBtn.addEventListener("click", () => {
     if (currentPages[type] > 1) {
       currentPages[type]--;
       loadResults(type);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  };
+  });
+
+  const pageBox = document.createElement("div");
+  pageBox.classList.add("page-info-box");
+  pageBox.innerHTML = `
+    <span class="page-text">Trang</span>
+    <span class="page-current">${page}</span>
+    <span class="page-divider">/</span>
+    <span class="page-total">${total}</span>
+  `;
 
   const nextBtn = document.createElement("button");
-  nextBtn.classList.add("page-arrow");
+  nextBtn.classList.add("page-circle");
   nextBtn.innerHTML = "&#8594;";
   nextBtn.disabled = page === total;
-  nextBtn.onclick = () => {
+  nextBtn.addEventListener("click", () => {
     if (currentPages[type] < total) {
       currentPages[type]++;
       loadResults(type);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  };
+  });
 
-  const info = document.createElement("span");
-  info.classList.add("page-info");
-  info.textContent = `Trang ${page} / ${total}`;
-
-  container.append(prevBtn, info, nextBtn);
-  pagination.appendChild(container);
+  container.append(prevBtn, pageBox, nextBtn);
+  pagination.after(container);
 }
