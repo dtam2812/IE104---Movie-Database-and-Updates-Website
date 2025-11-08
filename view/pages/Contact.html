@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liên hệ</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../public/assets/image/Screenshot 2025-10-13 121408-Photoroom.png"
+    />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../Services/reset.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -84,20 +89,20 @@
         </section>
     </main>
 
-    <!-- start-footer -->
-    <div id="footer"></div>
+    <!-- Start footer -->
+    <footer id="footer"></footer>
 
     <script type="module">
-        fetch('../components/footer.html')
-            .then(res => res.text())
-            .then(html => {
-            document.getElementById('footer').innerHTML = html;
-            })
-            .catch(error => {
-            console.error('Fetch footer failed:', error);
-            });
+      fetch("../components/Footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Fetch footer failed:", error);
+        });
     </script>
-    <!-- end-footer -->
+    <!-- End footer -->
     
 </body>
 </html>
