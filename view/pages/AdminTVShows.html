@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin TV Shows Management</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../Services/reset.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
+    <link rel="stylesheet" href="../../Style/AdminPage.css">
+    <script type="module">
+        // Import và gọi function async
+        import { AdminTVShows_js } from '../../js/AdminTVShows.js';
+        
+        // Gọi function và xử lý async
+        AdminTVShows_js().catch(error => {
+            console.error('Error initializing AdminTVShows:', error);
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Phần còn lại giữ nguyên như cũ -->
+    <section class="header">
+        <div class="header-container container">
+            <div class="mobile menu-toggle">
+                <div class="icon-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <a class="header-logo" href="../../view/pages/HomePage.html">
+                <img src="../../public/assets/image/Screenshot 2025-10-13 121408-Photoroom.png" alt="">
+            </a>
+            <div class="mobile search-toggle">
+                <div class="icon-search">
+                    <span></span>
+                    <span></span>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+            </div>
+            <div class="search">
+                <div class="search-box">
+                </div>
+            </div>
+            <div class="search-group">
+                <div id="main_menu" class="menu">
+                    <div class="menu-film-type">
+                    </div>
+                </div>
+                <div class="app-download"></div>
+
+                <div id="main_user" class="user_logged"> 
+                    <div class="user-dropdown-menu">
+                        <a class="header-user"> 
+                            <div class="line-center"> 
+                                <div class="user-avatar"> 
+                                    <img src="../../public/assets/image/vn_flag.svg"> 
+                                </div> 
+                            </div>  
+                        </a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Section -->
+    <section class="main">
+        <!-- Sidebar -->
+        <div class="admin-menu-container">
+            <nav class="admin-menu">
+                <ul class="admin-menu-list">
+                    <li>
+                        <a href="../pages/AdminUsers.html">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../pages/AdminMovies.html">
+                            <i class="fa-solid fa-film"></i>
+                            <span>Movies</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="active" href="#">
+                            <i class="fa-solid fa-tv"></i>
+                            <span>TV Shows</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../pages/HomePage.html">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>  
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main-container">
+            <div class="admin-main-content">
+                <div class="am-content-heading">
+                    <h1>TV Shows</h1>
+                    <a class="add-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Add TV Show</span>
+                    </a>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="am-search-box">
+                    <div class="search-bar">
+                        <div class="search-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input class="search-input" placeholder="Search by TV show name or ID (e.g. TV001)" autocomplete="off" />
+                    </div>
+                    <div class="filter-bar">
+                        <select class="filter-select">
+                            <option value="all">All Country</option>
+                            <option value="America">America</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Korea">Korea</option>
+                            <option value="China">China</option>
+                            <option value="England">England</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="Released">Released</option>
+                            <option value="Coming Soon">Coming Soon</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="all">All Rating</option>
+                            <option value="9+">9.0+</option>
+                            <option value="8+">8.0+</option>
+                            <option value="7+">7.0+</option>
+                            <option value="6+">6.0+</option>
+                            <option value="5+">5.0+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="dm-table-container">
+                    <div class="dm-table-heading">
+                        <h2>TV Shows (0)</h2>
+                    </div>
+                    <table class="dm-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Poster</th>
+                                <th>Genre</th>
+                                <th>Seasons</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                                <th>Detail</th>
+                                <th>     </th>
+                            </tr>
+                        </thead>
+                        <tbody class="dm-table-body"></tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="content__pagination">
+                    <button class="pagination-left-arrow disable">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="pagination__main">
+                        <span class="pagination-page-current">1</span>
+                        <span>/ 0</span>
+                    </div>
+                    <button class="pagination-right-arrow">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal: Add/Edit TV Show -->
+    <div class="modal-tvshow hidden">
+        <div class="modal_backdrop"></div>
+        <div class="modal_container">
+            <div class="modal_dialog modal_dialog_centered modal_dialog--wide">
+                <div class="modal_content">
+                    <button class="btn modal_close" aria-label="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="form-wrapper tvshow-form">
+                        <div class="content_header mb2">
+                            <h1 class="modal-title">Add TV Show</h1>
+                        </div>
+                    
+                        <div class="content_body">
+                            <form class="v-form">
+                                <!-- Hidden ID field -->
+                                <input type="hidden" name="id">
+
+                                <!-- SECTION 1: Title + Overview + Banner + Poster -->
+                                <div class="movie-section-top">
+                                    <!-- Left: Title + Overview -->
+                                    <div class="movie-info-left">
+                                        <div class="form-group mb2">
+                                            <label>Title: <span style="color: red;">*</span></label>
+                                            <input class="form-control" type="text" name="title" placeholder="TV Show title" required>
+                                        </div>
+
+                                        <div class="form-group mb2">
+                                            <label>Overview: <span style="color: red;">*</span></label>
+                                            <textarea class="form-control form-textarea" name="overview" placeholder="TV Show overview/description" rows="8" required></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Banner + Poster -->
+                                    <div class="tvshow-media-right movie-media-right">
+                                        <div class="banner-preview mb2">
+                                            <label>Banner (16:9): <span style="color: red;">*</span></label>
+                                            <img src="" alt="Banner">
+                                            <input type="file" class="banner-input" name="banner" accept="image/*">
+                                            <small>Ratio: 16:9 (e.g. 1920x1080)</small>
+                                        </div>
+                                        <div class="poster-preview">
+                                            <label>Poster (2:3): <span style="color: red;">*</span></label>
+                                            <img src="" alt="Poster">
+                                            <input type="file" class="poster-input" name="poster" accept="image/*">
+                                            <small>Ratio: 2:3 (e.g. 600x900)</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- SECTION 2: Các thông tin còn lại (2 cột) -->
+                                <div class="movie-section-bottom">
+                                    <!-- Column 1 -->
+                                    <div class="movie-info-column">
+                                        <!-- Hiển thị ID khi Edit (readonly) -->
+                                        <div class="form-group mb1 tvshow-id-display" style="display: none;">
+                                            <label>TV Show ID:</label>
+                                            <input class="form-control" type="text" name="id-display" placeholder="Auto-generated" readonly>
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Genre: <span style="color: red;">*</span></label>
+                                            <input class="form-control" type="text" name="genre" placeholder="e.g. Comedy, Drama" required>
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Number of Seasons:</label>
+                                            <input class="form-control" type="number" name="seasons" placeholder="Auto-calculated" readonly>
+                                            <button type="button" class="btn btn-secondary manage-seasons-btn" style="margin-top: 0.5rem; width: 100%;">
+                                                <i class="fa-solid fa-list"></i> Manage Seasons
+                                            </button>
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Total Episodes:</label>
+                                            <input class="form-control" type="number" name="totalEpisodes" placeholder="Auto-calculated" readonly>
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Country: <span style="color: red;">*</span></label>
+                                            <input class="form-control" type="text" name="country" list="country-list" placeholder="Type or select" required>
+                                            <datalist id="country-list">
+                                                <option value="America">
+                                                <option value="Japan">
+                                                <option value="Korea">
+                                                <option value="China">
+                                                <option value="England">
+                                                <option value="France">
+                                                <option value="Germany">
+                                                <option value="Spain">
+                                                <option value="Vietnam">
+                                            </datalist>
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Creator:</label>
+                                            <input class="form-control" type="text" name="creator" placeholder="Creator name">
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Main Cast:</label>
+                                            <input class="form-control" type="text" name="actors" placeholder="Actor1, Actor2">
+                                        </div>
+                                    </div>
+
+                                    <!-- Column 2 -->
+                                    <div class="movie-info-column">
+                                        <div class="form-group mb1">
+                                            <label>Producer:</label>
+                                            <input class="form-control" type="text" name="producer" placeholder="Producer name">
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Budget (USD):</label>
+                                            <input class="form-control" type="number" name="budget" placeholder="e.g. 50000000">
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Revenue (USD):</label>
+                                            <input class="form-control" type="number" name="revenue" placeholder="e.g. 150000000">
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>YouTube Trailer Link:</label>
+                                            <input class="form-control" type="url" name="trailer" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>IMDb Rating:</label>
+                                            <input class="form-control" type="number" name="rating" placeholder="e.g. 8.5" step="0.1" min="0" max="10">
+                                        </div>
+
+                                        <div class="form-group mb1">
+                                            <label>Status: <span style="color: red;">*</span></label>
+                                            <select class="form-control" name="status" required>
+                                                <option value="Released">Released</option>
+                                                <option value="Coming Soon">Coming Soon</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="form-group action-btn-center mt3 mb3">
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub-Modal: Manage Seasons -->
+    <div class="sub-modal-backdrop hidden" id="seasons-backdrop"></div>
+    <div class="sub-modal hidden" id="seasons-sub-modal">
+        <div class="sub-modal-header">
+            <h3>Manage Seasons</h3>
+            <button class="sub-close" type="button">×</button>
+        </div>
+        <div class="sub-modal-body">
+            <button type="button" class="btn btn-primary add-season-btn" style="width: 100%; margin-bottom: 1rem;">
+                <i class="fa-solid fa-plus"></i> Add New Season
+            </button>
+            <div id="seasons-list" class="seasons-accordion">
+                <!-- JS sẽ render seasons ở đây -->
+            </div>
+        </div>
+        <div class="sub-modal-footer">
+            <button type="button" class="btn btn-primary save-seasons-btn">Save Seasons</button>
+        </div>
+    </div>
+</body>
+</html>
