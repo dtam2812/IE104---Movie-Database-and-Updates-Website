@@ -327,7 +327,15 @@ async function renderBothMovieAndTV() {
         // Lấy 10 phim đầu mỗi loại rồi trộn theo thuật toán xào bài Fisher-Yates
         const movie10 = movieData.results.slice(0, 10)
         const tv10 = tvData.results.slice(0, 10)
-        const mergeAll = [...movie10, ...tv10]
+        let mergeAll = [...movie10, ...tv10]
+
+        // Nếu chỉ có một loại thì dùng toàn bộ kết quả của loại đó
+        if(movie10.length !== 0 && tv10.length == 0) {
+            mergeAll = movieData.results
+        }
+        else if(movie10.length == 0 && tv10.length !== 0) {
+            mergeAll = tvData.results
+        }
 
         for(let i = mergeAll.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
