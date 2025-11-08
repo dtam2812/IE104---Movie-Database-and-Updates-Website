@@ -61,7 +61,7 @@ main {
 .filter__select {
     padding-top: 16px;
     border: 1px solid var(--border-color);
-    margin: -8.6px 0 48px 0;
+    margin: -10.6px 0 48px 0;
     border-radius: 10px;
 }
 
@@ -242,7 +242,7 @@ main {
     }
 
     .filter__select {
-        margin: -8px -16px 0;
+        margin: -10px -16px 0;
     }
 
     .filter__select-name {
