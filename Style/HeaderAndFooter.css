@@ -547,7 +547,11 @@
 /* end-header */
 
 /* start-footer */
+
 .footer .footer-container {
+  width: 100vw;
+  position: absolute;
+  z-index: 2;
   background-color: black;
 }
 
