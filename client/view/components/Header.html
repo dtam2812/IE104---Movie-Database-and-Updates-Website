@@ -1,0 +1,148 @@
+<!-- start-header -->
+<section class="header">
+  <div class="header-container container">
+    <div class="mobile menu-toggle">
+      <div class="icon-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <a class="header-logo" href="../../view/pages/HomePage.html">
+      <img
+        src="../../../public/assets/image/Screenshot 2025-10-13 121408-Photoroom.png"
+        alt=""
+      />
+    </a>
+    <div class="mobile search-toggle">
+      <div class="icon-search">
+        <span></span>
+        <span></span>
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+    </div>
+    <div class="search">
+      <div class="search-box">
+        <div class="search-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <input
+          class="search-input"
+          placeholder="Tìm kiếm phim,diễn viên"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="search-group">
+      <div id="main_menu" class="menu">
+        <div class="menu-film-type">
+          <a title="Bộ lọc" href="../pages/Danhsach.html?type=all">Bộ lọc</a>
+        </div>
+        <div class="menu-film-type">
+          <a title="Phim lẻ" href="../pages/Danhsach.html?type=movie"
+            >Phim lẻ</a
+          >
+        </div>
+        <div class="menu-film-type">
+          <a title="Phim bộ" href="../pages/Danhsach.html?type=tv">Phim bộ</a>
+        </div>
+        <div class="menu-film-type dropdown">
+          <a class="dropdown-toggle" title="Quốc gia"
+            >Quốc gia<i class="fa-solid fa-caret-down ms-2"></i
+          ></a>
+          <ul class="dropdown-menu">
+            <li><a href="../pages/Danhsach.html?type=all&country=US">Mỹ</a></li>
+            <li>
+              <a href="../pages/Danhsach.html?type=all&country=JP">Nhật Bản</a>
+            </li>
+            <li>
+              <a href="../pages/Danhsach.html?type=all&country=KR">Hàn Quốc</a>
+            </li>
+            <li>
+              <a href="../pages/Danhsach.html?type=all&country=CN"
+                >Trung Quốc</a
+              >
+            </li>
+            <li>
+              <a href="../pages/Danhsach.html?type=all&country=GB">Anh</a>
+            </li>
+          </ul>
+        </div>
+        <div class="menu-film-type">
+          <a
+            title="Tình cảm"
+            href="../pages/Danhsach.html?type=movie&genre=10749"
+            >Tình cảm</a
+          >
+        </div>
+        <div class="menu-film-type">
+          <a title="Kinh dị" href="../pages/Danhsach.html?type=movie&genre=27"
+            >Kinh dị</a
+          >
+        </div>
+        <div class="menu-film-type">
+          <a title="Hành động" href="../pages/Danhsach.html?type=movie&genre=28"
+            >Hành động</a
+          >
+        </div>
+        <div class="menu-film-type">
+          <a title="Hài" href="../pages/Danhsach.html?type=all&genre=35">Hài</a>
+        </div>
+        <div class="menu-film-type">
+          <a
+            title="Thiếu nhi"
+            href="../pages/Danhsach.html?type=all&genre=10751"
+            >Gia đình</a
+          >
+        </div>
+      </div>
+      <div class="app-download"></div>
+      <!-- chưa đăng nhập -->
+      <div id="user_guest" class="user">
+        <a id="btn-member" class="button-user button-login">
+          <i class="fa-solid fa-user ms-1"></i>
+          <span>Thành viên</span>
+        </a>
+      </div>
+      <!-- chưa đăng nhập -->
+
+      <!-- đã đăng nhập -->
+      <div id="main_user" class="user_logged hidden">
+        <div class="user-dropdown-menu">
+          <a class="header-user">
+            <div class="line-center">
+              <div class="user-avatar">
+                <img src="../../public/assets/image/vn_flag.svg" />
+              </div>
+              <i class="fa-solid fa-caret-down"> </i>
+            </div>
+          </a>
+          <ul class="dropdown-list">
+            <div class="dropdown-header">
+              <div class="user-name line-center">
+                <span>Trịnh Trần Phương Tuấn</span>
+              </div>
+            </div>
+            <hr />
+            <div class="ui-mobile">
+              <a class="dropdown-item" href="../pages/UserDetail.html">
+                <div class="line-center">
+                  <i class="fa-solid fa-user"></i>
+                  <span>Tài khoản</span>
+                </div>
+              </a>
+              <hr />
+              <a id="Log-out-Btn" class="dropdown-item" href="#">
+                <div class="line-center">
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  <span>Đăng xuất</span>
+                </div>
+              </a>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- đã đăng nhập -->
+  </div>
+</section>

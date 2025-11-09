@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh sách phim</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../../public/assets/image/Screenshot 2025-10-13 121408-Photoroom.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
+    <link rel="stylesheet" href="../../Services/reset.css" />
+    <link rel="stylesheet" href="../../Style/Danhsach.css" />
+    <link rel="stylesheet" href="../../Style/MovieCard.css" alt="" />
+    <link rel="stylesheet" href="../../Style/SearchBar.css" />
+    <script src="../../js/Danhsach.js" defer></script>
+  </head>
+
+  <body>
+    <!-- start-header -->
+    <div id="header"></div>
+
+    <script type="module">
+      import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
+
+      fetch("../components/Header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+          headerjs();
+          return fetch("../components/SearchBar.html");
+        })
+        .then((res) => res.text())
+        .then((searchHTML) => {
+          document.querySelector(".search-box").innerHTML = searchHTML;
+          searchBar();
+        })
+        .catch((error) => console.error("Fetch header/search failed:", error));
+    </script>
+    <!-- end-header -->
+
+    <!-- Main -->
+    <main class="main">
+      <!-- name -->
+      <div class="main__header">
+        <h3 class="main__title">Danh sách phim</h3>
+      </div>
+
+      <!-- filter -->
+      <div class="main__filter">
+        <div class="filter__toggle">
+          <i class="fa-solid fa-filter"></i>
+          <span>Bộ lọc</span>
+        </div>
+
+        <!-- filter open -->
+        <div class="filter__select hidden">
+          <!-- Quốc gia -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Quốc gia:</div>
+            <div class="filter__select-list country">
+              <div
+                class="filter__select-list-item filter__select--active all"
+                data-country="all"
+              >
+                Tất cả
+              </div>
+              <div class="filter__select-list-item" data-country="US">Mỹ</div>
+              <div class="filter__select-list-item" data-country="JP">
+                Nhật Bản
+              </div>
+              <div class="filter__select-list-item" data-country="KR">
+                Hàn Quốc
+              </div>
+              <div class="filter__select-list-item" data-country="CN">
+                Trung Quốc
+              </div>
+              <div class="filter__select-list-item" data-country="GB">Anh</div>
+            </div>
+          </div>
+
+          <!-- Loại phim -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Loại phim:</div>
+            <div class="filter__select-list movie-type">
+              <div
+                class="filter__select-list-item filter__select--active"
+                data-type="all"
+              >
+                Tất cả
+              </div>
+              <div class="filter__select-list-item" data-type="movie">
+                Phim lẻ
+              </div>
+              <div class="filter__select-list-item" data-type="tv">Phim bộ</div>
+            </div>
+          </div>
+
+          <!-- Thể loại -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Thể loại:</div>
+            <div class="filter__select-list movie-genre">
+              <div
+                class="filter__select-list-item filter__select--active all"
+                data-genre="all"
+              >
+                Tất cả
+              </div>
+
+              <!-- Thể loại chung -->
+              <div class="filter__select-list-item" data-genre="16">
+                Hoạt hình
+              </div>
+              <div class="filter__select-list-item" data-genre="35">Hài</div>
+              <div class="filter__select-list-item" data-genre="80">
+                Hình sự
+              </div>
+              <div class="filter__select-list-item" data-genre="99">
+                Phim tài liệu
+              </div>
+              <div class="filter__select-list-item" data-genre="18">
+                Chính kịch
+              </div>
+              <div class="filter__select-list-item" data-genre="10751">
+                Gia đình
+              </div>
+              <div class="filter__select-list-item" data-genre="9648">
+                Bí ẩn
+              </div>
+              <div class="filter__select-list-item" data-genre="37">
+                Viễn Tây
+              </div>
+
+              <!-- Chỉ phim lẻ -->
+              <div class="filter__select-list-item" data-genre="28">
+                Hành động
+              </div>
+              <div class="filter__select-list-item" data-genre="12">
+                Phiêu lưu
+              </div>
+              <div class="filter__select-list-item" data-genre="14">
+                Giả tưởng
+              </div>
+              <div class="filter__select-list-item" data-genre="36">
+                Lịch sử
+              </div>
+              <div class="filter__select-list-item" data-genre="27">
+                Kinh dị
+              </div>
+              <div class="filter__select-list-item" data-genre="10402">
+                Âm nhạc
+              </div>
+              <div class="filter__select-list-item" data-genre="10749">
+                Tình cảm
+              </div>
+              <div class="filter__select-list-item" data-genre="878">
+                Khoa học viễn tưởng
+              </div>
+              <div class="filter__select-list-item" data-genre="53">Ly kỳ</div>
+              <div class="filter__select-list-item" data-genre="10752">
+                Chiến tranh
+              </div>
+
+              <!-- Chỉ phim bộ -->
+              <div class="filter__select-list-item" data-genre="10759">
+                Hành động & Phiêu lưu
+              </div>
+              <div class="filter__select-list-item" data-genre="10762">
+                Thiếu nhi
+              </div>
+              <div class="filter__select-list-item" data-genre="10763">
+                Thời sự
+              </div>
+              <div class="filter__select-list-item" data-genre="10764">
+                Truyền hình thực tế
+              </div>
+              <div class="filter__select-list-item" data-genre="10765">
+                Khoa học viễn tưởng & Giả tưởng
+              </div>
+              <div class="filter__select-list-item" data-genre="10766">
+                Phim dài tập
+              </div>
+              <div class="filter__select-list-item" data-genre="10767">
+                Talk show
+              </div>
+              <div class="filter__select-list-item" data-genre="10768">
+                Chiến tranh & Chính trị
+              </div>
+            </div>
+          </div>
+
+          <!-- Sắp xếp -->
+          <div class="filter__select-nav">
+            <div class="filter__select-name">Sắp xếp:</div>
+            <div class="filter__select-list arrange">
+              <div
+                class="filter__select-list-item filter__select--active"
+                data-arrange="new"
+              >
+                Mới nhất
+              </div>
+              <div class="filter__select-list-item" data-arrange="imdb">
+                Điểm IMDb
+              </div>
+              <div class="filter__select-list-item" data-arrange="popular">
+                Lượt xem
+              </div>
+            </div>
+          </div>
+
+          <!-- filter button -->
+          <div class="filter__select-last-nav">
+            <button class="filter__select-btn">
+              <span>Lọc kết quả</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button class="filter__close-btn">Đóng</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Movie card -->
+      <div class="movie"></div>
+
+      <!-- Phân trang -->
+      <div class="content__pagination">
+        <button class="pagination-left-arrow disable">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="pagination__main">
+          <span>Trang</span>
+          <span class="pagination-page-current">1</span>
+          <span>/ 100</span>
+        </div>
+
+        <button class="pagination-right-arrow">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </main>
+
+    <!-- Start footer -->
+    <footer id="footer"></footer>
+
+    <script type="module">
+      fetch("../components/Footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Fetch footer failed:", error);
+        });
+    </script>
+    <!-- End footer -->
+  </body>
+</html>
