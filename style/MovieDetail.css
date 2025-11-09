@@ -123,7 +123,11 @@ body {
   padding: 17px 17px;
   border-radius: 100%;
   background-color: #fecf59;
-  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  background: linear-gradient(
+    39deg,
+    rgba(254, 207, 89, 1),
+    rgba(255, 241, 204, 1)
+  );
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -350,7 +354,6 @@ body {
   padding-bottom: 10px;
 }
 
-
 /* THỐNG KÊ */
 .comments-stats {
   display: flex;
@@ -370,6 +373,7 @@ body {
 
 .stat-item span {
   font-weight: 600;
+  font-size: 16px;
   color: #fecf59;
 }
 
@@ -552,7 +556,6 @@ body {
   background: rgba(254, 207, 89, 0.1);
 }
 
-
 /*RESPONSIVE - MOBILE*/
 @media only screen and (max-width: 1090px) {
   /* MOBILE: Hiện tabs */
@@ -695,11 +698,10 @@ body {
 }
 
 @media only screen and (max-width: 980px) {
-.movie-list {
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-}
-
+  .movie-list {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
 }
 
 @media only screen and (max-width: 600px) {
@@ -739,7 +741,7 @@ body {
     font-size: 18px;
   }
 
-  .stat-item{
+  .stat-item {
     font-size: 12px;
   }
 }
@@ -764,4 +766,3 @@ body {
     font-size: 12px;
   }
 }
-
