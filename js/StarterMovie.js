@@ -15,7 +15,6 @@ let movies = [];
 let index = 0;
 let timer;
 
-// Constants
 const IMAGE_BASE = "https://image.tmdb.org/t/p";
 const FALLBACK_POSTER = "https://via.placeholder.com/300x450?text=No+Image";
 
@@ -29,7 +28,6 @@ const createEl = (tag, cls, html) => {
 const badge = (content, cls) =>
   createEl("div", `badge${cls ? " " + cls : ""}`, content);
 
-// Render Functions
 function createSlide(movie, isActive) {
   const wrap = createEl("div", `slide${isActive ? " active" : ""}`);
   const img = createEl("img", "bg");
@@ -65,22 +63,21 @@ function renderContent() {
   metaEl.append(...metaData);
 
   genresEl.innerHTML = "";
-  m.genres
+  const formattedGenres = m.genres.map((g) => g.replace(/^Phim\s+/i, ""));
+  formattedGenres
     .slice(0, 4)
     .forEach((g) => genresEl.append(badge(`<span>${g}</span>`)));
-  if (m.genres.length > 4)
-    genresEl.append(badge(`<span>+${m.genres.length - 4}</span>`));
+  if (formattedGenres.length > 4)
+    genresEl.append(badge(`<span>+${formattedGenres.length - 4}</span>`));
 
-  descEl.classList.remove("expanded"); // reset khi đổi phim
+  descEl.classList.remove("expanded");
   descEl.textContent = m.description;
 
-  // Xóa nút cũ nếu có
   const oldToggle = descEl.nextElementSibling;
   if (oldToggle && oldToggle.classList.contains("desc-toggle")) {
     oldToggle.remove();
   }
 
-  // Nếu mô tả dài, thêm nút toggle
   if (m.description.length > 200) {
     const toggleBtn = document.createElement("span");
     toggleBtn.className = "desc-toggle";
@@ -113,7 +110,6 @@ function renderThumbs() {
   );
 }
 
-// Update UI Cycle
 function update(stopAuto = false) {
   renderBackground();
   renderContent();
@@ -130,14 +126,12 @@ function next() {
   update();
 }
 
-// Data Fetching Logic
 async function fetchMovies() {
   try {
     const res = await fetch(API_URL);
     const { results } = await res.json();
     const basicMovies = results?.slice(0, 6) || [];
 
-    // fetch chi tiết song song
     const movieDetails = await Promise.all(
       basicMovies.map(async (m) => {
         try {
@@ -180,14 +174,13 @@ async function fetchMovies() {
     console.error("Fetch TMDB failed:", err);
   }
 }
-// Toggle màu đỏ cho nút favorite
+
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".favorite");
   if (!btn) return;
   btn.classList.toggle("active");
 });
 
-// Start
 fetchMovies();
 
 export const starterMovie = { update };

@@ -690,7 +690,7 @@
   }
 
   .main-logo .social-links {
-    padding-left: 0;
+    padding: 0auto;
   }
 
   .intro-logo {

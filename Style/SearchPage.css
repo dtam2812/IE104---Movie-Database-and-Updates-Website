@@ -1,12 +1,26 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
 body {
   background-color: #121212;
   color: white;
   font-family: "Inter", sans-serif;
+  width: 100%;
 }
 
 .search-result-container {
   padding: 100px 40px;
   min-height: 80vh;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 h2 {
@@ -21,6 +35,7 @@ h2 {
 
 .filter-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -43,11 +58,12 @@ h2 {
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 20px;
   padding: 20px;
   min-height: 400px;
   align-content: start;
+  width: 100%;
 }
 
 .placeholder-text {
@@ -75,12 +91,14 @@ h2 {
   width: 100%;
   height: 240px;
   object-fit: cover;
+  display: block;
 }
 
 .result-title {
   padding: 10px;
   font-size: 16px;
   line-height: 1.4;
+  word-wrap: break-word;
 }
 
 .pagination-modern {
@@ -89,6 +107,7 @@ h2 {
   align-items: center;
   gap: 24px;
   margin: 40px auto;
+  flex-wrap: wrap;
 }
 
 .page-circle {
@@ -149,15 +168,22 @@ h2 {
   color: #ccc;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
+  .search-result-container {
+    padding: 80px 20px;
+  }
+
   .results-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 16px;
   }
 }
 
 @media (max-width: 600px) {
+  .search-result-container {
+    padding: 60px 16px;
+  }
+
   .results-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;

@@ -15,14 +15,15 @@
 html,
 body {
   min-height: 100%;
-}
-
-body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
     sans-serif;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 .section {
@@ -49,131 +50,23 @@ body {
 
 .grid-wrap {
   position: relative;
-  margin: 0 50px;
   overflow: hidden;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6 cột cố định */
+  grid-template-columns: repeat(6, 1fr);
   grid-auto-rows: auto;
-  gap: 32px;
+  gap: 16px;
   justify-content: center;
   align-items: start;
   transition: max-height 0.3s ease;
-  padding: 15px 15px;
+  padding: 0;
 }
 
-/* Chỉ hiển thị tối đa 2 hàng (ẩn phần dư nếu có) */
 .grid-wrap.limited {
-  max-height: calc((320px + 160px) * 2); /* poster + khoảng cách */
+  max-height: calc((295px + 42px + 12px) * 2);
   overflow: hidden;
-}
-
-.card {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.poster-wrap {
-  position: relative;
-  border-radius: 8px;
-  background: var(--card-bg);
-  overflow: hidden;
-  aspect-ratio: 197/295;
-}
-
-.poster {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.badges {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  border-radius: 4.8px 4.8px 0 0;
-  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.badge {
-  padding: 3px 8px;
-  font-size: 11px;
-  line-height: 1.6;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.badge-gray {
-  background: var(--badge-gray);
-}
-
-.badge-blue {
-  background: var(--badge-blue);
-}
-
-.badge-green {
-  background: var(--badge-green);
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-height: 42px;
-}
-
-.movie-title {
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-  margin: 0;
-}
-
-.movie-subtitle {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-dim);
-  text-align: center;
-  margin: 0;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .card {
-    width: 100%;
-  }
-
-  .poster-wrap {
-    aspect-ratio: 160/240;
-  }
-
-  .title {
-    font-size: 20px;
-  }
 }
 
 .movie-box {
@@ -184,38 +77,16 @@ body {
   position: relative;
 }
 
-.movie-card .card-info-top {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  overflow: hidden;
-  box-shadow: 0 0 5px 2px #0000001a;
-}
-
-.card-info-top .card-info-ep-top {
-  gap: 3.5px;
-  padding: 5px 8px;
-  font-size: 11px;
-  font-weight: bold;
-  background-color: black;
-  color: #fff;
-  margin-top: 5px;
-  margin-right: 10px;
-  border-radius: 5px;
-}
-
 .movie-card {
   width: 100%;
-  padding-bottom: 150%;
-  height: 0;
   position: relative;
   border-radius: 0.5rem;
   overflow: hidden;
   display: block;
-  background-color: var(--bg-3);
+  background-color: var(--card-bg);
   transition: all 0.3s ease;
   box-shadow: 0 0 5px 2px #0000001a;
+  aspect-ratio: 197/295;
 }
 
 .movie-card img {
@@ -224,8 +95,6 @@ body {
   height: 100%;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   object-fit: cover;
 }
 
@@ -253,7 +122,55 @@ body {
   color: #aaa;
 }
 
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .movie-card {
+    aspect-ratio: 180/270;
+  }
+  .movie-box:nth-child(n + 19) {
+    display: block;
+  }
+}
 
-.grid .movie-box {
-  width: 100%;
+@media (max-width: 912px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .movie-card {
+    aspect-ratio: 160/240;
+  }
+  .movie-box:nth-child(n + 19) {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: 0 16px;
+  }
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .movie-card {
+    aspect-ratio: 140/210;
+  }
+  .movie-box:nth-child(n + 19) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 0 12px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .movie-card {
+    aspect-ratio: 120/180;
+  }
 }
