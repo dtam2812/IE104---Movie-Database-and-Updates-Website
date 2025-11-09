@@ -123,7 +123,11 @@ body {
   padding: 17px 17px;
   border-radius: 100%;
   background-color: #fecf59;
-  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  background: linear-gradient(
+    39deg,
+    rgba(254, 207, 89, 1),
+    rgba(255, 241, 204, 1)
+  );
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -250,6 +254,10 @@ body {
   grid-column: 1 / -1;
 }
 
+#comments {
+  grid-column: 1 / -1;
+}
+
 /*TAB 1: DIỄN VIÊN*/
 .actor-grid {
   display: flex;
@@ -327,6 +335,225 @@ body {
 
 .movie-box {
   margin-bottom: 10px;
+}
+
+/*TAB 3: ĐỀ XUẤT */
+
+.comment-section {
+  background-color: #191b24;
+  color: white;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.comment-section h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #fecf59;
+  padding-bottom: 10px;
+}
+
+/* THỐNG KÊ */
+.comments-stats {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  background: rgba(254, 207, 89, 0.1);
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.stat-item span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #fecf59;
+}
+
+/* Form */
+.comment-form {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Chọn sao*/
+.rating-input label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 8px;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.star-rating i {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.star-rating i:hover,
+.star-rating i.active {
+  color: #ffc107;
+  transform: scale(1.1);
+}
+
+/* Ô nhập*/
+#comment-text {
+  width: 100%;
+  min-height: 120px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  resize: vertical;
+  margin-bottom: 15px;
+}
+
+#comment-text:focus {
+  outline: none;
+  border-color: #fecf59;
+}
+
+/* Nút gửi */
+#submit-comment {
+  background: linear-gradient(39deg, #fecf59, #fff1cc);
+  color: #000;
+  font-weight: 600;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#submit-comment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(254, 207, 89, 0.4);
+}
+
+/* Danh sách đánh giá */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Thông báo chưa có đánh giá */
+.no-comments {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Mỗi đánh giá */
+.comment-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.comment-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Avatar + tên + sao */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.comment-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar tròn */
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fecf59, #ff9a44);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #000;
+}
+
+/* Thông tin user */
+.user-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Số sao đánh giá */
+.comment-rating {
+  display: flex;
+  gap: 4px;
+}
+
+.comment-rating i {
+  color: #ffc107;
+}
+
+.comment-rating i.empty {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Nội dung đánh giá */
+.comment-text {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+/* Nút like, reply */
+.comment-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.comment-action-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.comment-action-btn:hover {
+  color: #fecf59;
+  background: rgba(254, 207, 89, 0.1);
 }
 
 /*RESPONSIVE - MOBILE*/
@@ -475,7 +702,6 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
   }
-
 }
 
 @media only screen and (max-width: 600px) {
@@ -514,6 +740,10 @@ body {
   .grid-layout h3 {
     font-size: 18px;
   }
+
+  .stat-item {
+    font-size: 12px;
+  }
 }
 
 @media only screen and (max-width: 375px) {
@@ -536,4 +766,3 @@ body {
     font-size: 12px;
   }
 }
-

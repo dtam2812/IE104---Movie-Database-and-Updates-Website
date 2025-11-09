@@ -122,6 +122,7 @@
         <button class="tab" data-tab="seasons">Các mùa phim</button>
         <button class="tab" data-tab="producers">Nhà sản xuất</button>
         <button class="tab" data-tab="recommend">Đề xuất</button>
+        <button class="tab" data-tab="comments">Đánh giá</button>
       </div>
 
       <!-- TAB 1: Diễn viên -->
@@ -189,7 +190,50 @@
         </div>
       </div>
 
-      <!-- TAB 5: Đề xuất -->
+      <!-- TAB 5: Đánh giá -->
+      <div class="tab-content" id="comments">
+        <div class="grid-layout comment-section">
+          <h3>Đánh giá của khán giả</h3>
+
+          <!-- Thống kê -->
+          <div class="comments-stats">
+            <div class="stat-item">
+              Đánh giá trung bình: <span id="avg-rating">0</span>/5
+            </div>
+            <div class="stat-item">
+              Tổng số đánh giá: <span id="total-comments">0</span>
+            </div>
+          </div>
+
+          <!-- Form nhập comment -->
+          <div class="comment-form">
+            <div class="rating-input">
+              <label>Đánh giá của bạn:</label>
+              <div class="star-rating" id="star-rating">
+                <i class="fas fa-star" data-rating="1"></i>
+                <i class="fas fa-star" data-rating="2"></i>
+                <i class="fas fa-star" data-rating="3"></i>
+                <i class="fas fa-star" data-rating="4"></i>
+                <i class="fas fa-star" data-rating="5"></i>
+              </div>
+            </div>
+            <textarea
+              id="comment-text"
+              placeholder="Chia sẻ cảm nhận của bạn về bộ phim..."
+            ></textarea>
+            <button id="submit-comment">Gửi đánh giá</button>
+          </div>
+
+          <!-- Danh sách comments -->
+          <div class="comments-list" id="comments-list">
+            <div class="no-comments">
+              Chưa có đánh giá nào. Hãy là người đầu tiên!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: Đề xuất -->
       <div class="tab-content" id="recommend">
         <div class="grid-layout recommend-grid">
           <h3>Đề xuất</h3>
@@ -230,5 +274,6 @@
 
     <script type="module" src="../../js/TvShowDetail.js"></script>
     <script type="module" src="../../js/Trailer.js"></script>
+    <script type="module" src="../../js/Comment.js"></script>
   </body>
 </html>
