@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { userName, email, password } = req.body;
 
     await userModel.create({
-      username: name,
+      username: userName,
       email: email,
       password: bcrypt.hashSync(password, 10),
       role: "user",
@@ -23,13 +23,26 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await userModel.findOne(email);
+    const user = await userModel.findOne({ email });
     if (!user) return res.status(400).send("invalid user");
 
     const validPass = bcrypt.compareSync(password, user.password);
     if (!validPass) return res.status(400).send("invalid password");
 
-    return res.status(200).send("login valid");
+    const jwtToken = jwt.sign(
+      {
+        _id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.SECRET_JWT,
+      {
+        expiresIn: 10,
+      }
+    );
+
+    return res.status(200).send({ accessToken: jwtToken });
   } catch (error) {
     console.log(error);
   }

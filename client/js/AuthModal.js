@@ -1,3 +1,5 @@
+import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
+
 export function Auth_Modaljs() {
   const modal = document.querySelector(".modal");
   const backdrop = document.querySelector(".modal_backdrop");
@@ -67,7 +69,7 @@ export function Auth_Modaljs() {
     const isValid = registerFormEl.checkValidity();
     if (!isValid || submitBtn.disabled) return;
 
-    const name = registerFormEl
+    const userName = registerFormEl
       .querySelector('input[name="name"]')
       .value.trim();
     const email = registerFormEl
@@ -81,7 +83,7 @@ export function Auth_Modaljs() {
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ userName, email, password }),
       });
 
       if (response.status === 200) {
@@ -100,23 +102,31 @@ export function Auth_Modaljs() {
       .value.trim();
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         const data = await response.json();
+        const accessToken = data.accessToken;
+        const payloadDecoded = jwtDecode(accessToken);
+
+        if (payloadDecoded.role === "user") {
+          window.location.href = "/client/view/pages/HomePage.html";
+        } else {
+          window.location.href = "/client/view/pages/AdminUsers.html";
+        }
+
+        localStorage.setItem("accessToken", accessToken);
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
         modal.classList.add("hidden");
-      } else {
-        alert("Đăng nhập thất bại!");
       }
-    } catch {
-      alert("Lỗi khi kết nối đến server!");
+    } catch (error) {
+      console.log(error);
     }
   });
 }

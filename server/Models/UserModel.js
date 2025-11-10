@@ -5,6 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
   role: String,
+  status: String,
+  JoinDate: Date,
   favoriteFilm: [
     {
       id: String,
@@ -12,7 +14,6 @@ const userSchema = new mongoose.Schema({
       title: String,
       originalName: String,
       posterPath: String,
-      backdropPath: String,
     },
   ],
 });
