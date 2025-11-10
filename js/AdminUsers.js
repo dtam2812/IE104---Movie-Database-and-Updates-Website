@@ -1,163 +1,151 @@
-import { usersData } from './Data.js';
+// ========== KHỞI TẠO & LOAD DATA ==========
+export async function AdminUsers_js() {
+    
+    let allUsers = [];
+    // Load dữ liệu users từ file Data.js 
+    try {
+        const { usersData } = await import('./Data.js');
+        allUsers = usersData ? [...usersData] : [];
+        console.log('✅ Loaded users data');
+    } catch {
+        console.log('ℹ️ No initial user data, starting empty');
+    }
 
-export function AdminUsers_js() {
+    // ========== DOM ELEMENTS ==========
+    // Modal elements
     const modalUser = document.querySelector('.modal-user');
-    const addUserBtn = document.querySelector('.add-btn');
     const backdrop = document.querySelector('.modal-user .modal_backdrop');
-    const closeBtn = document.querySelector('.modal-user .modal_close');
-    const userForm = document.querySelector('.form-wrapper.user-form');
-    const userFormEl = userForm.querySelector('form');
-    const userCountHeading = document.querySelector('.dm-table-heading h2');
+    const userFormEl = document.querySelector('.form-wrapper.user-form form');
     const modalTitle = document.querySelector('.modal-title');
     const submitBtn = userFormEl.querySelector('.btn.btn-primary');
-
-    let currentEditRow = null;
-    let isEditMode = false;
-
-    const tableBody = document.querySelector('.dm-table-body');
     
-    // Avatar preview elements
-    const avatarPreview = userForm.querySelector('.user-avatar');
-    const avatarPreviewImg = avatarPreview.querySelector('img');
-    const avatarInput = avatarPreview.querySelector('.avatar-input');
-
-    const paginationLeft = document.querySelector('.pagination-left-arrow');
-    const paginationRight = document.querySelector('.pagination-right-arrow');
+    // Table & Pagination
+    const tableBody = document.querySelector('.dm-table-body');
+    const userCountHeading = document.querySelector('.dm-table-heading h2');
     const currentPageSpan = document.querySelector('.pagination-page-current');
     const totalPagesSpan = document.querySelector('.pagination__main span:last-child');
-
-    // TÌM KIẾM VÀ LỌC
+    const paginationLeft = document.querySelector('.pagination-left-arrow');
+    const paginationRight = document.querySelector('.pagination-right-arrow');
+    
+    // Search & Filter
     const searchInput = document.querySelector('.search-input');
     const roleFilter = document.querySelector('.filter-select:nth-child(1)');
     const statusFilter = document.querySelector('.filter-select:nth-child(2)');
-
-    // Phân trang - Khởi tạo mảng rỗng nếu không có usersData
-    let allUsers = [];
     
-    try {
-        if (typeof usersData !== 'undefined') {
-            allUsers = [...usersData];
-        }
-    } catch (error) {
-        console.log('No initial user data, starting with empty array');
-    }
-    
-    let filteredUsers = [...allUsers];
-    let currentPage = 1;
-    const usersPerPage = 5;
+    // Avatar preview
+    const avatarPreview = document.querySelector('.user-avatar');
+    const avatarPreviewImg = avatarPreview.querySelector('img');
+    const avatarInput = avatarPreview.querySelector('.avatar-input');
 
-    // Password validation elements
+    // Password validation
     const pwdInput = userFormEl.querySelector('input[name="password"]');
     const cfPwdInput = userFormEl.querySelector('input[name="cf_password"]');
     const errorMessage = userFormEl.querySelector('.non-same-pw');
 
-    // Tạo ID tự động tăng theo format UIT001, UIT002, ...
-    function generateUserId() {
-        if (allUsers.length === 0) {
-            return 'UIT001';
-        }
+    // ========== STATE MANAGEMENT ==========
+    let filteredUsers = [...allUsers];
+    let currentPage = 1;
+    let currentEditRow = null;
+    let isEditMode = false;
+    const usersPerPage = 5;
+
+    // ========== UTILITY FUNCTIONS ==========
+    
+    // Tạo ID tự động theo format UIT001, UIT002, ...
+    const generateUserId = () => {
+        if (allUsers.length === 0) return 'UIT001';
         
-        const maxNumber = allUsers.reduce((max, user) => {
+        const maxNum = allUsers.reduce((max, user) => {
             const match = user.id.match(/^UIT(\d+)$/);
-            if (match) {
-                const num = parseInt(match[1]);
-                return num > max ? num : max;
-            }
-            return max;
+            return match ? Math.max(max, parseInt(match[1])) : max;
         }, 0);
         
-        const newNumber = maxNumber + 1;
-        return 'UIT' + String(newNumber).padStart(3, '0');
-    }
+        return 'UIT' + String(maxNum + 1).padStart(3, '0');
+    };
 
     // Tính tổng số trang
-    function getTotalPages() {
-        return Math.ceil(filteredUsers.length / usersPerPage);
-    }
+    const getTotalPages = () => Math.ceil(filteredUsers.length / usersPerPage);
 
-    // Lấy users cho trang hiện tại
-    function getUsersForCurrentPage() {
-        const startIndex = (currentPage - 1) * usersPerPage;
-        const endIndex = startIndex + usersPerPage;
-        return filteredUsers.slice(startIndex, endIndex);
-    }
+    // Lấy danh sách users cho trang hiện tại
+    const getUsersForCurrentPage = () => {
+        const start = (currentPage - 1) * usersPerPage;
+        return filteredUsers.slice(start, start + usersPerPage);
+    };
 
-    // HÀM TÌM KIẾM VÀ LỌC - Giữ nguyên trang hiện tại nếu có thể
-    function filterUsers() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const roleValue = roleFilter.value;
-        const statusValue = statusFilter.value;
+    // Đọc file ảnh thành base64
+    const readFileAsDataURL = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.readAsDataURL(file);
+        });
+    };
+
+    // ========== FILTER & SEARCH ==========
+    
+    // Lọc users theo search và filter
+    const filterUsers = () => {
+        const search = searchInput.value.toLowerCase().trim();
+        const role = roleFilter.value;
+        const status = statusFilter.value;
 
         filteredUsers = allUsers.filter(user => {
-            const matchSearch = 
-                user.name.toLowerCase().includes(searchTerm) ||
-                user.email.toLowerCase().includes(searchTerm) ||
-                user.id.toLowerCase().includes(searchTerm);
-
-            const matchRole = roleValue === 'all' || user.role === roleValue;
-            const matchStatus = statusValue === 'all' || user.status === statusValue;
+            const matchSearch = user.name.toLowerCase().includes(search) || 
+                              user.email.toLowerCase().includes(search) ||
+                              user.id.toLowerCase().includes(search);
+            const matchRole = role === 'all' || user.role === role;
+            const matchStatus = status === 'all' || user.status === status;
 
             return matchSearch && matchRole && matchStatus;
         });
 
+        // Điều chỉnh trang hiện tại nếu vượt quá tổng số trang
         const totalPages = getTotalPages();
-        if (currentPage > totalPages && totalPages > 0) {
-            currentPage = totalPages;
-        } else if (totalPages === 0) {
-            currentPage = 1;
-        }
+        currentPage = totalPages === 0 ? 1 : Math.min(currentPage, totalPages);
         
         renderUsers();
-    }
+    };
 
-    // Event listeners cho tìm kiếm và lọc
-    searchInput.addEventListener('input', filterUsers);
-    roleFilter.addEventListener('change', filterUsers);
-    statusFilter.addEventListener('change', filterUsers);
-
-    // Tạo row cho user
-    function createUserRow(user, no) {
-        const newRow = document.createElement('tr');
-        newRow.dataset.userId = user.id;
-
-        const noCell = document.createElement('td');
-        noCell.textContent = no;
-        newRow.appendChild(noCell);
-
-        const userCell = document.createElement('td');
-        userCell.classList.add('user-column');
-        userCell.innerHTML = `
-            <div class="td-user-info">
-                <div class="td-user-avatar">
-                    <img src="${user.avatar}" alt="User Avatar" class="user-avatar-img">
-                </div>
-                <div class="td-user-name-email">
-                    <span class="name">${user.name}</span><br>
-                    <span class="email">${user.email}</span>
-                </div>
-            </div>
-        `;
-        newRow.appendChild(userCell);
-
-        const roleCell = document.createElement('td');
-        roleCell.textContent = user.role;
-        newRow.appendChild(roleCell);
-
-        const statusCell = document.createElement('td');
+    // ========== RENDER FUNCTIONS ==========
+    
+    // Tạo một row trong bảng users
+    const createUserRow = (user, no) => {
         const isActive = user.status === 'active';
-        statusCell.innerHTML = `
-            <label class="switch">
-                <input type="checkbox" class="status-toggle" ${isActive ? 'checked' : ''}>
-                <span class="slider ${isActive ? 'active' : 'banned'}">
-                    <span class="text active-text">Active</span>
-                    <span class="text banned-text">Banned</span>
-                </span>
-            </label>
+        
+        const row = document.createElement('tr');
+        row.dataset.userId = user.id;
+        row.innerHTML = `
+            <td>${no}</td>
+            <td class="user-column">
+                <div class="td-user-info">
+                    <div class="td-user-avatar">
+                        <img src="${user.avatar}" alt="User Avatar" class="user-avatar-img">
+                    </div>
+                    <div class="td-user-name-email">
+                        <span class="name">${user.name}</span><br>
+                        <span class="email">${user.email}</span>
+                    </div>
+                </div>
+            </td>
+            <td>${user.role}</td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" class="status-toggle" ${isActive ? 'checked' : ''}>
+                    <span class="slider ${isActive ? 'active' : 'banned'}">
+                        <span class="text active-text">Active</span>
+                        <span class="text banned-text">Banned</span>
+                    </span>
+                </label>
+            </td>
+            <td>${user.createdDate}</td>
+            <td><button class="btn btn-edit"><i class="fa-solid fa-user-pen"></i></button></td>
+            <td><a href="#" class="btn btn-detail"><i class="fa-solid fa-circle-info"></i></a></td>
+            <td><button class="btn btn-delete"><i class="fa-solid fa-trash"></i></button></td>
         `;
-        newRow.appendChild(statusCell);
 
-        const toggle = statusCell.querySelector('.status-toggle');
-        const slider = statusCell.querySelector('.slider');
+        // Event listener cho toggle status
+        const toggle = row.querySelector('.status-toggle');
+        const slider = row.querySelector('.slider');
         toggle.addEventListener('change', () => {
             const userIndex = allUsers.findIndex(u => u.id === user.id);
             if (userIndex !== -1) {
@@ -168,46 +156,23 @@ export function AdminUsers_js() {
             }
         });
 
-        const createDateCell = document.createElement('td');
-        createDateCell.textContent = user.createdDate;
-        newRow.appendChild(createDateCell);
-
-        const editCell = document.createElement('td');
-        editCell.innerHTML = `<button class="btn btn-edit"><i class="fa-solid fa-user-pen"></i></button>`;
-        newRow.appendChild(editCell);
-
-        const detailCell = document.createElement('td');
-        detailCell.innerHTML = `<a href="#" class="btn btn-detail"><i class="fa-solid fa-circle-info"></i></a>`;
-        newRow.appendChild(detailCell);
-
-        const deleteCell = document.createElement('td');
-        deleteCell.innerHTML = `<button class="btn btn-delete"><i class="fa-solid fa-trash"></i></button>`;
-        newRow.appendChild(deleteCell);
-
-        const editBtn = editCell.querySelector('.btn-edit');
-        editBtn.addEventListener('click', () => {
-            openEditModal(newRow);
-        });
-
-        const deleteBtn = deleteCell.querySelector('.btn-delete');
-        deleteBtn.addEventListener('click', function() {
-            if(confirm(`Are you sure you want to delete "${user.name}"?`)) {
-                const userId = newRow.dataset.userId;
-                allUsers = allUsers.filter(u => u.id !== userId);
+        // Event listeners cho các nút
+        row.querySelector('.btn-edit').addEventListener('click', () => openEditModal(row));
+        row.querySelector('.btn-delete').addEventListener('click', () => {
+            if (confirm(`Are you sure you want to delete "${user.name}"?`)) {
+                allUsers = allUsers.filter(u => u.id !== user.id);
                 filterUsers();
             }
         });
 
-        return newRow;
-    }
+        return row;
+    };
 
-    // Render bảng users
-    function renderUsers() {
-        tableBody.innerHTML = '';
-        
+    // Render toàn bộ bảng users
+    const renderUsers = () => {
         const usersToShow = getUsersForCurrentPage();
         const startNo = (currentPage - 1) * usersPerPage + 1;
-        
+
         if (usersToShow.length === 0) {
             tableBody.innerHTML = `
                 <tr>
@@ -217,78 +182,64 @@ export function AdminUsers_js() {
                 </tr>
             `;
         } else {
-            usersToShow.forEach((user, index) => {
-                const newRow = createUserRow(user, startNo + index);
-                tableBody.appendChild(newRow);
+            tableBody.innerHTML = '';
+            usersToShow.forEach((user, i) => {
+                tableBody.appendChild(createUserRow(user, startNo + i));
             });
         }
-        
+
         updateUserCount();
         updatePaginationButtons();
-    }
+    };
 
-    // Cập nhật số lượng user
-    function updateUserCount() {
-        if (filteredUsers.length === allUsers.length) {
-            userCountHeading.textContent = `Users (${allUsers.length})`;
-        } else {
-            userCountHeading.textContent = `Users (${filteredUsers.length} / ${allUsers.length})`;
-        }
-    }
+    // Cập nhật số lượng users hiển thị
+    const updateUserCount = () => {
+        userCountHeading.textContent = filteredUsers.length === allUsers.length
+            ? `Users (${allUsers.length})`
+            : `Users (${filteredUsers.length} / ${allUsers.length})`;
+    };
 
-    // Cập nhật nút phân trang
-    function updatePaginationButtons() {
+    // Cập nhật trạng thái các nút phân trang
+    const updatePaginationButtons = () => {
         const totalPages = getTotalPages();
         
         currentPageSpan.textContent = currentPage;
         totalPagesSpan.textContent = `/ ${totalPages}`;
         
-        if (currentPage === 1 || totalPages === 0) {
-            paginationLeft.classList.add('disable');
-            paginationLeft.disabled = true;
-        } else {
-            paginationLeft.classList.remove('disable');
-            paginationLeft.disabled = false;
-        }
+        paginationLeft.classList.toggle('disable', currentPage === 1 || totalPages === 0);
+        paginationLeft.disabled = currentPage === 1 || totalPages === 0;
         
-        if (currentPage >= totalPages || totalPages === 0) {
-            paginationRight.classList.add('disable');
-            paginationRight.disabled = true;
+        paginationRight.classList.toggle('disable', currentPage >= totalPages || totalPages === 0);
+        paginationRight.disabled = currentPage >= totalPages || totalPages === 0;
+    };
+
+    // ========== PASSWORD VALIDATION ==========
+    
+    // Kiểm tra mật khẩu khớp nhau
+    const validatePasswords = () => {
+        if (pwdInput.value && cfPwdInput.value && pwdInput.value !== cfPwdInput.value) {
+            errorMessage.style.display = 'block';
+            cfPwdInput.style.border = '1px solid red';
+            submitBtn.disabled = true;
         } else {
-            paginationRight.classList.remove('disable');
-            paginationRight.disabled = false;
+            errorMessage.style.display = 'none';
+            cfPwdInput.style.border = '';
+            submitBtn.disabled = false;
         }
-    }
-
-    // Event listeners cho phân trang
-    paginationLeft.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderUsers();
-        }
-    });
-
-    paginationRight.addEventListener('click', () => {
-        if (currentPage < getTotalPages()) {
-            currentPage++;
-            renderUsers();
-        }
-    });
-
-    // KHỞI TẠO
-    renderUsers();
+    };
 
     // ========== MODAL ADD/EDIT ==========
-    addUserBtn.addEventListener('click', () => {
+    
+    // Mở modal thêm user mới
+    const openAddModal = () => {
         isEditMode = false;
         modalTitle.textContent = 'Add User';
         submitBtn.textContent = 'Create';
         
-        // Reset form và preview
         userFormEl.reset();
         avatarPreviewImg.src = '../../public/assets/image/user_avatar_default.jpg';
         
-        // Ẩn trường ID display và password khi Add
+        // Ẩn ID display, hiện password fields
         const idDisplayGroup = userFormEl.querySelector('.user-id-display');
         const passwordGroup = userFormEl.querySelector('.password-group');
         const cfPasswordGroup = userFormEl.querySelector('.cf-password-group');
@@ -303,50 +254,50 @@ export function AdminUsers_js() {
         submitBtn.disabled = false;
         
         modalUser.classList.remove('hidden');
-        userForm.classList.add('active');
-    });
+        document.querySelector('.form-wrapper.user-form').classList.add('active');
+    };
 
-    function openEditModal(row) {
+    // Mở modal chỉnh sửa user
+    const openEditModal = (row) => {
         isEditMode = true;
         currentEditRow = row;
         
-        const userId = row.dataset.userId;
-        const user = allUsers.find(u => u.id === userId);
-        
+        const user = allUsers.find(u => u.id === row.dataset.userId);
         if (!user) return;
         
         modalTitle.textContent = 'Edit User';
         submitBtn.textContent = 'Save';
         
-        // Hiển thị preview với data hiện tại
+        // Hiển thị preview ảnh hiện tại
         avatarPreviewImg.src = user.avatar;
         
-        // Hiển thị ID (readonly)
+        // Hiển thị ID (readonly), ẩn password fields
         const idDisplayGroup = userFormEl.querySelector('.user-id-display');
         const idDisplayInput = userFormEl.querySelector('input[name="id-display"]');
+        const passwordGroup = userFormEl.querySelector('.password-group');
+        const cfPasswordGroup = userFormEl.querySelector('.cf-password-group');
+        
         if (idDisplayGroup && idDisplayInput) {
             idDisplayGroup.style.display = 'block';
             idDisplayInput.value = user.id;
         }
-        
-        // Ẩn password fields khi edit
-        const passwordGroup = userFormEl.querySelector('.password-group');
-        const cfPasswordGroup = userFormEl.querySelector('.cf-password-group');
         if (passwordGroup) passwordGroup.style.display = 'none';
         if (cfPasswordGroup) cfPasswordGroup.style.display = 'none';
         
-        // Điền dữ liệu
+        // Điền dữ liệu vào form
         userFormEl.querySelector('input[name="id"]').value = user.id;
         userFormEl.querySelector('input[name="name"]').value = user.name;
         userFormEl.querySelector('input[name="email"]').value = user.email;
         userFormEl.querySelector('select[name="role"]').value = user.role;
         
         modalUser.classList.remove('hidden');
-        userForm.classList.add('active');
-    }
+        document.querySelector('.form-wrapper.user-form').classList.add('active');
+    };
 
-    function closeModal() {
+    // Đóng modal
+    const closeModal = () => {
         modalUser.classList.add('hidden');
+        document.querySelector('.form-wrapper.user-form').classList.remove('active');
         userFormEl.reset();
         currentEditRow = null;
         isEditMode = false;
@@ -354,107 +305,102 @@ export function AdminUsers_js() {
         errorMessage.style.display = 'none';
         cfPwdInput.style.border = '';
         submitBtn.disabled = false;
-    }
+    };
 
+    // ========== EVENT LISTENERS ==========
+    
+    // Search & Filter
+    searchInput.addEventListener('input', filterUsers);
+    roleFilter.addEventListener('change', filterUsers);
+    statusFilter.addEventListener('change', filterUsers);
+
+    // Pagination
+    paginationLeft.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderUsers();
+        }
+    });
+    
+    paginationRight.addEventListener('click', () => {
+        if (currentPage < getTotalPages()) {
+            currentPage++;
+            renderUsers();
+        }
+    });
+
+    // Modal
+    document.querySelector('.add-btn').addEventListener('click', openAddModal);
     backdrop.addEventListener('click', closeModal);
-    closeBtn.addEventListener('click', closeModal);
-    document.addEventListener('keydown', e => { 
+    document.querySelector('.modal-user .modal_close').addEventListener('click', closeModal);
+    
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modalUser.classList.contains('hidden')) {
             closeModal();
         }
     });
 
-    // Upload avatar mới
-    avatarInput.addEventListener('change', function(e) {
+    // Upload avatar
+    avatarInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                avatarPreviewImg.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+        if (file) avatarPreviewImg.src = await readFileAsDataURL(file);
     });
 
-    // XÁC THỰC MẬT KHẨU
-    function validatePasswords() {
-        if (pwdInput.value && cfPwdInput.value && pwdInput.value !== cfPwdInput.value) {
-            errorMessage.style.display = 'block';
-            cfPwdInput.style.border = '1px solid red';
-            submitBtn.disabled = true;
-        } else {
-            errorMessage.style.display = 'none';
-            cfPwdInput.style.border = '';
-            submitBtn.disabled = false;
-        }
-    }
-
+    // Password validation
     pwdInput.addEventListener('input', validatePasswords);
     cfPwdInput.addEventListener('input', validatePasswords);
 
-    // SUBMIT FORM
-    userFormEl.addEventListener('submit', function(event) {
-        event.preventDefault();
+    // Submit form
+    userFormEl.addEventListener('submit', async (e) => {
+        e.preventDefault();
         
+        // Lấy dữ liệu từ form
         const name = userFormEl.querySelector('input[name="name"]').value;
         const email = userFormEl.querySelector('input[name="email"]').value;
         const role = userFormEl.querySelector('select[name="role"]').value;
         
-        let avatarURL;
+        // Xử lý ảnh avatar
         const avatarFile = avatarInput.files[0];
-        
-        function saveUser() {
-            if (isEditMode && currentEditRow) {
-                // EDIT MODE - Cập nhật trực tiếp vào allUsers
-                const userId = currentEditRow.dataset.userId;
-                const userIndex = allUsers.findIndex(u => u.id === userId);
-                
-                if (userIndex !== -1) {
-                    allUsers[userIndex] = {
-                        ...allUsers[userIndex],
-                        name: name,
-                        email: email,
-                        role: role,
-                        avatar: avatarURL
-                    };
-                    
-                    filterUsers();
-                }
-            } else {
-                // ADD MODE
-                const currentDate = new Date().toLocaleDateString('en-US');
-                
-                const newUser = {
-                    id: generateUserId(),
-                    name: name,
-                    email: email,
-                    role: role,
-                    status: 'active',
-                    avatar: avatarURL,
-                    createdDate: currentDate
-                };
-                
-                allUsers.push(newUser);
-                filterUsers();
-                
-                // Chuyển đến trang cuối nơi có user mới
-                currentPage = getTotalPages();
-                renderUsers();
-            }
+        const avatarURL = avatarFile ? await readFileAsDataURL(avatarFile) : avatarPreviewImg.src;
+
+        if (isEditMode && currentEditRow) {
+            // Chế độ EDIT
+            const userId = currentEditRow.dataset.userId;
+            const index = allUsers.findIndex(u => u.id === userId);
             
-            closeModal();
+            if (index !== -1) {
+                allUsers[index] = {
+                    ...allUsers[index],
+                    name,
+                    email,
+                    role,
+                    avatar: avatarURL
+                };
+                filterUsers();
+            }
+        } else {
+            // Chế độ ADD
+            const newUser = {
+                id: generateUserId(),
+                name,
+                email,
+                role,
+                status: 'active',
+                avatar: avatarURL,
+                createdDate: new Date().toLocaleDateString('en-US')
+            };
+            
+            allUsers.push(newUser);
+            filterUsers();
+            
+            // Chuyển đến trang cuối
+            currentPage = getTotalPages();
+            renderUsers();
         }
         
-        if (avatarFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                avatarURL = e.target.result;
-                saveUser();
-            };
-            reader.readAsDataURL(avatarFile);
-        } else {
-            avatarURL = avatarPreviewImg.src;
-            saveUser();
-        }
+        closeModal();
     });
+
+    // ========== KHỞI TẠO BAN ĐẦU ==========
+    renderUsers();
 }

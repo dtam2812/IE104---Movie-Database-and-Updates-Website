@@ -43,7 +43,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="../pages/HomePage.html"">
+                        <a href="../pages/HomePage.html">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <span>Sign Out</span>
                         </a>
@@ -229,8 +229,12 @@
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Actors:</label>
-                                            <input class="form-control" type="text" name="actors" placeholder="Actor1, Actor2">
+                                            <label>Actors (Display):</label>
+                                            <input class="form-control" type="text" name="actors" placeholder="Auto-filled from actors list" readonly>
+                                            <input type="hidden" name="actorsCount" value="0">
+                                            <button type="button" class="btn btn-secondary manage-actors-btn" style="margin-top: 0.5rem; width: 100%;">
+                                                <i class="fa-solid fa-users"></i> Manage Actors
+                                            </button>
                                         </div>
                                     </div>
 
@@ -282,6 +286,81 @@
             </div>
         </div>
     </div>
+
+    <!-- Sub-Modal: Manage Actors -->
+    <div class="sub-modal-backdrop hidden" id="actors-backdrop"></div>
+    <div class="sub-modal hidden" id="actors-sub-modal">
+        <div class="sub-modal-header">
+            <h3>Manage Actors & Cast</h3>
+            <button class="sub-close" type="button">×</button>
+        </div>
+        <div class="sub-modal-body">
+            <button type="button" class="btn btn-primary add-actor-btn" style="width: 100%; margin-bottom: 1rem;">
+                <i class="fa-solid fa-plus"></i> Add New Actor
+            </button>
+            <div id="actors-list" class="actors-accordion">
+                <!-- JS sẽ render actors ở đây -->
+            </div>
+        </div>
+        <div class="sub-modal-footer">
+            <button type="button" class="btn btn-primary save-actors-btn">Save Actors</button>
+        </div>
+    </div>
+
+    <!-- ========== TEMPLATES (Hidden) ========== -->
+    
+    <!-- Template: Actor Item -->
+    <template id="actor-item-template">
+        <div class="actor-item">
+            <div class="actor-header">
+                <h4 class="actor-title">Actor</h4>
+                <button type="button" class="btn-icon delete-actor-btn">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+            <div class="actor-body">
+                <div class="actor-content-wrapper">
+                    <!-- Photo ở trên -->
+                    <div class="actor-photo-right">
+                        <div class="actor-photo-preview">
+                            <img src="../../public/assets/image/user_avatar_default.jpg" 
+                                 alt="Actor Photo" class="actor-photo-img">
+                            <input type="file" class="actor-photo-input" accept="image/*">
+                        </div>
+                    </div>
+                    <!-- Info ở dưới -->
+                    <div class="actor-info-left">
+                        <div class="form-group mb1">
+                            <label>Actor ID:</label>
+                            <input type="text" class="form-control actor-id" 
+                                   placeholder="Auto-generated" readonly>
+                        </div>
+                        <div class="form-group mb1">
+                            <label>Full Name: <span style="color: red;">*</span></label>
+                            <input type="text" class="form-control actor-name" 
+                                   placeholder="e.g. Robert Downey Jr." required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template: Empty Table Row -->
+    <template id="empty-row-template">
+        <tr>
+            <td colspan="9" style="text-align: center; padding: 2rem; color: #717182;">
+                No movies found
+            </td>
+        </tr>
+    </template>
+
+    <!-- Template: Empty Actors List -->
+    <template id="empty-actors-template">
+        <p style="text-align: center; color: #717182; padding: 2rem;">
+            No actors added yet. Click "Add Actor" to start.
+        </p>
+    </template>
 
 </body>
 </html>

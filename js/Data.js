@@ -1,7 +1,3 @@
-// ==================== COMBINED DATA FILE ====================
-// File: AppData.js
-// Chứa tất cả data cho Movies, TV Shows và Users
-
 // ==================== MOVIES DATA ====================
 export const moviesData = [
   {
