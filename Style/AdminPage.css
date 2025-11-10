@@ -1,4 +1,4 @@
-/* ==================== GLOBAL ==================== */
+/* BASE*/
 body {
     background-color: #191B24;
     margin: 0;
@@ -12,7 +12,100 @@ body {
     padding: 90px 0 0 0;
 }
 
-/* ==================== ADMIN SIDEBAR MENU ==================== */
+/* Utility Classes */
+.mb1 { margin-bottom: 8px; }
+.mb2 { margin-bottom: 16px; }
+.mb3 { margin-bottom: 24px; }
+.mt1 { margin-top: 8px; }
+.mt3 { margin-top: 24px; }
+.hidden { display: none; }
+
+/* ADMIN HEADER */
+.admin-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 90px;
+    background-color: #0F111A;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.admin-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 32px;
+    gap: 24px;
+}
+
+.admin-hamburger {
+    display: none;
+}
+
+.admin-logo {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+}
+
+.admin-logo img {
+    height: 90px;
+    width: 150px;
+    object-fit: cover;
+}
+
+#main_user .header-user {
+    padding: 0.3rem 0.6rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+.line-center {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+#user_logged .header-user .user-avatar {
+    width: 42px;
+    height: 42px;
+}
+
+.user-avatar img {
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+}
+
+/* Menu Overlay */
+.admin-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.admin-menu-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+
+/* ADMIN SIDEBAR */
 .admin-menu-container {
     position: fixed;
     left: 0;
@@ -20,6 +113,7 @@ body {
     width: 17%;
     height: 100vh;
     padding: 30px 16px;
+    z-index: 1000;
 }
 
 .admin-menu-list {
@@ -42,6 +136,7 @@ body {
     text-decoration: none;
     gap: 1rem;
     border-radius: 4px;
+    transition: background-color 0.2s;
 }
 
 .admin-menu-list li a.active {
@@ -54,12 +149,11 @@ body {
 }
 
 .admin-menu-list li a span,
-.admin-menu-list li a i
-{
+.admin-menu-list li a i {
     font-size: 20px !important;
 }
 
-/* ==================== ADMIN MAIN CONTENT ==================== */
+/* ADMIN MAIN CONTENT */
 .admin-main-container {
     position: relative;
     margin-left: auto;
@@ -72,7 +166,7 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0.25rem 1.5rem 0.25rem 0;
+    padding: 0.25rem;
 }
 
 .admin-main-content .am-content-heading h1 {
@@ -95,9 +189,14 @@ body {
     margin-left: auto;
     gap: 0.5rem;
     cursor: pointer;
+    transition: opacity 0.2s;
 }
 
-/* ==================== SEARCH & FILTER ==================== */
+.admin-main-content .am-content-heading .add-btn:hover {
+    opacity: 0.9;
+}
+
+/* SEARCH & FILTER BAR */
 .am-search-box {
     display: flex;
     align-items: center;
@@ -120,6 +219,7 @@ body {
     font-weight: 500;
     gap: 1rem;
     padding: 0.7rem 0.8rem;
+    border-radius: 8px;
 }
 
 .am-search-box .search-bar .search-input {
@@ -127,6 +227,7 @@ body {
     background-color: transparent;
     border: none;
     outline: none;
+    font-size: 14px;
 }
 
 .am-search-box .search-bar .search-input::placeholder {
@@ -149,14 +250,16 @@ body {
     font-weight: 500;
     padding: 0.7rem 1rem;
     border-radius: 8px;
+    cursor: pointer;
 }
 
-/* ==================== TABLE ==================== */
+/* DATA TABLE */
 .dm-table-container {
     width: 100%;
     color: #717182;
     background-color: #F3F3F5;
     border-radius: 8px;
+    overflow: hidden;
 }
 
 .dm-table-container .dm-table-heading h2 {
@@ -203,7 +306,7 @@ body {
     padding-left: 1.5rem;
 }
 
-/* User Table Info */
+/* User Table */
 .td-user-info {
     display: inline-flex;
     text-align: left;
@@ -235,7 +338,7 @@ body {
     color: #717182;
 }
 
-/* Movie Table Info */
+/* Movie/TV Show Table */
 .movie-title {
     display: inline-flex;
     text-align: left;
@@ -248,6 +351,7 @@ body {
     height: 125px;
     object-fit: cover;
     border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Table Action Buttons */
@@ -257,13 +361,18 @@ td .btn {
     color: #0F111A;
     font-size: 16px;
     cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+td .btn:hover {
+    opacity: 0.7;
 }
 
 .btn.btn-delete {
     color: #c43538;
 }
 
-/* Status Slider */
+/* Status Toggle Switch */
 .switch {
     position: relative;
     display: inline-block;
@@ -350,7 +459,7 @@ input:not(:checked) + .slider .banned-text {
     opacity: 0.9;
 }
 
-/* ==================== PAGINATION ==================== */
+/* PAGINATION */
 .content__pagination {
     margin: 64px 0;
     display: flex;
@@ -362,11 +471,13 @@ input:not(:checked) + .slider .banned-text {
 .pagination-left-arrow,
 .pagination-right-arrow {
     background-color: #fff;
+    border: none;
     border-radius: 48px;
     width: 30px;
     height: 30px;
     color: #0F111A;
     cursor: pointer;
+    transition: opacity 0.2s;
 }
 
 .pagination-left-arrow:hover,
@@ -378,6 +489,7 @@ input:not(:checked) + .slider .banned-text {
 .pagination-right-arrow.disable {
     background-color: rgba(255, 255, 255, 0.9);
     cursor: not-allowed !important;
+    opacity: 0.5;
 }
 
 .pagination__main {
@@ -401,8 +513,10 @@ input:not(:checked) + .slider .banned-text {
     text-align: center;
 }
 
-/* ==================== MODAL BASE ==================== */
-.modal.hidden {
+/* MODAL */
+.modal-movie.hidden,
+.modal-tvshow.hidden,
+.modal-user.hidden {
     display: none;
 }
 
@@ -471,6 +585,11 @@ input:not(:checked) + .slider .banned-text {
     border: none;
     background-color: transparent;
     cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.modal_close:hover {
+    opacity: 0.7;
 }
 
 .modal_close i {
@@ -486,103 +605,7 @@ input:not(:checked) + .slider .banned-text {
     display: block;
 }
 
-/* ==================== MODAL FORM - MOVIE LAYOUT ==================== */
-/* Section Top: Title + Overview (Left) | Banner + Poster (Right) */
-.movie-section-top {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.movie-info-left {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.movie-media-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.banner-preview img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.poster-preview img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.banner-preview input[type="file"],
-.poster-preview input[type="file"] {
-    width: 100%;
-    color: #ccc;
-    font-size: 12px;
-    margin-top: 0.5rem;
-}
-
-.banner-preview input[type="file"]::file-selector-button,
-.poster-preview input[type="file"]::file-selector-button {
-    background-color: #ffd875;
-    color: #0F111A;
-    font-size: 12px;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 12px;
-    cursor: pointer;
-    margin-right: 0.5rem;
-}
-
-.banner-preview small,
-.poster-preview small {
-    color: #717182;
-    font-size: 11px;
-    display: block;
-    margin-top: 0.25rem;
-}
-
-/* Section Bottom: 2 cột thông tin */
-.movie-section-bottom {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-}
-
-.movie-info-column {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Submit button ở giữa */
-.action-btn-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.action-btn-center .btn-primary {
-    width: 200px;
-    max-width: 100%;
-}
-
-/* ==================== FORM ELEMENTS ==================== */
+/* FORM ELEMENTS */
 .content_header h1 {
     font-size: 19.6px;
     font-weight: 600;
@@ -613,6 +636,7 @@ input:not(:checked) + .slider .banned-text {
     background-clip: padding-box;
     outline: none;
     color: #ffffff;
+    transition: border-color 0.2s;
 }
 
 .form-control:focus {
@@ -631,7 +655,58 @@ input:not(:checked) + .slider .banned-text {
     padding: 12px 16px;
 }
 
-/* User Avatar Upload */
+/* Form Buttons */
+.btn {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 21px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6.4px;
+    opacity: 1;
+    min-height: 40px;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn.btn-primary {
+    background-color: #ffd875;
+    color: #191b24;
+    padding: 8px 17.6px;
+}
+
+.btn.btn-secondary {
+    background-color: #717182;
+    color: #fff;
+    padding: 8px 17.6px;
+}
+
+.action-btn-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-btn-center .btn-primary {
+    width: 200px;
+    max-width: 100%;
+}
+
+/* Form Validation */
+.non-same-pw {
+    display: none;
+    font-size: 12px;
+    color: #ff6b6b;
+    margin-top: 4px;
+}
+
+/* USER FORM */
 .user-avatar {
     display: flex;
     align-items: center;
@@ -646,119 +721,402 @@ input:not(:checked) + .slider .banned-text {
     object-fit: cover;
 }
 
+.user-avatar .upload-img input[type="file"] {
+    color: #ccc;
+    font-size: 12px;
+}
+
 .user-avatar .upload-img input[type="file"]::file-selector-button {
     background-color: #ccc;
     color: #0F111A;
     font-size: 10px;
+    border: none;
     border-radius: 5px;
     padding: 6px 12px;
     cursor: pointer;
 }
 
-/* Buttons */
-.btn {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 21px;
-    display: inline-flex;
+/* MOVIE/TV SHOW FORM */
+.movie-section-top {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.movie-info-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.movie-media-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.banner-preview img,
+.poster-preview img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.banner-preview img {
+    aspect-ratio: 16/9;
+}
+
+.poster-preview img {
+    aspect-ratio: 2/3;
+}
+
+.banner-preview input[type="file"],
+.poster-preview input[type="file"] {
+    width: 100%;
+    color: #ccc;
+    font-size: 12px;
+    margin-top: 0.5rem;
+}
+
+.banner-preview input[type="file"]::file-selector-button,
+.poster-preview input[type="file"]::file-selector-button {
+    background-color: #ffd875;
+    color: #0F111A;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-right: 0.5rem;
+}
+
+.banner-preview small,
+.poster-preview small {
+    color: #717182;
+    font-size: 11px;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.movie-section-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.movie-info-column {
+    display: flex;
+    flex-direction: column;
+}
+
+/* TV SHOW SEASONS SUB-MODAL */
+.sub-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.sub-modal-backdrop.hidden {
+    display: none;
+}
+
+.sub-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2F3346;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+.sub-modal.hidden {
+    display: none;
+}
+
+.sub-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #444;
+    background: #0F111A;
+}
+
+.sub-modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.sub-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #ccc;
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6.4px;
-    opacity: 1;
-    min-height: 40px;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.sub-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sub-modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+    background: #191B24;
+}
+
+.seasons-accordion {
+    margin-top: 1rem;
+}
+
+.season-item {
+    border: 1px solid #444;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    background: #2F3346;
+}
+
+.season-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #0F111A;
+    cursor: pointer;
+    color: #fff;
+}
+
+.season-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #ccc;
+    transition: color 0.2s;
+}
+
+.btn-icon:hover {
+    color: #ff4444;
+}
+
+.season-body {
+    padding: 1rem;
+    background: #191B24;
+    display: none;
+}
+
+.season-body input,
+.season-body textarea {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid #444;
+    background: #0F111A;
+    color: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.season-body input::placeholder,
+.season-body textarea::placeholder {
+    color: #999;
+}
+
+.season-poster-preview {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.season-poster-img {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+
+.sub-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background: #0F111A;
+}
+
+.add-season-btn,
+.save-seasons-btn,
+.cancel-seasons-btn,
+.manage-seasons-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
     cursor: pointer;
     border: none;
+    transition: background 0.2s;
 }
 
-.btn.btn-primary {
-    background-color: #ffd875;
-    color: #191b24;
-    padding: 8px 17.6px;
+.add-season-btn,
+.save-seasons-btn {
+    background: #4CAF50;
+    color: #fff;
 }
 
-.btn:hover {
-    opacity: 0.9;
+.add-season-btn:hover,
+.save-seasons-btn:hover {
+    background: #45a049;
 }
 
-/* Error Messages */
-.non-same-pw {
-    display: none;
-    font-size: 12px;
-    color: #ff6b6b;
-    margin-top: 4px;
+.cancel-seasons-btn {
+    background: #f44336;
+    color: #fff;
 }
 
-/* Spacing Utilities */
-.mb1 { margin-bottom: 8px; }
-.mb2 { margin-bottom: 16px; }
-.mb3 { margin-bottom: 24px; }
-.mt1 { margin-top: 8px; }
-.mt3 { margin-top: 24px; }
+.cancel-seasons-btn:hover {
+    background: #da190b;
+}
 
-/* ==================== RESPONSIVE ==================== */
-
-/* Tablet */
-@media only screen and (min-width: 769px) and (max-width: 1024px) {
-    .admin-menu-container {
-        width: 20%;
+/* RESPONSIVE (Mobile & Tablet <= 1100px) */
+@media only screen and (max-width: 1100px) {
+    /* Header */
+    .main {
+        padding: 0;
     }
 
-    .admin-main-container {
-        width: 80%;
+    .admin-header {
+        height: 70px;
     }
 
-    .movie-section-top {
-        grid-template-columns: 1fr 250px;
-        gap: 1.5rem;
+    .admin-header-container {
+        padding: 0 16px;
+        gap: 16px;
     }
 
-    .movie-section-bottom {
-        gap: 1.5rem;
+    /* Hamburger Menu */
+    .admin-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 2001;
     }
-}
 
-/* Mobile - Hide sidebar, show hamburger */
-@media only screen and (max-width: 768px) {
-    /* Hide sidebar by default */
+    .admin-hamburger .icon-menu {
+        width: 24px;
+        height: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .admin-hamburger .icon-menu span {
+        width: 100%;
+        height: 3px;
+        background-color: #fff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    .admin-hamburger.active .icon-menu span:nth-child(1) {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+        background-color: #ffde8a;
+    }
+
+    .admin-hamburger.active .icon-menu span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .admin-hamburger.active .icon-menu span:nth-child(3) {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) rotate(-45deg);
+        background-color: #ffde8a;
+    }
+
+    /* Logo */
+    .admin-logo {
+        position: relative;
+        left: auto;
+        transform: none;
+        margin-right: auto;
+    }
+
+    .admin-logo img {
+        height: 70px;
+        width: 100px;
+    }
+
+    /* Sidebar */
     .admin-menu-container {
         position: fixed;
         left: -100%;
         width: 70%;
         max-width: 280px;
         height: 100vh;
-        z-index: 2000;
+        z-index: 1000;
+        margin-top: 70px;
         transition: left 0.3s ease;
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
     }
 
     .admin-menu-container.active {
-        left: 0;
+        left: 0 !important;
     }
 
-    /* Overlay khi menu mở */
-    .admin-menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1999;
-        display: none;
-    }
-
-    .admin-menu-overlay.active {
-        display: block;
-    }
-
-    /* Main content full width */
+    /* Main Content */
     .admin-main-container {
         width: 100%;
         margin-left: 0;
-        padding: 1rem 0.5rem;
+        padding: 5rem 0.7rem !important;
     }
 
-    /* Heading */
+    /* Content Heading */
     .admin-main-content .am-content-heading {
         flex-direction: column;
         align-items: flex-start;
@@ -774,7 +1132,7 @@ input:not(:checked) + .slider .banned-text {
         justify-content: center;
     }
 
-    /* Search box */
+    /* Search Box */
     .am-search-box {
         flex-direction: column;
         align-items: stretch;
@@ -813,7 +1171,6 @@ input:not(:checked) + .slider .banned-text {
         min-width: 200px;
     }
 
-    /* Movie title in table */
     .movie-title {
         flex-direction: column;
         align-items: flex-start;
@@ -827,6 +1184,15 @@ input:not(:checked) + .slider .banned-text {
     /* Pagination */
     .content__pagination {
         margin: 40px 0;
+    }
+
+    .pagination__main {
+        padding: 0 12px;
+        font-size: 14px;
+    }
+
+    .pagination-page-current {
+        width: 50px;
     }
 
     /* Modal */
@@ -847,7 +1213,7 @@ input:not(:checked) + .slider .banned-text {
         font-size: 18px;
     }
 
-    /* Movie Modal Layout */
+    /* Movie/TV Show Form Layout */
     .movie-section-top {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -876,7 +1242,7 @@ input:not(:checked) + .slider .banned-text {
         width: 100%;
     }
 
-    /* Form controls */
+    /* Form Controls */
     .form-control {
         height: 40px;
         font-size: 14px;
@@ -885,246 +1251,11 @@ input:not(:checked) + .slider .banned-text {
     .form-textarea {
         min-height: 80px;
     }
-}
 
-/* Small Mobile */
-@media only screen and (max-width: 480px) {
-    .admin-main-content .am-content-heading h1 {
-        font-size: 20px;
-    }
-
-    .dm-table th,
-    .dm-table td {
-        font-size: 10px;
-        padding: 8px 6px;
-    }
-
-    .movie-media-right {
-        grid-template-columns: 1fr;
-    }
-
-    .banner-preview {
-        grid-column: auto;
-    }
-
-    .modal_content {
-        padding: 16px;
-    }
-
-    .pagination__main {
-        padding: 0 12px;
-        font-size: 14px;
-    }
-
-    .pagination-page-current {
-        width: 50px;
-    }
-}
-
-/* ==================== SUB-MODAL SEASONS (Dark Theme, match main modal) ==================== */
-.sub-modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-}
-
-.sub-modal-backdrop.hidden {
-    display: none;
-}
-
-.sub-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #2F3346;  /* Match main modal */
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    z-index: 10000;
-    max-width: 700px;
-    width: 90%;
-    max-height: 80vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    color: #fff;  /* White text for dark bg */
-}
-
-.sub-modal.hidden {
-    display: none;
-}
-
-.sub-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid #444;  /* Dark border */
-    background: #0F111A;  /* Darker header */
-}
-
-.sub-modal-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #fff;  /* White text */
-}
-
-.sub-close {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #ccc;  /* Light gray for visibility */
-    line-height: 1;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background 0.2s;
-}
-
-.sub-close:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.sub-modal-body {
-    padding: 1.5rem;
-    overflow-y: auto;
-    flex: 1;
-    background: #191B24;  /* Dark body */
-}
-
-.seasons-accordion {
-    margin-top: 1rem;
-}
-
-.season-item {
-    border: 1px solid #444;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    overflow: hidden;
-    background: #2F3346;  /* Dark container */
-}
-
-.season-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: #0F111A;  /* Dark header */
-    cursor: pointer;
-    color: #fff;  /* White text */
-}
-
-.season-header h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #fff;  /* Fix white text */
-}
-
-.btn-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    color: #ccc;  /* Light for visibility */
-    transition: color 0.2s;
-}
-
-.btn-icon:hover {
-    color: #ff4444;
-}
-
-.season-body {
-    padding: 1rem;
-    background: #191B24;  /* Dark body */
-    display: none;  /* Hidden ban đầu */
-}
-
-.season-body input,
-.season-body textarea {
-    width: 100%;
-    margin-bottom: 0.5rem;
-    padding: 0.75rem;
-    border: 1px solid #444;
-    background: #0F111A;  /* Dark input bg */
-    color: #fff;  /* White text */
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.season-body input::placeholder,
-.season-body textarea::placeholder {
-    color: #999;  /* Gray placeholder */
-}
-
-.season-poster-preview {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.season-poster-img {
-    width: 100px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #444;  /* Dark border */
-}
-
-.sub-modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid #444;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    background: #0F111A;  /* Dark footer */
-}
-
-.add-season-btn,
-.save-seasons-btn,
-.cancel-seasons-btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 4px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: background 0.2s;
-}
-
-.add-season-btn,
-.save-seasons-btn {
-    background: #4CAF50;
-    color: #fff;
-}
-
-.add-season-btn:hover,
-.save-seasons-btn:hover {
-    background: #45a049;
-}
-
-.cancel-seasons-btn {
-    background: #f44336;
-    color: #fff;
-}
-
-.cancel-seasons-btn:hover {
-    background: #da190b;
-}
-
-/* Responsive cho sub-modal */
-@media (max-width: 799px) {
+    /* Sub-modal */
     .sub-modal {
         width: 95%;
+        max-height: 90vh;
         top: 20%;
     }
     
@@ -1141,3 +1272,6 @@ input:not(:checked) + .slider .banned-text {
         align-items: flex-start;
     }
 }
+
+
+    

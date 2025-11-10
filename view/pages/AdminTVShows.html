@@ -7,65 +7,17 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../Services/reset.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <link rel="stylesheet" href="../../Style/AdminPage.css">
     <script type="module">
-        // Import và gọi function async
+        import { AdminHeader_js } from '../../js/HeaderAdmin.js';
         import { AdminTVShows_js } from '../../js/AdminTVShows.js';
         
-        // Gọi function và xử lý async
-        AdminTVShows_js().catch(error => {
-            console.error('Error initializing AdminTVShows:', error);
-        });
+        AdminHeader_js();  
+        AdminTVShows_js();   
     </script>
 </head>
 
 <body>
-    <!-- Phần còn lại giữ nguyên như cũ -->
-    <section class="header">
-        <div class="header-container container">
-            <div class="mobile menu-toggle">
-                <div class="icon-menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-            <a class="header-logo" href="../../view/pages/HomePage.html">
-                <img src="../../public/assets/image/Screenshot 2025-10-13 121408-Photoroom.png" alt="">
-            </a>
-            <div class="mobile search-toggle">
-                <div class="icon-search">
-                    <span></span>
-                    <span></span>
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
-            </div>
-            <div class="search">
-                <div class="search-box">
-                </div>
-            </div>
-            <div class="search-group">
-                <div id="main_menu" class="menu">
-                    <div class="menu-film-type">
-                    </div>
-                </div>
-                <div class="app-download"></div>
-
-                <div id="main_user" class="user_logged"> 
-                    <div class="user-dropdown-menu">
-                        <a class="header-user"> 
-                            <div class="line-center"> 
-                                <div class="user-avatar"> 
-                                    <img src="../../public/assets/image/vn_flag.svg"> 
-                                </div> 
-                            </div>  
-                        </a> 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Main Section -->
     <section class="main">

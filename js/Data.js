@@ -255,7 +255,7 @@ export const usersData = [
     email: 'tam@admin.com',
     role: 'Admin',
     status: 'active',
-    avatar: '../../public/assets/image/user_avatar_default.jpg',
+    avatar: '../../public/assets/image/hitleravaatar.png',
     createdDate: '10/30/2025'
   },
   {
