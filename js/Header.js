@@ -8,12 +8,54 @@ export function headerjs() {
   const logo = document.querySelector(".header-logo");
   const dropdown = document.querySelector(".menu-film-type.dropdown");
   const dropdownBtn = document.querySelector(".dropdown-toggle");
+const langRoot = document.querySelector(".language-switcher");
 
+  
   menuToggle.addEventListener("click", () => {
     menuToggle.classList.toggle("toggled");
     searchGroup.classList.toggle("toggled");
   });
+  
+if (langRoot) {
+  const langBtn = langRoot.querySelector(".swap-language");
+  const langLabel = langRoot.querySelector(".current-lang-label");
+  const langOptions = langRoot.querySelectorAll(".lang-option");
 
+  // mở/đóng menu
+  langBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = langRoot.classList.toggle("open");
+    langBtn.setAttribute("aria-expanded", String(open));
+  });
+
+  // chọn ngôn ngữ -> đổi nhãn và đánh dấu active
+  langOptions.forEach((opt) => {
+    opt.addEventListener("click", () => {
+      langOptions.forEach(o => o.classList.remove("is-active"));
+      opt.classList.add("is-active");
+      langLabel.textContent = opt.textContent.trim(); // "Vietnamese" hoặc "English"
+      langRoot.classList.remove("open");
+      langBtn.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  // click ngoài để đóng
+  document.addEventListener("click", () => {
+    if (langRoot.classList.contains("open")) {
+      langRoot.classList.remove("open");
+      langBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  // Esc để đóng
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      langRoot.classList.remove("open");
+      langBtn.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+  
   searchNav.addEventListener("click", () => {
     searchNav.classList.toggle("toggled");
     searchBox.classList.toggle("toggled");

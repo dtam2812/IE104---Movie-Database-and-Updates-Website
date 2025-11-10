@@ -74,12 +74,30 @@
       </div>
       <div class="app-download"></div>
       <!-- chưa đăng nhập -->
-      <div id="user_guest" class="user">
-        <a id="btn-member" class="button-user button-login">
-          <i class="fa-solid fa-user ms-1"></i>
-          <span>Thành viên</span>
-        </a>
-      </div>
+       <div class="header-button">
+          <!-- Language -->
+          <div class="language-switcher">
+          <button class="swap-language" aria-haspopup="listbox" aria-expanded="false">
+            <i class="fa-solid fa-globe"></i>
+            <span class="current-lang-label">Vietnamese</span>
+            <i class="fa-solid fa-caret-down caret"></i>
+          </button>
+
+          <ul class="select-language" role="listbox">
+            <li role="option" data-lang="vi" class="lang-option is-active">Vietnamese</li>
+            <li role="option" data-lang="en" class="lang-option">English</li>
+          </ul>
+        </div>
+
+
+          <div id="user_guest" class="user">
+            <a id="btn-member" class="button-user button-login">
+              <i class="fa-solid fa-user ms-1"></i>
+              <span>Thành viên</span>
+            </a>
+          </div>
+        </div>
+
       <!-- chưa đăng nhập -->
 
       <!-- đã đăng nhập -->
