@@ -4,9 +4,9 @@ const userSchema = new mongoose.Schema({
   userName: String,
   email: { type: String, unique: true },
   password: String,
-  role: String,
-  status: String,
-  JoinDate: Date,
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  status: { type: String, enum: ["active", "banned"], default: "active" },
+  joinDate: Date,
   favoriteFilm: [
     {
       id: String,

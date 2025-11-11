@@ -17,7 +17,7 @@ app.use(express.json());
 connectDB();
 
 //Middleware Router
-app.use("/users", userRoute);
+app.use("/auth/admin", userRoute);
 app.use("/api/auth", authRoute);
 
 app.listen(process.env.PORT, () => {

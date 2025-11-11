@@ -15,7 +15,7 @@ body {
 
 /* ==================== ADMIN SIDEBAR MENU ==================== */
 .admin-menu-container {
-  position: fixed;
+  position: absolute;
   width: 17%;
   height: 100vh;
   background-color: #0f111a;
@@ -351,8 +351,8 @@ input:not(:checked) + .slider .banned-text {
 }
 
 /* ==================== PAGINATION ==================== */
-.content__pagination {
-  margin: 64px 0;
+.content-pagination {
+  padding-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

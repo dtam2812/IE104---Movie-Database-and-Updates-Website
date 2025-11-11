@@ -161,6 +161,7 @@ export function headerjs() {
     logOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
+      console.log(jwtDecode(localStorage.accessToken));
       // Xoá accessToken và thông tin user
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userName");

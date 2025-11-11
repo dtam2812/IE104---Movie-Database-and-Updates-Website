@@ -89,7 +89,7 @@ export function Auth_Modaljs() {
       if (response.status === 200) {
         window.openLRFModal("login");
       }
-    } catch {
+    } catch (error) {
       console.log(error);
     }
   });
@@ -120,6 +120,8 @@ export function Auth_Modaljs() {
         }
 
         localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("userName", payloadDecoded.username);
+        localStorage.setItem("userEmail", payloadDecoded.email);
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
@@ -129,4 +131,15 @@ export function Auth_Modaljs() {
       console.log(error);
     }
   });
+}
+
+export function isTokenExpired(token) {
+  if (!token) return true;
+  try {
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000;
+    return decoded.exp && decoded.exp < now;
+  } catch {
+    return true;
+  }
 }

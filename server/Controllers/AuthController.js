@@ -7,10 +7,12 @@ const register = async (req, res) => {
     const { userName, email, password } = req.body;
 
     await userModel.create({
-      username: userName,
+      userName: userName,
       email: email,
       password: bcrypt.hashSync(password, 10),
       role: "user",
+      status: "active",
+      joinDate: new Date(),
     });
 
     return res.status(200).send("register");
@@ -32,13 +34,13 @@ const login = async (req, res) => {
     const jwtToken = jwt.sign(
       {
         _id: user.id,
-        username: user.username,
+        username: user.userName,
         email: user.email,
         role: user.role,
       },
       process.env.SECRET_JWT,
       {
-        expiresIn: 10,
+        expiresIn: 60,
       }
     );
 
