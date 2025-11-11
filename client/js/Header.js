@@ -24,11 +24,11 @@ function checkAuthStatus() {
 function loadUserInfo() {
   // Cập nhật tên user trong dropdown
   const userName = document.querySelector(".user-name span");
-  console.log(jwtDecode(localStorage.accessToken));
   if (userName) {
-    const storedName = localStorage.getItem("name");
-    if (storedName) {
-      userName.textContent = storedName;
+    const payloadDecoded = jwtDecode(localStorage.accessToken);
+    console.log(payloadDecoded);
+    if (localStorage.accessToken) {
+      userName.textContent = payloadDecoded.username;
     } else {
       userName.textContent = "User"; // Tên mặc định nếu không có
     }

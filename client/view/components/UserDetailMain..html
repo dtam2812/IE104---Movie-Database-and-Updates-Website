@@ -20,10 +20,6 @@
         <i class="bx bx-heart"></i>
         Yêu thích
       </button>
-      <button data-section="settings">
-        <i class="bx bx-cog"></i>
-        Cài đặt
-      </button>
     </div>
 
     <button class="logout">
@@ -43,40 +39,17 @@
         <div class="grid">
           <div class="form-group">
             <label for="name">Họ và tên</label>
-            <input type="text" id="name" value="Nguyễn Văn A" />
+            <input type="text" id="name" />
           </div>
 
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" value="nguyenvana@example.com" />
+            <input type="email" id="email" />
           </div>
 
           <div class="form-group">
-            <label for="phone">Số điện thoại</label>
-            <input type="text" id="phone" value="0123456789" />
-          </div>
-
-          <div class="form-group">
-            <label for="birthday">Ngày sinh</label>
-            <input type="text" id="birthday" value="01/01/1990" />
-          </div>
-
-          <div class="form-group">
-            <label>Giới tính</label>
-            <div class="radio-row">
-              <label class="radio">
-                <input type="radio" name="gender" checked />
-                Nam
-              </label>
-              <label class="radio">
-                <input type="radio" name="gender" />
-                Nữ
-              </label>
-              <label class="radio">
-                <input type="radio" name="gender" />
-                Khác
-              </label>
-            </div>
+            <label for="joinDate">Ngày tham gia</label>
+            <input type="text" id="joinDate" />
           </div>
         </div>
 
@@ -120,50 +93,6 @@
         <div class="favorites-list">
           <p class="empty-state">Chưa có phim nào trong danh sách yêu thích</p>
           <!-- Favorites content will be loaded here dynamically -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Settings Section -->
-    <div class="content-section" id="settings-section">
-      <h1 class="title">Cài đặt</h1>
-      <p class="subtitle">Tùy chỉnh cài đặt tài khoản của bạn</p>
-
-      <div class="card">
-        <div class="grid">
-          <div class="form-group">
-            <label for="language">Ngôn ngữ</label>
-            <select id="language">
-              <option value="vi">Tiếng Việt</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="theme">Giao diện</label>
-            <select id="theme">
-              <option value="dark">Tối</option>
-              <option value="light">Sáng</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="notifications">Thông báo</label>
-            <div class="radio-row">
-              <label class="radio">
-                <input type="radio" name="notifications" checked />
-                Bật
-              </label>
-              <label class="radio">
-                <input type="radio" name="notifications" />
-                Tắt
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn save-settings">Lưu cài đặt</button>
         </div>
       </div>
     </div>
