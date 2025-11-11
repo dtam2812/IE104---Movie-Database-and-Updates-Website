@@ -1,17 +1,14 @@
-// ========== KHỞI TẠO & LOAD DATA ==========
 export async function AdminUsers_js() {
-    
+
+    // Load dữ liệu movies từ file Data.js 
     let allUsers = [];
-    // Load dữ liệu users từ file Data.js 
     try {
         const { usersData } = await import('./Data.js');
         allUsers = usersData ? [...usersData] : [];
-        console.log('✅ Loaded users data');
     } catch {
-        console.log('ℹ️ No initial user data, starting empty');
+        console.log('No initial user data, starting empty');
     }
 
-    // ========== DOM ELEMENTS ==========
     // Modal elements
     const modalUser = document.querySelector('.modal-user');
     const backdrop = document.querySelector('.modal-user .modal_backdrop');
@@ -42,15 +39,14 @@ export async function AdminUsers_js() {
     const cfPwdInput = userFormEl.querySelector('input[name="cf_password"]');
     const errorMessage = userFormEl.querySelector('.non-same-pw');
 
-    // ========== STATE MANAGEMENT ==========
+    // STATE MANAGEMENT 
     let filteredUsers = [...allUsers];
     let currentPage = 1;
     let currentEditRow = null;
     let isEditMode = false;
     const usersPerPage = 5;
 
-    // ========== UTILITY FUNCTIONS ==========
-    
+    // FUNCTIONS 
     // Tạo ID tự động theo format UIT001, UIT002, ...
     const generateUserId = () => {
         if (allUsers.length === 0) return 'UIT001';
@@ -81,8 +77,7 @@ export async function AdminUsers_js() {
         });
     };
 
-    // ========== FILTER & SEARCH ==========
-    
+    // FILTER & SEARCH 
     // Lọc users theo search và filter
     const filterUsers = () => {
         const search = searchInput.value.toLowerCase().trim();
@@ -106,8 +101,7 @@ export async function AdminUsers_js() {
         renderUsers();
     };
 
-    // ========== RENDER FUNCTIONS ==========
-    
+    // RENDER FUNCTIONS 
     // Tạo một row trong bảng users
     const createUserRow = (user, no) => {
         const isActive = user.status === 'active';
@@ -213,8 +207,7 @@ export async function AdminUsers_js() {
         paginationRight.disabled = currentPage >= totalPages || totalPages === 0;
     };
 
-    // ========== PASSWORD VALIDATION ==========
-    
+    // PASSWORD VALIDATION 
     // Kiểm tra mật khẩu khớp nhau
     const validatePasswords = () => {
         if (pwdInput.value && cfPwdInput.value && pwdInput.value !== cfPwdInput.value) {
@@ -228,8 +221,7 @@ export async function AdminUsers_js() {
         }
     };
 
-    // ========== MODAL ADD/EDIT ==========
-    
+    // MODAL ADD/EDIT 
     // Mở modal thêm user mới
     const openAddModal = () => {
         isEditMode = false;
@@ -307,8 +299,7 @@ export async function AdminUsers_js() {
         submitBtn.disabled = false;
     };
 
-    // ========== EVENT LISTENERS ==========
-    
+    // EVENT LISTENERS 
     // Search & Filter
     searchInput.addEventListener('input', filterUsers);
     roleFilter.addEventListener('change', filterUsers);
@@ -400,7 +391,7 @@ export async function AdminUsers_js() {
         
         closeModal();
     });
+    
 
-    // ========== KHỞI TẠO BAN ĐẦU ==========
     renderUsers();
 }

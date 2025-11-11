@@ -8,16 +8,37 @@
     <link rel="stylesheet" href="../../Services/reset.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../Style/AdminPage.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <script type="module">
-        import { AdminHeader_js } from '../../js/HeaderAdmin.js';
         import { AdminMovies_js } from '../../js/AdminMovies.js';
         
-        AdminHeader_js();  
         AdminMovies_js();   
     </script>
 </head>
 
 <body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <script type="module">
+      import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
+
+      fetch("../components/Header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+          headerjs();
+          return fetch("../components/SearchBar.html");
+        })
+        .then((res) => res.text())
+        .then((searchHTML) => {
+          document.querySelector(".search-box").innerHTML = searchHTML;
+          searchBar();
+        })
+        .catch((error) => console.error("Fetch header/search failed:", error));
+    </script>
+
     <!-- Main Section -->
     <section class="main">
         <!-- Sidebar -->
@@ -135,6 +156,20 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <script type="module">
+      fetch("../components/footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Fetch footer failed:", error);
+        });
+    </script>
 
     <!-- Modal: Add/Edit Movie -->
     <div class="modal-movie hidden">
@@ -299,7 +334,7 @@
                 <i class="fa-solid fa-plus"></i> Add New Actor
             </button>
             <div id="actors-list" class="actors-accordion">
-                <!-- JS sẽ render actors ở đây -->
+
             </div>
         </div>
         <div class="sub-modal-footer">
@@ -307,8 +342,7 @@
         </div>
     </div>
 
-    <!-- ========== TEMPLATES (Hidden) ========== -->
-    
+    <!-- TEMPLATES (Hidden) -->
     <!-- Template: Actor Item -->
     <template id="actor-item-template">
         <div class="actor-item">
@@ -320,7 +354,7 @@
             </div>
             <div class="actor-body">
                 <div class="actor-content-wrapper">
-                    <!-- Photo ở trên -->
+                    <!-- Actor photo -->
                     <div class="actor-photo-right">
                         <div class="actor-photo-preview">
                             <img src="../../public/assets/image/user_avatar_default.jpg" 
@@ -328,7 +362,7 @@
                             <input type="file" class="actor-photo-input" accept="image/*">
                         </div>
                     </div>
-                    <!-- Info ở dưới -->
+                    <!-- Actor Info -->
                     <div class="actor-info-left">
                         <div class="form-group mb1">
                             <label>Actor ID:</label>

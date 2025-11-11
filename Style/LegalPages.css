@@ -1,3 +1,4 @@
+/* Base */
 html
 {
     scroll-behavior: smooth;
@@ -15,7 +16,7 @@ body
 main
 {
     width : 100%;
-    padding: 160px 0px;
+    padding: 120px 0px;
 }
 
 .legal_section
@@ -40,7 +41,7 @@ main
     margin-bottom: 19.2px;
 }
 
-h1
+.row_heading h1
 {
     color: white;
     font-size: 25.2px;
@@ -55,8 +56,58 @@ h1
     flex-direction: column;
 }
 
-/* style cho questtion list và question heading ở trang faq */
-.question-list
+.row_content h2
+{
+    color: #ffffff;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 31.5px;
+    text-align: left;
+    margin-bottom: 17px;
+}
+.legal_container p
+{
+    color: #D3D3D3;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 27px;
+    text-align: left;
+    margin-bottom: 16px;
+}
+.row_content ul 
+{
+    margin-bottom:  16px;       
+    padding-left: 32px;   
+    display: block;
+    list-style-type: disc;
+}
+
+.row_content li 
+{
+    color: #D3D3D3;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 27px;
+    text-align: left;
+}
+
+.row_content b
+{
+    font-weight: 600;
+}
+
+.row_content a
+{
+    color: white;
+}
+
+.row_content a:hover
+{
+    color: #FFD875;
+}
+
+/* Questtion list và question heading ở trang faq */
+.row_content .question-list
 {
     list-style: none;
     width: 560px;
@@ -91,60 +142,8 @@ h1
     text-align: left;
     margin-bottom: 17px;
 }
-/* style choquesttion list và question heading ở trang faq */
 
-h2
-{
-    color: #ffffff;
-    font-size: 21px;
-    font-weight: 600;
-    line-height: 31.5px;
-    text-align: left;
-    margin-bottom: 17px;
-}
-p
-{
-    color: #D3D3D3;
-    font-size: 15px;
-    font-weight: 300;
-    line-height: 27px;
-    text-align: left;
-    margin-bottom: 16px;
-}
-ul 
-{
-    margin-bottom:  16px;       
-    padding-left: 32px;   
-    display: block;
-    list-style-type: disc;
-}
-
-li 
-{
-    color: #D3D3D3;
-    font-size: 15px;
-    font-weight: 300;
-    line-height: 27px;
-    text-align: left;
-}
-
-li b
-{
-    font-weight: 600;
-}
-
-p a
-{
-    color: white;
-}
-
-a:hover
-{
-    color: #FFD875;
-}
-
-
-/* style cho các link mạng xã hội ở trang contact */
+/* Social links ở trang contact */
 .contact-social-link_content
 {
     width: 100%;
@@ -181,16 +180,14 @@ a:hover
     line-height: 20px; 
     margin: 0; 
 }
-/* style cho các link mạng xã hội ở trang contact */
 
-
-
-
-@media only screen and (max-width: 1391px)
+/* RESPONSIVE */
+/* Mobile & Tablet <= 1100px) */ 
+@media only screen and (max-width: 1100px)
 {
     main
     {
-        padding: 5% 0px 10% 0px;
+        padding: 20px 0px 50px 0px;
     }   
 
     .legal_container
@@ -212,35 +209,35 @@ a:hover
 
 @media only screen and (max-width: 641px)
 {
-    h1
+    .row_heading h1
     {
         font-size: 22.4px;
         line-height: 31.36px;
     }
 
-    li  
+    .row_content li  
     {
         font-size: 14px;
         line-height: 25.2px;
     }
 
 
-    li a {
+    .row_content a {
         font-size: 14px;
         line-height: 25.2px;
     }
 
-    h2
+    .row_content h2
     {
         font-size: 16.8px;
         line-height: 25.2px;
         margin-bottom: 17px;
     }
 
-    p
+    .legal_container p
     {
         font-size: 14px;
         line-height: 25.2px;
-        margin-bottom: 58px;
+        margin-bottom: 1rem;
     }
 }

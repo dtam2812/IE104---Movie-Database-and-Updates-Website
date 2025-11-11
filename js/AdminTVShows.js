@@ -1,11 +1,12 @@
 export async function AdminTVShows_js() {
+
+    // Load dữ liệu movies từ file Data.js 
     let tvShowsData = [];
     try {
         const module = await import('./Data.js');
         tvShowsData = module.tvShowsData || [];
-        console.log('✅ Loaded TV shows data');
     } catch {
-        console.log('ℹ️ No initial TV show data, starting empty');
+        console.log(' No initial TV show data, starting empty');
     }
 
     // DOM ELEMENTS 
@@ -239,7 +240,7 @@ export async function AdminTVShows_js() {
         titleInput.value = season.title || '';
         episodesInput.value = season.episodes || '';
         overviewInput.value = season.overview || '';
-        posterImg.src = season.poster || '../../public/assets/image/movie_poster_default.jpg';
+        posterImg.src = season.poster || '../../public/assets/image/0891b2.svg';
         
         // Toggle hiển thị
         header.addEventListener('click', (e) => {
@@ -420,8 +421,8 @@ export async function AdminTVShows_js() {
         submitBtn.textContent = 'Create';
         
         tvFormEl.reset();
-        bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.jpg';
-        posterPreviewImg.src = '../../public/assets/image/movie_poster_default.jpg';
+        bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.png';
+        posterPreviewImg.src = '../../public/assets/image/0891b2.svg';
         
         currentSeasons = [];
         currentActors = [];
@@ -570,7 +571,7 @@ export async function AdminTVShows_js() {
             title: `Season ${currentSeasons.length + 1}`,
             episodes: 0,
             overview: '',
-            poster: '../../public/assets/image/movie_poster_default.jpg'
+            poster: '../../public/assets/image/0891b2.svg'
         });
         renderSeasonsList();
     });
@@ -660,6 +661,6 @@ export async function AdminTVShows_js() {
         closeModal();
     });
 
-    // KHỞI TẠO
+
     renderTVShows();
 }

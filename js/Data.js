@@ -69,7 +69,7 @@ export const moviesData = [
     rating: 8.4,
     status: 'Released',
     banner: '../../public/assets/image/movie_banner_default.png',
-    poster: '../../public/assets/image/movie_poster_default.jpg',
+    poster: '../../public/assets/image/0891b2 copy.svg',
     trailer: 'https://www.youtube.com/watch?v=xU47nhruN-Q'
   },
   {
@@ -87,7 +87,7 @@ export const moviesData = [
     rating: 7.6,
     status: 'Released',
     banner: '../../public/assets/image/movie_banner_default.png',
-    poster: '../../public/assets/image/movie_poster_default.jpg',
+    poster: '../../public/assets/image/0891b2 copy.svg',
     trailer: 'https://www.youtube.com/watch?v=1ovgxN2VWNc'
   },
   {
@@ -105,7 +105,7 @@ export const moviesData = [
     rating: 0,
     status: 'Coming Soon',
     banner: '../../public/assets/image/movie_banner_default.png',
-    poster: '../../public/assets/image/movie_poster_default.jpg',
+    poster: '../../public/assets/image/0891b2 copy.svg',
     trailer: 'https://www.youtube.com/watch?v=nb_fFj_0rq8'
   }
 ];
@@ -127,37 +127,37 @@ export const tvShowsData = [
     rating: 9.5,
     status: 'Released',
     banner: '../../public/assets/image/movie_banner_default.jpg',
-    poster: '../../public/assets/image/movie_poster_default.jpg',
+    poster: '../../public/assets/image/0891b2 copy.svg',
     seasonsData: [
       {
         title: 'Season 1',
         episodes: 7,
         overview: 'Walter White, a struggling high school chemistry teacher, is diagnosed with lung cancer.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 2',
         episodes: 13,
         overview: 'Walt and Jesse are in over their heads with Tuco.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 3',
         episodes: 13,
         overview: 'Walt faces a new adversary in Gus Fring.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 4',
         episodes: 13,
         overview: 'Walt and Gus engage in a deadly game of cat and mouse.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 5',
         episodes: 16,
         overview: 'Walt builds an empire, but at what cost?',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       }
     ]
   },
@@ -176,25 +176,25 @@ export const tvShowsData = [
     rating: 9.2,
     status: 'Released',
     banner: '../../public/assets/image/movie_banner_default.jpg',
-    poster: '../../public/assets/image/movie_poster_default.jpg',
+    poster: '../../public/assets/image/0891b2 copy.svg' ,
     seasonsData: [
       {
         title: 'Season 1',
         episodes: 10,
         overview: 'Lord Eddard Stark is summoned to serve as the King\'s Hand.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 2',
         episodes: 10,
         overview: 'The battle for the Iron Throne continues.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 3',
         episodes: 10,
         overview: 'The Lannisters maintain their hold on King\'s Landing.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       }
     ]
   },
@@ -213,31 +213,31 @@ export const tvShowsData = [
     rating: 8.7,
     status: 'Released',
     banner: '../../public/assets/image/movie_banner_default.jpg',
-    poster: '../../public/assets/image/movie_poster_default.jpg',
+    poster: '../../public/assets/image/0891b2 copy.svg' ,
     seasonsData: [
       {
         title: 'Season 1',
         episodes: 8,
         overview: 'In 1983, a young boy vanishes into thin air.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 2',
         episodes: 9,
         overview: 'Will Byers has been rescued from the Upside Down.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 3',
         episodes: 8,
         overview: 'It\'s the summer of 1985 in Hawkins, Indiana.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       },
       {
         title: 'Season 4',
         episodes: 9,
         overview: 'It\'s been six months since the Battle of Starcourt.',
-        poster: '../../public/assets/image/movie_poster_default.jpg'
+        poster: '../../public/assets/image/0891b2 copy.svg'
       }
     ]
   }

@@ -1,12 +1,12 @@
 export async function AdminMovies_js() {
-    // Load dữ liệu movies từ file Data.js (nếu có)
+
+    // Load dữ liệu movies từ file Data.js 
     let allMovies = [];
     try {
         const { moviesData } = await import('./Data.js');
         allMovies = moviesData ? [...moviesData] : [];
-        console.log('✅ Loaded movies data');
     } catch {
-        console.log('ℹ️ No initial movie data, starting empty');
+        console.log('No initial movie data, starting empty');
     }
 
     // DOM ELEMENTS
@@ -48,7 +48,7 @@ export async function AdminMovies_js() {
     const emptyRowTemplate = document.getElementById('empty-row-template');
     const emptyActorsTemplate = document.getElementById('empty-actors-template');
 
-    // ========== STATE MANAGEMENT ==========
+    // STATE MANAGEMENT 
     let filteredMovies = [...allMovies];
     let currentActors = [];
     let currentPage = 1;
@@ -308,8 +308,8 @@ export async function AdminMovies_js() {
         submitBtn.textContent = 'Create';
         
         movieFormEl.reset();
-        bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.jpg';
-        posterPreviewImg.src = '../../public/assets/image/movie_poster_default.jpg';
+        bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.png';
+        posterPreviewImg.src = '../../public/assets/image/0891b2.svg';
         
         currentActors = [];
         movieFormEl.querySelector('input[name="actorsCount"]').value = '0';
@@ -513,6 +513,6 @@ export async function AdminMovies_js() {
         closeModal();
     });
 
-    // KHỞI TẠO
+
     renderMovies();
 }
