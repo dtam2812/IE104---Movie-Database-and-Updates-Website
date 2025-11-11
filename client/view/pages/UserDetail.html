@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tài khoản — UIT FILM</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="../../../public/assets/image/logo-web-black.pnggi"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
+    <link rel="stylesheet" href="../../Style/SearchBar.css" />
+    <link rel="stylesheet" href="../../Services/reset.css" />
+    <link rel="stylesheet" href="../../Style/UserDetail.css" />
+  </head>
+  <body>
+    <!-- start-header -->
+    <div id="header"></div>
+
+    <script type="module">
+      import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
+
+      fetch("../components/Header.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("header").innerHTML = html;
+          headerjs();
+          return fetch("../components/SearchBar.html");
+        })
+        .then((res) => res.text())
+        .then((searchHTML) => {
+          document.querySelector(".search-box").innerHTML = searchHTML;
+          searchBar();
+        })
+        .catch((error) => console.error("Fetch header/search failed:", error));
+    </script>
+
+    <!-- main user detail -->
+    <div id="userDetailMain"></div>
+    <script>
+      fetch("../components/UserDetailMain..html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("userDetailMain").innerHTML = html;
+        })
+        .catch((err) => console.error("UserDetailMain load error:", err));
+    </script>
+
+    <!-- start-footer -->
+    <div id="footer"></div>
+
+    <script type="module">
+      fetch("../components/Footer.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch((error) => {
+          console.error("Fetch footer failed:", error);
+        });
+    </script>
+
+    <!-- Toast -->
+    <div class="toast">
+      Thay đổi đã được lưu
+      <button>Đóng</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-backdrop">
+      <div class="modal">
+        <h3>Xác nhận</h3>
+        <p>Bạn có chắc chắn muốn thay đổi thông tin?</p>
+        <div class="actions">
+          <button class="btn">Xác nhận</button>
+          <button class="btn secondary">Hủy</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../js/UserDetail.js"></script>
+  </body>
+</html>
