@@ -1,5 +1,40 @@
-// //event click doi dau menu
-// //event click xo menu
+import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
+
+// Hàm kiểm tra trạng thái đăng nhập
+function checkAuthStatus() {
+  const accessToken = localStorage.getItem("accessToken");
+  const guest = document.getElementById("user_guest");
+  const logged = document.getElementById("main_user");
+
+  if (accessToken && guest && logged) {
+    // Đã đăng nhập - hiện user menu, ẩn button thành viên
+    guest.classList.add("hidden");
+    logged.classList.remove("hidden");
+
+    // Load thông tin user
+    loadUserInfo();
+  } else {
+    // Chưa đăng nhập - hiện button thành viên
+    guest.classList.remove("hidden");
+    logged.classList.add("hidden");
+  }
+}
+
+// Hàm load thông tin user
+function loadUserInfo() {
+  // Cập nhật tên user trong dropdown
+  const userName = document.querySelector(".user-name span");
+  if (userName) {
+    const payloadDecoded = jwtDecode(localStorage.accessToken);
+    console.log(payloadDecoded);
+    if (localStorage.accessToken) {
+      userName.textContent = payloadDecoded.username;
+    } else {
+      userName.textContent = "User"; // Tên mặc định nếu không có
+    }
+  }
+}
+
 export function headerjs() {
   const menuToggle = document.querySelector(".menu-toggle");
   const searchGroup = document.querySelector(".search-group");
@@ -8,6 +43,9 @@ export function headerjs() {
   const logo = document.querySelector(".header-logo");
   const dropdown = document.querySelector(".menu-film-type.dropdown");
   const dropdownBtn = document.querySelector(".dropdown-toggle");
+
+  // Kiểm tra trạng thái đăng nhập ngay khi load trang
+  checkAuthStatus();
 
   menuToggle.addEventListener("click", () => {
     menuToggle.classList.toggle("toggled");
@@ -40,14 +78,22 @@ export function headerjs() {
     }
   });
 
-  // popup modal
+  // Popup modal - chỉ cho phép khi chưa đăng nhập
   const memberBtn = document.querySelector("#btn-member");
   if (memberBtn) {
     memberBtn.addEventListener("click", async (e) => {
       e.preventDefault();
+
+      // Kiểm tra đã đăng nhập chưa
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        // Đã đăng nhập rồi thì không mở modal
+        return;
+      }
+
       let modal = document.querySelector(".modal");
       if (!modal) {
-        //load file AuthModal.html vào header.html
+        // Load file AuthModal.html vào header.html
         const html = await (
           await fetch("../../view/components/AuthModal.html")
         ).text();
@@ -67,7 +113,7 @@ export function headerjs() {
           }
         });
 
-        // import filr AuthModal.js vào
+        // Import file AuthModal.js vào
         const { Auth_Modaljs } = await import("./AuthModal.js");
         Auth_Modaljs();
         setTimeout(() => window.openLRFModal("login"), 50);
@@ -77,7 +123,7 @@ export function headerjs() {
     });
   }
 
-  //Xử lý sự kiện sau khi user đăng nhập vào
+  // Xử lý sự kiện sau khi user đăng nhập vào
   document.addEventListener("userLoggedIn", (e) => {
     const guest = document.getElementById("user_guest");
     const logged = document.getElementById("main_user");
@@ -86,29 +132,42 @@ export function headerjs() {
       guest.classList.add("hidden");
       logged.classList.remove("hidden");
     }
+
+    // Load thông tin user sau khi đăng nhập
+    loadUserInfo();
   });
 
-  //Xử lý sự kiện khi click vào main user ở heder
+  // Xử lý sự kiện khi click vào main user ở header
   const userDropdownMenu = document.querySelector(".user-dropdown-menu");
-  const dropdownList = userDropdownMenu.querySelector(".dropdown-list");
+  const dropdownList = userDropdownMenu?.querySelector(".dropdown-list");
 
-  userDropdownMenu.addEventListener("click", (e) => {
-    dropdownList.classList.toggle("show");
-  });
+  if (userDropdownMenu && dropdownList) {
+    userDropdownMenu.addEventListener("click", (e) => {
+      dropdownList.classList.toggle("show");
+    });
 
-  //tắt user-dropdown-menu khi click ở bên ngoài menu
-  document.addEventListener("click", (e) => {
-    if (!userDropdownMenu.contains(e.target)) {
-      dropdownList.classList.remove("show");
-    }
-  });
+    // Tắt user-dropdown-menu khi click ở bên ngoài menu
+    document.addEventListener("click", (e) => {
+      if (!userDropdownMenu.contains(e.target)) {
+        dropdownList.classList.remove("show");
+      }
+    });
+  }
 
-  //Xử lý sự kiện đăng xuất
-  const logOutBtn = dropdownList.querySelector("#Log-out-Btn");
+  // Xử lý sự kiện đăng xuất
+  const logOutBtn = document.querySelector("#Log-out-Btn");
 
   if (logOutBtn) {
     logOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
+
+      console.log(jwtDecode(localStorage.accessToken));
+      // Xoá accessToken và thông tin user
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("refreshToken");
+      // Xoá các thông tin khác nếu có...
 
       const guest = document.getElementById("user_guest");
       const logged = document.getElementById("main_user");
