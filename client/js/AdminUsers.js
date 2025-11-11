@@ -183,6 +183,7 @@ export async function AdminUsers_js() {
         allUsers[userIndex].status = toggle.checked ? "active" : "banned";
         slider.classList.toggle("active", toggle.checked);
         slider.classList.toggle("banned", !toggle.checked);
+
         filterUsers();
       }
     });
