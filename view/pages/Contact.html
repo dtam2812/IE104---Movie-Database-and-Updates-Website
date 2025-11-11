@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liên hệ</title>
+    <title data-i18n="contact.title">Liên hệ</title>
     <link
       rel="icon"
       type="image/png"
@@ -21,48 +21,29 @@
 <body>
     <!-- start-header -->
     <div id="header"></div>
-
-    <script type="module">
-      import { headerjs } from "../../js/Header.js";
-      import { searchBar } from "../../js/SearchBar.js";
-
-      fetch("../components/Header.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("header").innerHTML = html;
-          headerjs();
-          return fetch("../components/SearchBar.html");
-        })
-        .then((res) => res.text())
-        .then((searchHTML) => {
-          document.querySelector(".search-box").innerHTML = searchHTML;
-          searchBar();
-        })
-        .catch((error) => console.error("Fetch header/search failed:", error));
-    </script>
     <!-- end-header -->
     <main>
         <section class="legal_section">
                 <div class="legal_container">
                     <div class="row_heading">
-                        <h1>Liên hệ</h1>
+                        <h1 data-i18n="contact.heading">Liên hệ</h1>
                     </div>
                     <div class ="row_content">
-                        <p>Chào mừng bạn đến với trang Liên Hệ của UIT FILM! Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn để mang lại trải nghiệm tốt nhất khi sử dụng dịch vụ. 
+                        <p data-i18n="contact.intro.p1">Chào mừng bạn đến với trang Liên Hệ của UIT FILM! Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn để mang lại trải nghiệm tốt nhất khi sử dụng dịch vụ. 
                         Nếu có bất kỳ câu hỏi, góp ý, hoặc yêu cầu hỗ trợ nào, hãy liên hệ với chúng tôi qua các thông tin dưới đây.</p>
                         <p>&nbsp;</p>
-                        <h2>1. Thông Tin Liên Hệ Chính</h2>
-                        <p>Email hỗ trợ khách hàng: <a href="mailto:23521749@gm.uit.edu.vn"><b>lienhe@uitfilm.com</b></a></p>
+                        <h2 data-i18n="contact.main.h2">1. Thông Tin Liên Hệ Chính</h2>
+                        <p><span data-i18n="contact.supportEmail.label">Email hỗ trợ khách hàng: </span><a href="mailto:23521749@gm.uit.edu.vn"><b>lienhe@uitfilm.com</b></a></p>
                         <ul>
-                            <li><b>Vấn đề tài khoản:</b> Quên mật khẩu, không thể truy cập, và các vấn đề liên quan đến tài khoản.</li>
-                            <li><b>Hỗ trợ kỹ thuật:</b> Sự cố khi xem phim, chất lượng video hoặc các lỗi khác khi sử dụng trang web.</li>
-                            <li><b>Đóng góp ý kiến:</b> Chúng tôi trân trọng mọi ý kiến đóng góp từ bạn để nâng cao chất lượng dịch vụ.</li>
+                            <li data-i18n="contact.main.li.account"><b>Vấn đề tài khoản:</b> Quên mật khẩu, không thể truy cập, và các vấn đề liên quan đến tài khoản.</li>
+                            <li data-i18n="contact.main.li.tech"><b>Hỗ trợ kỹ thuật:</b> Sự cố khi xem phim, chất lượng video hoặc các lỗi khác khi sử dụng trang web.</li>
+                            <li data-i18n="contact.main.li.feedback"><b>Đóng góp ý kiến:</b> Chúng tôi trân trọng mọi ý kiến đóng góp từ bạn để nâng cao chất lượng dịch vụ.</li>
                         </ul>
-                        <p>Email liên hệ về Chính Sách Riêng Tư: <a href="mailto:23521749@gm.uit.edu.vn"><b>lienhe@uitfilm.com</p>
-                        <p>Mọi thắc mắc liên quan đến bảo mật thông tin và chính sách riêng tư của UIT FILM.</p>
+                        <p><span data-i18n="contact.privacy.h2">Email liên hệ về Chính Sách Riêng Tư: </span><a href="mailto:23521749@gm.uit.edu.vn"><b>lienhe@uitfilm.com</p>
+                        <p data-i18n="contact.privacy.note">Mọi thắc mắc liên quan đến bảo mật thông tin và chính sách riêng tư của UIT FILM.</p>
                         <p>&nbsp;</p>
-                        <h2>2. Liên Hệ Qua Mạng Xã Hội</h2>
-                        <p>Ngoài email, bạn cũng có thể liên hệ và cập nhật thông tin mới nhất từ UIT FILM qua các kênh mạng xã hội của chúng tôi:</p>
+                        <h2 data-i18n="contact.social.h2">2. Liên Hệ Qua Mạng Xã Hội</h2>
+                        <p data-i18n="contact.social.intro">Ngoài email, bạn cũng có thể liên hệ và cập nhật thông tin mới nhất từ UIT FILM qua các kênh mạng xã hội của chúng tôi:</p>
                         <div class = "contact-social-link_content">
                             <a href="https://www.instagram.com/_dttuowng/" class="social-link"><i class='bx bxl-telegram'></i><p>Telegram: https://t.me/congdonguitfilm </p></a>
                         </div>
@@ -79,10 +60,10 @@
                             <a href="https://www.instagram.com/_dttuowng/" class="social-link"><i class='bx bxl-twitter'></i><p>X: https://www.x.com/uitfilmtv/ </p></a>
                         </div>
                         <p>&nbsp;</p>
-                        <h2>3. Câu Hỏi Thường Gặp (F.A.Q)</h2>
-                        <p>Trước khi gửi yêu cầu hỗ trợ, bạn có thể tham khảo trang <a href="../../view/pages/FAQ.html"><b>Hỏi Thường Gặp (F.A.Q)</b></a> để tìm câu trả lời nhanh cho các vấn đề phổ biến nhất tại <b>F.A.Q - UIT FILM.</b></p>
-                        <p>Chúng tôi rất vui khi được hỗ trợ bạn và mong muốn mang đến trải nghiệm xem phim trực tuyến tốt nhất! 
-                        <b>UIT FILM - Cùng bạn khám phá thế giới giải trí đa dạng, an toàn và miễn phí!</b></p>
+                        <h2 data-i18n="contact.faq.h2">3. Câu Hỏi Thường Gặp (F.A.Q)</h2>
+                        <p><span data-i18n="contact.faq.p1">Trước khi gửi yêu cầu hỗ trợ, bạn có thể tham khảo trang</span><a href="../../view/pages/FAQ.html"><b data-i18n="contact.faq.linkText">Hỏi Thường Gặp (F.A.Q)</b></a><span data-i18n="contact.faq.p2">để tìm câu trả lời nhanh cho các vấn đề phổ biến nhất tại</span><b>F.A.Q - UIT FILM.</b></p>
+                        <p><span data-i18n="contact.closing.p1">Chúng tôi rất vui khi được hỗ trợ bạn và mong muốn mang đến trải nghiệm xem phim trực tuyến tốt nhất!</span> 
+                        <b data-i18n="contact.closing.brand">UIT FILM - Cùng bạn khám phá thế giới giải trí đa dạng, an toàn và miễn phí!</b></p>
                         <p>&nbsp;</p>
                     </div>
                 </div>
@@ -91,18 +72,35 @@
 
     <!-- Start footer -->
     <footer id="footer"></footer>
-
-    <script type="module">
-      fetch("../components/Footer.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("footer").innerHTML = html;
-        })
-        .catch((error) => {
-          console.error("Fetch footer failed:", error);
-        });
-    </script>
     <!-- End footer -->
     
+    <script type="module">
+    import { initTranslate } from "../../js/Translate.js";
+    import { headerjs } from "../../js/Header.js";
+    import { searchBar } from "../../js/SearchBar.js";
+    import { loadFooter } from "../../js/Footer.js";
+
+    async function loadHTML(target, url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+      document.querySelector(target).innerHTML = await res.text();
+    }
+
+    (async () => {
+      // Header + Search
+      await loadHTML("#header", "../components/Header.html");
+      headerjs();
+
+      const searchRes = await fetch("../components/SearchBar.html");
+      document.querySelector(".search-box").innerHTML = await searchRes.text();
+      searchBar();
+
+      // Footer: chỉ chèn HTML, KHÔNG tự dịch
+      await loadFooter({ translate: false });
+
+      // Dịch TOÀN TRANG một lần sau khi mọi component đã sẵn sàng
+      await initTranslate();
+    })().catch((err) => console.error("Init page failed:", err));
+  </script>
 </body>
 </html>
