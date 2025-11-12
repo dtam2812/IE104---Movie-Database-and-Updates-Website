@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,24 +30,20 @@
     <!-- end-header -->
 
     <!-- start-movie-hero -->
-    <main class="hero" id="hero" aria-label="Movie carousel">
+    <main class="hero" aria-label="Movie carousel">
       <div class="slides" id="slides"></div>
       <div class="container">
         <div class="stack">
           <div class="left">
             <div class="en" id="en"></div>
-            <div class="row" id="meta">
-              <span data-meta="year"></span>
-              <span data-meta="runtime"></span>
-              <span data-meta="imdb"></span>
-            </div>
+            <div class="row" id="meta"></div>
             <div class="row" id="genres"></div>
             <p class="desc" id="desc"></p>
             <div class="controls">
               <div class="play" id="trailer-btn" aria-label="Play">
                 <a class="play" href="#">
                   <i class="fa-solid fa-play"></i>
-                  <span><strong>Trailer</strong></span>
+                  <span><strong data-i18n="grid.trailer">Trailer</strong></span>
                 </a>
               </div>
               <div class="actions" role="group" aria-label="Actions">
@@ -88,7 +84,6 @@
       </div>
       <div class="bottom-grad" aria-hidden="true"></div>
     </main>
-
     <!-- end-movie-hero -->
 
     <!-- start-movie-grid -->
@@ -108,40 +103,41 @@
         })
         .catch((err) => console.error("Fetch MovieGrid failed:", err));
     </script>
-
     <!-- end-movie-grid -->
+
     <!-- start-footer -->
     <div id="footer"></div>
     <!-- end-footer -->
 
     <script type="module">
-    import { initTranslate } from "../../js/Translate.js";
-    import { headerjs } from "../../js/Header.js";
-    import { load } from "../../js/StarterMovie.js";
-    import { searchBar } from "../../js/SearchBar.js";
-    import { loadFooter } from "../../js/Footer.js";
+      import { initTranslate } from "../../js/Translate.js";
+      import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
+      import { loadFooter } from "../../js/Footer.js";
 
-    
-    async function loadHTML(target, url) {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`${url} -> ${res.status}`);
-      document.querySelector(target).innerHTML = await res.text();
-    }
-    
-    (async () => {
-      await loadHTML("#header", "../components/Header.html");
-      headerjs();
-      
-      const s = await fetch("../components/SearchBar.html");
-      const box = document.querySelector(".search-box");
-      if (box) { box.innerHTML = await s.text(); searchBar(); }
-      
-      await loadFooter({ translate: false });
-      
-      await initTranslate(); // dịch 1 lần cho toàn trang
-    })().catch(err => console.error("Init page failed:", err));
-    load().catch(console.error);
+      async function loadHTML(target, url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+        document.querySelector(target).innerHTML = await res.text();
+      }
+
+      (async () => {
+        await loadHTML("#header", "../components/Header.html");
+        headerjs();
+
+        const s = await fetch("../components/SearchBar.html");
+        const box = document.querySelector(".search-box");
+        if (box) {
+          box.innerHTML = await s.text();
+          searchBar();
+        }
+
+        await loadFooter({ translate: false });
+
+        await initTranslate(); // dịch 1 lần cho toàn trang
+      })().catch((err) => console.error("Init page failed:", err));
     </script>
+
+    <script type="module" src="../../js/StarterMovie.js"></script>
   </body>
 </html>
-
