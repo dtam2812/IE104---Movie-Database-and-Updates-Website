@@ -1,6 +1,9 @@
-// UserDetail.js - Xử lý tương tác cho trang User Detail
+import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 
+// UserDetail.js - Xử lý tương tác cho trang User Detail
 document.addEventListener("DOMContentLoaded", function () {
+  setTimeout(() => getUserDetail(), 1500);
+
   // Toast functionality
   const toast = document.querySelector(".toast");
   const toastButton = document.querySelector(".toast button");
@@ -19,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Validate form before showing toast
       if (validateForm()) {
-        showToast("Thay đổi đã được lưu");
+        updateInformation();
       }
     });
   });
@@ -99,6 +102,107 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// Load user detail
+async function getUserDetail() {
+  try {
+    const token = localStorage.getItem("accessToken");
+    const payloadDecoded = jwtDecode(token);
+    const userId = payloadDecoded._id;
+    if (!token) {
+      setTimeout(() => {
+        window.location.href = "../../Pages/Login.html";
+      }, 1500);
+      return;
+    }
+
+    const response = await fetch(
+      `http://localhost:5000/api/authUser/userDetail/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Không thể tải thông tin người dùng");
+    }
+
+    const userData = await response.json();
+    displayUserInformation(userData);
+  } catch (error) {
+    console.error("Error loading user info:", error);
+    showToast("Lỗi khi tải thông tin người dùng");
+  }
+}
+
+function displayUserInformation(userData) {
+  const nameField = document.getElementById("name");
+  const emailField = document.getElementById("email");
+  const joinDateField = document.getElementById("joinDate");
+  const userName = document.querySelector(".sidebar .name");
+
+  if (nameField && userData.userName) nameField.value = userData.userName;
+  if (emailField && userData.email) emailField.value = userData.email;
+
+  const joinYear = userData.joinDate.split("-")[0];
+  const joinMonth = userData.joinDate.split("-")[1];
+  const joinDay =
+    userData.joinDate.split("-")[2].split("")[0] +
+    userData.joinDate.split("-")[2].split("")[1];
+  const joinDate = joinDay + "/" + joinMonth + "/" + joinYear;
+  if (joinDateField && userData.joinDate) {
+    joinDateField.value = joinDate;
+    joinDateField.setAttribute("readonly", true);
+    joinDateField.style.cursor = "not-allowed";
+  }
+  if (userName && userData.userName) userName.textContent = userData.userName;
+}
+
+async function updateInformation() {
+  try {
+    const token = localStorage.getItem("accessToken");
+    const payloadDecoded = jwtDecode(token);
+    const userId = payloadDecoded._id;
+
+    const nameField = document.getElementById("name");
+    const emailField = document.getElementById("email");
+
+    const updatedData = {
+      name: nameField ? nameField.value.trim() : "",
+      email: emailField ? emailField.value.trim() : "",
+    };
+
+    const response = await fetch(
+      `http://localhost:5000/api/authUser/update/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(updatedData),
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error("Không thể cập nhật thông tin");
+    }
+
+    const result = await response.json();
+    showToast("Thay đổi đã được lưu");
+    if (result.userName) {
+      const userName = document.querySelector(".sidebar .name");
+      if (userName) userName.textContent = result.userName;
+    }
+  } catch (error) {
+    console.error("Error saving user info:", error);
+    showToast("Lỗi khi lưu thông tin");
+  }
+}
+
 // Function to show toast message
 function showToast(message) {
   const toast = document.querySelector(".toast");
@@ -106,6 +210,8 @@ function showToast(message) {
 
   if (toastText) {
     toastText.textContent = message;
+  } else {
+    toast.childNodes[0].textContent = message + " ";
   }
 
   toast.classList.add("show");
@@ -247,8 +353,6 @@ function updateAvatar(imageUrl) {
 function updateUserInfo(userData) {
   const nameField = document.getElementById("name");
   const emailField = document.getElementById("email");
-  const phoneField = document.getElementById("phone");
-  const birthdayField = document.getElementById("birthday");
   const userName = document.querySelector(".sidebar .name");
 
   if (nameField && userData.name) nameField.value = userData.name;
@@ -257,10 +361,6 @@ function updateUserInfo(userData) {
   if (birthdayField && userData.birthday)
     birthdayField.value = userData.birthday;
   if (userName && userData.name) userName.textContent = userData.name;
-
-  if (userData.avatar) {
-    updateAvatar(userData.avatar);
-  }
 }
 
 // Export functions for use in other modules

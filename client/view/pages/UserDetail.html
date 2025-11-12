@@ -48,7 +48,7 @@
     <!-- main user detail -->
     <div id="userDetailMain"></div>
     <script>
-      fetch("../components/UserDetailMain..html")
+      fetch("../components/UserDetailMain.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("userDetailMain").innerHTML = html;
@@ -88,6 +88,6 @@
       </div>
     </div>
 
-    <script src="../../js/UserDetail.js"></script>
+    <script type="module" src="../../js/UserDetail.js"></script>
   </body>
 </html>
