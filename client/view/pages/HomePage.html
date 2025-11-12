@@ -27,37 +27,20 @@
   <body>
     <!-- start-header -->
     <div id="header"></div>
-
-    <script type="module">
-      import { headerjs } from "../../js/Header.js";
-      import { searchBar } from "../../js/SearchBar.js";
-
-      fetch("../components/Header.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("header").innerHTML = html;
-          headerjs();
-          return fetch("../components/SearchBar.html");
-        })
-        .then((res) => res.text())
-        .then((searchHTML) => {
-          document.querySelector(".search-box").innerHTML = searchHTML;
-          searchBar();
-        })
-        .catch((error) => console.error("Fetch header/search failed:", error));
-    </script>
-
     <!-- end-header -->
 
     <!-- start-movie-hero -->
-    <main class="hero" aria-label="Movie carousel">
+    <main class="hero" id="hero" aria-label="Movie carousel">
       <div class="slides" id="slides"></div>
       <div class="container">
         <div class="stack">
           <div class="left">
-            <div id="brand" alt="Tiêu đề" class="brand" >
             <div class="en" id="en"></div>
-            <div class="row" id="meta"></div>
+            <div class="row" id="meta">
+              <span data-meta="year"></span>
+              <span data-meta="runtime"></span>
+              <span data-meta="imdb"></span>
+            </div>
             <div class="row" id="genres"></div>
             <p class="desc" id="desc"></p>
             <div class="controls">
@@ -106,7 +89,6 @@
       <div class="bottom-grad" aria-hidden="true"></div>
     </main>
 
-    <script type="module" src="../../js/StarterMovie.js"></script>
     <!-- end-movie-hero -->
 
     <!-- start-movie-grid -->
@@ -130,17 +112,36 @@
     <!-- end-movie-grid -->
     <!-- start-footer -->
     <div id="footer"></div>
+    <!-- end-footer -->
 
     <script type="module">
-      fetch("../components/Footer.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("footer").innerHTML = html;
-        })
-        .catch((error) => {
-          console.error("Fetch footer failed:", error);
-        });
+    import { initTranslate } from "../../js/Translate.js";
+    import { headerjs } from "../../js/Header.js";
+    import { load } from "../../js/StarterMovie.js";
+    import { searchBar } from "../../js/SearchBar.js";
+    import { loadFooter } from "../../js/Footer.js";
+
+    
+    async function loadHTML(target, url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+      document.querySelector(target).innerHTML = await res.text();
+    }
+    
+    (async () => {
+      await loadHTML("#header", "../components/Header.html");
+      headerjs();
+      
+      const s = await fetch("../components/SearchBar.html");
+      const box = document.querySelector(".search-box");
+      if (box) { box.innerHTML = await s.text(); searchBar(); }
+      
+      await loadFooter({ translate: false });
+      
+      await initTranslate(); // dịch 1 lần cho toàn trang
+    })().catch(err => console.error("Init page failed:", err));
+    load().catch(console.error);
     </script>
-    <!-- end-footer -->
   </body>
 </html>
+

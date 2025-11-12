@@ -1,186 +1,194 @@
+// StarterMovie.js — phiên bản an toàn, không để lỗi dịch chặn render
+// Giả định trang HomePage.html gọi: import { load } from "../../js/StarterMovie.js"; await load();
+
 import { TMDB_API_KEY } from "../../config.js";
 
-const API_KEY = TMDB_API_KEY;
-const API_URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=vi-VN`;
+const TMDB_BASE = "https://api.themoviedb.org/3";
+const IMG_W780  = "https://image.tmdb.org/t/p/w780";
+const IMG_ORI   = "https://image.tmdb.org/t/p/original";
 
-const slidesEl = document.getElementById("slides");
-const brandEl = document.getElementById("brand");
-const enEl = document.getElementById("en");
-const metaEl = document.getElementById("meta");
-const genresEl = document.getElementById("genres");
-const descEl = document.getElementById("desc");
-const thumbsEl = document.getElementById("thumbs");
+const LIBRE_TRANSLATE = "https://libretranslate.com/translate";
 
-let movies = [];
-let index = 0;
-let timer;
+// ========== utils ==========
+const tmdbLang = (lang) => (lang === "vi" ? "vi-VN" : "en-US");
 
-const IMAGE_BASE = "https://image.tmdb.org/t/p";
-const FALLBACK_POSTER = "https://via.placeholder.com/300x450?text=No+Image";
-
-const createEl = (tag, cls, html) => {
-  const el = document.createElement(tag);
-  if (cls) el.className = cls;
-  if (html) el.innerHTML = html;
-  return el;
-};
-
-const badge = (content, cls) =>
-  createEl("div", `badge${cls ? " " + cls : ""}`, content);
-
-function createSlide(movie, isActive) {
-  const wrap = createEl("div", `slide${isActive ? " active" : ""}`);
-  const img = createEl("img", "bg");
-  img.src = movie.backgroundImage;
-  img.alt = movie.title;
-  wrap.append(img, createEl("div", "overlay-v"), createEl("div", "overlay-h"));
-  return wrap;
+function getLang() {
+  return document.documentElement.lang || localStorage.getItem("language") || "vi";
 }
 
-function renderBackground() {
-  slidesEl.replaceChildren(
-    ...movies.map((m, i) => createSlide(m, i === index))
-  );
-}
-
-function renderContent() {
-  const m = movies[index];
-  brandEl.src = m.title;
-  brandEl.alt = m.title;
-  enEl.textContent = m.englishTitle || "";
-
-  metaEl.innerHTML = "";
-  const metaData = [
-    badge("<b>HD</b>", "grad"),
-    badge("<b>PG-13</b>", "white"),
-    badge(
-      `<span class="imdb">IMDb</span><span>${m.imdbRating}</span>`,
-      "outline-yellow"
-    ),
-    badge(`<span>${m.year}</span>`),
-    badge(`<span>${m.duration}</span>`),
-  ];
-  metaEl.append(...metaData);
-
-  genresEl.innerHTML = "";
-  const formattedGenres = m.genres.map((g) => g.replace(/^Phim\s+/i, ""));
-  formattedGenres
-    .slice(0, 4)
-    .forEach((g) => genresEl.append(badge(`<span>${g}</span>`)));
-  if (formattedGenres.length > 4)
-    genresEl.append(badge(`<span>+${formattedGenres.length - 4}</span>`));
-
-  descEl.classList.remove("expanded");
-  descEl.textContent = m.description;
-
-  const oldToggle = descEl.nextElementSibling;
-  if (oldToggle && oldToggle.classList.contains("desc-toggle")) {
-    oldToggle.remove();
-  }
-
-  if (m.description.length > 200) {
-    const toggleBtn = document.createElement("span");
-    toggleBtn.className = "desc-toggle";
-    toggleBtn.textContent = "Xem thêm";
-
-    toggleBtn.onclick = () => {
-      const expanded = descEl.classList.toggle("expanded");
-      toggleBtn.textContent = expanded ? "Thu gọn" : "Xem thêm";
-    };
-
-    descEl.after(toggleBtn);
-  }
-}
-
-function renderThumbs() {
-  thumbsEl.replaceChildren(
-    ...movies.map((m, i) => {
-      const b = createEl("button", `thumb${i === index ? " active" : ""}`);
-      b.ariaLabel = m.title;
-      const img = createEl("img");
-      img.src = m.thumbnailImage;
-      img.alt = m.title;
-      b.append(img);
-      b.onclick = () => {
-        index = i;
-        update(true);
-      };
-      return b;
-    })
-  );
-}
-
-function update(stopAuto = false) {
-  renderBackground();
-  renderContent();
-  renderThumbs();
-
-  if (stopAuto) {
-    clearInterval(timer);
-    timer = setInterval(next, 5000);
-  }
-}
-
-function next() {
-  index = (index + 1) % movies.length;
-  update();
-}
-
-async function fetchMovies() {
+function getCache(key) {
   try {
-    const res = await fetch(API_URL);
-    const { results } = await res.json();
-    const basicMovies = results?.slice(0, 6) || [];
-
-    const movieDetails = await Promise.all(
-      basicMovies.map(async (m) => {
-        try {
-          const detailRes = await fetch(
-            `https://api.themoviedb.org/3/movie/${m.id}?api_key=${API_KEY}&language=vi-VN`
-          );
-          const detail = await detailRes.json();
-
-          return {
-            title: m.title || m.original_title || "Không có tiêu đề",
-            englishTitle: m.original_title || "",
-            backgroundImage: m.backdrop_path
-              ? `${IMAGE_BASE}/original${m.backdrop_path}`
-              : FALLBACK_POSTER,
-            thumbnailImage: m.poster_path
-              ? `${IMAGE_BASE}/w300${m.poster_path}`
-              : FALLBACK_POSTER,
-            imdbRating: (m.vote_average || 0).toFixed(1),
-            year: m.release_date?.split("-")[0] || "N/A",
-            duration: detail.runtime ? `${detail.runtime} phút` : "N/A",
-            genres: detail.genres?.map((g) => g.name) || [],
-            description: m.overview || "Không có mô tả.",
-          };
-        } catch (err) {
-          console.warn(`Lỗi chi tiết phim ${m.id}:`, err);
-          return null;
-        }
-      })
-    );
-
-    movies = movieDetails.filter(Boolean);
-
-    if (movies.length > 0) {
-      update();
-      timer = setInterval(next, 5000);
-    } else {
-      console.warn("Không có phim để hiển thị.");
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { value, exp } = JSON.parse(raw);
+    if (exp && Date.now() > exp) {
+      localStorage.removeItem(key);
+      return null;
     }
-  } catch (err) {
-    console.error("Fetch TMDB failed:", err);
+    return value;
+  } catch {
+    return null;
   }
 }
 
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".favorite");
-  if (!btn) return;
-  btn.classList.toggle("active");
-});
+function setCache(key, value, ttlMs = 1000 * 60 * 60 * 24 * 30) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ value, exp: Date.now() + ttlMs }));
+  } catch {}
+}
 
-fetchMovies();
+// ========== translate helpers ==========
+async function libreTranslate(text, source, target) {
+  // Chặn gọi vớ vẩn dẫn tới 400
+  if (!text || !text.trim()) return "";
+  if (!source || !target) return text;
 
-export const starterMovie = { update };
+  const res = await fetch(LIBRE_TRANSLATE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ q: text, source, target, format: "text" }),
+  });
+
+  // Không throw ra ngoài. 400/429/5xx thì trả lại EN để UI vẫn chạy.
+  if (!res.ok) {
+    console.warn("LibreTranslate failed:", res.status, await safeText(res));
+    return text;
+  }
+  const data = await res.json().catch(() => ({}));
+  return data?.translatedText || data?.data?.translatedText || text;
+}
+
+async function safeText(r) {
+  try { return await r.text(); } catch { return ""; }
+}
+
+async function translateTextWithCache(text, movieId, targetLang) {
+  if (!text || !text.trim()) return "";
+  const key = `home_overview_${movieId}_${targetLang}`;
+  const c = getCache(key);
+  if (c) return c;
+
+  const out =
+    targetLang === "vi"
+      ? await libreTranslate(text, "en", "vi")
+      : text; // các ngôn ngữ khác: để nguyên EN
+
+  setCache(key, out);
+  return out;
+}
+
+// ========== TMDB fetching ==========
+async function fetchTrendingMovie(lang) {
+  // Bạn có thể đổi endpoint theo thiết kế của bạn
+  const url = `${TMDB_BASE}/trending/movie/day?api_key=${TMDB_API_KEY}&language=${tmdbLang(lang)}&page=1`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`TMDB trending -> ${res.status}`);
+  const data = await res.json();
+  return (data.results || [])[0] || null;
+}
+
+async function fetchMovieById(id, lang) {
+  const url = `${TMDB_BASE}/movie/${id}?api_key=${TMDB_API_KEY}&language=${tmdbLang(lang)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`TMDB movie ${id} -> ${res.status}`);
+  return await res.json();
+}
+
+// ========== model builder ==========
+async function buildMovieModel(lang) {
+  // Chọn movie hiển thị trên hero
+  const featured = await fetchTrendingMovie(lang);
+  if (!featured) {
+    return {
+      id: 0,
+      title: "N/A",
+      overview: "",
+      poster: "",
+      backdrop: "",
+      vote: "N/A",
+    };
+  }
+
+  const id = featured.id;
+  // Lấy chi tiết để chắc overview đúng
+  const detail = await fetchMovieById(id, lang);
+
+  // Lấy EN để fallback/đem đi dịch khi cần
+  let enOverview = detail.overview || "";
+  if (!enOverview || enOverview.trim().length < 8) {
+    const en = await fetchMovieById(id, "en");
+    enOverview = en.overview || "";
+  }
+
+  let finalOverview = detail.overview || "";
+  if (getLang() === "vi") {
+    // Chỉ dịch khi EN có nội dung đủ dài
+    if (!finalOverview || finalOverview.trim().length < 8) {
+      finalOverview = await translateTextWithCache(enOverview, id, "vi");
+    }
+  } else {
+    // Ngôn ngữ khác: nếu thiếu thì dùng EN gốc
+    if (!finalOverview || finalOverview.trim().length < 8) {
+      finalOverview = enOverview;
+    }
+  }
+
+  return {
+    id,
+    title: detail.title || detail.original_title || "N/A",
+    overview: finalOverview || "",
+    poster: detail.poster_path ? `${IMG_W780}${detail.poster_path}` : "",
+    backdrop: detail.backdrop_path ? `${IMG_ORI}${detail.backdrop_path}` : "",
+    vote: typeof detail.vote_average === "number" ? detail.vote_average.toFixed(1) : "N/A",
+  };
+}
+
+// ========== render ==========
+function renderHero(model) {
+  // Điều chỉnh selector theo HTML của bạn
+  const hero = document.querySelector(".starter-hero") || document.body;
+
+  const bg = document.querySelector(".background-fade");
+  if (bg && model.backdrop) {
+    bg.style.backgroundImage = `url(${model.backdrop})`;
+    bg.style.backgroundSize = "cover";
+    bg.style.backgroundPosition = "center";
+  }
+
+  const titleEl = document.querySelector(".starter-title, .movie-content-title h3");
+  if (titleEl) titleEl.textContent = model.title;
+
+  const overviewEl = document.querySelector(".starter-overview, .movie-content-overview");
+  if (overviewEl) {
+    overviewEl.innerHTML = `
+      <span data-i18n="detail.intro">Giới thiệu:</span><br>
+      ${model.overview || "Không có mô tả."}
+    `;
+  }
+
+  const scoreEl = document.querySelector(".starter-score span, .movie-content-score span");
+  if (scoreEl) scoreEl.textContent = model.vote;
+
+  const posterEl = document.querySelector(".starter-poster img, .movie-content-left img");
+  if (posterEl && model.poster) posterEl.src = model.poster;
+
+  // Nút trailer nếu có
+  const trailerBtn = document.getElementById("trailer-btn");
+  if (trailerBtn) {
+    trailerBtn.href = `MovieDetail.html?id=${model.id}#trailer`;
+  }
+}
+
+// ========== public API ==========
+export async function load() {
+  try {
+    const lang = getLang();
+    const model = await buildMovieModel(lang);
+    renderHero(model);
+  } catch (err) {
+    console.error("StarterMovie.load error:", err);
+    // Thông báo nhẹ nhưng không crash UI
+    const holder = document.querySelector(".starter-overview, .movie-content-overview");
+    if (holder) holder.textContent = "Không thể tải dữ liệu.";
+  }
+}

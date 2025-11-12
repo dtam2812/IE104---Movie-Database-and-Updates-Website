@@ -467,7 +467,7 @@ function displayMovies(movieList) {
     // Xác định phim lẻ hay phim bộ
     const isMovie = movie.title !== undefined;
     const movieId = movie.id;
-    const movieName = isMovie ? movie.title : movie.name;
+    const movieName = isMovie ? (movie.title || movie.original_title) : (movie.name  || movie.original_name);
     const originalName = isMovie ? movie.original_title : movie.original_name;
 
     // Xử lý poster: Nếu không có thì dùng placeholder
