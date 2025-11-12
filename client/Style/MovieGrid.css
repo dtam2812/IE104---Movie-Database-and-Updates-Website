@@ -50,14 +50,13 @@ body {
 
 .grid-wrap {
   position: relative;
-  overflow: hidden;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-auto-rows: auto;
-  gap: 16px;
+  gap: 20px;
   justify-content: center;
   align-items: start;
   transition: max-height 0.3s ease;
@@ -124,6 +123,26 @@ body {
   color: #aaa;
 }
 
+.movie-card .card-info-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  overflow: hidden;
+  box-shadow: 0 0 5px 2px #0000001a;
+}
+
+.card-info-top .card-info-ep-top {
+  gap: 3.5px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  background-color: black;
+  color: #fff;
+  margin-top: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: repeat(5, 1fr);
