@@ -108,8 +108,7 @@ export async function AdminUsers_js() {
     filteredUsers = allUsers.filter((user) => {
       const matchSearch =
         user.name.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm) ||
-        user.id.toLowerCase().includes(searchTerm);
+        user.email.toLowerCase().includes(searchTerm);
 
       const matchRole = roleValue === "all" || user.role === roleValue;
       const matchStatus = statusValue === "all" || user.status === statusValue;
@@ -312,7 +311,8 @@ export async function AdminUsers_js() {
 
     // Reset form và preview
     userFormEl.reset();
-    avatarPreviewImg.src = "../../public/assets/image/user_avatar_default.jpg";
+    avatarPreviewImg.src =
+      "../../../public/assets/image/user_avatar_default.jpg";
 
     // Ẩn trường ID display và password khi Add
     const idDisplayGroup = userFormEl.querySelector(".user-id-display");
