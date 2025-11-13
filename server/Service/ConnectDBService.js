@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/MovieWeb");
+    await mongoose.connect(process.env.DB_URL);
     console.log("connect db");
   } catch (error) {
     console.log("cannot connect db: ", error);

@@ -1,28 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Users Management</title>
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../../Services/reset.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
-    <link rel="stylesheet" href="../../Style/AdminPage.css" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../Services/reset.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../Style/AdminPage.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <script type="module">
-      import { AdminUsers_js } from "../../js/AdminUsers.js";
-      AdminUsers_js();
+        import { AdminUsers_js } from '../../js/AdminUsers.js';
+        
+        AdminUsers_js();   
     </script>
-  </head>
+</head>
 
-  <body>
-    <!-- start-header -->
+<body>
+    <!-- Header -->
     <div id="header"></div>
 
     <script type="module">
@@ -44,256 +39,117 @@
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
 
-    <!-- end-header -->
-
     <!-- Main Section -->
     <section class="main">
-      <!-- Sidebar -->
-      <div class="admin-menu-container">
-        <nav class="admin-menu">
-          <ul class="admin-menu-list">
-            <li>
-              <a class="active" href="#">
-                <i class="fa-solid fa-user"></i>
-                <span>Users</span>
-              </a>
-            </li>
-            <li>
-              <a href="../pages/AdminMovies.html">
-                <i class="fa-solid fa-film"></i>
-                <span>Movies</span>
-              </a>
-            </li>
-            <li>
-              <a href="../pages/AdminTVShows.html">
-                <i class="fa-solid fa-tv"></i>
-                <span>TV Shows</span>
-              </a>
-            </li>
-            <li>
-              <a href="../pages/HomePage.html">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <!-- Main Content -->
-      <div class="admin-main-container">
-        <div class="admin-main-content">
-          <div class="am-content-heading">
-            <h1>Users</h1>
-            <a class="add-btn">
-              <i class="fa-solid fa-plus"></i>
-              <span>Add User</span>
-            </a>
-          </div>
-
-          <!-- Search and Filter -->
-          <div class="am-search-box">
-            <div class="search-bar">
-              <div class="search-icon">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </div>
-              <input
-                class="search-input"
-                placeholder="Search by user name, email or ID (e.g. UIT001)"
-                autocomplete="off"
-              />
-            </div>
-            <div class="filter-bar">
-              <select class="filter-select">
-                <option value="all">All Roles</option>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-              </select>
-              <select class="filter-select">
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="banned">Banned</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Table -->
-          <div class="dm-table-container">
-            <div class="dm-table-heading">
-              <h2>Users (0)</h2>
-            </div>
-            <table class="dm-table">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Created</th>
-                  <th>Edit</th>
-                  <th>Detail</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody class="dm-table-body"></tbody>
-            </table>
-          </div>
-
-          <!-- Pagination -->
-          <div class="content__pagination">
-            <button class="pagination-left-arrow disable">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            <div class="pagination__main">
-              <span class="pagination-page-current">1</span>
-              <span>/ 10</span>
-            </div>
-            <button class="pagination-right-arrow">
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
+        <!-- Sidebar -->
+        <div class="admin-menu-container">
+            <nav class="admin-menu">
+                <ul class="admin-menu-list">
+                    <li>
+                        <a class="active" href="#">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../pages/AdminMovies.html">
+                            <i class="fa-solid fa-film"></i>
+                            <span>Movies</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../pages/AdminTVShows.html">
+                            <i class="fa-solid fa-tv"></i>
+                            <span>TV Shows</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="../pages/HomePage.html">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Sign Out</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>  
         </div>
-      </div>
-    </section>
 
-    <!-- Modal: Add/Edit User -->
-    <div class="modal-user hidden">
-      <div class="modal_backdrop"></div>
-      <div class="modal_container">
-        <div class="modal_dialog modal_dialog_centered">
-          <div class="modal_content">
-            <button class="btn modal_close" aria-label="close">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="form-wrapper user-form">
-              <div class="content_header mb2">
-                <h1 class="modal-title">Add User</h1>
-              </div>
-
-              <div class="content_body">
-                <!-- Avatar Preview -->
-                <div class="user-avatar mb3 mt3">
-                  <img
-                    src="../../public/assets/image/user_avatar_default.jpg"
-                    alt="User Avatar"
-                  />
-                  <div class="upload-img">
-                    <label class="avatar-label" for="avatar-input"
-                      >Upload image</label
-                    >
-                    <input
-                      type="file"
-                      class="avatar-input"
-                      id="avatar-input"
-                      accept="image/*"
-                    />
-                  </div>
+        <!-- Main Content -->
+        <div class="admin-main-container">
+            <div class="admin-main-content">
+                <div class="am-content-heading">
+                    <h1>Users</h1>
+                    <a class="add-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Add User</span>
+                    </a>
                 </div>
 
-                <form class="v-form">
-                  <!-- Hidden ID field -->
-                  <input type="hidden" name="id" />
+                <!-- Search and Filter -->
+                <div class="am-search-box">
+                    <div class="search-bar">
+                        <div class="search-icon">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <input class="search-input" placeholder="Search by user name, email or ID (e.g. UIT001)" autocomplete="off" />
+                    </div>
+                    <div class="filter-bar">
+                        <select class="filter-select">
+                            <option value="all">All Roles</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="banned">Banned</option>
+                        </select>
+                    </div>
+                </div>
 
-                  <!-- ID Display (readonly, shown only in Edit mode) -->
-                  <div
-                    class="form-group mb1 user-id-display"
-                    style="display: none"
-                  >
-                    <label>User ID:</label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="id-display"
-                      placeholder="Auto-generated"
-                      readonly
-                    />
-                  </div>
+                <!-- Table -->
+                <div class="dm-table-container">
+                    <div class="dm-table-heading">
+                        <h2>Users (0)</h2>
+                    </div>
+                    <table class="dm-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Edit</th>
+                                <th>Detail</th>
+                                <th>     </th>
+                            </tr>
+                        </thead>
+                        <tbody class="dm-table-body"></tbody>
+                    </table>
+                </div>
 
-                  <!-- Name -->
-                  <div class="form-group mb1">
-                    <label>User Name: <span style="color: red">*</span></label>
-                    <input
-                      class="form-control"
-                      type="text"
-                      name="name"
-                      placeholder="User name"
-                      required
-                    />
-                  </div>
-
-                  <!-- Email -->
-                  <div class="form-group mb1">
-                    <label>Email: <span style="color: red">*</span></label>
-                    <input
-                      class="form-control"
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      required
-                    />
-                  </div>
-
-                  <!-- Role -->
-                  <div class="form-group mb1">
-                    <label>Role: <span style="color: red">*</span></label>
-                    <select class="form-control" name="role" required>
-                      <option value="" disabled selected>Select role</option>
-                      <option value="Admin">Admin</option>
-                      <option value="User">User</option>
-                    </select>
-                  </div>
-
-                  <!-- Password (only shown when adding) -->
-                  <div class="form-group mb1 password-group">
-                    <label>Password: <span style="color: red">*</span></label>
-                    <input
-                      class="form-control"
-                      type="password"
-                      name="password"
-                      minlength="6"
-                      placeholder="Password"
-                      required
-                    />
-                  </div>
-
-                  <!-- Confirm Password (only shown when adding) -->
-                  <div class="form-group mb1 cf-password-group">
-                    <label
-                      >Confirm Password:
-                      <span style="color: red">*</span></label
-                    >
-                    <input
-                      class="form-control"
-                      type="password"
-                      name="cf_password"
-                      minlength="6"
-                      placeholder="Confirm password"
-                      required
-                    />
-                    <small class="non-same-pw" style="display: none; color: red"
-                      >Passwords do not match.</small
-                    >
-                  </div>
-
-                  <!-- Submit Button -->
-                  <div class="form-group action-btn-center mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
-                      Create
+                <!-- Pagination -->
+                <div class="content__pagination">
+                    <button class="pagination-left-arrow disable">
+                        <i class="fa-solid fa-arrow-left"></i>
                     </button>
-                  </div>
-                </form>
-              </div>
+                    <div class="pagination__main">
+                        <span class="pagination-page-current">1</span>
+                        <span>/ 10</span>
+                    </div>
+                    <button class="pagination-right-arrow">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
+    </section>
 
-    <!-- start-footer -->
+    <!-- Footer -->
     <div id="footer"></div>
 
     <script type="module">
-      fetch("../components/Footer.html")
+      fetch("../components/footer.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("footer").innerHTML = html;
@@ -302,6 +158,87 @@
           console.error("Fetch footer failed:", error);
         });
     </script>
-    <!-- end-footer -->
-  </body>
+
+    <!-- Modal: Add/Edit User -->
+    <div class="modal-user hidden">
+        <div class="modal_backdrop"></div>
+        <div class="modal_container">
+            <div class="modal_dialog modal_dialog_centered">
+                <div class="modal_content">
+                    <button class="btn modal_close" aria-label="close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="form-wrapper user-form">
+                        <div class="content_header mb2">
+                            <h1 class="modal-title">Add User</h1>
+                        </div>
+                    
+                        <div class="content_body">
+                            <!-- Avatar Preview -->
+                            <div class="user-avatar mb3 mt3">
+                                <img src="/public/assets/image/user_avatar_default.jpg" alt="User Avatar">
+                                <div class="upload-img">
+                                    <label class="avatar-label" for="avatar-input">Upload image</label>
+                                    <input type="file" class="avatar-input" id="avatar-input" accept="image/*">
+                                </div>
+                            </div>
+
+                            <form class="v-form">
+                                <!-- Hidden ID field -->
+                                <input type="hidden" name="id">
+
+                                <!-- ID Display (readonly, shown only in Edit mode) -->
+                                <div class="form-group mb1 user-id-display" style="display: none;">
+                                    <label>User ID:</label>
+                                    <input class="form-control" type="text" name="id-display" placeholder="Auto-generated" readonly>
+                                </div>
+
+                                <!-- Name -->
+                                <div class="form-group mb1">
+                                    <label>User Name: <span style="color: red;">*</span></label>
+                                    <input class="form-control" type="text" name="name" placeholder="User name" required>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="form-group mb1">
+                                    <label>Email: <span style="color: red;">*</span></label>
+                                    <input class="form-control" type="email" name="email" placeholder="Email" required>
+                                </div>
+
+                                <!-- Role -->
+                                <div class="form-group mb1">
+                                    <label>Role: <span style="color: red;">*</span></label>
+                                    <select class="form-control" name="role" required>
+                                        <option value="" disabled selected>Select role</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="User">User</option>
+                                    </select>
+                                </div>
+
+                                <!-- Password (only shown when adding) -->
+                                <div class="form-group mb1 password-group">
+                                    <label>Password: <span style="color: red;">*</span></label>
+                                    <input class="form-control" type="password" name="password" minlength="6" placeholder="Password" required>
+                                </div>
+
+                                <!-- Confirm Password (only shown when adding) -->
+                                <div class="form-group mb1 cf-password-group">
+                                    <label>Confirm Password: <span style="color: red;">*</span></label>
+                                    <input class="form-control" type="password" name="cf_password" minlength="6" placeholder="Confirm password" required>
+                                    <small class="non-same-pw" style="display: none; color: red;">Passwords do not match.</small>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="form-group action-btn-center mt3 mb3">
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </div>
+    </div>
+
+</body>
 </html>

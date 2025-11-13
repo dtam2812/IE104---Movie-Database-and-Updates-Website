@@ -4,7 +4,9 @@ const userSchema = new mongoose.Schema({
   userName: String,
   email: { type: String, unique: true },
   password: String,
-  role: String,
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  status: { type: String, enum: ["active", "banned"], default: "active" },
+  joinDate: Date,
   favoriteFilm: [
     {
       id: String,
@@ -12,7 +14,6 @@ const userSchema = new mongoose.Schema({
       title: String,
       originalName: String,
       posterPath: String,
-      backdropPath: String,
     },
   ],
 });

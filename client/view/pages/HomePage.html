@@ -23,6 +23,10 @@
     <link rel="stylesheet" href="../../Style/MovieGrid.css" />
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <link rel="stylesheet" href="../../Style/Trailer.css" />
+    <script type="module">
+      import { checkAndShowLoginPopup } from "../../js/AutoLoginPopup.js";
+      checkAndShowLoginPopup();
+    </script>
   </head>
   <body>
     <!-- start-header -->
@@ -46,7 +50,6 @@
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
-
     <!-- end-header -->
 
     <!-- start-movie-hero -->
