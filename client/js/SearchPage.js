@@ -8,7 +8,7 @@ const grid = document.getElementById("results-grid");
 const pagination = document.getElementById("pagination");
 const filterButtons = document.querySelectorAll(".filter-btn");
 
-let currentFilter = "all";
+let currentFilter = "movie";
 let allResults = [];
 let currentPages = { all: 1, movie: 1, tv: 1, person: 1 };
 
@@ -26,13 +26,13 @@ Promise.all([
     movieCardTemplate = movieHTML.trim();
     tvCardTemplate = tvHTML.trim();
     castCardTemplate = castHTML.trim();
-    loadResults("all");
+    loadResults(currentFilter);
   })
   .catch((err) => console.error("Không tải được component:", err));
 
 // Hàm load dữ liệu từ TMDB
-async function loadResults(type = "all") {
-  grid.innerHTML = "<p class='placeholder-text'>Đang tải...</p>";
+async function loadResults(type = "movie") {
+  grid.innerHTML = "<p class='placeholder-text' data-i18n='search.loading'>Đang tải...</p>";
   const currentPage = currentPages[type];
 
   try {
@@ -97,7 +97,7 @@ async function loadResults(type = "all") {
     renderPaginationModern(currentPage, totalPages, type);
   } catch (err) {
     console.error(err);
-    grid.innerHTML = "<p class='placeholder-text'>Lỗi tải dữ liệu.</p>";
+    grid.innerHTML = "<p class='placeholder-text' data-i18n='search.error'>Lỗi tải dữ liệu.</p>";
   }
 }
 
@@ -117,7 +117,7 @@ function renderResults() {
   grid.innerHTML = "";
 
   if (!allResults.length) {
-    grid.innerHTML = "<p class='placeholder-text'>Không tìm thấy kết quả.</p>";
+    grid.innerHTML = "<p class='placeholder-text' data-i18n='search.noResults'>Không tìm thấy kết quả.</p>";
     return;
   }
 
@@ -198,7 +198,7 @@ function renderPaginationModern(page, total, type) {
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
-    <span class="page-text">Trang</span>
+    <span class="page-text" data-i18n="search.page">Trang</span>
     <span class="page-current">${page}</span>
     <span class="page-divider">/</span>
     <span class="page-total">${total}</span>
@@ -219,3 +219,9 @@ function renderPaginationModern(page, total, type) {
   container.append(prevBtn, pageBox, nextBtn);
   pagination.after(container);
 }
+
+// Lắng nghe sự kiện đổi ngôn ngữ
+window.addEventListener('languagechange', () => {
+  console.log('🔄 Language changed, reloading results...');
+  loadResults(currentFilter);
+});

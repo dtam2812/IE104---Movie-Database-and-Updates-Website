@@ -21,7 +21,7 @@
     />
 
     <!-- Style -->
-    <link rel="stylesheet" href="../../Style/reset.css" />
+    <link rel="stylesheet" href="../../Services/reset.css" />
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <link rel="stylesheet" href="../../Style/MovieCard.css" />
@@ -31,36 +31,18 @@
   <body>
     <!-- Header -->
     <div id="header"></div>
-    <script type="module">
-      import { headerjs } from "../../js/Header.js";
-      import { searchBar } from "../../js/SearchBar.js";
-
-      fetch("../components/Header.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("header").innerHTML = html;
-          headerjs();
-          return fetch("../components/SearchBar.html");
-        })
-        .then((res) => res.text())
-        .then((searchHTML) => {
-          document.querySelector(".search-box").innerHTML = searchHTML;
-          searchBar();
-        })
-        .catch((err) => console.error("Lỗi tải header/search:", err));
-    </script>
 
     <!-- Nội dung -->
     <div class="search-result-container">
-      <h2>Kết quả tìm kiếm cho "<span id="query-text"></span>"</h2>
+      <h2><span data-i18n="search.resultsFor">Kết quả tìm kiếm cho</span> "<span id="query-text"></span>"</h2>
 
       <div class="filter-buttons">
-        <button class="filter-btn active" data-type="movie">Phim</button>
-        <button class="filter-btn" data-type="person">Diễn viên</button>
+        <button class="filter-btn active" data-type="movie" data-i18n="search.filterMovie">Phim</button>
+        <button class="filter-btn" data-type="person" data-i18n="search.filterActor">Diễn viên</button>
       </div>
 
       <div id="results-grid" class="results-grid">
-        <p class="placeholder-text">Đang tải...</p>
+        <p class="placeholder-text" data-i18n="search.loading">Đang tải...</p>
       </div>
 
       <div id="pagination" class="pagination"></div>
@@ -68,16 +50,36 @@
 
     <!-- Footer -->
     <div id="footer"></div>
+
+    <!-- Scripts -->
     <script type="module">
-      fetch("../components/Footer.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("footer").innerHTML = html;
-        })
-        .catch((err) => console.error("Lỗi tải footer:", err));
+      import { initTranslate } from "../../js/Translate.js";
+      import { headerjs } from "../../js/Header.js";
+      import { searchBar } from "../../js/SearchBar.js";
+
+      async function loadHTML(target, url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+        document.querySelector(target).innerHTML = await res.text();
+      }
+
+      (async () => {
+        await loadHTML("#header", "../components/Header.html");
+        headerjs();
+
+        const s = await fetch("../components/SearchBar.html");
+        const box = document.querySelector(".search-box");
+        if (box) {
+          box.innerHTML = await s.text();
+          searchBar();
+        }
+
+        await loadHTML("#footer", "../components/Footer.html");
+
+        await initTranslate(); // Dịch toàn bộ trang
+      })().catch((err) => console.error("Init page failed:", err));
     </script>
 
-    <!-- Script -->
     <script type="module" src="../../js/SearchPage.js"></script>
   </body>
 </html>

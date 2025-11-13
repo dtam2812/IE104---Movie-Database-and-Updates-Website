@@ -20,39 +20,102 @@ let allMovies = [];
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
+// ========== i18n ==========
+let translations = {};
+
+function currentLang() {
+  const stored = localStorage.getItem("language");
+  const htmlLang = document.documentElement.lang;
+
+  if (stored && stored !== htmlLang) {
+    document.documentElement.lang = stored;
+    return stored;
+  }
+
+  if (htmlLang && htmlLang !== stored) {
+    localStorage.setItem("language", htmlLang);
+    return htmlLang;
+  }
+
+  return stored || htmlLang || "vi";
+}
+
+function tmdbLang(lang) {
+  return lang === "vi" ? "vi-VN" : "en-US";
+}
+
+async function loadTranslations(lang) {
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    if (!res.ok) throw new Error(`Load translations failed: ${res.status}`);
+    translations = await res.json();
+    return translations;
+  } catch (err) {
+    console.error("Load translations error:", err);
+  }
+}
+
+function t(key) {
+  return translations[key] || key;
+}
+
+function translateDOM() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const translated = t(key);
+
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      el.placeholder = translated;
+    } else {
+      el.textContent = translated;
+    }
+  });
+}
+
 /* ================== LOAD TEMPLATE ================== */
-Promise.all([
-  fetch("../components/MovieCardRender.html").then((res) => res.text()),
-  fetch("../components/TvShowCardRender.html").then((res) => res.text()),
-])
-  .then(([movieHTML, tvHTML]) => {
+async function loadTemplates() {
+  try {
+    const [movieHTML, tvHTML] = await Promise.all([
+      fetch("../components/MovieCardRender.html").then((res) => res.text()),
+      fetch("../components/TvShowCardRender.html").then((res) => res.text()),
+    ]);
     movieCardTemplate = movieHTML;
     tvCardTemplate = tvHTML;
-    loadPersonDetail();
-    loadPersonMovies();
-  })
-  .catch((err) => console.error("Không tải được template:", err));
+  } catch (err) {
+    console.error("Không tải được template:", err);
+  }
+}
 
 /* ================== LOAD THÔNG TIN DIỄN VIÊN ================== */
 async function loadPersonDetail() {
+  const lang = currentLang();
+  
   try {
     const res = await fetch(
-      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=${tmdbLang(lang)}`
     );
     const data = await res.json();
 
     if (!data || data.success === false) {
-      personName.textContent = "Không tìm thấy diễn viên";
+      personName.textContent = t("cast.unknown");
       return;
     }
 
     // --- Gán dữ liệu ---
-    personName.textContent = data.name || "Đang cập nhật";
-    alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
-    biography.textContent = data.biography || "Đang cập nhật";
-    gender.textContent =
-      data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
-    birthday.textContent = data.birthday || "Đang cập nhật";
+    personName.textContent = data.name || t("cast.updating");
+    alsoKnownAs.textContent = data.also_known_as[0] || t("cast.updating");
+    biography.textContent = data.biography || t("cast.updating");
+    
+    // Dịch giới tính
+    if (data.gender === 1) {
+      gender.textContent = t("cast.female");
+    } else if (data.gender === 2) {
+      gender.textContent = t("cast.male");
+    } else {
+      gender.textContent = t("cast.unknown");
+    }
+    
+    birthday.textContent = data.birthday || t("cast.updating");
 
     // --- Ảnh diễn viên ---
     const profile = data.profile_path
@@ -73,14 +136,16 @@ async function loadPersonDetail() {
 
 /* ================== LOAD DANH SÁCH PHIM/TIVI ================== */
 async function loadPersonMovies() {
+  const lang = currentLang();
+  
   try {
     const res = await fetch(
-      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=${tmdbLang(lang)}`
     );
     const data = await res.json();
 
     if (!data || !data.cast) {
-      moviesGrid.innerHTML = "<p>Không có dữ liệu được tìm thấy.</p>";
+      moviesGrid.innerHTML = `<p>${t("cast.noResults")}</p>`;
       return;
     }
 
@@ -103,7 +168,7 @@ function renderMoviesPage() {
   const currentMovies = allMovies.slice(start, end);
 
   if (currentMovies.length === 0) {
-    moviesGrid.innerHTML = "<p>Không có kết quả.</p>";
+    moviesGrid.innerHTML = `<p>${t("cast.noResults")}</p>`;
     return;
   }
 
@@ -113,7 +178,7 @@ function renderMoviesPage() {
       ? `${IMG_URL}${item.poster_path}`
       : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
-    const title = item.title || item.name || "Không rõ";
+    const title = item.title || item.name || t("cast.unknown");
     const original_title = item.original_title || item.original_name || "";
 
     // --- Chọn template (phim hoặc TV show) ---
@@ -165,7 +230,7 @@ function renderPaginationModern(page, total) {
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
-    <span class="page-text">Trang</span>
+    <span class="page-text">${t("cast.page")}</span>
     <span class="page-current">${page}</span>
     <span class="page-divider">/</span>
     <span class="page-total">${total}</span>
@@ -190,3 +255,32 @@ function renderPaginationModern(page, total) {
 
   moviesGrid.after(container);
 }
+
+/* ================== BOOT ================== */
+async function boot() {
+  const lang = currentLang();
+  console.log(`🌐 Current language: ${lang}`);
+
+  await loadTranslations(lang);
+  translateDOM();
+  await loadTemplates();
+  await loadPersonDetail();
+  await loadPersonMovies();
+
+  console.log("✅ Cast detail page loaded");
+}
+
+// ========== Event Listeners ==========
+document.addEventListener("DOMContentLoaded", boot);
+
+window.addEventListener("languagechange", async () => {
+  console.log("🔄 Language changed, reloading page...");
+  await boot();
+});
+
+window.addEventListener("storage", (e) => {
+  if (e.key === "language") {
+    console.log("🔄 Language changed in another tab, reloading...");
+    boot();
+  }
+});
