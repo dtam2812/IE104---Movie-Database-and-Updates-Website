@@ -48,7 +48,7 @@
     <!-- main user detail -->
     <div id="userDetailMain"></div>
     <script>
-      fetch("../components/UserDetailMain..html")
+      fetch("../components/UserDetailMain.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("userDetailMain").innerHTML = html;
@@ -83,11 +83,10 @@
         <p>Bạn có chắc chắn muốn thay đổi thông tin?</p>
         <div class="actions">
           <button class="btn">Xác nhận</button>
-          <button class="btn secondary">Hủy</button>
         </div>
       </div>
     </div>
 
-    <script src="../../js/UserDetail.js"></script>
+    <script type="module" src="../../js/UserDetail.js"></script>
   </body>
 </html>
