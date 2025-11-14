@@ -19,11 +19,11 @@ export function Auth_Modaljs() {
   function showErrorMessage(formWrapper, message) {
     const errorDiv = formWrapper.querySelector(".auth-error-message");
     const errorText = errorDiv.querySelector(".error-text");
-    
+
     if (errorDiv && errorText) {
       errorText.textContent = message;
       errorDiv.style.display = "flex";
-      
+
       // Trigger animation
       setTimeout(() => {
         errorDiv.classList.add("show");
@@ -64,7 +64,9 @@ export function Auth_Modaljs() {
   function closeLRFModal() {
     modal.classList.add("hidden");
     // Ẩn tất cả error messages khi đóng modal
-    [loginForm, registerForm, forgotForm, resetForm].forEach(form => hideErrorMessage(form));
+    [loginForm, registerForm, forgotForm, resetForm].forEach((form) =>
+      hideErrorMessage(form)
+    );
   }
 
   backdrop.addEventListener("click", closeLRFModal);
@@ -77,11 +79,17 @@ export function Auth_Modaljs() {
   switchLink.forEach((link) => {
     link.addEventListener("click", () => {
       // Ẩn error messages khi chuyển form
-      [loginForm, registerForm, forgotForm, resetForm].forEach(form => hideErrorMessage(form));
-      
+      [loginForm, registerForm, forgotForm, resetForm].forEach((form) =>
+        hideErrorMessage(form)
+      );
+
       const text = link.textContent.trim();
       if (text.includes("Đăng ký ngay")) window.openLRFModal("register");
-      else if (text.includes("Đăng nhập") || text.includes("Quay lại đăng nhập")) window.openLRFModal("login");
+      else if (
+        text.includes("Đăng nhập") ||
+        text.includes("Quay lại đăng nhập")
+      )
+        window.openLRFModal("login");
       else if (text.includes("Quên mật khẩu?")) window.openLRFModal("forgot");
     });
   });
@@ -113,7 +121,9 @@ export function Auth_Modaljs() {
 
   // Password validation for reset password form
   const newPwdInput = resetFormEl.querySelector('input[name="new_password"]');
-  const cfNewPwdInput = resetFormEl.querySelector('input[name="cf_new_password"]');
+  const cfNewPwdInput = resetFormEl.querySelector(
+    'input[name="cf_new_password"]'
+  );
   const resetSubmitBtn = resetFormEl.querySelector(".btn.btn-primary");
   const resetErrorMessage = resetFormEl.querySelector(".non-same-pw");
 
@@ -165,7 +175,7 @@ export function Auth_Modaljs() {
       } else {
         const errorText = await response.text();
         showErrorMessage(
-          registerForm, 
+          registerForm,
           errorText || "Không thể đăng ký. Vui lòng thử lại!"
         );
       }
@@ -200,35 +210,38 @@ export function Auth_Modaljs() {
         const accessToken = data.accessToken;
         const payloadDecoded = jwtDecode(accessToken);
 
+        if (payloadDecoded.status === "Banned") {
+          showErrorMessage(loginForm, "Tài khoản của bạn đã bị chặn.");
+          return;
+        }
+
         // Lưu token và thông tin user
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("userName", payloadDecoded.username);
         localStorage.setItem("userEmail", payloadDecoded.email);
 
         // Token check sẽ được start từ Header.js sau khi reload
-        
+
         // Dispatch event để cập nhật UI
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
-        
+
         // Đóng modal
         modal.classList.add("hidden");
 
-        console.log("User role:", payloadDecoded.role);  
-        
-        if (payloadDecoded.role === "admin") {
-          console.log("Redirecting admin to AdminUsers.html");
+        console.log("User role:", payloadDecoded.role);
+
+        if (payloadDecoded.role === "Admin") {
           window.location.href = "/client/view/pages/AdminUsers.html";
         } else {
-          console.log("Redirecting user to HomePage.html");
           window.location.href = "/client/view/pages/HomePage.html";
         }
       } else {
         // login error (400/401)
         const errorText = await response.text();
         showErrorMessage(
-          loginForm, 
+          loginForm,
           errorText || "Email hoặc mật khẩu không đúng!"
         );
       }
@@ -250,7 +263,7 @@ export function Auth_Modaljs() {
 
     // Lưu email để dùng khi reset password
     forgotPasswordEmail = email;
-    
+
     // Reset form và chuyển sang form reset password
     forgotForm.querySelector("form").reset();
     window.openLRFModal("reset");

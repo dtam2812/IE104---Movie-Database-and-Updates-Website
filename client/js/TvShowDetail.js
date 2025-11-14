@@ -179,6 +179,7 @@ function renderInfo(tv) {
     console.error("Không tìm thấy .info-grid container");
     return;
   }
+  const firstAirDate = new Date(tv.first_air_date);
 
   infoGrid.innerHTML = `
       <h3>Thông tin phim</h3>
@@ -205,8 +206,11 @@ function renderInfo(tv) {
         <div class="movie-info-value">${tv.status || "Không rõ"}</div>
       </div>
       <div class="movie-info">
-        <div class="movie-info-title">Ngày phát sóng đầu:</div>
-        <div class="movie-info-value">${tv.first_air_date || "N/A"}</div>
+        <div class="movie-info-title">Ngày ra mắt:</div>
+        <div class="movie-info-value">${
+          firstAirDate.toLocaleDateString("vi-VN") || "N/A"
+        }</div>
+      </div>
       </div>
     `;
   console.log(tv);

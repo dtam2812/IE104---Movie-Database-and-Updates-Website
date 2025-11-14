@@ -73,7 +73,6 @@ body {
   gap: 20px;
   width: 100%;
   box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 .movie-card {

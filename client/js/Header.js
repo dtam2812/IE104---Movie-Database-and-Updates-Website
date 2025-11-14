@@ -9,16 +9,16 @@ const CHECK_INTERVAL_MS = 10000; // 10 giây
 // Hàm kiểm tra token có hết hạn chưa
 function isTokenExpired(token) {
   if (!token) return true;
-  
+
   try {
     const decoded = jwtDecode(token);
     const now = Date.now() / 1000;
-    
+
     if (decoded.exp && decoded.exp < now) {
       console.log("Token đã hết hạn!");
       return true;
     }
-    
+
     return false;
   } catch (error) {
     console.error("Error decoding token:", error);
@@ -29,23 +29,23 @@ function isTokenExpired(token) {
 // Hàm xử lý khi token hết hạn
 function handleTokenExpiration() {
   console.log("Token hết hạn - Đang xử lý logout...");
-  
+
   // 1. Set flag để AutoLoginPopup biết là token đã hết hạn
   sessionStorage.setItem("tokenExpired", "true");
-  
+
   // 2. Xóa tất cả thông tin user
   localStorage.removeItem("accessToken");
   localStorage.removeItem("userName");
   localStorage.removeItem("userEmail");
   localStorage.removeItem("refreshToken");
-  
+
   // 3. Lấy đường dẫn hiện tại
   const currentPath = window.location.pathname;
   const isHomePage = currentPath.includes("HomePage.html");
-  
+
   // 4. Luôn redirect về HomePage
   window.location.href = "/client/view/pages/HomePage.html";
-  
+
   // 5. Nếu đang ở HomePage → reload và mở popup
   if (isHomePage) {
     window.location.reload();
@@ -54,11 +54,13 @@ function handleTokenExpiration() {
 
 // Hàm kiểm tra token định kỳ
 function startTokenExpirationCheck() {
-  console.log(`Bắt đầu kiểm tra token expiration mỗi ${CHECK_INTERVAL_MS / 1000} giây...`);
-  
+  console.log(
+    `Bắt đầu kiểm tra token expiration mỗi ${CHECK_INTERVAL_MS / 1000} giây...`
+  );
+
   const checkInterval = setInterval(() => {
     const accessToken = localStorage.getItem("accessToken");
-        
+
     if (isTokenExpired(accessToken)) {
       console.log("Token đã hết hạn!");
       clearInterval(checkInterval);
@@ -73,22 +75,22 @@ function startTokenExpirationCheck() {
         console.error("Error checking token:", error);
       }
     }
-  }, CHECK_INTERVAL_MS); 
-  
-  window.addEventListener('beforeunload', () => clearInterval(checkInterval));
+  }, CHECK_INTERVAL_MS);
+
+  window.addEventListener("beforeunload", () => clearInterval(checkInterval));
   return checkInterval;
 }
 
 // Hàm kiểm tra token khi vừa load trang
 function checkTokenOnPageLoad() {
   const accessToken = localStorage.getItem("accessToken");
-  
+
   if (accessToken && isTokenExpired(accessToken)) {
     console.log("Token đã hết hạn khi load trang");
     handleTokenExpiration();
     return false;
   }
-  
+
   return true;
 }
 
@@ -138,7 +140,7 @@ function loadUserInfo() {
 function removeAdminMenu() {
   const existingAdminMenu = document.getElementById("admin-menu-item");
   if (existingAdminMenu) existingAdminMenu.remove();
-  
+
   const existingSeparator = document.getElementById("admin-menu-separator");
   if (existingSeparator) existingSeparator.remove();
 }
@@ -146,8 +148,10 @@ function removeAdminMenu() {
 // Hàm tạo menu Admin động
 function createAdminMenu() {
   removeAdminMenu();
-  
-  const dropdownList = document.querySelector(".user-dropdown-menu .dropdown-list");
+
+  const dropdownList = document.querySelector(
+    ".user-dropdown-menu .dropdown-list"
+  );
   if (!dropdownList) {
     console.error("Dropdown list not found");
     return;
@@ -180,13 +184,13 @@ function createAdminMenu() {
 // Hàm kiểm tra role Admin
 function checkAdminRole() {
   const accessToken = localStorage.getItem("accessToken");
-  
+
   if (accessToken) {
     try {
       const payloadDecoded = jwtDecode(accessToken);
-      console.log("Checking admin role:", payloadDecoded.role);  
-      
-      if (payloadDecoded.role === "admin") {
+      console.log("Checking admin role:", payloadDecoded.role);
+
+      if (payloadDecoded.role === "Admin") {
         createAdminMenu();
       } else {
         removeAdminMenu();
@@ -212,8 +216,8 @@ export function headerjs() {
 
   // Check token on load
   if (!checkTokenOnPageLoad()) {
-    checkAuthStatus();  
-    return;  
+    checkAuthStatus();
+    return;
   }
 
   // Start token check nếu có token
@@ -276,7 +280,7 @@ export function headerjs() {
       let modal = document.querySelector(".modal");
       if (!modal) {
         const html = await (
-          await fetch("/client/view/components/AuthModal.html")  
+          await fetch("/client/view/components/AuthModal.html")
         ).text();
         const doc = new DOMParser().parseFromString(html, "text/html");
         document.body.appendChild(doc.querySelector(".modal"));
@@ -286,7 +290,9 @@ export function headerjs() {
           if (!document.querySelector(`link[href="${href}"]`)) {
             const newLink = Object.assign(document.createElement("link"), {
               rel: "stylesheet",
-              href: href.startsWith('http') ? href : `/client${href.startsWith('/') ? '' : '/'}${href}`,  
+              href: href.startsWith("http")
+                ? href
+                : `/client${href.startsWith("/") ? "" : "/"}${href}`,
             });
             document.head.appendChild(newLink);
           }
@@ -331,7 +337,7 @@ export function headerjs() {
       e.preventDefault();
 
       console.log("Logging out user");
-      
+
       try {
         const token = localStorage.getItem("accessToken");
         if (token) {

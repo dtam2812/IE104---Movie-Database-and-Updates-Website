@@ -132,6 +132,7 @@ function renderInfo(movie) {
     console.error("Không tìm thấy .info-grid container");
     return;
   }
+  const releaseDate = new Date(movie.release_date);
 
   infoGrid.innerHTML = `
     <h3>Thông tin phim</h3>
@@ -154,7 +155,7 @@ function renderInfo(movie) {
     <div class="movie-info">
       <div class="movie-info-title">Nhà sản xuất:</div>
       <div class="movie-info-value">${
-        movie.production_companies?.[0]?.name || "Không rõ"
+        movie.production_companies?.[0]?.name || "Đang cập nhật"
       }</div>
     </div>
     <div class="movie-info">
@@ -171,10 +172,15 @@ function renderInfo(movie) {
     </div>
     <div class="movie-info">
       <div class="movie-info-title">Trạng thái:</div>
-      <div class="movie-info-value">${movie.status || "Không rõ"}</div>
+      <div class="movie-info-value">${movie.status || "Đang cập nhật"}</div>
+    </div>
+    <div class="movie-info">
+      <div class="movie-info-title">Ngày ra mắt:</div>
+      <div class="movie-info-value">${
+        releaseDate.toLocaleDateString("vi-VN") || "Đang cập nhật"
+      }</div>
     </div>
   `;
-  console.log(movie);
 }
 
 // ========== ĐỀ XUẤT PHIM ========== //

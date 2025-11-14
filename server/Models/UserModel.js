@@ -4,13 +4,13 @@ const userSchema = new mongoose.Schema({
   userName: String,
   email: { type: String, unique: true },
   password: String,
-  role: { type: String, enum: ["user", "admin"], default: "user" },
-  status: { type: String, enum: ["active", "banned"], default: "active" },
+  role: { type: String, enum: ["User", "Admin"], default: "User" },
+  status: { type: String, enum: ["Active", "Banned"], default: "Active" },
   joinDate: Date,
   favoriteFilm: [
     {
       id: String,
-      type: { type: String, enum: ["movie", "tv"] },
+      type: { type: String, enum: ["Movie", "TV Show"] },
       title: String,
       originalName: String,
       posterPath: String,
