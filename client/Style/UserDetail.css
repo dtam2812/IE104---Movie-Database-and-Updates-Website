@@ -253,6 +253,16 @@ input:focus {
   transform: translateY(-1px);
 }
 
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .muted-link {
   color: var(--accent);
   cursor: pointer;
