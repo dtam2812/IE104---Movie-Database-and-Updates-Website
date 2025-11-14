@@ -4,15 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="../../Services/reset.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link rel="stylesheet" href="../../style/AuthModal.css" />
     <script type="module">
       import { Auth_Modaljs } from "../../js/AuthModal.js";
@@ -38,8 +32,14 @@
               <div class="content_body">
                 <p class="mb3">
                   Nếu bạn chưa có tài khoản,
-                  <a class="switch-form"> Đăng kí ngay</a>
+                  <a class="switch-form"> Đăng ký ngay</a>
                 </p>
+
+                <!-- Error Message -->
+                <div class="auth-error-message" style="display: none;">
+                  <i class="fa-solid fa-exclamation-triangle"></i>
+                  <span class="error-text"></span>
+                </div>
 
                 <form class="v-form">
                   <div class="form-group mb1">
@@ -84,6 +84,12 @@
                   Nếu bạn đã có tài khoản,
                   <a class="switch-form"> Đăng nhập</a>
                 </p>
+
+                <!-- Error Message -->
+                <div class="auth-error-message" style="display: none;">
+                  <i class="fa-solid fa-exclamation-triangle"></i>
+                  <span class="error-text"></span>
+                </div>
 
                 <form class="v-form">
                   <div class="form-group mb1">
@@ -143,9 +149,14 @@
 
               <div class="content_body">
                 <p class="mb3">
-                  Nếu bạn đã có tài khoản,
-                  <a class="switch-form"> Đăng nhập</a>
+                  Nhập email để nhận mã xác nhận đặt lại mật khẩu
                 </p>
+
+                <!-- Error Message -->
+                <div class="auth-error-message" style="display: none;">
+                  <i class="fa-solid fa-exclamation-triangle"></i>
+                  <span class="error-text"></span>
+                </div>
 
                 <form class="v-form">
                   <div class="form-group mb1">
@@ -158,12 +169,64 @@
                     />
                   </div>
                   <div class="form-group action-btn- mt3 mb3">
-                    <button class="btn btn-primary">Gửi yêu cầu</button>
+                    <button type="submit" class="btn btn-primary">Gửi yêu cầu</button>
+                  </div>
+                  <div class="form-pw-fogot">
+                    <a class="switch-form">Quay lại đăng nhập</a>
                   </div>
                 </form>
               </div>
             </div>
             <!-- forgot-password-form -->
+
+            <!-- reset-password-form -->
+            <div class="form-wrapper reset">
+              <div class="content_header mb2">
+                <h1>Tạo mật khẩu mới</h1>
+              </div>
+
+              <div class="content_body">
+                <p class="mb3">
+                  Nhập mật khẩu mới cho tài khoản của bạn
+                </p>
+
+                <!-- Error Message -->
+                <div class="auth-error-message" style="display: none;">
+                  <i class="fa-solid fa-exclamation-triangle"></i>
+                  <span class="error-text"></span>
+                </div>
+
+                <form class="v-form">
+                  <div class="form-group mb1">
+                    <input
+                      class="form-control"
+                      type="password"
+                      name="new_password"
+                      minlength="6"
+                      placeholder="Mật khẩu mới"
+                      required
+                    />
+                  </div>
+                  <div class="form-group mb3">
+                    <input
+                      class="form-control"
+                      type="password"
+                      name="cf_new_password"
+                      minlength="6"
+                      placeholder="Nhập lại mật khẩu mới"
+                      required
+                    />
+                    <small class="non-same-pw">Mật khẩu không khớp</small>
+                  </div>
+                  <div class="form-group action-btn- mt3 mb3">
+                    <button type="submit" class="btn btn-primary">
+                      Đặt lại mật khẩu
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- reset-password-form -->
           </div>
         </div>
       </div>
