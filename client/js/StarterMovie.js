@@ -11,6 +11,12 @@ const genresEl = document.getElementById("genres");
 const descEl = document.getElementById("desc");
 const thumbsEl = document.getElementById("thumbs");
 
+const trailerModal = document.getElementById("trailer-modal");
+const trailerFrame = document.getElementById("trailer-frame");
+const closeTrailer = document.getElementById("close-trailer");
+const trailerBtn = document.getElementById("trailer-btn");
+const infoBtn = document.querySelector("button[aria-label='Info']");
+
 let movies = [];
 let index = 0;
 let timer;
@@ -28,6 +34,7 @@ const createEl = (tag, cls, html) => {
 const badge = (content, cls) =>
   createEl("div", `badge${cls ? " " + cls : ""}`, content);
 
+// ----- Tạo slide -----
 function createSlide(movie, isActive) {
   const wrap = createEl("div", `slide${isActive ? " active" : ""}`);
   const img = createEl("img", "bg");
@@ -43,12 +50,16 @@ function renderBackground() {
   );
 }
 
+// ----- Nội dung slide -----
 function renderContent() {
   const m = movies[index];
+  if (!m) return;
+
   brandEl.src = m.title;
   brandEl.alt = m.title;
   enEl.textContent = m.englishTitle || "";
 
+  // Meta
   metaEl.innerHTML = "";
   const metaData = [
     badge("<b>HD</b>", "grad"),
@@ -62,6 +73,7 @@ function renderContent() {
   ];
   metaEl.append(...metaData);
 
+  // Genres
   genresEl.innerHTML = "";
   const formattedGenres = m.genres.map((g) => g.replace(/^Phim\s+/i, ""));
   formattedGenres
@@ -70,13 +82,12 @@ function renderContent() {
   if (formattedGenres.length > 4)
     genresEl.append(badge(`<span>+${formattedGenres.length - 4}</span>`));
 
+  // Description
   descEl.classList.remove("expanded");
   descEl.textContent = m.description;
-
   const oldToggle = descEl.nextElementSibling;
-  if (oldToggle && oldToggle.classList.contains("desc-toggle")) {
+  if (oldToggle && oldToggle.classList.contains("desc-toggle"))
     oldToggle.remove();
-  }
 
   if (m.description.length > 200) {
     const toggleBtn = document.createElement("span");
@@ -87,11 +98,11 @@ function renderContent() {
       const expanded = descEl.classList.toggle("expanded");
       toggleBtn.textContent = expanded ? "Thu gọn" : "Xem thêm";
     };
-
     descEl.after(toggleBtn);
   }
 }
 
+// ----- Thumbnails -----
 function renderThumbs() {
   thumbsEl.replaceChildren(
     ...movies.map((m, i) => {
@@ -110,6 +121,7 @@ function renderThumbs() {
   );
 }
 
+// ----- Cập nhật carousel -----
 function update(stopAuto = false) {
   renderBackground();
   renderContent();
@@ -126,6 +138,7 @@ function next() {
   update();
 }
 
+// ----- Lấy danh sách phim -----
 async function fetchMovies() {
   try {
     const res = await fetch(API_URL);
@@ -141,6 +154,7 @@ async function fetchMovies() {
           const detail = await detailRes.json();
 
           return {
+            id: m.id, // thêm ID để lấy trailer
             title: m.title || m.original_title || "Không có tiêu đề",
             englishTitle: m.original_title || "",
             backgroundImage: m.backdrop_path
@@ -175,12 +189,71 @@ async function fetchMovies() {
   }
 }
 
+// ----- Trailer -----
+async function getTrailerKey(movieId, type = "movie") {
+  try {
+    const res = await fetch(
+      `https://api.themoviedb.org/3/${type}/${movieId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
+    );
+    const data = await res.json();
+    if (!data.results || data.results.length === 0) return null;
+
+    const trailer = data.results.find(
+      (v) => v.type === "Trailer" && v.site === "YouTube"
+    );
+    const teaser = data.results.find(
+      (v) => v.type === "Teaser" && v.site === "YouTube"
+    );
+    const fallback = data.results.find((v) => v.site === "YouTube");
+
+    return (trailer || teaser || fallback)?.key || null;
+  } catch (err) {
+    console.error("Lỗi lấy trailer:", err);
+    return null;
+  }
+}
+
+trailerBtn.addEventListener("click", async () => {
+  const currentMovie = movies[index];
+  if (!currentMovie) return;
+
+  const key = await getTrailerKey(currentMovie.id);
+  if (!key) {
+    alert("Xin lỗi, không tìm thấy trailer cho phim này.");
+    return;
+  }
+
+  trailerFrame.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
+  trailerModal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+});
+
+function closeModal() {
+  trailerModal.style.display = "none";
+  trailerFrame.src = "";
+  document.body.style.overflow = "";
+}
+
+closeTrailer.addEventListener("click", closeModal);
+window.addEventListener("click", (e) => {
+  if (e.target === trailerModal) closeModal();
+});
+
+// ----- Favorite -----
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".favorite");
   if (!btn) return;
   btn.classList.toggle("active");
 });
 
+// ----- Info Button -----
+infoBtn.addEventListener("click", () => {
+  const currentMovie = movies[index];
+  if (!currentMovie) return;
+  window.location.href = `../pages/MovieDetail.html?id=${currentMovie.id}`;
+});
+
+// ----- Khởi tạo -----
 fetchMovies();
 
 export const starterMovie = { update };

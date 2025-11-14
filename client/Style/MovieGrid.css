@@ -29,7 +29,7 @@ body {
 .section {
   max-width: 100%;
   padding: 0 20px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .header-grid {
@@ -62,6 +62,7 @@ body {
   align-items: start;
   transition: max-height 0.3s ease;
   padding: 0;
+  margin-top: 20px;
 }
 
 .grid-wrap.limited {

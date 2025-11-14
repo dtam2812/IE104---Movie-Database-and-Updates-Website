@@ -216,24 +216,53 @@ function clearError(field) {
 function handleNavigation(section) {
   switch (section) {
     case "Thông tin cá nhân":
-      // Load personal information section
-      console.log("Loading personal information...");
+      showSection("personal-info-section");
       break;
     case "Yêu thích":
-      // Load favorites section
-      console.log("Loading favorites...");
-      // You can redirect or load content dynamically here
-      // window.location.href = "../../Pages/Favorites.html";
-      break;
-    case "Cài đặt":
-      // Load settings section
-      console.log("Loading settings...");
-      // window.location.href = "../../Pages/Settings.html";
+      showSection("favorites-section");
       break;
     default:
       console.log("Unknown section:", section);
   }
 }
+
+function showSection(sectionId) {
+  // Hide all sections
+  const allSections = document.querySelectorAll(".content-section");
+  allSections.forEach((section) => {
+    section.classList.remove("active");
+  });
+
+  // Show target section
+  const targetSection = document.getElementById(sectionId);
+  if (targetSection) {
+    targetSection.classList.add("active");
+
+    // Scroll to top of the section smoothly
+    setTimeout(() => {
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
+  }
+}
+
+const favoritesLinks = document.querySelectorAll('[data-section="favorites"]');
+
+favoritesLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // Highlight button nav
+    const navButtons = document.querySelectorAll(".nav button");
+    navButtons.forEach((btn) => btn.classList.remove("active"));
+    link.classList.add("active");
+
+    // Show favorites section
+    showSection("favorites-section");
+  });
+});
 
 // Function to update user avatar
 function updateAvatar(imageUrl) {
