@@ -1,5 +1,6 @@
-// Cấu hình API
-const API_KEY = "8d7f1f7ef4ead0588ee2c66d06f75799";
+import { TMDB_API_KEY } from "../../config.js";
+
+// Cấu hình chung 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w300";
 const PLACEHOLDER_IMAGE =
@@ -411,7 +412,7 @@ async function renderBothMovieAndTV() {
 
 // Tạo API theo bộ lọc người dùng chọn
 function createApiUrl(type, page) {
-  let url = `${BASE_URL}/discover/${type}?api_key=${API_KEY}&language=${LANGUAGE}&page=${page}`;
+  let url = `${BASE_URL}/discover/${type}?api_key=${TMDB_API_KEY}&language=${LANGUAGE}&page=${page}`;
 
   if (currentGenre.length > 0) {
     url += `&with_genres=${currentGenre.join(",")}`;

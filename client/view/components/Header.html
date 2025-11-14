@@ -14,6 +14,23 @@
         alt=""
       />
     </a>
+    <div class="language-switcher mobile-lang">
+        <button class="swap-language" aria-haspopup="listbox" aria-expanded="false">
+          <img src="../../../public/assets/image/Flag_of_Vietnam.svg" alt="VN" class="current-flag" data-lang="vi" />
+          <i class="fa-solid fa-caret-down caret"></i>
+        </button>
+
+        <ul class="select-language" role="listbox">
+          <li role="option" data-lang="vi" class="lang-option is-active">
+            <img src="../../../public/assets/image/Flag_of_Vietnam.svg" alt="VN" class="flag-icon" />
+            <span>Tiếng Việt</span>
+          </li>
+          <li role="option" data-lang="en" class="lang-option">
+            <img src="../../../public/assets/image/English-flag.svg" alt="UK" class="flag-icon" />
+            <span>English</span>
+          </li>
+        </ul>
+      </div>
     <div class="mobile search-toggle">
       <div class="icon-search">
         <span></span>
@@ -78,16 +95,21 @@
       
       <div class="header-button">
         <!-- Language Switcher -->
-        <div class="language-switcher">
+        <div class="language-switcher desktop-lang">
           <button class="swap-language" aria-haspopup="listbox" aria-expanded="false">
-            <i class="fa-solid fa-globe"></i>
-            <span class="current-lang-label">Vietnamese</span>
+            <img src="../../../public/assets/image/Flag_of_Vietnam.svg" alt="VN" class="current-flag" data-lang="vi" />
             <i class="fa-solid fa-caret-down caret"></i>
           </button>
 
           <ul class="select-language" role="listbox">
-            <li role="option" data-lang="vi" class="lang-option is-active">Vietnamese</li>
-            <li role="option" data-lang="en" class="lang-option">English</li>
+            <li role="option" data-lang="vi" class="lang-option is-active">
+              <img src="../../../public/assets/image/Flag_of_Vietnam.svg" alt="VN" class="flag-icon" />
+              <span>Tiếng Việt</span>
+            </li>
+            <li role="option" data-lang="en" class="lang-option">
+              <img src="../../../public/assets/image/English-flag.svg" alt="UK" class="flag-icon" />
+              <span>English</span>
+            </li>
           </ul>
         </div>
 

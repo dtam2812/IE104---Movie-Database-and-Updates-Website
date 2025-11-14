@@ -35,6 +35,48 @@ function loadUserInfo() {
   }
 }
 
+// Hàm lưu ngôn ngữ đã chọn
+function saveLanguagePreference(lang) {
+  localStorage.setItem('selectedLanguage', lang);
+}
+
+// Hàm load ngôn ngữ đã chọn
+function loadLanguagePreference() {
+  return localStorage.getItem('selectedLanguage');
+}
+
+// Hàm cập nhật UI theo ngôn ngữ đã lưu
+function applyLanguagePreference(languageSwitchers) {
+  const savedLang = loadLanguagePreference();
+
+  languageSwitchers.forEach((switcher) => {
+    const allOptions = switcher.querySelectorAll(".lang-option");
+    const currentFlag = switcher.querySelector(".current-flag");
+    
+    // Xóa active khỏi tất cả options
+    allOptions.forEach(o => o.classList.remove("is-active"));
+    
+    // Thêm active vào option tương ứng
+    const matchingOption = Array.from(allOptions).find(
+      o => o.getAttribute("data-lang") === savedLang
+    );
+    
+    if (matchingOption) {
+      matchingOption.classList.add("is-active");
+      
+      // Cập nhật cờ hiện tại từ option
+      if (currentFlag) {
+        const optionFlag = matchingOption.querySelector(".flag-icon");
+        if (optionFlag) {
+          currentFlag.src = optionFlag.src;
+          currentFlag.alt = savedLang === 'vi' ? 'VN' : 'UK';
+          currentFlag.setAttribute("data-lang", savedLang);
+        }
+      }
+    }
+  });
+}
+
 export async function headerjs() {
   // ========== KHỞI TẠO HỆ THỐNG DỊCH ==========
   const { initTranslate } = await import('./Translate.js');
@@ -46,61 +88,101 @@ export async function headerjs() {
   const logo = document.querySelector(".header-logo");
   const dropdown = document.querySelector(".menu-film-type.dropdown");
   const dropdownBtn = document.querySelector(".dropdown-toggle");
-  const langRoot = document.querySelector(".language-switcher");
+  const languageSwitchers = document.querySelectorAll(".language-switcher");
 
   // Kiểm tra trạng thái đăng nhập ngay khi load trang
   checkAuthStatus();
+  
+  // Khôi phục ngôn ngữ đã chọn ngay sau khi khởi tạo
+  applyLanguagePreference(languageSwitchers);
 
   menuToggle.addEventListener("click", () => {
     menuToggle.classList.toggle("toggled");
     searchGroup.classList.toggle("toggled");
   });
   
-  if (langRoot) {
-    const langBtn = langRoot.querySelector(".swap-language");
-    const langLabel = langRoot.querySelector(".current-lang-label");
-    const langOptions = langRoot.querySelectorAll(".lang-option");
+  // Xử lý language switcher cho cả 2 nút (mobile và desktop)
+  languageSwitchers.forEach((languageSwitch) => {
+    const langBtn = languageSwitch.querySelector(".swap-language");
+    const langOptions = languageSwitch.querySelectorAll(".lang-option");
 
-    // mở/đóng menu
+    // Mở/đóng menu
     langBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const open = langRoot.classList.toggle("open");
-      langBtn.setAttribute("aria-expanded", String(open));
+      
+      // Lấy trạng thái hiện tại trước khi toggle
+      const wasOpen = languageSwitch.classList.contains("open");
+      
+      // Đóng TẤT CẢ language switchers trước
+      languageSwitchers.forEach((switcher) => {
+        switcher.classList.remove("open");
+        switcher.querySelector(".swap-language").setAttribute("aria-expanded", "false");
+      });
+      
+      // Nếu menu đang đóng thì mở nó, nếu đang mở thì giữ đóng
+      if (!wasOpen) {
+        languageSwitch.classList.add("open");
+        langBtn.setAttribute("aria-expanded", "true");
+      }
     });
 
-    // chọn ngôn ngữ -> đổi nhãn và đánh dấu active
+    // Chọn ngôn ngữ -> đổi cờ và đánh dấu active cho CẢ 2 switchers
     langOptions.forEach((opt) => {
-      opt.addEventListener("click", () => {
-        langOptions.forEach(o => o.classList.remove("is-active"));
-        opt.classList.add("is-active");
-        langLabel.textContent = opt.textContent.trim();
-        langRoot.classList.remove("open");
-        langBtn.setAttribute("aria-expanded", "false");
+      opt.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const selectedLang = opt.getAttribute("data-lang");
+        const selectedFlagSrc = opt.querySelector(".flag-icon").src;
+        
+        // Lưu ngôn ngữ đã chọn vào localStorage (chỉ lưu lang code, không lưu URL)
+        saveLanguagePreference(selectedLang);
+        
+        // Cập nhật TẤT CẢ language switchers (mobile + desktop)
+        languageSwitchers.forEach((switcher) => {
+          const allOptions = switcher.querySelectorAll(".lang-option");
+          const currentFlag = switcher.querySelector(".current-flag");
+          
+          // Xóa active khỏi tất cả options
+          allOptions.forEach(o => o.classList.remove("is-active"));
+          
+          // Thêm active vào option tương ứng
+          const matchingOption = Array.from(allOptions).find(
+            o => o.getAttribute("data-lang") === selectedLang
+          );
+          if (matchingOption) {
+            matchingOption.classList.add("is-active");
+          }
+          
+          // Cập nhật cờ hiện tại
+          if (currentFlag) {
+            currentFlag.src = selectedFlagSrc;
+            currentFlag.alt = selectedLang === 'vi' ? 'VN' : 'UK';
+            currentFlag.setAttribute("data-lang", selectedLang);
+          }
+          
+          // Đóng menu
+          switcher.classList.remove("open");
+          switcher.querySelector(".swap-language").setAttribute("aria-expanded", "false");
+        });
       });
     });
+  });
 
-    // click ngoài để đóng
-    document.addEventListener("click", () => {
-      if (langRoot.classList.contains("open")) {
-        langRoot.classList.remove("open");
-        langBtn.setAttribute("aria-expanded", "false");
+  // Click ngoài để đóng tất cả language switchers
+  document.addEventListener("click", (e) => {
+    languageSwitchers.forEach((languageSwitch) => {
+      if (!languageSwitch.contains(e.target) && languageSwitch.classList.contains("open")) {
+        languageSwitch.classList.remove("open");
+        languageSwitch.querySelector(".swap-language").setAttribute("aria-expanded", "false");
       }
     });
-
-    // Esc để đóng
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        langRoot.classList.remove("open");
-        langBtn.setAttribute("aria-expanded", "false");
-      }
-    });
-  }
+  });
   
   searchNav.addEventListener("click", () => {
     searchNav.classList.toggle("toggled");
     searchBox.classList.toggle("toggled");
     logo.classList.toggle("hidden");
     menuToggle.classList.toggle("hidden");
+    languageSwitchers.forEach(ls => ls.classList.toggle("hidden"));
   });
 
   dropdownBtn.addEventListener("click", () => {
@@ -189,7 +271,6 @@ export async function headerjs() {
       dropdownList.classList.toggle("show");
     });
 
-  const logOutBtn = dropdownList.querySelector("#Log-out-Btn");
     // Tắt user-dropdown-menu khi click ở bên ngoài menu
     document.addEventListener("click", (e) => {
       if (!userDropdownMenu.contains(e.target)) {
