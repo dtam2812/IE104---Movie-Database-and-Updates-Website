@@ -16,17 +16,12 @@ export async function AdminUsers_js() {
 
   const tableBody = document.querySelector(".dm-table-body");
 
-  // Avatar preview elements
-  const avatarPreview = userForm.querySelector(".user-avatar");
-  const avatarPreviewImg = avatarPreview.querySelector("img");
-  const avatarInput = avatarPreview.querySelector(".avatar-input");
-
   const paginationLeft = document.querySelector(".pagination-left-arrow");
   const paginationRight = document.querySelector(".pagination-right-arrow");
   const currentPageSpan = document.querySelector(".pagination-page-current");
-  const totalPagesSpan = document.querySelector( ".pagination__main span:last-child");
+  const totalPagesSpan = document.querySelector(".pagination__main span:last-child");
 
-  // TÌM KIẾM VÀ LỌC
+  // SEARCH & FILTER
   const searchInput = document.querySelector(".search-input");
   const roleFilter = document.querySelector(".filter-select:nth-child(1)");
   const statusFilter = document.querySelector(".filter-select:nth-child(2)");
@@ -243,15 +238,11 @@ export async function AdminUsers_js() {
     newRow.appendChild(noCell);
 
     const userName = user.userName || user.name || 'No Name';
-    const userAvatar = user.avatar || '../../../public/assets/image/user_avatar_default.jpg';
 
     const userCell = document.createElement("td");
     userCell.classList.add("user-column");
     userCell.innerHTML = `
       <div class="td-user-info">
-        <div class="td-user-avatar">
-          <img src="${userAvatar}" alt="User Avatar" class="user-avatar-img" onerror="this.src='../../../public/assets/image/user_avatar_default.jpg'">
-        </div>
         <div class="td-user-name-email">
           <span class="name">${userName}</span><br>
           <span class="email">${user.email}</span>
@@ -429,7 +420,6 @@ export async function AdminUsers_js() {
     submitBtn.textContent = "Create";
 
     userFormEl.reset();
-    avatarPreviewImg.src = "../../../public/assets/image/user_avatar_default.jpg";
 
     const idDisplayGroup = userFormEl.querySelector(".user-id-display");
     const passwordGroup = userFormEl.querySelector(".password-group");
@@ -475,8 +465,6 @@ export async function AdminUsers_js() {
     modalTitle.textContent = "Edit User";
     submitBtn.textContent = "Save";
 
-    avatarPreviewImg.src = user.avatar || "../../../public/assets/image/user_avatar_default.jpg";
-
     const idDisplayGroup = userFormEl.querySelector(".user-id-display");
     const idDisplayInput = userFormEl.querySelector('input[name="id-display"]');
     if (idDisplayGroup && idDisplayInput) {
@@ -512,7 +500,6 @@ export async function AdminUsers_js() {
     userFormEl.reset();
     currentEditRow = null;
     isEditMode = false;
-    avatarInput.value = "";
     errorMessage.style.display = "none";
     cfPwdInput.style.border = "";
     submitBtn.disabled = false;
@@ -523,18 +510,6 @@ export async function AdminUsers_js() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !modalUser.classList.contains("hidden")) {
       closeModal();
-    }
-  });
-
-  // AVATAR UPLOAD
-  avatarInput.addEventListener("change", function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        avatarPreviewImg.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
     }
   });
 
@@ -565,88 +540,63 @@ export async function AdminUsers_js() {
     const role = userFormEl.querySelector('select[name="role"]').value;
     const password = pwdInput.value.trim();
 
-    let avatarURL;
-    const avatarFile = avatarInput.files[0];
+    try {
+      if (isEditMode && currentEditRow) {
+        console.log('Saving edited user');
+        
+        const userId = currentEditRow.dataset.userId;
+        
+        // Prepare update data
+        const updateData = {
+          userName: name,
+          email: email,
+          role: role,
+        };
 
-    async function saveUser() {
-      try {
-        if (isEditMode && currentEditRow) {
-          console.log('Saving edited user');
-          
-          const userId = currentEditRow.dataset.userId;
-          
-          // Prepare update data
-          const updateData = {
-            userName: name,
-            email: email,
-            role: role,
+        // Call API
+        await updateUserAPI(userId, updateData);
+        
+        // Update local data
+        const userIndex = allUsers.findIndex((u) => (u._id || u.id) === userId);
+        if (userIndex !== -1) {
+          allUsers[userIndex] = {
+            ...allUsers[userIndex],
+            ...updateData,
           };
-          
-          if (avatarURL && avatarURL !== '../../../public/assets/image/user_avatar_default.jpg') {
-            updateData.avatar = avatarURL;
-          }
-
-          // Call API
-          await updateUserAPI(userId, updateData);
-          
-          // Update local data
-          const userIndex = allUsers.findIndex((u) => (u._id || u.id) === userId);
-          if (userIndex !== -1) {
-            allUsers[userIndex] = {
-              ...allUsers[userIndex],
-              ...updateData,
-            };
-            console.log('Updated user:', allUsers[userIndex]);
-          }
-
-          alert("Cập nhật user thành công!");
-          filterUsers();
-        } else {
-          console.log('Adding new user');
-          
-          // Prepare new user data
-          const newUserData = {
-            userName: name,
-            email: email,
-            password: password,
-            role: role,
-            status: "active",
-          };
-          
-          if (avatarURL && avatarURL !== '../../../public/assets/image/user_avatar_default.jpg') {
-            newUserData.avatar = avatarURL;
-          }
-
-          // Call API
-          const createdUser = await createUserAPI(newUserData);
-          
-          // Add to local array
-          allUsers.push(createdUser);
-          
-          alert("Tạo user thành công!");
-          filterUsers();
-
-          // Go to last page
-          currentPage = getTotalPages();
-          renderUsers();
+          console.log('Updated user:', allUsers[userIndex]);
         }
 
-        closeModal();
-      } catch (error) {
-        alert("Lỗi khi lưu user: " + error.message);
-      }
-    }
+        alert("Cập nhật user thành công!");
+        filterUsers();
+      } else {
+        console.log('Adding new user');
+        
+        // Prepare new user data
+        const newUserData = {
+          userName: name,
+          email: email,
+          password: password,
+          role: role,
+          status: "active",
+        };
 
-    if (avatarFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        avatarURL = e.target.result;
-        saveUser();
-      };
-      reader.readAsDataURL(avatarFile);
-    } else {
-      avatarURL = avatarPreviewImg.src;
-      saveUser();
+        // Call API
+        const createdUser = await createUserAPI(newUserData);
+        
+        // Add to local array
+        allUsers.push(createdUser);
+        
+        alert("Tạo user thành công!");
+        filterUsers();
+
+        // Go to last page
+        currentPage = getTotalPages();
+        renderUsers();
+      }
+
+      closeModal();
+    } catch (error) {
+      alert("Lỗi khi lưu user: " + error.message);
     }
   });
 

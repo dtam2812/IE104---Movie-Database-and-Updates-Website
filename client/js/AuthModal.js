@@ -8,21 +8,63 @@ export function Auth_Modaljs() {
   const loginForm = document.querySelector(".form-wrapper.login");
   const registerForm = document.querySelector(".form-wrapper.register");
   const forgotForm = document.querySelector(".form-wrapper.forgot");
-  const primaryBtn = document.querySelectorAll(".btn.btn-primary");
+  const resetForm = document.querySelector(".form-wrapper.reset");
   const registerFormEl = registerForm.querySelector("form");
+  const resetFormEl = resetForm.querySelector("form");
+
+  // Biến lưu email khi forgot password
+  let forgotPasswordEmail = "";
+
+  // Hàm hiển thị thông báo lỗi
+  function showErrorMessage(formWrapper, message) {
+    const errorDiv = formWrapper.querySelector(".auth-error-message");
+    const errorText = errorDiv.querySelector(".error-text");
+    
+    if (errorDiv && errorText) {
+      errorText.textContent = message;
+      errorDiv.style.display = "flex";
+      
+      // Trigger animation
+      setTimeout(() => {
+        errorDiv.classList.add("show");
+      }, 10);
+
+      // Tự động ẩn sau 5 giây
+      setTimeout(() => {
+        errorDiv.classList.remove("show");
+        setTimeout(() => {
+          errorDiv.style.display = "none";
+        }, 300);
+      }, 5000);
+    }
+  }
+
+  // Hàm ẩn thông báo lỗi
+  function hideErrorMessage(formWrapper) {
+    const errorDiv = formWrapper.querySelector(".auth-error-message");
+    if (errorDiv) {
+      errorDiv.classList.remove("show");
+      setTimeout(() => {
+        errorDiv.style.display = "none";
+      }, 300);
+    }
+  }
 
   window.openLRFModal = function (target = "login") {
     modal.classList.remove("hidden");
-    [loginForm, registerForm, forgotForm].forEach((f) =>
+    [loginForm, registerForm, forgotForm, resetForm].forEach((f) =>
       f.classList.remove("active")
     );
     if (target === "register") registerForm.classList.add("active");
     else if (target === "forgot") forgotForm.classList.add("active");
+    else if (target === "reset") resetForm.classList.add("active");
     else loginForm.classList.add("active");
   };
 
   function closeLRFModal() {
     modal.classList.add("hidden");
+    // Ẩn tất cả error messages khi đóng modal
+    [loginForm, registerForm, forgotForm, resetForm].forEach(form => hideErrorMessage(form));
   }
 
   backdrop.addEventListener("click", closeLRFModal);
@@ -34,9 +76,12 @@ export function Auth_Modaljs() {
   // Switch form events
   switchLink.forEach((link) => {
     link.addEventListener("click", () => {
+      // Ẩn error messages khi chuyển form
+      [loginForm, registerForm, forgotForm, resetForm].forEach(form => hideErrorMessage(form));
+      
       const text = link.textContent.trim();
-      if (text.includes("Đăng kí ngay")) window.openLRFModal("register");
-      else if (text.includes("Đăng nhập")) window.openLRFModal("login");
+      if (text.includes("Đăng ký ngay")) window.openLRFModal("register");
+      else if (text.includes("Đăng nhập") || text.includes("Quay lại đăng nhập")) window.openLRFModal("login");
       else if (text.includes("Quên mật khẩu?")) window.openLRFModal("forgot");
     });
   });
@@ -66,6 +111,31 @@ export function Auth_Modaljs() {
   pwdInput.addEventListener("input", validatePasswords);
   cfPwdInput.addEventListener("input", validatePasswords);
 
+  // Password validation for reset password form
+  const newPwdInput = resetFormEl.querySelector('input[name="new_password"]');
+  const cfNewPwdInput = resetFormEl.querySelector('input[name="cf_new_password"]');
+  const resetSubmitBtn = resetFormEl.querySelector(".btn.btn-primary");
+  const resetErrorMessage = resetFormEl.querySelector(".non-same-pw");
+
+  function validateResetPasswords() {
+    if (
+      newPwdInput.value &&
+      cfNewPwdInput.value &&
+      newPwdInput.value !== cfNewPwdInput.value
+    ) {
+      resetErrorMessage.style.display = "block";
+      cfNewPwdInput.style.border = "1px solid red";
+      resetSubmitBtn.disabled = true;
+    } else {
+      resetErrorMessage.style.display = "none";
+      cfNewPwdInput.style.border = "";
+      resetSubmitBtn.disabled = false;
+    }
+  }
+
+  newPwdInput.addEventListener("input", validateResetPasswords);
+  cfNewPwdInput.addEventListener("input", validateResetPasswords);
+
   // Register form submit
   registerFormEl.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -90,14 +160,18 @@ export function Auth_Modaljs() {
       });
 
       if (response.status === 200) {
+        registerFormEl.reset();
         window.openLRFModal("login");
       } else {
         const errorText = await response.text();
-        alert("Lỗi đăng ký: " + errorText || "Không thể đăng ký. Thử lại!");
+        showErrorMessage(
+          registerForm, 
+          errorText || "Không thể đăng ký. Vui lòng thử lại!"
+        );
       }
     } catch (error) {
       console.error("Register error:", error);
-      alert("Lỗi kết nối. Vui lòng thử lại!");
+      showErrorMessage(registerForm, "Lỗi kết nối. Vui lòng thử lại!");
     }
   });
 
@@ -110,7 +184,7 @@ export function Auth_Modaljs() {
       .value.trim();
 
     if (!email || !password) {
-      alert("Vui lòng nhập email và password!");
+      showErrorMessage(loginForm, "Vui lòng nhập email và mật khẩu!");
       return;
     }
 
@@ -144,23 +218,58 @@ export function Auth_Modaljs() {
         console.log("User role:", payloadDecoded.role);  
         
         if (payloadDecoded.role === "admin") {
-          // Admin → redirect đến trang Admin
           console.log("Redirecting admin to AdminUsers.html");
           window.location.href = "/client/view/pages/AdminUsers.html";
         } else {
-          // User thường → redirect đến HomePage
           console.log("Redirecting user to HomePage.html");
           window.location.href = "/client/view/pages/HomePage.html";
         }
       } else {
         // login error (400/401)
         const errorText = await response.text();
-        alert("Lỗi đăng nhập: " + errorText || "Email hoặc password sai!");
+        showErrorMessage(
+          loginForm, 
+          errorText || "Email hoặc mật khẩu không đúng!"
+        );
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Lỗi kết nối. Vui lòng thử lại!");
+      showErrorMessage(loginForm, "Lỗi kết nối. Vui lòng thử lại!");
     }
+  });
+
+  // Forgot password form submit
+  forgotForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = forgotForm.querySelector('input[name="email"]').value.trim();
+
+    if (!email) {
+      showErrorMessage(forgotForm, "Vui lòng nhập email!");
+      return;
+    }
+
+    // Lưu email để dùng khi reset password
+    forgotPasswordEmail = email;
+    
+    // Reset form và chuyển sang form reset password
+    forgotForm.querySelector("form").reset();
+    window.openLRFModal("reset");
+  });
+
+  // Reset password form submit
+  resetFormEl.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const isValid = resetFormEl.checkValidity();
+    if (!isValid || resetSubmitBtn.disabled) return;
+
+    const newPassword = resetFormEl
+      .querySelector('input[name="new_password"]')
+      .value.trim();
+
+    // Reset form và chuyển về login
+    resetFormEl.reset();
+    forgotPasswordEmail = ""; // Clear email
+    window.openLRFModal("login");
   });
 }
 
