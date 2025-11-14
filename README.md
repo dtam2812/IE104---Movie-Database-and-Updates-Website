@@ -29,7 +29,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 
 |	Tên chức năng	|	Tác nhân	| Hoàn thành |
 |:-------------:|:-----:|:-----:|
-||	1.Unauthenticated User Module	(Mô-đun Người dùng chưa xác thực)	||
+||	1.Unauthenticated User Module	(Mô-đun Người dùng chưa xác thực)                   	||
 |	Đăng ký tài khoản người dùng	|	Unauthenticated User 	| 100%|
 |	Đăng nhập người dùng 	|	Unauthenticated User	| 100%|
 |	Quên mật khẩu	|	Unauthenticated User 	| 100%|
@@ -41,7 +41,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |	Đề xuất phim tương tự	|	Unauthenticated User 	| 100%|
 |	Sử dụng bộ lọc	|	Unauthenticated User	| 0%|
 |	Xem Trailer	|	Unauthenticated User	| 0%|
-||	2.Authenticated User Module	 (Mô-đun Người dùng đã xác thực)	||
+||	2.Authenticated User Module	 (Mô-đun Người dùng đã xác thực)                        	||
 |	Xem thông tin cá nhân	|	Authentication User	| 100%|
 |	Sửa thông tin cá nhân	|	Authentication User	| 100%|
 |	Xem thông báo	|	Authentication User	| 100%|
@@ -51,7 +51,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |	Đánh giá	|	Customer	| 100%|
 |	Thêm phim yêu thích vào mục yêu thích	|	Customer	| 100%|
 |	Xem lại phim yêu thích vào mục yêu thích	|	Customer	| 100%|
-||	3.Admin Module (Mô-đun Quản trị viên)||
+||	3.Admin Module (Mô-đun Quản trị viên)                   ||
 |	Quản lý phim	|	Admin	| 100%|
 |	Thêm phim	|	Admin	| 100%|
 |	Xóa phim	|	Admin	| 100%|
