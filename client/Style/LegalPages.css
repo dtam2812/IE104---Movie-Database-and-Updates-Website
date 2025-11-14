@@ -1,174 +1,243 @@
-html {
-  scroll-behavior: smooth;
+/* Base */
+html
+{
+    scroll-behavior: smooth;
 }
 
-body {
-  background-color: #191b24;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-x: hidden;
+body
+{
+    background-color: #191B24;
+    margin: 0;
+    padding: 0; 
+    box-sizing: border-box; 
+    overflow-x: hidden; 
+}   
+
+main
+{
+    width : 100%;
+    padding: 120px 0px;
 }
 
-main {
-  width: 100%;
-  padding: 160px 0px;
-}
+.legal_section
+{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+} 
 
-.legal_section {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-
-.legal_container {
-  display: flex;
-  flex-direction: column;
-  max-width: 960px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0px 50px 16px 50px;
-}
-
-.row_heading {
-  margin-bottom: 19.2px;
-}
-
-h1 {
-  color: white;
-  font-size: 25.2px;
-  font-weight: 600;
-  line-height: 35.3px;
-  text-align: left;
-}
-
-.row_content {
-  display: flex;
-  flex-direction: column;
-}
-
-/* style cho questtion list và question heading ở trang faq */
-.question-list {
-  list-style: none;
-  width: 560px;
-  height: auto;
-  border-radius: 16px;
-  padding: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.19);
-  margin: 32px 0px;
-}
-
-.question-list li a {
-  display: inline-block;
-  color: white;
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 27px;
-  margin-top: 8px;
-}
-
-.question-list li:hover a {
-  color: #ffd875;
-}
-
-.faq_heading_question {
-  color: #ffd875;
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 31.5px;
-  text-align: left;
-  margin-bottom: 17px;
-}
-/* style choquesttion list và question heading ở trang faq */
-
-h2 {
-  color: #ffffff;
-  font-size: 21px;
-  font-weight: 600;
-  line-height: 31.5px;
-  text-align: left;
-  margin-bottom: 17px;
-}
-p {
-  color: #d3d3d3;
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 27px;
-  text-align: left;
-  margin-bottom: 16px;
-}
-ul {
-  margin-bottom: 16px;
-  padding-left: 32px;
-  display: block;
-  list-style-type: disc;
-}
-
-li {
-  color: #d3d3d3;
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 27px;
-  text-align: left;
-}
-
-li b {
-  font-weight: 600;
-}
-
-a {
-  color: white;
-}
-
-a:hover {
-  color: #ffd875;
-}
-
-@media only screen and (max-width: 1391px) {
-  main {
-    padding: 5% 0px 10% 0px;
-  }
-
-  .legal_container {
+.legal_container
+{
     display: flex;
     flex-direction: column;
-    padding: 0px 16px 16px 16px;
+    max-width: 960px;
     width: 100%;
     margin: 0 auto;
-  }
+    padding: 0px 50px 16px 50px;
+} 
 
-  .question-list {
-    width: 100%;
-    height: auto;
-    margin-bottom: 60px;
-  }
+.row_heading
+{
+    margin-bottom: 19.2px;
 }
 
-@media only screen and (max-width: 641px) {
-  h1 {
-    font-size: 22.4px;
-    line-height: 31.36px;
-  }
+.row_heading h1
+{
+    color: white;
+    font-size: 25.2px;
+    font-weight: 600;
+    line-height: 35.3px;
+    text-align: left;
+}
 
-  li {
-    font-size: 14px;
-    line-height: 25.2px;
-  }
+.row_content
+{
+    display: flex;
+    flex-direction: column;
+}
 
-  li a {
-    font-size: 14px;
-    line-height: 25.2px;
-  }
-
-  h2 {
-    font-size: 16.8px;
-    line-height: 25.2px;
+.row_content h2
+{
+    color: #ffffff;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 31.5px;
+    text-align: left;
     margin-bottom: 17px;
-  }
+}
+.legal_container p
+{
+    color: #D3D3D3;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 27px;
+    text-align: left;
+    margin-bottom: 16px;
+}
+.row_content ul 
+{
+    margin-bottom:  16px;       
+    padding-left: 32px;   
+    display: block;
+    list-style-type: disc;
+}
 
-  p {
+.row_content li 
+{
+    color: #D3D3D3;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 27px;
+    text-align: left;
+}
+
+.row_content b
+{
+    font-weight: 600;
+}
+
+.row_content a
+{
+    color: white;
+}
+
+.row_content a:hover
+{
+    color: #FFD875;
+}
+
+/* Questtion list và question heading ở trang faq */
+.row_content .question-list
+{
+    list-style: none;
+    width: 560px;
+    height: auto;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.19);
+    margin: 32px 0px;
+}
+
+.question-list li a
+{
+    display: inline-block;
+    color: white;
+    font-size: 15px;          
+    font-weight: 300;
+    line-height: 27px;
+    margin-top: 8px;
+}
+
+.question-list li:hover a 
+{
+    color: #FFD875;
+}
+
+.faq_heading_question 
+{
+    color: #FFD875;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 31.5px;
+    text-align: left;
+    margin-bottom: 17px;
+}
+
+/* Social links ở trang contact */
+.contact-social-link_content
+{
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.social-link
+{
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    padding: 12.2px 5.8px;
+    border-radius: 4.8px;
+}
+.social-link:hover
+{
+    background-color: rgba(170,170,170,1);
+    border: 1px solid rgba(170,170,170,1);
+}
+
+.contact-social-link_content .social-link i 
+{
+    font-size: 20px;
+    margin-right: 8px;
+    color: black;
+}
+
+.social-link p
+{
+    color: black;
     font-size: 14px;
-    line-height: 25.2px;
-    margin-bottom: 58px;
-  }
+    font-weight: 500;
+    line-height: 20px; 
+    margin: 0; 
+}
+
+/* RESPONSIVE */
+/* Mobile & Tablet <= 1100px) */ 
+@media only screen and (max-width: 1100px)
+{
+    main
+    {
+        padding: 20px 0px 50px 0px;
+    }   
+
+    .legal_container
+    {
+        display: flex;
+        flex-direction: column;
+        padding: 0px 16px 16px 16px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .question-list
+    {
+        width: 100%;
+        height: auto;
+        margin-bottom: 60px;
+    }
+}
+
+@media only screen and (max-width: 641px)
+{
+    .row_heading h1
+    {
+        font-size: 22.4px;
+        line-height: 31.36px;
+    }
+
+    .row_content li  
+    {
+        font-size: 14px;
+        line-height: 25.2px;
+    }
+
+
+    .row_content a {
+        font-size: 14px;
+        line-height: 25.2px;
+    }
+
+    .row_content h2
+    {
+        font-size: 16.8px;
+        line-height: 25.2px;
+        margin-bottom: 17px;
+    }
+
+    .legal_container p
+    {
+        font-size: 14px;
+        line-height: 25.2px;
+        margin-bottom: 1rem;
+    }
 }
