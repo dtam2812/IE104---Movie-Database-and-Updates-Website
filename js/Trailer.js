@@ -6,56 +6,70 @@ const trailerModal = document.getElementById("trailer-modal");
 const trailerFrame = document.getElementById("trailer-frame");
 const closeTrailer = document.getElementById("close-trailer");
 
-// Lấy ID và loại nội dung
+// Xác định loại nội dung (movie hoặc tv)   
+const currentPage = window.location.pathname;
+let type = "movie"; // mặc định
+
+// Dựa vào tên file HTML để xác định type
+if (currentPage.includes("TvShowDetail")) {
+  type = "tv";
+} else if (currentPage.includes("MovieDetail")) {
+  type = "movie";
+}
+
+// Lấy params từ URL
 const params = new URLSearchParams(window.location.search);
 const contentId = params.get("id");
-const type = params.get("type") || "movie"; // "movie" hoặc "tv"
 
-// Hàm lấy trailer
+// Cho phép override type bằng query param
+const typeParam = params.get("type");
+if (typeParam && (typeParam === "movie" || typeParam === "tv")) {
+  type = typeParam;
+}
+
+// Lấy key trailer từ TMDB
 async function getTrailerKey() {
   try {
-    const res = await fetch(
-      `${BASE_URL}/${type}/${contentId}/videos?api_key=${TMDB_API_KEY}&language=en-US`
-    );
+    const url = `${BASE_URL}/${type}/${contentId}/videos?api_key=${TMDB_API_KEY}&language=en-US`;
+    const res = await fetch(url);
     const data = await res.json();
 
     if (!data.results || data.results.length === 0) {
-      console.warn("Không có video nào trong TMDB.");
       return null;
     }
 
-    // Ưu tiên trailer chính thức
+    // Ưu tiên 1: Trailer chính thức
     const trailer = data.results.find(
       (v) => v.type === "Trailer" && v.site === "YouTube"
     );
 
-    //  Nếu không có, thử teaser
+    // Ưu tiên 2: Teaser
     const teaser = data.results.find(
       (v) => v.type === "Teaser" && v.site === "YouTube"
     );
 
-    //  Nếu vẫn không có, lấy clip đầu tiên trên YouTube
+    // Ưu tiên 3: Bất kỳ video YouTube nào
     const fallback = data.results.find((v) => v.site === "YouTube");
 
     const best = trailer || teaser || fallback;
 
-    if (!best) {
-      console.warn("Không tìm thấy video YouTube hợp lệ.");
-      return null;
-    }
-
-    return best.key;
+    return best ? best.key : null;
   } catch (err) {
     console.error("Lỗi lấy trailer:", err);
     return null;
   }
 }
 
-//Mở trailer
+// Mở trailer
 trailerBtn.addEventListener("click", async () => {
   const key = await getTrailerKey();
+
   if (!key) {
-    alert("Xin lỗi, không tìm thấy trailer cho nội dung này.");
+    alert(
+      `Xin lỗi, không tìm thấy trailer cho ${
+        type === "tv" ? "TV Show" : "phim"
+      } này.`
+    );
     return;
   }
 
@@ -64,14 +78,15 @@ trailerBtn.addEventListener("click", async () => {
   document.body.style.overflow = "hidden";
 });
 
-//Đóng trailer
+// Đóng trailer
 function closeModal() {
   trailerModal.style.display = "none";
-  trailerFrame.src = ""; // dừng video
+  trailerFrame.src = "";
   document.body.style.overflow = "";
 }
 
 closeTrailer.addEventListener("click", closeModal);
+
 window.addEventListener("click", (e) => {
   if (e.target === trailerModal) closeModal();
 });
