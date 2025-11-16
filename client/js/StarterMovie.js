@@ -14,6 +14,12 @@ const genresEl = document.getElementById("genres");
 const descEl = document.getElementById("desc");
 const thumbsEl = document.getElementById("thumbs");
 
+const trailerModal = document.getElementById("trailer-modal");
+const trailerFrame = document.getElementById("trailer-frame");
+const closeTrailer = document.getElementById("close-trailer");
+const trailerBtn = document.getElementById("trailer-btn");
+const infoBtn = document.querySelector("button[aria-label='Info']");
+
 let movies = [];
 let index = 0;
 let timer;
@@ -183,6 +189,7 @@ function renderBackground() {
   slidesEl.replaceChildren(...movies.map((m, i) => createSlide(m, i === index)));
 }
 
+// ----- Nội dung slide -----
 function renderContent() {
   const m = movies[index];
   if (!m) return;
@@ -232,6 +239,7 @@ function renderContent() {
   }
 }
 
+// ----- Thumbnails -----
 function renderThumbs() {
   if (!thumbsEl) return;
   thumbsEl.replaceChildren(
@@ -251,6 +259,7 @@ function renderThumbs() {
   );
 }
 
+// ----- Cập nhật carousel -----
 function update(stopAuto = false) {
   renderBackground();
   renderContent();

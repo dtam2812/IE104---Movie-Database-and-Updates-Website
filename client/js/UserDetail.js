@@ -388,21 +388,58 @@ function clearError(field) {
 }
 
 // Function to handle navigation between sections
-function handleNavigation(sectionId) {
+function handleNavigation(section) {
+  switch (section) {
+    case "Thông tin cá nhân":
+      showSection("personal-info-section");
+      break;
+    case "Yêu thích":
+      showSection("favorites-section");
+      break;
+    default:
+      console.log("Unknown section:", section);
+  }
+
+  console.log("Navigated to:", sectionId);
+}
+
+function showSection(sectionId) {
   // Hide all sections
   const allSections = document.querySelectorAll(".content-section");
   allSections.forEach((section) => {
     section.classList.remove("active");
   });
 
-  // Show selected section
-  const targetSection = document.getElementById(`${sectionId}-section`);
+  // Show target section
+  const targetSection = document.getElementById(sectionId);
   if (targetSection) {
     targetSection.classList.add("active");
-  }
 
-  console.log("Navigated to:", sectionId);
+    // Scroll to top of the section smoothly
+    setTimeout(() => {
+      targetSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
+  }
 }
+
+const favoritesLinks = document.querySelectorAll('[data-section="favorites"]');
+
+favoritesLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // Highlight button nav
+    const navButtons = document.querySelectorAll(".nav button");
+    navButtons.forEach((btn) => btn.classList.remove("active"));
+    link.classList.add("active");
+
+    // Show favorites section
+    showSection("favorites-section");
+  });
+});
 
 // Function to update user avatar
 function updateAvatar(imageUrl) {
