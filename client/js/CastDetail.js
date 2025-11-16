@@ -178,8 +178,22 @@ function renderMoviesPage() {
       ? `${IMG_URL}${item.poster_path}`
       : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
-    const title = item.title || item.name || t("cast.unknown");
-    const original_title = item.original_title || item.original_name || "";
+    /* ================== TITLE FALLBACK (MỚI THÊM) ================== */
+    let localizedTitle =
+      item.title || item.name || "";
+
+    let originalTitle =
+      item.original_title || item.original_name || "";
+
+    // TMDB không có tiêu đề theo ngôn ngữ hiện tại → dùng tên gốc
+    if (!localizedTitle || localizedTitle.trim().length < 1) {
+      localizedTitle = originalTitle;
+    }
+
+    if (!localizedTitle) localizedTitle = t("cast.unknown");
+    if (!originalTitle || originalTitle.trim().length < 1)
+      originalTitle = localizedTitle;
+    /* ================================================================ */
 
     // --- Chọn template (phim hoặc TV show) ---
     let template =
@@ -188,8 +202,8 @@ function renderMoviesPage() {
     let cardHTML = template
       .replace(/{{id}}/g, item.id)
       .replace(/{{poster}}/g, poster)
-      .replace(/{{title}}/g, title)
-      .replace(/{{original_title}}/g, original_title);
+      .replace(/{{title}}/g, localizedTitle)
+      .replace(/{{original_title}}/g, originalTitle);
 
     moviesGrid.insertAdjacentHTML("beforeend", cardHTML);
   });
@@ -213,7 +227,6 @@ function renderPaginationModern(page, total) {
   const container = document.createElement("div");
   container.classList.add("pagination-modern");
 
-  // Nút Prev
   const prevBtn = document.createElement("button");
   prevBtn.classList.add("page-circle");
   prevBtn.innerHTML = "&#8592;";
@@ -226,7 +239,6 @@ function renderPaginationModern(page, total) {
     }
   });
 
-  // Thông tin trang
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
@@ -236,7 +248,6 @@ function renderPaginationModern(page, total) {
     <span class="page-total">${total}</span>
   `;
 
-  // Nút Next
   const nextBtn = document.createElement("button");
   nextBtn.classList.add("page-circle");
   nextBtn.innerHTML = "&#8594;";

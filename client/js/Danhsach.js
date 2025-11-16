@@ -5,7 +5,7 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w300";
 const PLACEHOLDER_IMAGE =
   "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
-const LANGUAGE = "vi-VN";
+let LANGUAGE = getLang();
 
 // Lưu thông tin filter hiện tại
 let currentPage = 1;
@@ -91,6 +91,11 @@ filterCloseBtn.addEventListener("click", () => {
   filterSelect.classList.add("hidden");
   faFilter.classList.remove("fa-filter-active");
 });
+
+function getLang() {
+  const lang = localStorage.getItem("language") || document.documentElement.lang || "vi";
+  return lang === "vi" ? "vi-VN" : "en-US";
+}
 
 // Active 1 item duy nhất trong mục "Quốc gia"
 selectListItemCountry.forEach((current) => {
@@ -390,13 +395,13 @@ async function renderBothMovieAndTV() {
       mergeAll = movieData.results;
     } else if (movie10.length == 0 && tv10.length !== 0) {
       mergeAll = tvData.results;
+    } else {
+      mergeAll = []
     }
 
-    for (let i = mergeAll.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      let temp = mergeAll[i];
-      mergeAll[i] = mergeAll[j];
-      mergeAll[j] = temp;
+    for (let i = 0; i < 10; i++) {
+      if (movie10[i]) mergeAll.push(movie10[i]);
+      if (tv10[i]) mergeAll.push(tv10[i]);
     }
 
     const maxPages = Math.max(movieData.total_pages, tvData.total_pages);
@@ -578,3 +583,11 @@ leftPag.addEventListener("click", async () => {
     await render();
   }
 });
+
+// Khi ngôn ngữ bị thay đổi từ Translate.js
+window.addEventListener("languagechange", (e) => {
+  LANGUAGE = getLang();   // cập nhật ngôn ngữ API TMDB
+  currentPage = 1;        // đưa về trang 1
+  render();               // fetch lại + render ngay
+});
+

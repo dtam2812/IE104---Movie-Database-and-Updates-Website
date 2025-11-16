@@ -16,7 +16,29 @@ let movieCardTemplate = "";
 let tvCardTemplate = "";
 let castCardTemplate = "";
 
-// Nạp template card
+/* ---------------------------------------------------
+   🔥 THÊM MỚI — HÀM LẤY TÊN PHIM THEO NGÔN NGỮ
+--------------------------------------------------- */
+function getLocalizedTitle(item) {
+  const lang = document.documentElement.lang || "vi";
+
+  if (item.media_type === "movie") {
+    return lang === "vi"
+      ? (item.title || item.original_title || "Không rõ")
+      : (item.original_title || item.title || "Unknown");
+  }
+
+  if (item.media_type === "tv") {
+    return lang === "vi"
+      ? (item.name || item.original_name || "Không rõ")
+      : (item.original_name || item.name || "Unknown");
+  }
+
+  return item.name || item.original_name || "Unknown";
+}
+
+// ===================================================
+
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
   fetch("../components/TvShowCardRender.html").then((r) => r.text()),
@@ -134,10 +156,11 @@ function renderMovieCard(item) {
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
     : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
+  /* 🔥 THAY THẾ TỐI THIỂU: chỉ sửa {{title}} để dùng hàm mới */
   const html = movieCardTemplate
     .replace(/{{id}}/g, item.id)
     .replace(/{{poster}}/g, poster)
-    .replace(/{{title}}/g, item.title || "Không rõ")
+    .replace(/{{title}}/g, getLocalizedTitle(item))
     .replace(/{{original_title}}/g, item.original_title || "");
 
   grid.insertAdjacentHTML("beforeend", html);
@@ -148,10 +171,11 @@ function renderTvCard(item) {
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
     : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
+  /* 🔥 THAY THẾ TỐI THIỂU: chỉ sửa {{title}} */
   const html = tvCardTemplate
     .replace(/{{id}}/g, item.id)
     .replace(/{{poster}}/g, poster)
-    .replace(/{{title}}/g, item.name || "Không rõ")
+    .replace(/{{title}}/g, getLocalizedTitle(item))
     .replace(/{{original_title}}/g, item.original_name || "");
 
   grid.insertAdjacentHTML("beforeend", html);

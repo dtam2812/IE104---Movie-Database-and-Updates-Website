@@ -5,20 +5,29 @@ export function searchBar() {
   const dropdown = document.querySelector(".search-dropdown");
   let timer;
 
+  // ✅ THÊM: Hàm lấy ngôn ngữ hiện tại
+  function getCurrentLanguage() {
+    const lang = localStorage.getItem("language") || "vi";
+    return lang === "vi" ? "vi-VN" : "en-US";
+  }
+
   async function fetchResults(query) {
+    // ✅ SỬA: Lấy ngôn ngữ động thay vì hard-code "vi-VN"
+    const language = getCurrentLanguage();
+    
     const [movieRes, tvRes, personRes] = await Promise.all([
       fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
           query
         )}&page=1`
       ),
       fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
           query
         )}&page=1`
       ),
       fetch(
-        `https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
           query
         )}&page=1`
       ),
