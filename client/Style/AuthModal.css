@@ -1,196 +1,172 @@
-.modal.hidden
-{
-    display: none;
-} 
-
-.modal_backdrop
-{
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    z-index:  1050;
-    width: 100vw;
-    height: 100vh;
-    background-color: #131727;
-    opacity: 0.95 ;
-    
-}
-
-.modal_container
-{
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    z-index: 1055;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-.modal_dialog
-{
-    max-width: 860px;
-    width: 96%;
-    margin: auto;
-    
-}
-
-.modal_dialog_centered
-{  
-    display: flex;
-    align-items: center;
-    min-height: calc(100% - 28px*2);  
-}
-
-.modal_content
-{
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 500px;
-    pointer-events: auto;
-    background-color: #1E2545;
-    background-clip: padding-box;
-    padding: 64px 64px 64px 484px; 
-    border-radius: 12px
-}
-
-.modal_content::before
-{
-    content: "";
-    position: absolute;
-    width: 48%;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-image: url("../../public/assets/image/authmodal.png");
-    background-size: cover;
-    background-position: 0 100%;
-     border-radius: 12px 0px 0px 12px;
-}
-/* stylw cho nút close và nút đăng nhập */
-.modal_close
-{
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-}
-
-.modal_close i
-{
-    font-size: 16px;
-    color: white;
-}
-
-.form-wrapper 
-{
+.modal.hidden {
   display: none;
 }
 
-.form-wrapper.active 
-{
+.modal_backdrop {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  background-color: #131727;
+  opacity: 0.95;
+}
+
+.modal_container {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1055;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.modal_dialog {
+  max-width: 860px;
+  width: 96%;
+  margin: auto;
+}
+
+.modal_dialog_centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 28px * 2);
+}
+
+.modal_content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 500px;
+  pointer-events: auto;
+  background-color: #1e2545;
+  background-clip: padding-box;
+  padding: 64px 64px 64px 484px;
+  border-radius: 12px;
+}
+
+.modal_content::before {
+  content: "";
+  position: absolute;
+  width: 48%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-image: url("../../public/assets/image/authmodal.png");
+  background-size: cover;
+  background-position: 0 100%;
+  border-radius: 12px 0px 0px 12px;
+}
+/* stylw cho nút close và nút đăng nhập */
+.modal_close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+}
+
+.modal_close i {
+  font-size: 16px;
+  color: white;
+}
+
+.form-wrapper {
+  display: none;
+}
+
+.form-wrapper.active {
   display: block;
 }
 
-
-.btn
-{
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 21px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6.4px;
-    opacity: 1;
-    min-height: 40px;
-    cursor: pointer;
+.btn {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6.4px;
+  opacity: 1;
+  min-height: 40px;
+  cursor: pointer;
 }
 
-.btn.btn-primary
-{
-    display: block;
-    width: 100%;
-    background-color: #ffd875;
-    color: #191b24;
-    padding: 8px 17.6px;
+.btn.btn-primary {
+  display: block;
+  width: 100%;
+  background-color: #ffd875;
+  color: #191b24;
+  padding: 8px 17.6px;
 }
 
-.btn:hover
-{
-    opacity: 0.9;
+.btn:hover {
+  opacity: 0.9;
 }
 
 /* stylw cho nút close và nút đăng nhập */
 
-.content_header
-{
-    width: 100%;
+.content_header {
+  width: 100%;
 }
-.content_header h1
-{
-    font-size: 19.6px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #fff;
+.content_header h1 {
+  font-size: 19.6px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #fff;
 }
 
-.content_body p
-{   
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 22.4px;
-    color: #fff6;
+.content_body p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.4px;
+  color: #fff6;
 }
 
-.switch-form
-{
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 22.4px;
-    color: #ffd875;
-    cursor: pointer;
+.switch-form {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22.4px;
+  color: #ffd875;
+  cursor: pointer;
 }
 
-.form-control
-{
-    display: block;
-    width: 100%;
-    font-weight: 400;
-    line-height: 1.5;
-    height: 42px;
-    border: 1px solid #ffffff10;
-    border-radius: 6.4px;
-    font-size: 13.3px;
-    padding: 8px 16px;
-    background-color: transparent;
-    background-clip: padding-box;
-    outline: none;
-    color: #ffffff
+.form-control {
+  display: block;
+  width: 100%;
+  font-weight: 400;
+  line-height: 1.5;
+  height: 42px;
+  border: 1px solid #ffffff10;
+  border-radius: 6.4px;
+  font-size: 13.3px;
+  padding: 8px 16px;
+  background-color: transparent;
+  background-clip: padding-box;
+  outline: none;
+  color: #ffffff;
 }
 
-.form-control:focus
-{
-    border: 1px solid #ffffff
+.form-control:focus {
+  border: 1px solid #ffffff;
 }
 
-.non-same-pw
-{
-    display: none;
-    font-size: 12px;
-    color: #ff6b6b;
-    margin-top: 4px;
+.non-same-pw {
+  display: none;
+  font-size: 12px;
+  color: #ff6b6b;
+  margin-top: 4px;
 }
 
 /* Error Message Styles */
@@ -223,102 +199,127 @@
   flex: 1;
 }
 
-.form-pw-fogot
-{
+.form-pw-fogot {
+  width: 100%;
+  text-align: center;
+}
+
+.form-pw-fogot .switch-form {
+  font-size: 12.25px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.mb1 {
+  margin-bottom: 8px;
+}
+
+.mb2 {
+  margin-bottom: 16px;
+}
+
+.mb3 {
+  margin-bottom: 24px;
+}
+
+.mt1 {
+  margin-top: 8px;
+}
+
+.mt1 {
+  margin-top: 16px;
+}
+
+.mt3 {
+  margin-top: 24px;
+}
+
+.otp-input {
+  text-align: center;
+  letter-spacing: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: "Courier New", monospace;
+}
+
+.otp-input::placeholder {
+  letter-spacing: normal;
+  font-size: 13.3px;
+  font-weight: 400;
+}
+
+.resend-otp {
+  color: #ffd875 !important;
+  text-decoration: underline;
+  font-size: 12.25px;
+}
+
+.resend-otp:hover {
+  opacity: 0.8;
+}
+
+/* Timer cho resend OTP */
+.resend-timer {
+  color: #ffffff80;
+  font-size: 12.25px;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Highlight OTP success */
+.otp-success {
+  border-color: #28a745 !important;
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+/* Highlight OTP error */
+.otp-error {
+  border-color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+@media only screen and (min-width: 800px) and (max-width: 990px) {
+  .modal_dialog {
+    max-width: 760px;
+    width: 96%;
+    margin: auto;
+  }
+
+  .modal_content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    text-align: center;
+    min-height: 400px;
+    pointer-events: auto;
+    background-color: #1e2545;
+    background-clip: padding-box;
+    padding: 48px 48px 48px 408px;
+    border-radius: 12px;
+  }
 }
 
-.form-pw-fogot .switch-form
-{
-    font-size: 12.25px;
-    color: #ffffff;
-    cursor: pointer;
-}
+@media only screen and (max-width: 799px) {
+  .modal_dialog {
+    max-width: 450px;
+    width: 96%;
+    margin: auto;
+  }
 
-.mb1
-{
-    margin-bottom: 8px;
-}
+  .modal_content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: auto;
+    pointer-events: auto;
+    background-color: #1e2545;
+    background-clip: padding-box;
+    padding: 32px;
+    border-radius: 12px;
+  }
 
-.mb2
-{
-    margin-bottom: 16px;
-}
-
-.mb3
-{
-    margin-bottom: 24px;
-}
-
-.mt1
-{
-    margin-top: 8px;
-}
-
-.mt1
-{
-    margin-top: 16px;
-}
-
-.mt3
-{
-    margin-top: 24px;
-}
-
-
-@media only screen and (min-width: 800px) and  (max-width: 990px)
-{
-    .modal_dialog
-    {
-        max-width: 760px;
-        width: 96%;
-        margin: auto;
-        
-    }
-
-    .modal_content
-    {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: 400px;
-        pointer-events: auto;
-        background-color: #1E2545;
-        background-clip: padding-box;
-        padding: 48px 48px 48px 408px; 
-        border-radius: 12px
-    }
-}
-
-
-@media only screen and (max-width: 799px) 
-{
-    .modal_dialog
-    {
-        max-width: 450px;
-        width: 96%;
-        margin: auto;
-        
-    }
-
-    .modal_content
-    {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: auto;
-        pointer-events: auto;
-        background-color: #1E2545;
-        background-clip: padding-box;
-        padding: 32px; 
-        border-radius: 12px;
-    }
-
-    .modal_content::before
-    {
-        content: none;
-    }
+  .modal_content::before {
+    content: none;
+  }
 }
