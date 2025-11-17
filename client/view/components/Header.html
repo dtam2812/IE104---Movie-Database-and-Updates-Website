@@ -14,6 +14,40 @@
         alt=""
       />
     </a>
+    <div class="language-switcher mobile-lang">
+      <button
+        class="swap-language"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+      >
+        <img
+          src="../../../public/assets/image/Flag_of_Vietnam.svg"
+          alt="VN"
+          class="current-flag"
+          data-lang="vi"
+        />
+        <i class="fa-solid fa-caret-down caret"></i>
+      </button>
+
+      <ul class="select-language" role="listbox">
+        <li role="option" data-lang="vi" class="lang-option is-active">
+          <img
+            src="../../../public/assets/image/Flag_of_Vietnam.svg"
+            alt="VN"
+            class="flag-icon"
+          />
+          <span>Tiếng Việt</span>
+        </li>
+        <li role="option" data-lang="en" class="lang-option">
+          <img
+            src="../../../public/assets/image/English-flag.svg"
+            alt="UK"
+            class="flag-icon"
+          />
+          <span>English</span>
+        </li>
+      </ul>
+    </div>
     <div class="mobile search-toggle">
       <div class="icon-search">
         <span></span>
@@ -28,7 +62,8 @@
         </div>
         <input
           class="search-input"
-          placeholder="Tìm kiếm phim,diễn viên"
+          data-i18n-placeholder="header.search"
+          placeholder="Tìm kiếm phim, diễn viên"
           autocomplete="off"
         />
       </div>
@@ -36,35 +71,69 @@
     <div class="search-group">
       <div id="main_menu" class="menu">
         <div class="menu-film-type">
-          <a title="Bộ lọc" href="../pages/Danhsach.html?type=all">Bộ lọc</a>
+          <a
+            title="Bộ lọc"
+            href="../pages/Danhsach.html?type=all"
+            data-i18n="header.filter"
+            >Bộ lọc</a
+          >
         </div>
         <div class="menu-film-type">
-          <a title="Phim lẻ" href="../pages/Danhsach.html?type=movie"
+          <a
+            title="Phim lẻ"
+            href="../pages/Danhsach.html?type=movie"
+            data-i18n="header.movie"
             >Phim lẻ</a
           >
         </div>
         <div class="menu-film-type">
-          <a title="Phim bộ" href="../pages/Danhsach.html?type=tv">Phim bộ</a>
+          <a
+            title="Phim bộ"
+            href="../pages/Danhsach.html?type=tv"
+            data-i18n="header.tv"
+            >Phim bộ</a
+          >
         </div>
         <div class="menu-film-type dropdown">
-          <a class="dropdown-toggle" title="Quốc gia"
-            >Quốc gia<i class="fa-solid fa-caret-down ms-2"></i
-          ></a>
+          <a class="dropdown-toggle" title="Quốc gia">
+            <span data-i18n="header.country">Quốc gia</span>
+            <i class="fa-solid fa-caret-down ms-2"></i>
+          </a>
           <ul class="dropdown-menu">
-            <li><a href="../pages/Danhsach.html?type=all&country=US">Mỹ</a></li>
             <li>
-              <a href="../pages/Danhsach.html?type=all&country=JP">Nhật Bản</a>
+              <a
+                href="../pages/Danhsach.html?type=all&country=US"
+                data-i18n="country.us"
+                >Mỹ</a
+              >
             </li>
             <li>
-              <a href="../pages/Danhsach.html?type=all&country=KR">Hàn Quốc</a>
+              <a
+                href="../pages/Danhsach.html?type=all&country=JP"
+                data-i18n="country.jp"
+                >Nhật Bản</a
+              >
             </li>
             <li>
-              <a href="../pages/Danhsach.html?type=all&country=CN"
+              <a
+                href="../pages/Danhsach.html?type=all&country=KR"
+                data-i18n="country.kr"
+                >Hàn Quốc</a
+              >
+            </li>
+            <li>
+              <a
+                href="../pages/Danhsach.html?type=all&country=CN"
+                data-i18n="country.cn"
                 >Trung Quốc</a
               >
             </li>
             <li>
-              <a href="../pages/Danhsach.html?type=all&country=GB">Anh</a>
+              <a
+                href="../pages/Danhsach.html?type=all&country=GB"
+                data-i18n="country.gb"
+                >Anh</a
+              >
             </li>
           </ul>
         </div>
@@ -72,41 +141,92 @@
           <a
             title="Tình cảm"
             href="../pages/Danhsach.html?type=movie&genre=10749"
+            data-i18n="header.romance"
             >Tình cảm</a
           >
         </div>
         <div class="menu-film-type">
-          <a title="Kinh dị" href="../pages/Danhsach.html?type=movie&genre=27"
+          <a
+            title="Kinh dị"
+            href="../pages/Danhsach.html?type=movie&genre=27"
+            data-i18n="header.horror"
             >Kinh dị</a
           >
         </div>
         <div class="menu-film-type">
-          <a title="Hành động" href="../pages/Danhsach.html?type=movie&genre=28"
+          <a
+            title="Hành động"
+            href="../pages/Danhsach.html?type=movie&genre=28"
+            data-i18n="header.action"
             >Hành động</a
           >
         </div>
         <div class="menu-film-type">
-          <a title="Hài" href="../pages/Danhsach.html?type=all&genre=35">Hài</a>
+          <a
+            title="Hài"
+            href="../pages/Danhsach.html?type=all&genre=35"
+            data-i18n="header.comedy"
+            >Hài</a
+          >
         </div>
         <div class="menu-film-type">
           <a
-            title="Thiếu nhi"
+            title="Gia đình"
             href="../pages/Danhsach.html?type=all&genre=10751"
+            data-i18n="header.family"
             >Gia đình</a
           >
         </div>
       </div>
       <div class="app-download"></div>
-      <!-- chưa đăng nhập -->
-      <div id="user_guest" class="user">
-        <a id="btn-member" class="button-user button-login">
-          <i class="fa-solid fa-user ms-1"></i>
-          <span>Thành viên</span>
-        </a>
-      </div>
-      <!-- chưa đăng nhập -->
 
-      <!-- đã đăng nhập -->
+      <div class="header-button">
+        <!-- Language Switcher -->
+        <div class="language-switcher desktop-lang">
+          <button
+            class="swap-language"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+          >
+            <img
+              src="../../../public/assets/image/Flag_of_Vietnam.svg"
+              alt="VN"
+              class="current-flag"
+              data-lang="vi"
+            />
+            <i class="fa-solid fa-caret-down caret"></i>
+          </button>
+
+          <ul class="select-language" role="listbox">
+            <li role="option" data-lang="vi" class="lang-option is-active">
+              <img
+                src="../../../public/assets/image/Flag_of_Vietnam.svg"
+                alt="VN"
+                class="flag-icon"
+              />
+              <span>Tiếng Việt</span>
+            </li>
+            <li role="option" data-lang="en" class="lang-option">
+              <img
+                src="../../../public/assets/image/English-flag.svg"
+                alt="UK"
+                class="flag-icon"
+              />
+              <span>English</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- User Guest -->
+        <div id="user_guest" class="user">
+          <a id="btn-member" class="button-user button-login">
+            <i class="fa-solid fa-user ms-1"></i>
+            <span data-i18n="header.member">Thành viên</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- User Logged In -->
       <div id="main_user" class="user_logged hidden">
         <div class="user-dropdown-menu">
           <a class="header-user">
@@ -114,7 +234,7 @@
               <div class="user-avatar">
                 <img src="../../../public/assets/image/vn_flag.svg" />
               </div>
-              <i class="fa-solid fa-caret-down"> </i>
+              <i class="fa-solid fa-caret-down"></i>
             </div>
           </a>
           <ul class="dropdown-list">
@@ -128,14 +248,14 @@
               <a class="dropdown-item" href="../pages/UserDetail.html">
                 <div class="line-center">
                   <i class="fa-solid fa-user"></i>
-                  <span>Tài khoản</span>
+                  <span data-i18n="header.account">Tài khoản</span>
                 </div>
               </a>
               <hr />
               <a id="Log-out-Btn" class="dropdown-item" href="#">
                 <div class="line-center">
                   <i class="fa-solid fa-right-from-bracket"></i>
-                  <span>Đăng xuất</span>
+                  <span data-i18n="header.logout">Đăng xuất</span>
                 </div>
               </a>
             </div>
@@ -143,6 +263,5 @@
         </div>
       </div>
     </div>
-    <!-- đã đăng nhập -->
   </div>
 </section>
