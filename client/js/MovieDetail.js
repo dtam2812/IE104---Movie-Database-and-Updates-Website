@@ -7,7 +7,7 @@ const IMG_URL = "https://image.tmdb.org/t/p/w500";
 async function fetchMovieDetails(movieId) {
   try {
     const res = await fetch(
-      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=credits,release_dates`
     );
     const movie = await res.json();
 
@@ -28,6 +28,19 @@ async function fetchMovieDetails(movieId) {
     // Điểm IMDb
     document.querySelector(".movie-banner__rating span").textContent =
       movie.vote_average?.toFixed(1) || "N/A";
+
+    // Độ tuổi (Age Rating)
+    const releaseDates = movie.release_dates?.results || [];
+    const ratingObj =
+      releaseDates.find(r => r.iso_3166_1 === "US") ||
+      releaseDates.find(r => r.iso_3166_1 === "GB") ||
+      releaseDates[0];
+
+    const ageRating = ratingObj?.release_dates[0]?.certification || "N/A";
+
+    const ageElement = document.querySelector(".movie-banner__age strong");
+    if (ageElement) ageElement.textContent = ageRating;
+
 
     // Thể loại
     document.querySelector(".movie-banner__genres").innerHTML =
