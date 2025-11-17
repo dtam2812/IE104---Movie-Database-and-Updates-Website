@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../Style/AdminPage.css">
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
+    <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <script type="module">
         import { AdminMovies_js } from '../../js/AdminMovies.js';
         
@@ -43,31 +44,31 @@
     <!-- Main Section -->
     <section class="main">
         <!-- Sidebar -->
-        <div class="admin-menu-container">
-            <nav class="admin-menu">
-                <ul class="admin-menu-list">
-                    <li>
-                        <a href="../pages/AdminUsers.html">
-                            <i class="fa-solid fa-user"></i>
-                            <span>Users</span>
+        <div class="admin-menu">
+            <nav class="admin-menu__nav">
+                <ul class="admin-menu__list">
+                    <li class="admin-menu__item">
+                        <a href="../pages/AdminUsers.html" class="admin-menu__link">
+                            <i class="fa-solid fa-user admin-menu__icon"></i>
+                            <span class="admin-menu__text">Users</span>
                         </a>
                     </li>
-                    <li>
-                        <a class="active" href="#">
-                            <i class="fa-solid fa-film"></i>
-                            <span>Movies</span>
+                    <li class="admin-menu__item">
+                        <a href="#" class="admin-menu__link admin-menu__link--active">
+                            <i class="fa-solid fa-film admin-menu__icon"></i>
+                            <span class="admin-menu__text">Movies</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="../pages/AdminTVShows.html">
-                            <i class="fa-solid fa-tv"></i>
-                            <span>TV Shows</span>
+                    <li class="admin-menu__item">
+                        <a href="../pages/AdminTVShows.html" class="admin-menu__link">
+                            <i class="fa-solid fa-tv admin-menu__icon"></i>
+                            <span class="admin-menu__text">TV Shows</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="../pages/HomePage.html">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Sign Out</span>
+                    <li class="admin-menu__item">
+                        <a href="../pages/HomePage.html" class="admin-menu__link">
+                            <i class="fa-solid fa-right-from-bracket admin-menu__icon"></i>
+                            <span class="admin-menu__text">Sign Out</span>
                         </a>
                     </li>
                 </ul>
@@ -75,26 +76,26 @@
         </div>
 
         <!-- Main Content -->
-        <div class="admin-main-container">
-            <div class="admin-main-content">
-                <div class="am-content-heading">
-                    <h1>Movies</h1>
-                    <a class="add-btn">
+        <div class="admin-content">
+            <div class="admin-content__wrapper">
+                <div class="admin-content__header">
+                    <h1 class="admin-content__title">Movies</h1>
+                    <a class="admin-content__add-btn">
                         <i class="fa-solid fa-plus"></i>
                         <span>Add Movie</span>
                     </a>
                 </div>
 
                 <!-- Search and Filter -->
-                <div class="am-search-box">
-                    <div class="search-bar">
-                        <div class="search-icon">
+                <div class="search-filter">
+                    <div class="search-filter__search">
+                        <div class="search-filter__icon">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
-                        <input class="search-input" placeholder="Search by movie name or ID (e.g. MV001)" autocomplete="off" />
+                        <input class="search-filter__input" placeholder="Search by movie name or ID (e.g. MV001)" autocomplete="off" />
                     </div>
-                    <div class="filter-bar">
-                        <select class="filter-select">
+                    <div class="search-filter__filters">
+                        <select class="search-filter__select">
                             <option value="all">All Country</option>
                             <option value="America">America</option>
                             <option value="Japan">Japan</option>
@@ -102,12 +103,12 @@
                             <option value="China">China</option>
                             <option value="England">England</option>
                         </select>
-                        <select class="filter-select">
+                        <select class="search-filter__select">
                             <option value="all">All Status</option>
                             <option value="Released">Released</option>
                             <option value="Coming Soon">Coming Soon</option>
                         </select>
-                        <select class="filter-select">
+                        <select class="search-filter__select">
                             <option value="all">All Rating</option>
                             <option value="9+">9.0+</option>
                             <option value="8+">8.0+</option>
@@ -119,38 +120,38 @@
                 </div>
 
                 <!-- Table -->
-                <div class="dm-table-container">
-                    <div class="dm-table-heading">
-                        <h2>Movies (0)</h2>
+                <div class="data-table">
+                    <div class="data-table__header">
+                        <h2 class="data-table__title">Movies (0)</h2>
                     </div>
-                    <table class="dm-table">
-                        <thead>
+                    <table class="data-table__table">
+                        <thead class="data-table__head">
                             <tr>
-                                <th>No.</th>
-                                <th>Poster</th>
-                                <th>Genre</th>
-                                <th>Duration</th>
-                                <th>Rating</th>
-                                <th>Status</th>
-                                <th>Edit</th>
-                                <th>Detail</th>
-                                <th>     </th>
+                                <th class="data-table__th">No.</th>
+                                <th class="data-table__th">Poster</th>
+                                <th class="data-table__th">Genre</th>
+                                <th class="data-table__th">Duration</th>
+                                <th class="data-table__th">Rating</th>
+                                <th class="data-table__th">Status</th>
+                                <th class="data-table__th">Edit</th>
+                                <th class="data-table__th">Detail</th>
+                                <th class="data-table__th">     </th>
                             </tr>
                         </thead>
-                        <tbody class="dm-table-body"></tbody>
+                        <tbody class="data-table__body"></tbody>
                     </table>
                 </div>
 
                 <!-- Pagination -->
-                <div class="content__pagination">
-                    <button class="pagination-left-arrow disable">
+                <div class="pagination">
+                    <button class="pagination__arrow pagination__arrow--left disable">
                         <i class="fa-solid fa-arrow-left"></i>
                     </button>
-                    <div class="pagination__main">
-                        <span class="pagination-page-current">1</span>
+                    <div class="pagination__info">
+                        <span class="pagination__current">1</span>
                         <span>/ 10</span>
                     </div>
-                    <button class="pagination-right-arrow">
+                    <button class="pagination__arrow pagination__arrow--right">
                         <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
@@ -173,79 +174,79 @@
     </script>
 
     <!-- Modal: Add/Edit Movie -->
-    <div class="modal-movie hidden">
-        <div class="modal_backdrop"></div>
-        <div class="modal_container">
-            <div class="modal_dialog modal_dialog_centered modal_dialog--wide">
-                <div class="modal_content">
-                    <button class="btn modal_close" aria-label="close">
+    <div class="modal modal--movie hidden">
+        <div class="modal__backdrop"></div>
+        <div class="modal__container">
+            <div class="modal__dialog modal__dialog--centered modal__dialog--wide">
+                <div class="modal__content">
+                    <button class="modal__close" aria-label="close">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
-                    <div class="form-wrapper movie-form">
-                        <div class="content_header mb2">
-                            <h1 class="modal-title">Add Movie</h1>
+                    <div class="form form--movie">
+                        <div class="form__header mb2">
+                            <h1 class="modal__title">Add Movie</h1>
                         </div>
                     
-                        <div class="content_body">
+                        <div class="form__body">
                             <form class="v-form">
                                 <!-- Hidden ID field -->
                                 <input type="hidden" name="id">
 
                                 <!-- SECTION 1: Title + Overview + Banner + Poster -->
-                                <div class="movie-section-top">
+                                <div class="media-form__section media-form__section--top">
                                     <!-- Left: Title + Overview -->
-                                    <div class="movie-info-left">
-                                        <div class="form-group mb2">
+                                    <div class="media-form__info">
+                                        <div class="form__group mb2">
                                             <label>Title: <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="text" name="title" placeholder="Movie title" required>
+                                            <input class="form__control" type="text" name="title" placeholder="Movie title" required>
                                         </div>
 
-                                        <div class="form-group mb2">
+                                        <div class="form__group mb2">
                                             <label>Overview: <span style="color: red;">*</span></label>
-                                            <textarea class="form-control form-textarea" name="overview" placeholder="Movie overview/description" rows="8" required></textarea>
+                                            <textarea class="form__control form__control--textarea" name="overview" placeholder="Movie overview/description" rows="8" required></textarea>
                                         </div>
                                     </div>
 
                                     <!-- Right: Banner + Poster -->
-                                    <div class="movie-media-right">
-                                        <div class="banner-preview mb2">
+                                    <div class="media-form__media">
+                                        <div class="media-form__banner mb2">
                                             <label>Banner (16:9): <span style="color: red;">*</span></label>
                                             <img src="" alt="Banner">
-                                            <input type="file" class="banner-input" name="banner" accept="image/*">
+                                            <input type="file" class="media-form__banner-input" name="banner" accept="image/*">
                                             <small>Ratio: 16:9 (e.g. 1920x1080)</small>
                                         </div>
-                                        <div class="poster-preview">
+                                        <div class="media-form__poster">
                                             <label>Poster (2:3): <span style="color: red;">*</span></label>
                                             <img src="" alt="Poster">
-                                            <input type="file" class="poster-input" name="poster" accept="image/*">
+                                            <input type="file" class="media-form__poster-input" name="poster" accept="image/*">
                                             <small>Ratio: 2:3 (e.g. 600x900)</small>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- SECTION 2: Các thông tin còn lại (2 cột) -->
-                                <div class="movie-section-bottom">
+                                <!-- SECTION 2: Other information (2 columns) -->
+                                <div class="media-form__section media-form__section--bottom">
                                     <!-- Column 1 -->
-                                    <div class="movie-info-column">
-                                        <!-- Hiển thị ID khi Edit (readonly) -->
-                                        <div class="form-group mb1 movie-id-display" style="display: none;">
+                                    <div class="media-form__column">
+                                        <!-- Display ID when Edit (readonly) -->
+                                        <div class="form__group mb1 media-form__id-display" style="display: none;">
                                             <label>Movie ID:</label>
-                                            <input class="form-control" type="text" name="id-display" placeholder="Auto-generated" readonly>
+                                            <input class="form__control" type="text" name="id-display" placeholder="Auto-generated" readonly>
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Genre: <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="text" name="genre" placeholder="e.g. Horror, Action" required>
+                                            <input class="form__control" type="text" name="genre" placeholder="e.g. Horror, Action" required>
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Duration (min): <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="number" name="duration" placeholder="e.g. 120" required>
+                                            <input class="form__control" type="number" name="duration" placeholder="e.g. 120" required>
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Country: <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="text" name="country" list="country-list" placeholder="Type or select" required>
+                                            <input class="form__control" type="text" name="country" list="country-list" placeholder="Type or select" required>
                                             <datalist id="country-list">
                                                 <option value="America">
                                                 <option value="Japan">
@@ -259,51 +260,51 @@
                                             </datalist>
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Director:</label>
-                                            <input class="form-control" type="text" name="director" placeholder="Director name">
+                                            <input class="form__control" type="text" name="director" placeholder="Director name">
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Actors (Display):</label>
-                                            <input class="form-control" type="text" name="actors" placeholder="Auto-filled from actors list" readonly>
+                                            <input class="form__control" type="text" name="actors" placeholder="Auto-filled from actors list" readonly>
                                             <input type="hidden" name="actorsCount" value="0">
-                                            <button type="button" class="btn btn-secondary manage-actors-btn" style="margin-top: 0.5rem; width: 100%;">
+                                            <button type="button" class="form__btn form__btn--secondary form__manage-btn form__manage-btn--actors" style="margin-top: 0.5rem; width: 100%;">
                                                 <i class="fa-solid fa-users"></i> Manage Actors
                                             </button>
                                         </div>
                                     </div>
 
                                     <!-- Column 2 -->
-                                    <div class="movie-info-column">
-                                        <div class="form-group mb1">
+                                    <div class="media-form__column">
+                                        <div class="form__group mb1">
                                             <label>Producer:</label>
-                                            <input class="form-control" type="text" name="producer" placeholder="Producer name">
+                                            <input class="form__control" type="text" name="producer" placeholder="Producer name">
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Budget (USD):</label>
-                                            <input class="form-control" type="number" name="budget" placeholder="e.g. 50000000">
+                                            <input class="form__control" type="number" name="budget" placeholder="e.g. 50000000">
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Revenue (USD):</label>
-                                            <input class="form-control" type="number" name="revenue" placeholder="e.g. 150000000">
+                                            <input class="form__control" type="number" name="revenue" placeholder="e.g. 150000000">
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>YouTube Trailer Link:</label>
-                                            <input class="form-control" type="url" name="trailer" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                                            <input class="form__control" type="url" name="trailer" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>IMDb Rating:</label>
-                                            <input class="form-control" type="number" name="rating" placeholder="e.g. 8.5" step="0.1" min="0" max="10">
+                                            <input class="form__control" type="number" name="rating" placeholder="e.g. 8.5" step="0.1" min="0" max="10">
                                         </div>
 
-                                        <div class="form-group mb1">
+                                        <div class="form__group mb1">
                                             <label>Status: <span style="color: red;">*</span></label>
-                                            <select class="form-control" name="status" required>
+                                            <select class="form__control" name="status" required>
                                                 <option value="Released">Released</option>
                                                 <option value="Coming Soon">Coming Soon</option>
                                             </select>
@@ -312,8 +313,8 @@
                                 </div>
 
                                 <!-- Submit Button -->
-                                <div class="form-group action-btn-center mt3 mb3">
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                <div class="form__group form__actions mt3 mb3">
+                                    <button type="submit" class="form__btn form__btn--primary">Create</button>
                                 </div>
                             </form>
                         </div>
@@ -324,55 +325,55 @@
     </div>
 
     <!-- Sub-Modal: Manage Actors -->
-    <div class="sub-modal-backdrop hidden" id="actors-backdrop"></div>
+    <div class="sub-modal__backdrop hidden" id="actors-backdrop"></div>
     <div class="sub-modal hidden" id="actors-sub-modal">
-        <div class="sub-modal-header">
+        <div class="sub-modal__header">
             <h3>Manage Actors & Cast</h3>
-            <button class="sub-close" type="button">×</button>
+            <button class="sub-modal__close" type="button">×</button>
         </div>
-        <div class="sub-modal-body">
-            <button type="button" class="btn btn-primary add-actor-btn" style="width: 100%; margin-bottom: 1rem;">
+        <div class="sub-modal__body">
+            <button type="button" class="form__btn form__btn--primary sub-modal__add-btn" style="width: 100%; margin-bottom: 1rem;">
                 <i class="fa-solid fa-plus"></i> Add New Actor
             </button>
-            <div id="actors-list" class="actors-accordion">
+            <div id="actors-list" class="sub-modal__list">
 
             </div>
         </div>
-        <div class="sub-modal-footer">
-            <button type="button" class="btn btn-primary save-actors-btn">Save Actors</button>
+        <div class="sub-modal__footer">
+            <button type="button" class="form__btn form__btn--primary sub-modal__save-btn">Save Actors</button>
         </div>
     </div>
 
     <!-- TEMPLATES (Hidden) -->
     <!-- Template: Actor Item -->
     <template id="actor-item-template">
-        <div class="actor-item">
-            <div class="actor-header">
-                <h4 class="actor-title">Actor</h4>
-                <button type="button" class="btn-icon delete-actor-btn">
+        <div class="actor">
+            <div class="actor__header">
+                <h4 class="actor__title">Actor</h4>
+                <button type="button" class="sub-modal__icon-btn actor__delete-btn">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
-            <div class="actor-body">
-                <div class="actor-content-wrapper">
+            <div class="actor__body">
+                <div class="actor__content">
                     <!-- Actor photo -->
-                    <div class="actor-photo-right">
-                        <div class="actor-photo-preview">
+                    <div class="actor__photo">
+                        <div class="actor__photo-wrapper">
                             <img src="../../public/assets/image/user_avatar_default.jpg" 
-                                 alt="Actor Photo" class="actor-photo-img">
-                            <input type="file" class="actor-photo-input" accept="image/*">
+                                 alt="Actor Photo" class="actor__photo-image">
+                            <input type="file" class="actor__photo-input" accept="image/*">
                         </div>
                     </div>
                     <!-- Actor Info -->
-                    <div class="actor-info-left">
-                        <div class="form-group mb1">
+                    <div class="actor__info">
+                        <div class="form__group mb1">
                             <label>Actor ID:</label>
-                            <input type="text" class="form-control actor-id" 
+                            <input type="text" class="form__control actor__id" 
                                    placeholder="Auto-generated" readonly>
                         </div>
-                        <div class="form-group mb1">
+                        <div class="form__group mb1">
                             <label>Full Name: <span style="color: red;">*</span></label>
-                            <input type="text" class="form-control actor-name" 
+                            <input type="text" class="form__control actor__name" 
                                    placeholder="e.g. Robert Downey Jr." required>
                         </div>
                     </div>

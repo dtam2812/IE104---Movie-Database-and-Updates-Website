@@ -1,43 +1,62 @@
 import { usersData } from "./Data.js";
 
 export async function AdminUsers_js() {
-  const modalUser = document.querySelector(".modal-user");
-  const addUserBtn = document.querySelector(".add-btn");
-  const backdrop = document.querySelector(".modal-user .modal_backdrop");
-  const closeBtn = document.querySelector(".modal-user .modal_close");
-  const userForm = document.querySelector(".form-wrapper.user-form");
+  const modalUser = document.querySelector(".modal--user");
+  const addUserBtn = document.querySelector(".admin-content__add-btn");
+  const backdrop = document.querySelector(".modal--user .modal__backdrop");
+  const closeBtn = document.querySelector(".modal--user .modal__close");
+  const userForm = document.querySelector(".form--user");
   const userFormEl = userForm.querySelector("form");
-  const userCountHeading = document.querySelector(".dm-table-heading h2");
-  const modalTitle = document.querySelector(".modal-title");
-  const submitBtn = userFormEl.querySelector(".btn.btn-primary");
+  const userCountHeading = document.querySelector(".data-table__title");
+  const modalTitle = document.querySelector(".form__title");
+  const submitBtn = userFormEl.querySelector(".form__btn--primary");
 
   let currentEditRow = null;
   let isEditMode = false;
 
-  const tableBody = document.querySelector(".dm-table-body");
+  const tableBody = document.querySelector(".data-table__body");
 
-  const paginationLeft = document.querySelector(".pagination-left-arrow");
-  const paginationRight = document.querySelector(".pagination-right-arrow");
-  const currentPageSpan = document.querySelector(".pagination-page-current");
-  const totalPagesSpan = document.querySelector(".pagination__main span:last-child");
+  const paginationLeft = document.querySelector(".pagination__arrow--left");
+  const paginationRight = document.querySelector(".pagination__arrow--right");
+  const currentPageSpan = document.querySelector(".pagination__current");
+  const totalPagesSpan = document.querySelector(".pagination__info span:last-child");
 
   // SEARCH & FILTER
-  const searchInput = document.querySelector(".search-input");
-  const roleFilter = document.querySelector(".filter-select:nth-child(1)");
-  const statusFilter = document.querySelector(".filter-select:nth-child(2)");
+  const searchInput = document.querySelector(".search-filter__input");
+  const roleFilter = document.querySelector(".search-filter__select:nth-child(1)");
+  const statusFilter = document.querySelector(".search-filter__select:nth-child(2)");
 
   let allUsers = [];
 
   // PASSWORD VALIDATION
   const pwdInput = userFormEl.querySelector('input[name="password"]');
   const cfPwdInput = userFormEl.querySelector('input[name="cf_password"]');
-  const errorMessage = userFormEl.querySelector(".non-same-pw");
+  const errorMessage = userFormEl.querySelector(".form__error");
 
   // API BASE URL
   const API_BASE = "http://localhost:5000";
 
   // GET TOKEN
   const getToken = () => localStorage.getItem("accessToken");
+
+  // SIGN OUT FUNCTIONALITY
+  const signOutLink = document.querySelector('.admin-menu__item:last-child .admin-menu__link');
+  if (signOutLink) {
+    signOutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      console.log("Admin signing out");
+
+      // Xóa tất cả thông tin user khỏi localStorage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("refreshToken");
+
+      // Redirect về trang HomePage
+      window.location.href = "/client/view/pages/HomePage.html";
+    });
+  }
 
   // LOAD USERS FROM API
   const getListUser = async () => {
@@ -234,42 +253,45 @@ export async function AdminUsers_js() {
     newRow.dataset.userId = user._id || user.id;
 
     const noCell = document.createElement("td");
+    noCell.classList.add("data-table__th");
     noCell.textContent = no;
     newRow.appendChild(noCell);
 
     const userName = user.userName || user.name || 'No Name';
 
     const userCell = document.createElement("td");
-    userCell.classList.add("user-column");
+    userCell.classList.add("data-table__th");
     userCell.innerHTML = `
-      <div class="td-user-info">
-        <div class="td-user-name-email">
-          <span class="name">${userName}</span><br>
-          <span class="email">${user.email}</span>
+      <div class="user-cell">
+        <div class="user-cell__info">
+          <span class="user-cell__name">${userName}</span><br>
+          <span class="user-cell__email">${user.email}</span>
         </div>
       </div>
     `;
     newRow.appendChild(userCell);
 
     const roleCell = document.createElement("td");
+    roleCell.classList.add("data-table__th");
     roleCell.textContent = user.role;
     newRow.appendChild(roleCell);
 
     const statusCell = document.createElement("td");
+    statusCell.classList.add("data-table__th");
     const isActive = user.status === "active";
     statusCell.innerHTML = `
-      <label class="switch">
-        <input type="checkbox" class="status-toggle" ${isActive ? "checked" : ""}>
-        <span class="slider ${isActive ? "active" : "banned"}">
-          <span class="text active-text">Active</span>
-          <span class="text banned-text">Banned</span>
+      <label class="status-toggle">
+        <input type="checkbox" class="status-toggle__input" ${isActive ? "checked" : ""}>
+        <span class="status-toggle__slider ${isActive ? "active" : "banned"}">
+          <span class="status-toggle__text status-toggle__text--active">Active</span>
+          <span class="status-toggle__text status-toggle__text--banned">Banned</span>
         </span>
       </label>
     `;
     newRow.appendChild(statusCell);
 
-    const toggle = statusCell.querySelector(".status-toggle");
-    const slider = statusCell.querySelector(".slider");
+    const toggle = statusCell.querySelector(".status-toggle__input");
+    const slider = statusCell.querySelector(".status-toggle__slider");
     toggle.addEventListener("change", async () => {
       const userId = user._id || user.id;
       const newStatus = toggle.checked ? "active" : "banned";
@@ -292,28 +314,32 @@ export async function AdminUsers_js() {
     });
 
     const createDateCell = document.createElement("td");
+    createDateCell.classList.add("data-table__th");
     createDateCell.textContent = formatDate(user.joinDate || user.createdDate);
     newRow.appendChild(createDateCell);
 
     const editCell = document.createElement("td");
-    editCell.innerHTML = `<button class="btn btn-edit"><i class="fa-solid fa-user-pen"></i></button>`;
+    editCell.classList.add("data-table__th");
+    editCell.innerHTML = `<button class="data-table__btn data-table__btn--edit"><i class="fa-solid fa-user-pen"></i></button>`;
     newRow.appendChild(editCell);
 
     const detailCell = document.createElement("td");
-    detailCell.innerHTML = `<a href="#" class="btn btn-detail"><i class="fa-solid fa-circle-info"></i></a>`;
+    detailCell.classList.add("data-table__th");
+    detailCell.innerHTML = `<a href="#" class="data-table__btn data-table__btn--detail"><i class="fa-solid fa-circle-info"></i></a>`;
     newRow.appendChild(detailCell);
 
     const deleteCell = document.createElement("td");
-    deleteCell.innerHTML = `<button class="btn btn-delete"><i class="fa-solid fa-trash"></i></button>`;
+    deleteCell.classList.add("data-table__th");
+    deleteCell.innerHTML = `<button class="data-table__btn data-table__btn--delete"><i class="fa-solid fa-trash"></i></button>`;
     newRow.appendChild(deleteCell);
 
-    const editBtn = editCell.querySelector(".btn-edit");
+    const editBtn = editCell.querySelector(".data-table__btn--edit");
     editBtn.addEventListener("click", () => {
       console.log('Edit button clicked for user:', user);
       openEditModal(newRow);
     });
 
-    const deleteBtn = deleteCell.querySelector(".btn-delete");
+    const deleteBtn = deleteCell.querySelector(".data-table__btn--delete");
     deleteBtn.addEventListener("click", async function () {
       const userName = user.userName || user.name;
       if (confirm(`Are you sure you want to delete "${userName}"?`)) {
@@ -421,9 +447,9 @@ export async function AdminUsers_js() {
 
     userFormEl.reset();
 
-    const idDisplayGroup = userFormEl.querySelector(".user-id-display");
-    const passwordGroup = userFormEl.querySelector(".password-group");
-    const cfPasswordGroup = userFormEl.querySelector(".cf-password-group");
+    const idDisplayGroup = userFormEl.querySelector(".form__id-display");
+    const passwordGroup = userFormEl.querySelector(".form__group--password");
+    const cfPasswordGroup = userFormEl.querySelector(".form__group--confirm-password");
 
     if (idDisplayGroup) idDisplayGroup.style.display = "none";
     if (passwordGroup) {
@@ -440,7 +466,7 @@ export async function AdminUsers_js() {
     submitBtn.disabled = false;
 
     modalUser.classList.remove("hidden");
-    userForm.classList.add("active");
+    userForm.classList.add("form--active");
   });
 
   // MODAL - EDIT USER
@@ -465,15 +491,15 @@ export async function AdminUsers_js() {
     modalTitle.textContent = "Edit User";
     submitBtn.textContent = "Save";
 
-    const idDisplayGroup = userFormEl.querySelector(".user-id-display");
+    const idDisplayGroup = userFormEl.querySelector(".form__id-display");
     const idDisplayInput = userFormEl.querySelector('input[name="id-display"]');
     if (idDisplayGroup && idDisplayInput) {
       idDisplayGroup.style.display = "block";
       idDisplayInput.value = user._id || user.id;
     }
 
-    const passwordGroup = userFormEl.querySelector(".password-group");
-    const cfPasswordGroup = userFormEl.querySelector(".cf-password-group");
+    const passwordGroup = userFormEl.querySelector(".form__group--password");
+    const cfPasswordGroup = userFormEl.querySelector(".form__group--confirm-password");
     if (passwordGroup) {
       passwordGroup.style.display = "none";
       pwdInput.removeAttribute('required');
@@ -490,13 +516,13 @@ export async function AdminUsers_js() {
 
     console.log('Modal should be visible now');
     modalUser.classList.remove("hidden");
-    userForm.classList.add("active");
+    userForm.classList.add("form--active");
   }
 
   // MODAL - CLOSE
   function closeModal() {
     modalUser.classList.add("hidden");
-    userForm.classList.remove("active");
+    userForm.classList.remove("form--active");
     userFormEl.reset();
     currentEditRow = null;
     isEditMode = false;

@@ -11,32 +11,32 @@ export async function AdminMovies_js() {
 
     // DOM ELEMENTS
     // Modal elements
-    const modalMovie = document.querySelector('.modal-movie');
-    const backdrop = document.querySelector('.modal-movie .modal_backdrop');
-    const movieFormEl = document.querySelector('.form-wrapper.movie-form form');
-    const modalTitle = document.querySelector('.modal-title');
-    const submitBtn = movieFormEl.querySelector('.btn.btn-primary');
+    const modalMovie = document.querySelector('.modal--movie');
+    const backdrop = document.querySelector('.modal--movie .modal__backdrop');
+    const movieFormEl = document.querySelector('.form--movie form');
+    const modalTitle = document.querySelector('.form__title');
+    const submitBtn = movieFormEl.querySelector('.form__btn--primary');
     
     // Table & Pagination
-    const tableBody = document.querySelector('.dm-table-body');
-    const movieCountHeading = document.querySelector('.dm-table-heading h2');
-    const currentPageSpan = document.querySelector('.pagination-page-current');
-    const totalPagesSpan = document.querySelector('.pagination__main span:last-child');
-    const paginationLeft = document.querySelector('.pagination-left-arrow');
-    const paginationRight = document.querySelector('.pagination-right-arrow');
+    const tableBody = document.querySelector('.data-table__body');
+    const movieCountHeading = document.querySelector('.data-table__title');
+    const currentPageSpan = document.querySelector('.pagination__current');
+    const totalPagesSpan = document.querySelector('.pagination__info span:last-child');
+    const paginationLeft = document.querySelector('.pagination__arrow--left');
+    const paginationRight = document.querySelector('.pagination__arrow--right');
     
     // Search & Filter
-    const searchInput = document.querySelector('.search-input');
-    const countryFilter = document.querySelector('.filter-select:nth-child(1)');
-    const statusFilter = document.querySelector('.filter-select:nth-child(2)');
-    const ratingFilter = document.querySelector('.filter-select:nth-child(3)');
+    const searchInput = document.querySelector('.search-filter__input');
+    const countryFilter = document.querySelector('.search-filter__select:nth-child(1)');
+    const statusFilter = document.querySelector('.search-filter__select:nth-child(2)');
+    const ratingFilter = document.querySelector('.search-filter__select:nth-child(3)');
     
     // Media inputs
-    const mediaPreview = document.querySelector('.movie-media-right');
-    const bannerPreviewImg = mediaPreview.querySelector('.banner-preview img');
-    const posterPreviewImg = mediaPreview.querySelector('.poster-preview img');
-    const bannerInput = mediaPreview.querySelector('.banner-input');
-    const posterInput = mediaPreview.querySelector('.poster-input');
+    const mediaPreview = document.querySelector('.media-form__media');
+    const bannerPreviewImg = mediaPreview.querySelector('.media-form__banner img');
+    const posterPreviewImg = mediaPreview.querySelector('.media-form__poster img');
+    const bannerInput = mediaPreview.querySelector('.media-form__banner-input');
+    const posterInput = mediaPreview.querySelector('.media-form__poster-input');
 
     // Sub-modal (Actors)
     const subModal = document.getElementById('actors-sub-modal');
@@ -47,6 +47,26 @@ export async function AdminMovies_js() {
     const actorTemplate = document.getElementById('actor-item-template');
     const emptyRowTemplate = document.getElementById('empty-row-template');
     const emptyActorsTemplate = document.getElementById('empty-actors-template');
+
+    
+    // SIGN OUT FUNCTIONALITY
+    const signOutLink = document.querySelector('.admin-menu__item:last-child .admin-menu__link');
+    if (signOutLink) {
+        signOutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            console.log("Admin signing out");
+
+            // Xóa tất cả thông tin user khỏi localStorage
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("refreshToken");
+
+            // Redirect về trang HomePage
+            window.location.href = "/client/view/pages/HomePage.html";
+        });
+    }
 
     // STATE MANAGEMENT 
     let filteredMovies = [...allMovies];
@@ -134,32 +154,32 @@ export async function AdminMovies_js() {
         const row = document.createElement('tr');
         row.dataset.movieId = movie.id;
         row.innerHTML = `
-            <td>${no}</td>
-            <td>
-                <div class="movie-title">
-                    <div class="movie-poster">
-                        <img src="${movie.poster}" alt="${movie.title}">
+            <td class ="data-table__th">${no}</td>
+            <td class ="data-table__th">
+                <div class="movie-cell">
+                    <div class="movie-cell__poster">
+                        <img class="movie-cell__image" src="${movie.poster}" alt="${movie.title}">
                     </div>
-                    <div class="movie-title">
+                    <div class="movie-cell__title">
                         <span>${movie.title}</span>
                     </div>
                 </div>
             </td>
-            <td>${movie.genre}</td>
-            <td>${durationText}</td>
-            <td>${ratingHTML}</td>
-            <td>
+            <td class ="data-table__th">${movie.genre}</td>
+            <td class ="data-table__th">${durationText}</td>
+            <td class ="data-table__th">${ratingHTML}</td>
+            <td class ="data-table__th">
                 <span style="color: ${statusColor}; font-weight: 600;">
                     ${movie.status}
                 </span>
             </td>
-            <td><button class="btn btn-edit"><i class="fa-solid fa-pen"></i></button></td>
-            <td><button class="btn btn-detail"><i class="fa-solid fa-circle-info"></i></button></td>
-            <td><button class="btn btn-delete"><i class="fa-solid fa-trash"></i></button></td>
+            <td class ="data-table__th"><button class="data-table__btn data-table__btn--edit"><i class="fa-solid fa-pen"></i></button></td>
+            <td class ="data-table__th"><button class="data-table__btn data-table__btn--detail"><i class="fa-solid fa-circle-info"></i></button></td>
+            <td class ="data-table__th"><button class="data-table__btn data-table__btn--delete"><i class="fa-solid fa-trash"></i></button></td>
         `;
 
-        row.querySelector('.btn-edit').addEventListener('click', () => openEditModal(row));
-        row.querySelector('.btn-delete').addEventListener('click', () => {
+        row.querySelector('.data-table__btn--edit').addEventListener('click', () => openEditModal(row));
+        row.querySelector('.data-table__btn--delete').addEventListener('click', () => {
             if (confirm(`Are you sure you want to delete "${movie.title}"?`)) {
                 allMovies = allMovies.filter(m => m.id !== movie.id);
                 filterMovies();
@@ -213,17 +233,17 @@ export async function AdminMovies_js() {
     // Tạo actor item từ template
     const createActorItem = (actor, index) => {
         const actorItem = actorTemplate.content.cloneNode(true);
-        const actorDiv = actorItem.querySelector('.actor-item');
+        const actorDiv = actorItem.querySelector('.actor');
         
         // Set data
-        const header = actorDiv.querySelector('.actor-header');
-        const body = actorDiv.querySelector('.actor-body');
-        const titleEl = actorDiv.querySelector('.actor-title');
-        const idInput = actorDiv.querySelector('.actor-id');
-        const nameInput = actorDiv.querySelector('.actor-name');
-        const photoImg = actorDiv.querySelector('.actor-photo-img');
-        const photoInput = actorDiv.querySelector('.actor-photo-input');
-        const deleteBtn = actorDiv.querySelector('.delete-actor-btn');
+        const header = actorDiv.querySelector('.actor__header');
+        const body = actorDiv.querySelector('.actor__body');
+        const titleEl = actorDiv.querySelector('.actor__title');
+        const idInput = actorDiv.querySelector('.actor__id');
+        const nameInput = actorDiv.querySelector('.actor__name');
+        const photoImg = actorDiv.querySelector('.actor__photo-image');
+        const photoInput = actorDiv.querySelector('.actor__photo-input');
+        const deleteBtn = actorDiv.querySelector('.actor__delete-btn');
         
         titleEl.textContent = actor.name || `Actor ${index + 1}`;
         idInput.value = actor.id || '';
@@ -232,7 +252,7 @@ export async function AdminMovies_js() {
         
         // Toggle hiển thị
         header.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-actor-btn')) return;
+            if (e.target.closest('.actor__delete-btn')) return;
             body.style.display = body.style.display === 'none' ? 'block' : 'none';
         });
         
@@ -314,11 +334,11 @@ export async function AdminMovies_js() {
         currentActors = [];
         movieFormEl.querySelector('input[name="actorsCount"]').value = '0';
         
-        const idDisplayGroup = movieFormEl.querySelector('.movie-id-display');
+        const idDisplayGroup = movieFormEl.querySelector('.media-form__id-display');
         if (idDisplayGroup) idDisplayGroup.style.display = 'none';
         
         modalMovie.classList.remove('hidden');
-        document.querySelector('.form-wrapper.movie-form').classList.add('active');
+        document.querySelector('.form--movie').classList.add('form--active');
     };
 
     // Mở modal chỉnh sửa movie
@@ -335,7 +355,7 @@ export async function AdminMovies_js() {
         bannerPreviewImg.src = movie.banner;
         posterPreviewImg.src = movie.poster;
         
-        const idDisplayGroup = movieFormEl.querySelector('.movie-id-display');
+        const idDisplayGroup = movieFormEl.querySelector('.media-form__id-display');
         const idDisplayInput = movieFormEl.querySelector('input[name="id-display"]');
         if (idDisplayGroup && idDisplayInput) {
             idDisplayGroup.style.display = 'block';
@@ -373,13 +393,13 @@ export async function AdminMovies_js() {
         movieFormEl.querySelector('input[name="actorsCount"]').value = currentActors.length;
         
         modalMovie.classList.remove('hidden');
-        document.querySelector('.form-wrapper.movie-form').classList.add('active');
+        document.querySelector('.form--movie').classList.add('form--active');
     };
 
     // Đóng modal
     const closeModal = () => {
         modalMovie.classList.add('hidden');
-        document.querySelector('.form-wrapper.movie-form').classList.remove('active');
+        document.querySelector('.form--movie').classList.remove('form--active');
         movieFormEl.reset();
         currentEditRow = null;
         isEditMode = false;
@@ -411,9 +431,9 @@ export async function AdminMovies_js() {
     });
 
     // Modal
-    document.querySelector('.add-btn').addEventListener('click', openAddModal);
+    document.querySelector('.admin-content__add-btn').addEventListener('click', openAddModal);
     backdrop.addEventListener('click', closeModal);
-    document.querySelector('.modal-movie .modal_close').addEventListener('click', closeModal);
+    document.querySelector('.modal--movie .modal__close').addEventListener('click', closeModal);
     
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modalMovie.classList.contains('hidden')) {
@@ -435,12 +455,12 @@ export async function AdminMovies_js() {
     });
 
     // Sub-modal actors
-    movieFormEl.querySelector('.manage-actors-btn')?.addEventListener('click', (e) => {
+    movieFormEl.querySelector('.form__manage-btn--actors')?.addEventListener('click', (e) => {
         e.preventDefault();
         openActorsModal();
     });
     
-    subModal?.querySelector('.add-actor-btn')?.addEventListener('click', () => {
+    subModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
         const movieId = movieFormEl.querySelector('input[name="id"]').value || generateMovieId();
         const newActorId = generateActorId(movieId);
         
@@ -452,8 +472,8 @@ export async function AdminMovies_js() {
         renderActorsList();
     });
     
-    subModal?.querySelector('.save-actors-btn')?.addEventListener('click', closeActorsModal);
-    subModal?.querySelector('.sub-close')?.addEventListener('click', closeActorsModal);
+    subModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeActorsModal);
+    subModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeActorsModal);
     subModalBackdrop?.addEventListener('click', closeActorsModal);
 
     // Submit form
@@ -512,7 +532,6 @@ export async function AdminMovies_js() {
         
         closeModal();
     });
-
 
     renderMovies();
 }

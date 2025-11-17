@@ -14,7 +14,7 @@ body {
     min-height: calc(80vh - 90px); 
 }
 
-/*  UTILITY CLASSES */
+/* UTILITY CLASSES */
 .mb1 { margin-bottom: 8px; }
 .mb2 { margin-bottom: 16px; }
 .mb3 { margin-bottom: 24px; }
@@ -22,8 +22,8 @@ body {
 .mt3 { margin-top: 24px; }
 .hidden { display: none; }
 
-/* ADMIN SIDEBAR MENU */
-.admin-menu-container {
+/* ========== ADMIN SIDEBAR MENU ========== */
+.admin-menu {
   position: absolute;
   width: 17%;
   height: calc(80vh - 90px); 
@@ -35,7 +35,7 @@ body {
   box-sizing: border-box;
 }
 
-.admin-menu-list {
+.admin-menu__list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -46,14 +46,14 @@ body {
   gap: 1rem; 
 }
 
-.admin-menu-list li {
+.admin-menu__item {
   margin: 0; 
   flex: 1; 
   display: flex;
   align-items: center;
 }
 
-.admin-menu-list li a {
+.admin-menu__link {
   display: flex;
   align-items: center;
   color: rgba(255, 255, 255, 0.6);
@@ -67,22 +67,22 @@ body {
   justify-content: flex-start; 
 }
 
-.admin-menu-list li a.active {
+.admin-menu__link--active {
   background-color: #fff;
-  color: #0f111a;
+  color: #0f111a !important;
 }
 
-.admin-menu-list li a:not(.active):hover {
+.admin-menu__link:not(.admin-menu__link--active):hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.admin-menu-list li a span,
-.admin-menu-list li a i {
+.admin-menu__text,
+.admin-menu__icon {
   font-size: 20px;
 }
 
-/* ADMIN MAIN CONTENT */
-.admin-main-container {
+/* ========== ADMIN MAIN CONTENT ========== */
+.admin-content {
     position: relative;
     margin-left: 17%;
     width: 83%;
@@ -91,14 +91,14 @@ body {
     min-height: calc(80vh - 90px);
 }
 
-.admin-main-content .am-content-heading {
+.admin-content__header {
     display: flex;
     align-items: center;
     width: 100%;
     padding: 0.25rem;
 }
 
-.admin-main-content .am-content-heading h1 {
+.admin-content__title {
     color: #fff;
     font-size: 30px;
     letter-spacing: 0.5px;
@@ -106,7 +106,7 @@ body {
     line-height: 36px;
 }
 
-.admin-main-content .am-content-heading .add-btn {
+.admin-content__add-btn {
     display: flex;
     align-items: center;
     background-color: #0F111A;
@@ -121,12 +121,12 @@ body {
     transition: opacity 0.2s;
 }
 
-.admin-main-content .am-content-heading .add-btn:hover {
+.admin-content__add-btn:hover {
     opacity: 0.9;
 }
 
-/* SEARCH & FILTER BAR */
-.am-search-box {
+/* ========== SEARCH & FILTER BAR ========== */
+.search-filter {
     display: flex;
     align-items: center;
     width: 100%;
@@ -138,7 +138,7 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.am-search-box .search-bar {
+.search-filter__search {
     width: 100%;
     display: flex;
     align-items: center;
@@ -151,7 +151,7 @@ body {
     border-radius: 8px;
 }
 
-.am-search-box .search-bar .search-input {
+.search-filter__input {
     width: 100%;
     background-color: transparent;
     border: none;
@@ -159,18 +159,18 @@ body {
     font-size: 14px;
 }
 
-.am-search-box .search-bar .search-input::placeholder {
+.search-filter__input::placeholder {
     color: #717182;
 }
 
-.am-search-box .filter-bar {
+.search-filter__filters {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-right: 1.2rem;
 }
 
-.am-search-box .filter-bar .filter-select {
+.search-filter__select {
     background-color: #F3F3F5;
     border: none;
     outline: none;
@@ -182,8 +182,8 @@ body {
     cursor: pointer;
 }
 
-/* DATA TABLE */
-.dm-table-container {
+/* ========== DATA TABLE ========== */
+.data-table {
     width: 100%;
     color: #717182;
     background-color: #F3F3F5;
@@ -191,21 +191,24 @@ body {
     overflow: hidden;
 }
 
-.dm-table-container .dm-table-heading h2 {
+.data-table__header {
     color: #0F111A;
     width: 100%;
     padding: 1.7rem;
+}
+
+.data-table__title {
     font-size: 20px;
     line-height: 20px;
     font-weight: 600;
 }
 
-.dm-table {
+.data-table__table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.dm-table thead {
+.data-table__head {
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: #0F111A;
     font-size: 14px;
@@ -213,8 +216,8 @@ body {
     line-height: 20px;
 }
 
-.dm-table th,
-.dm-table td {
+.data-table__th,
+.data-table__td {
     text-align: center;
     font-size: 12px;
     font-weight: 500;
@@ -223,59 +226,56 @@ body {
     padding: 14px 12px;
 }
 
-.dm-table th {
+.data-table__th {
     font-size: 14px !important;
     font-weight: 600 !important;
 }
 
-.dm-table th:nth-child(2),
-.dm-table td:nth-child(2) {
+.data-table__th:nth-child(2),
+.data-table__td:nth-child(2) {
     width: 25%;
     text-align: left;
     padding-left: 1.5rem;
 }
 
-/* User Table */
-.td-user-info {
+/* User Table Cell */
+.user-cell {
     display: inline-flex;
     text-align: left;
     gap: 1rem;
     align-items: center;
 }
 
-.td-user-info .td-user-avatar .user-avatar-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    object-fit: cover;
-}
-
-.td-user-info .td-user-name-email {
+.user-cell__info {
     text-align: left;
     font-size: 14px;
     line-height: 20px;
 }
 
-.td-user-info .td-user-name-email .name {
+.user-cell__name {
     font-weight: 600;
     color: #0F111A;
 }
 
-.td-user-info .td-user-name-email .email {
+.user-cell__email {
     font-weight: 400;
     color: #717182;
 }
 
-/* Movie/TV Show Table */
-.movie-title {
+/* Movie/TV Show Table Cell */
+.movie-cell {
     display: inline-flex;
     text-align: left;
     gap: 1rem;
     align-items: center;
 }
 
-.movie-title .movie-poster img {
+.movie-cell__poster {
+    width: 100px;
+    height: 125px;
+}
+
+.movie-cell__image {
     width: 100px;
     height: 125px;
     object-fit: cover;
@@ -284,7 +284,7 @@ body {
 }
 
 /* Table Action Buttons */
-td .btn {
+.data-table__btn {
     background-color: transparent;
     border: none;
     color: #0F111A;
@@ -293,29 +293,29 @@ td .btn {
     transition: opacity 0.2s;
 }
 
-td .btn:hover {
+.data-table__btn:hover {
     opacity: 0.7;
 }
 
-.btn.btn-delete {
+.data-table__btn--delete {
     color: #c43538;
 }
 
-/* Status Toggle Switch */
-.switch {
+/* ========== STATUS TOGGLE SWITCH ========== */
+.status-toggle {
     position: relative;
     display: inline-block;
     width: 100px;
     height: 34px;
 }
 
-.switch input {
+.status-toggle__input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.slider {
+.status-toggle__slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -330,7 +330,7 @@ td .btn:hover {
     padding: 0 15px;
 }
 
-.slider:before {
+.status-toggle__slider:before {
     position: absolute;
     content: "";
     height: 26px;
@@ -343,53 +343,53 @@ td .btn:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-input:checked + .slider {
+.status-toggle__input:checked + .status-toggle__slider {
     background-color: #4CAF50;
     justify-content: flex-start;
 }
 
-input:checked + .slider:before {
+.status-toggle__input:checked + .status-toggle__slider:before {
     transform: translateX(62px);
 }
 
-input:not(:checked) + .slider {
+.status-toggle__input:not(:checked) + .status-toggle__slider {
     background-color: #e53935;
     justify-content: flex-end;
 }
 
-input:not(:checked) + .slider:before {
+.status-toggle__input:not(:checked) + .status-toggle__slider:before {
     transform: translateX(0);
 }
 
-.slider .text {
+.status-toggle__text {
     font-size: 13px;
     font-weight: 600;
     color: white;
     z-index: 1;
 }
 
-.slider .active-text {
+.status-toggle__text--active {
     display: block;
 }
 
-.slider .banned-text {
+.status-toggle__text--banned {
     display: none;
 }
 
-input:not(:checked) + .slider .active-text {
+.status-toggle__input:not(:checked) + .status-toggle__slider .status-toggle__text--active {
     display: none;
 }
 
-input:not(:checked) + .slider .banned-text {
+.status-toggle__input:not(:checked) + .status-toggle__slider .status-toggle__text--banned {
     display: block;
 }
 
-.slider:hover {
+.status-toggle__slider:hover {
     opacity: 0.9;
 }
 
-/* PAGINATION */
-.content__pagination {
+/* ========== PAGINATION ========== */
+.pagination {
     margin: 64px 0;
     display: flex;
     justify-content: center;
@@ -397,8 +397,8 @@ input:not(:checked) + .slider .banned-text {
     gap: 8px;
 }
 
-.pagination-left-arrow,
-.pagination-right-arrow {
+.pagination__arrow--left,
+.pagination__arrow--right {
     background-color: #fff;
     border: none;
     border-radius: 48px;
@@ -409,19 +409,19 @@ input:not(:checked) + .slider .banned-text {
     transition: opacity 0.2s;
 }
 
-.pagination-left-arrow:hover,
-.pagination-right-arrow:hover {
+.pagination__arrow--left:hover,
+.pagination__arrow--right:hover {
     opacity: 0.9;
 }
 
-.pagination-left-arrow.disable,
-.pagination-right-arrow.disable {
+.pagination__arrow--left.disable,
+.pagination__arrow--right.disable {
     background-color: rgba(255, 255, 255, 0.9);
     cursor: not-allowed !important;
     opacity: 0.5;
 }
 
-.pagination__main {
+.pagination__info {
     height: 50px;
     padding: 0 19.2px;
     border-radius: 48px;
@@ -434,7 +434,7 @@ input:not(:checked) + .slider .banned-text {
     line-height: 24px;
 }
 
-.pagination-page-current {
+.pagination__current {
     width: 60px;
     font-weight: 600;
     border: solid 1px #ffffff20;
@@ -442,14 +442,14 @@ input:not(:checked) + .slider .banned-text {
     text-align: center;
 }
 
-/* MODAL */
-.modal-movie.hidden,
-.modal-tvshow.hidden,
-.modal-user.hidden {
+/* ========== MODAL ========== */
+.modal--movie.hidden,
+.modal--tvshow.hidden,
+.modal--user.hidden {
     display: none;
 }
 
-.modal_backdrop {
+.modal__backdrop {
     position: fixed;
     top: 0;
     right: 0;
@@ -462,7 +462,7 @@ input:not(:checked) + .slider .banned-text {
     opacity: 0.95;
 }
 
-.modal_container {
+.modal__container {
     position: fixed;
     top: 0;
     right: 0;
@@ -475,23 +475,23 @@ input:not(:checked) + .slider .banned-text {
     overflow-y: auto;
 }
 
-.modal_dialog {
+.modal__dialog {
     max-width: 504px;
     width: 96%;
     margin: auto;
 }
 
-.modal_dialog_centered {
+.modal__dialog--centered {
     display: flex;
     align-items: center;
     min-height: calc(100% - 56px);
 }
 
-.modal_dialog--wide {
+.modal__dialog--wide {
     max-width: 900px !important;
 }
 
-.modal_content {
+.modal__content {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -504,7 +504,7 @@ input:not(:checked) + .slider .banned-text {
     border-radius: 12px;
 }
 
-.modal_close {
+.modal__close {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -517,32 +517,36 @@ input:not(:checked) + .slider .banned-text {
     transition: opacity 0.2s;
 }
 
-.modal_close:hover {
+.modal__close:hover {
     opacity: 0.7;
 }
 
-.modal_close i {
+.modal__close i {
     font-size: 16px;
     color: white;
 }
 
-.form-wrapper {
+/* ========== FORM ELEMENTS ========== */
+.form {
     display: none;
 }
 
-.form-wrapper.active {
+.form--active {
     display: block;
 }
 
-/* FORM ELEMENTS */
-.content_header h1 {
+.form__header {
+    margin-bottom: 1.5rem;
+}
+
+.form__title {
     font-size: 19.6px;
     font-weight: 600;
     line-height: 1.5;
     color: #fff;
 }
 
-.content_body label {
+.form__body label {
     display: block;
     font-size: 13.3px;
     font-weight: 400;
@@ -551,7 +555,7 @@ input:not(:checked) + .slider .banned-text {
     margin-bottom: 8px;
 }
 
-.form-control {
+.form__control {
     display: block;
     width: 100%;
     font-weight: 400;
@@ -568,16 +572,16 @@ input:not(:checked) + .slider .banned-text {
     transition: border-color 0.2s;
 }
 
-.form-control:focus {
+.form__control:focus {
     border: 1px solid #ffffff;
 }
 
-.form-control option {
+.form__control option {
     background-color: #191b24;
     color: #ffffff;
 }
 
-.form-textarea {
+.form__control--textarea {
     height: auto !important;
     resize: vertical;
     min-height: 100px;
@@ -585,7 +589,7 @@ input:not(:checked) + .slider .banned-text {
 }
 
 /* Form Buttons */
-.btn {
+.form__btn {
     font-size: 14px;
     font-weight: 500;
     line-height: 21px;
@@ -600,35 +604,35 @@ input:not(:checked) + .slider .banned-text {
     transition: opacity 0.2s;
 }
 
-.btn:hover {
+.form__btn:hover {
     opacity: 0.9;
 }
 
-.btn.btn-primary {
+.form__btn--primary {
     background-color: #ffd875;
     color: #191b24;
     padding: 8px 17.6px;
 }
 
-.btn.btn-secondary {
+.form__btn--secondary {
     background-color: #717182;
     color: #fff;
     padding: 8px 17.6px;
 }
 
-.action-btn-center {
+.form__actions {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.action-btn-center .btn-primary {
+.form__actions .form__btn--primary {
     width: 200px;
     max-width: 100%;
 }
 
 /* Form Validation */
-.non-same-pw {
+.form__error {
     display: none;
     font-size: 12px;
     color: #ff6b6b;
@@ -636,13 +640,13 @@ input:not(:checked) + .slider .banned-text {
 }
 
 /* USER FORM */
-.user-avatar {
+.form__user-avatar {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.user-avatar img {
+.form__user-avatar img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -650,12 +654,12 @@ input:not(:checked) + .slider .banned-text {
     object-fit: cover;
 }
 
-.user-avatar .upload-img input[type="file"] {
+.form__user-avatar .upload-img input[type="file"] {
     color: #ccc;
     font-size: 12px;
 }
 
-.user-avatar .upload-img input[type="file"]::file-selector-button {
+.form__user-avatar .upload-img input[type="file"]::file-selector-button {
     background-color: #ccc;
     color: #0F111A;
     font-size: 10px;
@@ -665,8 +669,8 @@ input:not(:checked) + .slider .banned-text {
     cursor: pointer;
 }
 
-/* MOVIE/TV SHOW FORM */
-.movie-section-top {
+/* ========== MOVIE/TV SHOW FORM ========== */
+.media-form__section--top {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 2rem;
@@ -675,20 +679,20 @@ input:not(:checked) + .slider .banned-text {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.movie-info-left {
+.media-form__info {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.movie-media-right {
+.media-form__media {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.banner-preview img,
-.poster-preview img {
+.media-form__banner img,
+.media-form__poster img {
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -697,24 +701,24 @@ input:not(:checked) + .slider .banned-text {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.banner-preview img {
+.media-form__banner img {
     aspect-ratio: 16/9;
 }
 
-.poster-preview img {
+.media-form__poster img {
     aspect-ratio: 2/3;
 }
 
-.banner-preview input[type="file"],
-.poster-preview input[type="file"] {
+.media-form__banner-input,
+.media-form__poster-input {
     width: 100%;
     color: #ccc;
     font-size: 12px;
     margin-top: 0.5rem;
 }
 
-.banner-preview input[type="file"]::file-selector-button,
-.poster-preview input[type="file"]::file-selector-button {
+.media-form__banner-input::file-selector-button,
+.media-form__poster-input::file-selector-button {
     background-color: #ffd875;
     color: #0F111A;
     font-size: 12px;
@@ -725,28 +729,28 @@ input:not(:checked) + .slider .banned-text {
     margin-right: 0.5rem;
 }
 
-.banner-preview small,
-.poster-preview small {
+.media-form__banner small,
+.media-form__poster small {
     color: #717182;
     font-size: 11px;
     display: block;
     margin-top: 0.25rem;
 }
 
-.movie-section-bottom {
+.media-form__section--bottom {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     margin-bottom: 1.5rem;
 }
 
-.movie-info-column {
+.media-form__column {
     display: flex;
     flex-direction: column;
 }
 
-/* SUB-MODAL (Seasons/Actors)  */
-.sub-modal-backdrop {
+/* ========== SUB-MODAL (Seasons/Actors) ========== */
+.sub-modal__backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -756,7 +760,7 @@ input:not(:checked) + .slider .banned-text {
     z-index: 9999;
 }
 
-.sub-modal-backdrop.hidden {
+.sub-modal__backdrop.hidden {
     display: none;
 }
 
@@ -782,7 +786,7 @@ input:not(:checked) + .slider .banned-text {
     display: none;
 }
 
-.sub-modal-header {
+.sub-modal__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -791,13 +795,13 @@ input:not(:checked) + .slider .banned-text {
     background: #0F111A;
 }
 
-.sub-modal-header h3 {
+.sub-modal__header h3 {
     margin: 0;
     font-size: 1.5rem;
     color: #fff;
 }
 
-.sub-close {
+.sub-modal__close {
     background: none;
     border: none;
     font-size: 2rem;
@@ -814,25 +818,46 @@ input:not(:checked) + .slider .banned-text {
     transition: all 0.2s;
 }
 
-.sub-close:hover {
+.sub-modal__close:hover {
     color: #fff;
     background: rgba(255, 255, 255, 0.1);
 }
 
-.sub-modal-body {
+.sub-modal__body {
     padding: 1.5rem;
     overflow-y: auto;
     flex: 1;
     background: #191B24;
 }
 
-.seasons-accordion,
-.actors-accordion {
+.sub-modal__list {
     margin-top: 1rem;
 }
 
-.season-item,
-.actor-item {
+.sub-modal__footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background: #0F111A;
+}
+
+.sub-modal__icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #ccc;
+    transition: color 0.2s;
+}
+
+.sub-modal__icon-btn:hover {
+    color: #ff4444;
+}
+
+/* ========== SEASON ITEM ========== */
+.season {
     border: 1px solid #444;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -840,8 +865,7 @@ input:not(:checked) + .slider .banned-text {
     background: #2F3346;
 }
 
-.season-header,
-.actor-header {
+.season__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -851,35 +875,21 @@ input:not(:checked) + .slider .banned-text {
     color: #fff;
 }
 
-.season-header h4,
-.actor-header h4 {
+.season__title {
     margin: 0;
     font-size: 1.1rem;
     color: #fff;
 }
 
-.btn-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    color: #ccc;
-    transition: color 0.2s;
-}
-
-.btn-icon:hover {
-    color: #ff4444;
-}
-
-.season-body,
-.actor-body {
+.season__body {
     padding: 1rem;
     background: #191B24;
     display: none;
 }
 
-.season-body input,
-.season-body textarea {
+.season__input--title,
+.season__input--episodes,
+.season__input--overview {
     width: 100%;
     margin-bottom: 0.5rem;
     padding: 0.75rem;
@@ -890,19 +900,20 @@ input:not(:checked) + .slider .banned-text {
     box-sizing: border-box;
 }
 
-.season-body input::placeholder,
-.season-body textarea::placeholder {
+.season__input--title::placeholder,
+.season__input--episodes::placeholder,
+.season__input--overview::placeholder {
     color: #999;
 }
 
-.season-poster-preview {
+.season__poster {
     display: flex;
     gap: 1rem;
     align-items: center;
     margin-bottom: 0.5rem;
 }
 
-.season-poster-img {
+.season__poster-image {
     width: 100px;
     height: 150px;
     object-fit: cover;
@@ -910,36 +921,57 @@ input:not(:checked) + .slider .banned-text {
     border: 1px solid #444;
 }
 
-.sub-modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid #444;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    background: #0F111A;
+/* ========== ACTOR ITEM ========== */
+.actor {
+    border: 1px solid #444;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    background: #2F3346;
 }
 
-/* Actor Specific Styles */
-.actor-content-wrapper {
+.actor__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #0F111A;
+    cursor: pointer;
+    color: #fff;
+}
+
+.actor__title {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.actor__body {
+    padding: 1rem;
+    background: #191B24;
+    display: none;
+}
+
+.actor__content {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-.actor-info-left {
+.actor__info {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.actor-photo-right {
+.actor__photo {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.actor-photo-preview {
+.actor__photo-wrapper {
     position: relative;
     width: 150px;
     height: 150px;
@@ -951,17 +983,17 @@ input:not(:checked) + .slider .banned-text {
     margin: 0 auto;
 }
 
-.actor-photo-preview:hover {
+.actor__photo-wrapper:hover {
     border-color: #525298;
 }
 
-.actor-photo-img {
+.actor__photo-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.actor-photo-input {
+.actor__photo-input {
     position: absolute;
     top: 0;
     left: 0;
@@ -971,8 +1003,18 @@ input:not(:checked) + .slider .banned-text {
     cursor: pointer;
 }
 
-/* RESPONSIVE */
-/* (Mobile & Tablet <= 1100px) */
+.actor__id,
+.actor__name {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #444;
+    background: #0F111A;
+    color: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* ========== RESPONSIVE ========== */
 @media only screen and (max-width: 1100px) {
     .main {
         padding: 0;
@@ -980,7 +1022,7 @@ input:not(:checked) + .slider .banned-text {
         flex-direction: column;
     }
 
-    .admin-menu-container {
+    .admin-menu {
         position: static; 
         left: auto; 
         width: 100%; 
@@ -994,8 +1036,7 @@ input:not(:checked) + .slider .banned-text {
         box-shadow: none; 
     }
 
-
-    .admin-menu-list {
+    .admin-menu__list {
         flex-direction: row; 
         justify-content: space-around; 
         width: 100%;
@@ -1003,7 +1044,7 @@ input:not(:checked) + .slider .banned-text {
         gap: 0.5rem; 
     }
 
-    .admin-menu-list li a {
+    .admin-menu__link {
         font-size: 1rem !important; 
         padding: 0.5rem 0.5rem;
         color: rgba(255, 255, 255, 0.6);
@@ -1011,194 +1052,182 @@ input:not(:checked) + .slider .banned-text {
         white-space: nowrap; 
     }
 
-    .admin-menu-list li a span,
-    .admin-menu-list li a i {
+    .admin-menu__text,
+    .admin-menu__icon {
         font-size: 16px;
     }
 
-    /* Main Content */
-    .admin-main-container {
+    .admin-content {
         width: 100%;
         margin-left: 0;
         padding: 1rem 0.7rem !important;
     }
 
-    /* Content Heading */
-    .admin-main-content .am-content-heading {
+    .admin-content__header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
 
-    .admin-main-content .am-content-heading h1 {
+    .admin-content__title {
         display: none;
     }
 
-    .admin-main-content .am-content-heading .add-btn {
+    .admin-content__add-btn {
         width: 100%;
         justify-content: center;
     }
 
-    /* Search Box */
-    .am-search-box {
+    .search-filter {
         flex-direction: column;
         align-items: stretch;
         padding: 1rem;
         gap: 0.8rem;
     }
 
-    .am-search-box .filter-bar {
+    .search-filter__filters {
         flex-direction: column;
         margin-right: 0;
         gap: 0.5rem;
     }
 
-    .am-search-box .filter-bar .filter-select {
+    .search-filter__select {
         width: 100%;
     }
 
-    /* Table */
-    .dm-table-container {
+    .data-table {
         overflow-x: auto;
     }
 
-    .dm-table {
+    .data-table__table {
         min-width: 800px;
     }
 
-    .dm-table th,
-    .dm-table td {
+    .data-table__th,
+    .data-table__td {
         padding: 10px 8px;
         font-size: 11px;
     }
 
-    .dm-table th:nth-child(2),
-    .dm-table td:nth-child(2) {
+    .data-table__th:nth-child(2),
+    .data-table__td:nth-child(2) {
         width: auto;
         min-width: 200px;
     }
 
-    .movie-title {
+    .movie-cell {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .movie-title .movie-poster img {
+    .movie-cell__image {
         width: 60px;
         height: 75px;
     }
 
-    /* Pagination */
-    .content__pagination {
+    .pagination {
         margin: 40px 0;
     }
 
-    .pagination__main {
+    .pagination__info {
         padding: 0 12px;
         font-size: 14px;
     }
 
-    .pagination-page-current {
+    .pagination__current {
         width: 50px;
     }
 
-    /* Modal */
-    .modal_dialog {
+    .modal__dialog {
         max-width: 95%;
     }
 
-    .modal_dialog--wide {
+    .modal__dialog--wide {
         max-width: 95% !important;
     }
 
-    .modal_content {
+    .modal__content {
         padding: 20px;
         min-height: auto;
     }
 
-    .content_header h1 {
+    .form__title {
         font-size: 18px;
     }
 
-    /* Movie/TV Show Form Layout */
-    .movie-section-top {
+    .media-form__section--top {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
 
-    .movie-media-right {
+    .media-form__media {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
     }
 
-    .banner-preview {
+    .media-form__banner {
         grid-column: 1 / -1;
     }
 
-    .movie-section-bottom {
+    .media-form__section--bottom {
         grid-template-columns: 1fr;
         gap: 0;
     }
 
-    .form-group {
+    .form__group {
         margin-bottom: 1rem !important;
     }
 
-    .action-btn-center .btn-primary {
+    .form__actions .form__btn--primary {
         width: 100%;
     }
 
-    /* Form Controls */
-    .form-control {
+    .form__control {
         height: 40px;
         font-size: 14px;
     }
 
-    .form-textarea {
+    .form__control--textarea {
         min-height: 80px;
     }
 
-    /* Sub-modal */
     .sub-modal {
         width: 95%;
         max-height: 90vh;
         top: 20%;
     }
     
-    .sub-modal-header h3 {
+    .sub-modal__header h3 {
         font-size: 1.25rem;
     }
     
-    .season-body {
+    .season__body {
         padding: 0.75rem;
     }
     
-    .season-poster-preview {
+    .season__poster {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .actor-photo-preview {
+    .actor__photo-wrapper {
         width: 120px;
         height: 120px;
     }
     
-    .actor-content-wrapper {
+    .actor__content {
         gap: 1rem;
     }
 }
 
 @media only screen and (max-width: 450px) {
-
-    .admin-menu-container {
+    .admin-menu {
         overflow-x: auto;
-  
     }
 
-    .admin-menu-list li a span,
-    .admin-menu-list li a i {
+    .admin-menu__text,
+    .admin-menu__icon {
         font-size: 12px;
     }
-
 }
