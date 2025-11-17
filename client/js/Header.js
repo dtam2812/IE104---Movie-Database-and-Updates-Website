@@ -1,9 +1,7 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 import { checkAndShowLoginPopup } from "./AutoLoginPopup.js";
 
-// ============================================
-// TOKEN EXPIRATION HANDLER (gộp từ file cũ)
-// ============================================
+// TOKEN EXPIRATION HANDLER 
 const CHECK_INTERVAL_MS = 10000; // 10 giây
 
 // Hàm kiểm tra token có hết hạn chưa
@@ -186,7 +184,7 @@ function checkAdminRole() {
       const payloadDecoded = jwtDecode(accessToken);
       console.log("Checking admin role:", payloadDecoded.role);  
       
-      if (payloadDecoded.role === "admin") {
+      if (payloadDecoded.role === "Admin") {
         createAdminMenu();
       } else {
         removeAdminMenu();
