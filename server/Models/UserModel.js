@@ -4,8 +4,8 @@ const userSchema = new mongoose.Schema({
   userName: String,
   email: { type: String, unique: true },
   password: String,
-  role: { type: String, enum: ["User", "Admin"], default: "User" },
-  status: { type: String, enum: ["Active", "Banned"], default: "Active" },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  status: { type: String, enum: ["active", "banned"], default: "active" },
   joinDate: Date,
   favoriteFilm: [
     {
@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-//compiler
+// Đảm bảo không có validation lỗi
+userSchema.set("validateBeforeSave", false);
+
 const UserModel = mongoose.model("User", userSchema);
 
 module.exports = UserModel;

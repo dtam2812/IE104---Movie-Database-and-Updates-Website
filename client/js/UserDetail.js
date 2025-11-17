@@ -292,6 +292,176 @@ function updateUserInfo(userData) {
   }
 }
 
+// Lấy thông tin user từ server
+async function fetchUserDetail() {
+  try {
+    const res = await fetch("http://localhost:5000/api/authUser/getUser", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Lỗi khi lấy dữ liệu");
+
+    const data = await res.json(); // ✅ khai báo const
+    console.log("User data:", data.user);
+
+    // Cập nhật thông tin lên giao diện
+    updateUserInfo({
+      name: data.user.userName,
+      email: data.user.email,
+      phone: data.user.phone,
+      birthday: data.user.birthday,
+      avatar: data.user.avatar, // nếu có
+    });
+
+    // Nếu có danh sách yêu thích
+    if (data.user.favoriteFilm) {
+      renderFavorites(data.user.favoriteFilm);
+    }
+  } catch (err) {
+    console.error("Fetch user detail error:", err);
+  }
+}
+
+// Render danh sách phim yêu thích
+// Render danh sách phim yêu thích
+function renderFavorites(favorites) {
+  const container = document.querySelector(".favorites-list");
+  if (!container) {
+    console.error("Favorites container not found");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  if (!favorites || favorites.length === 0) {
+    container.innerHTML = `
+      <div class="empty-favorites">
+        <i class="bx bx-heart"></i>
+        <p>Chưa có phim nào trong danh sách yêu thích</p>
+        <a href="../pages/HomePage.html" class="btn browse-movies-btn">Khám phá phim</a>
+      </div>
+    `;
+    return;
+  }
+
+  // Lọc các phim trùng lặp
+  const uniqueFavorites = favorites.filter(
+    (film, index, self) =>
+      index ===
+      self.findIndex(
+        (f) =>
+          f._id === film._id ||
+          f.id === film.id ||
+          (f.title === film.title && f.originalName === film.originalName)
+      )
+  );
+
+  if (uniqueFavorites.length === 0) {
+    container.innerHTML = `
+      <div class="empty-favorites">
+        <i class="bx bx-heart"></i>
+        <p>Chưa có phim nào trong danh sách yêu thích</p>
+        <a href="../pages/HomePage.html" class="btn browse-movies-btn">Khám phá phim</a>
+      </div>
+    `;
+    return;
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "favorites-grid";
+
+  uniqueFavorites.forEach((film, index) => {
+    const filmId = film.id;
+
+    const filmCard = document.createElement("div");
+    filmCard.className = "favorite-card";
+    filmCard.setAttribute("data-film-id", filmId);
+
+    if (!filmId) {
+      console.warn("Film missing ID:", film);
+      return; // Bỏ qua phim không có ID
+    }
+
+    // Tạo episode/quality badge
+    const typeBadge =
+      film.type === "TV" || film.media_type === "tv"
+        ? `<div class="favorite-card__episode-badge">TV Show</div>`
+        : `<div class="favorite-card__episode-badge">Movie</div>`;
+
+    filmCard.innerHTML = `
+  <div class="favorite-card__container">
+    <img 
+      src="${film.posterPath || "/images/default-poster.jpg"}" 
+      alt="${film.title || film.originalName || "Unknown"}" 
+      class="favorite-card__poster"
+      onerror="this.src='/images/default-poster.jpg'"
+    />
+    <div class="favorite-card__info-top">
+      ${typeBadge}
+    </div>
+  </div>
+  <div class="favorite-card__info">
+    <div class="favorite-card__vietnamese-title">
+      <span>${film.title || film.originalName || "Unknown Title"}</span>
+    </div>
+    <div class="favorite-card__original-title">
+      <span>${film.originalName || ""}</span>
+    </div>
+  </div>
+`;
+
+    // Thêm event listener để khi click vào card sẽ chuyển đến trang chi tiết
+    filmCard.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      // Đảm bảo đường dẫn đúng
+      window.location.href = `../pages/MovieDetail.html?id=${filmId}`;
+    });
+
+    grid.appendChild(filmCard);
+  });
+
+  container.appendChild(grid);
+}
+
+// Function để xóa phim khỏi danh sách yêu thích
+async function removeFromFavorites(filmId) {
+  if (
+    !confirm("Bạn có chắc chắn muốn xóa phim này khỏi danh sách yêu thích?")
+  ) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/films/${filmId}/favorite`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.ok) {
+      showToast("Đã xóa phim khỏi danh sách yêu thích");
+      // Reload lại danh sách yêu thích
+      fetchUserDetail();
+    } else {
+      throw new Error("Lỗi khi xóa phim yêu thích");
+    }
+  } catch (error) {
+    console.error("Remove from favorites error:", error);
+    showToast("Có lỗi xảy ra khi xóa phim");
+  }
+}
+
+// Gọi khi load trang
+document.addEventListener("DOMContentLoaded", fetchUserDetail);
+
 // Export functions for use in other modules
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {

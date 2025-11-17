@@ -1,4 +1,5 @@
 import { TMDB_API_KEY } from "../../config.js";
+import { favoritesManager } from "../js/Favorite.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
@@ -10,6 +11,15 @@ async function fetchMovieDetails(movieId) {
       `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=credits`
     );
     const movie = await res.json();
+
+    // Lưu thông tin phim vào currentMovie để sử dụng cho favorite
+    window.currentMovie = {
+      id: movieId,
+      title: movie.title || movie.original_title,
+      originalName: movie.original_title,
+      posterPath: movie.poster_path,
+      type: "Movie",
+    };
 
     // Ảnh poster
     document.querySelector(".movie-banner__poster img").src = movie.poster_path
@@ -55,6 +65,12 @@ async function fetchMovieDetails(movieId) {
 
     // Thông tin phim
     renderInfo(movie);
+
+    // Cập nhật trạng thái nút yêu thích
+    updateFavoriteButtonState();
+
+    // Khởi tạo event listener cho nút yêu thích
+    initFavoriteButton();
   } catch (error) {
     console.error("Lỗi khi tải chi tiết phim:", error);
   }
@@ -274,7 +290,9 @@ function initTabs() {
 
       // Bỏ active của tất cả tabs và contents
       tabs.forEach((t) => t.classList.remove("movie-tabs__item--active"));
-      tabContents.forEach((content) => content.classList.remove("movie-tabs__content--active"));
+      tabContents.forEach((content) =>
+        content.classList.remove("movie-tabs__content--active")
+      );
 
       // Thêm active cho tab được chọn
       this.classList.add("movie-tabs__item--active");
@@ -330,6 +348,80 @@ function initViewMore() {
 
       content.classList.add("actors-grid--expanded");
       this.textContent = "Thu gọn ⮝";
+    }
+  });
+}
+
+// Cập nhật trạng thái nút yêu thích
+async function updateFavoriteButtonState() {
+  const favoriteBtn = document.querySelector(
+    ".movie-banner__button--like, .favorite-btn, .favorite"
+  );
+  if (!favoriteBtn || !window.currentMovie) return;
+
+  const token =
+    localStorage.getItem("accessToken") || localStorage.getItem("token");
+  if (!token) {
+    favoriteBtn.classList.remove("active");
+    return;
+  }
+
+  try {
+    const isFavorite = await favoritesManager.checkFavoriteStatus(
+      window.currentMovie.id
+    );
+    updateFavoriteButtonAppearance(favoriteBtn, isFavorite);
+  } catch (error) {
+    console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
+  }
+}
+
+// Cập nhật giao diện nút yêu thích
+function updateFavoriteButtonAppearance(button, isFavorite) {
+  const svg = button.querySelector("svg");
+  const path = svg?.querySelector("path");
+
+  if (isFavorite) {
+    button.classList.add("active");
+    if (path) path.style.fill = "#ff4444";
+  } else {
+    button.classList.remove("active");
+    if (path) path.style.fill = "none";
+  }
+}
+
+// Khởi tạo event listener cho nút yêu thích
+function initFavoriteButton() {
+  const favoriteBtn = document.querySelector(
+    ".movie-banner__button--like, .favorite-btn, .favorite"
+  );
+  if (!favoriteBtn) return;
+
+  favoriteBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const token =
+      localStorage.getItem("accessToken") || localStorage.getItem("token");
+    if (!token || !favoritesManager.isValidToken(token)) {
+      favoritesManager.showLoginPrompt();
+      return;
+    }
+
+    if (!window.currentMovie) return;
+
+    try {
+      await favoritesManager.handleFavoriteClick(favoriteBtn, {
+        id: window.currentMovie.id.toString(),
+        type: window.currentMovie.type,
+        title: window.currentMovie.title,
+        originalName: window.currentMovie.originalName,
+        posterPath: IMG_URL + window.currentMovie.posterPath,
+      });
+
+      // Cập nhật lại trạng thái nút
+      updateFavoriteButtonState();
+    } catch (error) {
+      console.error("Lỗi khi xử lý yêu thích:", error);
     }
   });
 }

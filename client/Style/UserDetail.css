@@ -430,3 +430,280 @@ input:focus {
     font-size: 14px;
   }
 }
+
+/* UserDetail.css - Phần favorites grid */
+
+/* Favorites Section */
+.favorites-list {
+  width: 100%;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: auto;
+  gap: 20px;
+  justify-content: center;
+  align-items: start;
+  transition: max-height 0.3s ease;
+  padding: 0;
+}
+
+/* Favorite Movie Card - Áp dụng style từ movie-box */
+.favorite-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+/* Card container */
+.favorite-card__container {
+  width: 100%;
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: block;
+  background-color: var(--card-bg);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px 2px #0000001a;
+  aspect-ratio: 197/295;
+}
+
+.favorite-card__container:hover {
+  transform: translateY(-5%);
+}
+
+/* Poster Image */
+.favorite-card__poster {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+}
+
+/* Info Top (Episode/Quality badge) */
+.favorite-card__info-top {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  overflow: hidden;
+}
+
+.favorite-card__episode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3.5px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 5px;
+  backdrop-filter: blur(5px);
+}
+
+/* Movie Info */
+.favorite-card__info {
+  min-height: 42px;
+  text-align: center;
+  padding: 0 5px;
+}
+
+/* Titles */
+.favorite-card__vietnamese-title {
+  margin-bottom: 4px;
+}
+
+.favorite-card__vietnamese-title a {
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2;
+}
+
+.favorite-card__original-title {
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.favorite-card__original-title a {
+  color: #aaa;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 1;
+}
+
+/* Empty State */
+.empty-favorites {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-favorites i {
+  font-size: 64px;
+  margin-bottom: 20px;
+  color: #555;
+  display: block;
+}
+
+.empty-favorites p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.browse-movies-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: var(--primary-color, #e50914);
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.browse-movies-btn:hover {
+  background-color: var(--primary-hover, #f40612);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media only screen and (min-width: 1920px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media only screen and (max-width: 1600px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media only screen and (max-width: 980px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .favorite-card__vietnamese-title a {
+    font-size: 13px;
+  }
+
+  .favorite-card__original-title {
+    font-size: 12px;
+  }
+
+  .favorite-card__episode-badge {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 15px;
+  }
+
+  .favorite-card__vietnamese-title a {
+    font-size: 12px;
+  }
+
+  .favorite-card__original-title {
+    font-size: 11px;
+  }
+
+  .favorite-card__episode-badge {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .favorite-card__info {
+    min-height: 38px;
+  }
+}
+
+@media only screen and (max-width: 510px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .favorite-card__vietnamese-title a {
+    font-size: 11px;
+  }
+
+  .favorite-card__original-title {
+    font-size: 10px;
+  }
+
+  .favorite-card__episode-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+
+  .favorite-card__info {
+    min-height: 38px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .favorite-card__vietnamese-title a {
+    font-size: 10px;
+  }
+
+  .favorite-card__original-title {
+    font-size: 9px;
+  }
+}

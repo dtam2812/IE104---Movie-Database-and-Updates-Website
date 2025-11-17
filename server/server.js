@@ -6,6 +6,7 @@ const connectDB = require("./Service/ConnectDBService");
 const userRoute = require("./Router/UserRoute");
 const userAdminRoute = require("./Router/UserAdminRoute");
 const authRoute = require("./Router/AuthRoute");
+const favoritesRouter = require("./Router/FavoriteRoute");
 
 //middleware su dung cors
 app.use(cors());
@@ -20,6 +21,7 @@ connectDB();
 app.use("/auth/admin", userAdminRoute);
 app.use("/api/authUser", userRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/favorites", favoritesRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on port ${process.env.PORT}`);
