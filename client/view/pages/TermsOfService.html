@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="../../Services/reset.css" />
   </head>
   <body>
-    <!-- start-header -->
+    <!-- Header -->
     <div id="header"></div>
 
     <script type="module">
@@ -45,16 +45,15 @@
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
-    <!-- end-header -->
 
     <main>
-      <section class="legal_section">
-        <div class="legal_container">
-          <div class="row_heading">
-            <h1>Điều Khoản Sử Dụng &dash; UIT FILM</h1>
+      <section class="legal">
+        <div class="legal__container">
+          <div class="legal__heading">
+            <h1 class="legal__title">Điều Khoản Sử Dụng &dash; UIT FILM</h1>
           </div>
-          <div class="row_content">
-            <p>
+          <div class="legal__content">
+            <p class="legal__text">
               Chào mừng bạn đến với UIT FILM &dash; Phim hay cả rổ, nền tảng xem
               phim trực tuyến miễn phí hàng đầu. Để đảm bảo trải nghiệm tốt nhất
               cho tất cả người dùng, UIT FILM xây dựng và duy trì các điều khoản
@@ -63,93 +62,97 @@
               hiểu rõ quyền và nghĩa vụ của bạn.
             </p>
             <p>&nbsp;</p>
-            <h2>1. Chấp Nhận Điều Khoản Sử Dụng</h2>
-            <p>
+            <h2 class="legal__subtitle">1. Chấp Nhận Điều Khoản Sử Dụng</h2>
+            <p class="legal__text">
               Khi sử dụng dịch vụ của UIT FILM, bạn chấp nhận rằng. Bạn đã đọc,
               hiểu và đồng ý với các điều khoản sử dụng này. Nếu bạn không đồng
               ý với bất kỳ điều khoản nào, vui lòng không tiếp tục truy cập hoặc
               sử dụng UIT FILM.
             </p>
             <p>&nbsp;</p>
-            <h2>2. Đăng Ký Tài Khoản</h2>
-            <p>Khi đăng ký tài khoản tại UIT FILM, bạn cam kết:</p>
-            <ul>
-              <li>Cung cấp thông tin chính xác, đầy đủ và luôn cập nhật.</li>
-              <li>
+            <h2 class="legal__subtitle">2. Đăng Ký Tài Khoản</h2>
+            <p class="legal__text">
+              Khi đăng ký tài khoản tại UIT FILM, bạn cam kết:
+            </p>
+            <ul class="legal__list">
+              <li class="legal__list-item">
+                Cung cấp thông tin chính xác, đầy đủ và luôn cập nhật.
+              </li>
+              <li class="legal__list-item">
                 Bảo mật thông tin đăng nhập của mình. UIT FILM không chịu trách
                 nhiệm cho bất kỳ mất mát hoặc thiệt hại nào liên quan đến việc
                 tiết lộ thông tin tài khoản.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Không sử dụng tài khoản của mình để thực hiện các hành vi vi
                 phạm pháp luật hoặc gây tổn hại cho UIT FILM và người dùng khác.
               </li>
             </ul>
             <p>&nbsp;</p>
-            <h2>3. Hành Vi Bị Cấm</h2>
-            <p>Khi sử dụng UIT FILM, bạn đồng ý không:</p>
-            <ul>
-              <li>
+            <h2 class="legal__subtitle">3. Hành Vi Bị Cấm</h2>
+            <p class="legal__text">Khi sử dụng UIT FILM, bạn đồng ý không:</p>
+            <ul class="legal__list">
+              <li class="legal__list-item">
                 Đăng tải, chia sẻ hoặc phát tán bất kỳ nội dung nào vi phạm
                 quyền sở hữu trí tuệ, pháp luật hoặc quyền riêng tư của người
                 khác.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Thực hiện các hành vi gây hại cho hệ thống, cố gắng truy cập
                 trái phép vào máy chủ hoặc tài khoản của người dùng khác.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Sử dụng UIT FILM với mục đích thương mại mà không có sự đồng ý
                 bằng văn bản từ chúng tôi.
               </li>
             </ul>
-            <h2>4. Bảo Mật Thông Tin</h2>
-            <p>
+            <h2 class="legal__subtitle">4. Bảo Mật Thông Tin</h2>
+            <p class="legal__text">
               UIT FILM cam kết bảo vệ thông tin cá nhân của bạn. Vui lòng tham
               khảo
-              <a href="../../view/pages/PrivacyPolicy.html"
-                ><b>Chính Sách Riêng Tư </b></a
+              <a class="legal__link" href="../../view/pages/PrivacyPolicy.html"
+                ><b class="legal__text--bold">Chính Sách Riêng Tư </b></a
               >
               của chúng tôi để hiểu rõ cách chúng tôi thu thập, sử dụng và bảo
               mật thông tin cá nhân của bạn.
             </p>
             <p>&nbsp;</p>
-            <h2>5. Quyền Thay Đổi Dịch Vụ</h2>
-            <p>UIT FILM có quyền:</p>
-            <ul>
-              <li>
+            <h2 class="legal__subtitle">5. Quyền Thay Đổi Dịch Vụ</h2>
+            <p class="legal__text">UIT FILM có quyền:</p>
+            <ul class="legal__list">
+              <li class="legal__list-item">
                 Thay đổi, cập nhật hoặc ngừng cung cấp bất kỳ nội dung hoặc dịch
                 vụ nào trên nền tảng mà không cần thông báo trước.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Xóa bỏ hoặc tạm ngừng tài khoản của bạn nếu phát hiện hành vi vi
                 phạm các điều khoản sử dụng hoặc các quy định pháp luật có liên
                 quan.
               </li>
             </ul>
             <p>&nbsp;</p>
-            <h2>6. Miễn Trừ Trách Nhiệm</h2>
-            <p>
+            <h2 class="legal__subtitle">6. Miễn Trừ Trách Nhiệm</h2>
+            <p class="legal__text">
               UIT FILM cam kết nỗ lực cung cấp dịch vụ với chất lượng tốt nhất,
               nhưng chúng tôi không chịu trách nhiệm về:
             </p>
-            <ul>
-              <li>
+            <ul class="legal__list">
+              <li class="legal__list-item">
                 Bất kỳ gián đoạn nào trong quá trình truy cập hoặc sự cố kỹ
                 thuật.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Nội dung do bên thứ ba cung cấp hoặc bất kỳ lỗi hay mất mát nào
                 do sử dụng nội dung trên UIT FILM.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Các thiệt hại gián tiếp, ngẫu nhiên hoặc hậu quả phát sinh từ
                 việc sử dụng hoặc không thể sử dụng dịch vụ của chúng tôi.
               </li>
             </ul>
             <p>&nbsp;</p>
-            <h2>7. Thay Đổi Điều Khoản Sử Dụng</h2>
-            <p>
+            <h2 class="legal__subtitle">7. Thay Đổi Điều Khoản Sử Dụng</h2>
+            <p class="legal__text">
               Chúng tôi có thể cập nhật điều khoản sử dụng theo thời gian để phù
               hợp với các thay đổi trong hoạt động và dịch vụ. Khi điều khoản
               thay đổi, chúng tôi sẽ đăng tải bản cập nhật lên trang web và gửi
@@ -158,18 +161,20 @@
               với các điều khoản mới.
             </p>
             <p>&nbsp;</p>
-            <h2>Liên Hệ</h2>
-            <p>
+            <h2 class="legal__subtitle">Liên Hệ</h2>
+            <p class="legal__text">
               Nếu bạn có bất kỳ câu hỏi hoặc thắc mắc nào liên quan đến các điều
               khoản sử dụng, vui lòng liên hệ với chúng tôi qua email:
-              <a href="mailto:23521749@gm.uit.edu.vn">lienhe@uitfilm.com</a>.
+              <a class="legal__link" href="mailto:23521749@gm.uit.edu.vn"
+                >lienhe@uitfilm.com</a
+              >.
             </p>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Start footer -->
+    <!-- Footer -->
     <footer id="footer"></footer>
 
     <script type="module">
@@ -182,6 +187,5 @@
           console.error("Fetch footer failed:", error);
         });
     </script>
-    <!-- End footer -->
   </body>
 </html>

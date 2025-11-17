@@ -3,7 +3,7 @@ import { TMDB_API_KEY } from "../../config.js";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
 
-// ========== HÀM CHÍNH ========== //
+// Main function
 async function fetchTvDetails(tvId) {
   try {
     const res = await fetch(
@@ -12,76 +12,74 @@ async function fetchTvDetails(tvId) {
     const tv = await res.json();
     console.log(tv);
 
-    // --- Ảnh poster ---
-    document.querySelector(".movie-content-left img").src = tv.poster_path
+    // Poster image
+    document.querySelector(".detail__poster img").src = tv.poster_path
       ? `${IMG_URL}${tv.poster_path}`
       : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
-    // --- Tiêu đề ---
-    document.querySelector(".movie-content-title h3").textContent =
+    // Title
+    document.querySelector(".detail__title h3").textContent =
       tv.name || tv.original_name || "Không rõ";
 
-    // --- Giới thiệu ---
-    document.querySelector(".movie-content-overview").innerHTML = `
+    // Overview
+    document.querySelector(".detail__overview").innerHTML = `
         <span>Giới thiệu:</span><br>${tv.overview || "Không có mô tả"}
       `;
 
-    // --- Điểm IMDb ---
-    document.querySelector(".movie-content-score span").textContent =
+    // IMDb score
+    document.querySelector(".detail__score span").textContent =
       tv.vote_average?.toFixed(1) || "N/A";
 
-    // --- Giới hạn độ tuổi (Content Rating) ---
+    // Content rating (age restriction)
     const contentRatings = tv.content_ratings?.results || [];
-    // Ưu tiên: US > GB > quốc gia đầu tiên
+    // Priority: US > GB > first country
     const rating =
       contentRatings.find((r) => r.iso_3166_1 === "US") ||
       contentRatings.find((r) => r.iso_3166_1 === "GB") ||
       contentRatings[0];
 
-    const ageRatingElement = document.querySelector(
-      ".movie-content-age span strong"
-    );
+    const ageRatingElement = document.querySelector(".detail__age span strong");
     if (ageRatingElement && rating) {
       ageRatingElement.textContent = rating.rating;
     } else if (ageRatingElement) {
       ageRatingElement.textContent = "N/A";
     }
 
-    // --- Thể loại ---
-    document.querySelector(".movie-content-type").innerHTML =
+    // Genres
+    document.querySelector(".detail__genres").innerHTML =
       tv.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
       "<span>Không rõ</span>";
 
-    // --- Nhà sản xuất chính ---
-    document.querySelector(".movie-content-director p").innerHTML = `
+    // Main producer
+    document.querySelector(".detail__director p").innerHTML = `
         <span>Nhà sản xuất:</span> ${tv.created_by?.[0]?.name || "Không rõ"}
       `;
 
-    // --- Ảnh nền ---
-    const bg = document.querySelector(".background-fade");
+    // Background image
+    const bg = document.querySelector(".detail__background");
     bg.style.backgroundImage = tv.backdrop_path
       ? `url(https://image.tmdb.org/t/p/original${tv.backdrop_path})`
       : "none";
     bg.style.backgroundSize = "cover";
     bg.style.backgroundPosition = "center";
 
-    // --- Diễn viên ---
+    // Actors
     renderActors(tv.credits?.cast || []);
 
-    // --- Thông tin phim ---
+    // Info
     renderInfo(tv);
 
-    // --- Các mùa phim ---
+    // Seasons
     renderSeasons(tv.seasons);
 
-    // --- Nhà sản xuất ---
+    // Producers
     renderProducers(tv.production_companies);
   } catch (error) {
     console.error("Lỗi khi tải chi tiết TV Show:", error);
   }
 }
 
-// ========== TẠO HTML CHO 1 DIỄN VIÊN ========== //
+// Create HTML for one actor
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -90,14 +88,14 @@ function createActorHTML(actor) {
       )}&size=300&background=1a1a2e&color=0891b2`;
 
   return `
-    <div class="cast-box">
-      <a class="cast-card" href="CastDetail.html?id=${actor.id}">
+    <div class="cast-box actor">
+      <a class="cast-card actor__link" href="CastDetail.html?id=${actor.id}">
         <div class="cast-img">
-          <img src="${img}" alt="${actor.name}" />
+          <img class="actor__img" src="${img}" alt="${actor.name}" />
         </div>
       </a>
       <div class="info">
-        <h4 class="name">
+        <h4 class="name actor__name">
           <a href="CastDetail.html?id=${actor.id}">${actor.name}</a>
         </h4>
         <h4 class="other-name">
@@ -107,7 +105,7 @@ function createActorHTML(actor) {
     </div>`;
 }
 
-// ========== TẠO HTML CHO 1 MÙA PHIM ========== //
+// Create HTML for one season
 function createSeasonHTML(season) {
   const poster = season.poster_path
     ? `${IMG_URL}${season.poster_path}`
@@ -116,13 +114,15 @@ function createSeasonHTML(season) {
   const rating = season.vote_average || null;
 
   return `
-    <div class="season-box">
-      <img src="${poster}" alt="${season.name}">
-      <div class="season-info">
-        <h4>${season.name}</h4>
+    <div class="season">
+      <img class="season__poster" src="${poster}" alt="${season.name}">
+      <div class="season__info">
+        <h4 class="season__name">${season.name}</h4>
         ${
           rating
-            ? `<p class="imdb-badge">IMDb <span>${rating.toFixed(1)}</span></p>`
+            ? `<p class="season__badge">IMDb <span>${rating.toFixed(
+                1
+              )}</span></p>`
             : ""
         }
         <p><strong>Ngày phát sóng:</strong> ${season.air_date || "N/A"}</p>
@@ -133,13 +133,13 @@ function createSeasonHTML(season) {
   `;
 }
 
-// ========== RENDER CÁC PHẦN ========== //
+// Render sections
 function renderActors(actors) {
-  const actorContainer = document.querySelector("#actors .circle-actor");
-  const viewMoreBtn = document.querySelector("#actors .view-more");
+  const actorContainer = document.querySelector("#actors .actors");
+  const viewMoreBtn = document.querySelector("#actors .tab-panel__more");
 
   if (!actorContainer) {
-    console.error("Không tìm thấy .circle-actor container");
+    console.error("Không tìm thấy .actors container");
     return;
   }
 
@@ -151,17 +151,17 @@ function renderActors(actors) {
     return;
   }
 
-  // Lưu toàn bộ danh sách diễn viên vào data attribute
+  // Store all actors in data attribute
   actorContainer.dataset.allActors = JSON.stringify(actors);
 
-  // Hiển thị 5 diễn viên đầu tiên
+  // Show first 5 actors
   const actorsToShow = actors.slice(0, 5);
 
   actorsToShow.forEach((actor) => {
     actorContainer.insertAdjacentHTML("beforeend", createActorHTML(actor));
   });
 
-  // Ẩn nút "Xem thêm" nếu có 5 diễn viên hoặc ít hơn
+  // Hide "View more" button if 5 or fewer actors
   if (viewMoreBtn) {
     if (actors.length <= 5) {
       viewMoreBtn.style.display = "none";
@@ -173,27 +173,27 @@ function renderActors(actors) {
 }
 
 function renderInfo(tv) {
-  const infoGrid = document.querySelector("#info .info-grid");
+  const infoGrid = document.querySelector("#info .tab-panel--info");
 
   if (!infoGrid) {
-    console.error("Không tìm thấy .info-grid container");
+    console.error("Không tìm thấy .tab-panel--info container");
     return;
   }
   const firstAirDate = new Date(tv.first_air_date);
 
   infoGrid.innerHTML = `
-      <h3>Thông tin phim</h3>
-      <div class="movie-info">
-        <div class="movie-info-title">Số mùa:</div>
-        <div class="movie-info-value">${tv.number_of_seasons || "N/A"}</div>
+      <h3 class="tab-panel__title">Thông tin phim</h3>
+      <div class="info-item">
+        <div class="info-item__label">Số mùa:</div>
+        <div class="info-item__value">${tv.number_of_seasons || "N/A"}</div>
       </div>
-      <div class="movie-info">
-        <div class="movie-info-title">Tổng số tập:</div>
-        <div class="movie-info-value">${tv.number_of_episodes || "N/A"}</div>
+      <div class="info-item">
+        <div class="info-item__label">Tổng số tập:</div>
+        <div class="info-item__value">${tv.number_of_episodes || "N/A"}</div>
       </div>
-      <div class="movie-info">
-        <div class="movie-info-title">Quốc gia:</div>
-        <div class="movie-info-value">${
+      <div class="info-item">
+        <div class="info-item__label">Quốc gia:</div>
+        <div class="info-item__value">${
           tv.production_countries?.[0]?.iso_3166_1
             ? `<img src="https://flagcdn.com/48x36/${tv.production_countries[0].iso_3166_1.toLowerCase()}.png" 
                   alt="${tv.production_countries[0].name}" 
@@ -201,13 +201,13 @@ function renderInfo(tv) {
             : "Không rõ"
         }</div>
       </div>
-      <div class="movie-info">
-        <div class="movie-info-title">Trạng thái:</div>
-        <div class="movie-info-value">${tv.status || "Không rõ"}</div>
+      <div class="info-item">
+        <div class="info-item__label">Trạng thái:</div>
+        <div class="info-item__value">${tv.status || "Không rõ"}</div>
       </div>
-      <div class="movie-info">
-        <div class="movie-info-title">Ngày ra mắt:</div>
-        <div class="movie-info-value">${
+      <div class="info-item">
+        <div class="info-item__label">Ngày ra mắt:</div>
+        <div class="info-item__value">${
           firstAirDate.toLocaleDateString("vi-VN") || "N/A"
         }</div>
       </div>
@@ -217,11 +217,11 @@ function renderInfo(tv) {
 }
 
 function renderSeasons(seasons) {
-  const container = document.querySelector("#seasons .season-list");
+  const container = document.querySelector("#seasons .seasons");
   const viewMoreBtn = document.getElementById("season-view-more");
 
   if (!container) {
-    console.error("Không tìm thấy .season-list container");
+    console.error("Không tìm thấy .seasons container");
     return;
   }
 
@@ -241,16 +241,16 @@ function renderSeasons(seasons) {
     return;
   }
 
-  // Lưu toàn bộ danh sách mùa phim vào data attribute
+  // Store all seasons in data attribute
   container.dataset.allSeasons = JSON.stringify(validSeasons);
-  // Hiển thị 3 mùa đầu tiên
+  // Show first 3 seasons
   const seasonsToShow = validSeasons.slice(0, 3);
 
   seasonsToShow.forEach((season) => {
     container.insertAdjacentHTML("beforeend", createSeasonHTML(season));
   });
 
-  // Ẩn nút "Xem thêm" nếu có 2 mùa hoặc ít hơn
+  // Hide "View more" button if 3 or fewer seasons
   if (viewMoreBtn) {
     if (validSeasons.length <= 3) {
       viewMoreBtn.style.display = "none";
@@ -262,10 +262,10 @@ function renderSeasons(seasons) {
 }
 
 function renderProducers(producers) {
-  const container = document.querySelector("#producers .producer-info");
+  const container = document.querySelector("#producers .producers");
 
   if (!container) {
-    console.error("Không tìm thấy .producer-info container");
+    console.error("Không tìm thấy .producers container");
     return;
   }
 
@@ -282,22 +282,22 @@ function renderProducers(producers) {
     if (logo) {
       container.insertAdjacentHTML(
         "beforeend",
-        `<div class="producer-item">
-            <img src="${logo}" alt="${company.name}" title="${company.name}" />
+        `<div class="producer">
+            <img class="producer__logo" src="${logo}" alt="${company.name}" title="${company.name}" />
           </div>`
       );
     } else {
       container.insertAdjacentHTML(
         "beforeend",
-        `<div class="producer-item">
-            <p><strong>${company.name}</strong></p>
+        `<div class="producer">
+            <p class="producer__name"><strong>${company.name}</strong></p>
           </div>`
       );
     }
   });
 }
 
-// ========== ĐỀ XUẤT TV SHOWS ========== //
+// Recommended TV Shows
 async function loadRecommendedTvShows(tvId) {
   const container = document.getElementById("recommendations");
 
@@ -368,32 +368,34 @@ async function loadRecommendedTvShows(tvId) {
   }
 }
 
-// ========== CHUYỂN TAB ========== //
+// Tab switching
 function initTabs() {
-  const tabs = document.querySelectorAll(".tab");
-  const tabContents = document.querySelectorAll(".tab-content");
+  const tabs = document.querySelectorAll(".tabs__btn");
+  const tabContents = document.querySelectorAll(".tabs__content");
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", function () {
       const targetTab = this.getAttribute("data-tab");
 
-      // Bỏ active của tất cả tabs và contents
-      tabs.forEach((t) => t.classList.remove("active"));
-      tabContents.forEach((content) => content.classList.remove("active"));
+      // Remove active from all tabs and contents
+      tabs.forEach((t) => t.classList.remove("tabs__btn--active"));
+      tabContents.forEach((content) =>
+        content.classList.remove("tabs__content--active")
+      );
 
-      // Thêm active cho tab được chọn
-      this.classList.add("active");
+      // Add active to selected tab
+      this.classList.add("tabs__btn--active");
 
-      // Thêm active cho content tương ứng
+      // Add active to corresponding content
       const targetContent = document.getElementById(targetTab);
       if (targetContent) {
-        targetContent.classList.add("active");
+        targetContent.classList.add("tabs__content--active");
       }
     });
   });
 }
 
-// ========== XEM THÊM (DIỄN VIÊN & MÙA PHIM) ========== //
+// View more (actors & seasons)
 function initViewMore(buttonSelector, contentSelector) {
   const viewMoreBtn = document.querySelector(buttonSelector);
   const content = document.querySelector(contentSelector);
@@ -405,9 +407,9 @@ function initViewMore(buttonSelector, contentSelector) {
 
     const isExpanded = content.classList.contains("expanded");
 
-    // Kiểm tra loại nội dung (diễn viên hoặc mùa phim)
-    const isActorSection = content.classList.contains("circle-actor");
-    const isSeasonSection = content.classList.contains("season-list");
+    // Check content type (actors or seasons)
+    const isActorSection = content.classList.contains("actors");
+    const isSeasonSection = content.classList.contains("seasons");
 
     if (isExpanded) {
       if (isActorSection) {
@@ -438,13 +440,13 @@ function initViewMore(buttonSelector, contentSelector) {
 
       content.classList.remove("expanded");
 
-      // Cuộn lên đầu section
-      const parentSection = content.closest(".grid-layout");
+      // Scroll to top of section
+      const parentSection = content.closest(".tab-panel");
       if (parentSection) {
         parentSection.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     } else {
-      // ====== MỞ RỘNG ======
+      // Expand
       if (isActorSection) {
         const allActors = JSON.parse(content.dataset.allActors || "[]");
         content.innerHTML = "";
@@ -465,13 +467,13 @@ function initViewMore(buttonSelector, contentSelector) {
   });
 }
 
-// ========== KHỞI CHẠY ========== //
+// Initialize
 document.addEventListener("DOMContentLoaded", () => {
   const tvId = new URLSearchParams(window.location.search).get("id") || 2382;
 
   fetchTvDetails(tvId);
   loadRecommendedTvShows(tvId);
   initTabs();
-  initViewMore("#actors .view-more", "#actors .circle-actor");
-  initViewMore("#season-view-more", "#seasons .season-list");
+  initViewMore("#actors .tab-panel__more", "#actors .actors");
+  initViewMore("#season-view-more", "#seasons .seasons");
 });

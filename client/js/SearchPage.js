@@ -4,9 +4,9 @@ const params = new URLSearchParams(window.location.search);
 const query = params.get("query") || "";
 document.getElementById("query-text").textContent = query;
 
-const grid = document.getElementById("results-grid"); // id không đổi
-const pagination = document.getElementById("pagination"); // id không đổi
-const filterButtons = document.querySelectorAll(".search-page__filter-btn");
+const grid = document.getElementById("results-grid");
+const pagination = document.getElementById("pagination");
+const filterButtons = document.querySelectorAll(".searchPage__filterBtn");
 
 let currentFilter = "all";
 let allResults = [];
@@ -16,7 +16,6 @@ let movieCardTemplate = "";
 let tvCardTemplate = "";
 let castCardTemplate = "";
 
-// Nạp template card
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
   fetch("../components/TvShowCardRender.html").then((r) => r.text()),
@@ -30,9 +29,8 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được component:", err));
 
-// Hàm load dữ liệu từ TMDB
 async function loadResults(type = "all") {
-  grid.innerHTML = "<p class='search-page__placeholder'>Đang tải...</p>";
+  grid.innerHTML = `<p class="searchPage__placeholder">Đang tải...</p>`;
   const currentPage = currentPages[type];
 
   try {
@@ -94,48 +92,45 @@ async function loadResults(type = "all") {
 
     allResults = results.slice(0, 18);
     renderResults();
-    renderPaginationModern(currentPage, totalPages, type);
+    renderPagination(currentPage, totalPages, type);
   } catch (err) {
     console.error(err);
-    grid.innerHTML = "<p class='search-page__placeholder'>Lỗi tải dữ liệu.</p>";
+    grid.innerHTML = `<p class="searchPage__placeholder">Lỗi tải dữ liệu.</p>`;
   }
 }
 
-// Xử lý click tab
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) =>
-      b.classList.remove("search-page__filter-btn--active")
+      b.classList.remove("searchPage__filterBtn--active")
     );
-    btn.classList.add("search-page__filter-btn--active");
+    btn.classList.add("searchPage__filterBtn--active");
+
     currentFilter = btn.dataset.type;
     currentPages[currentFilter] = 1;
     loadResults(currentFilter);
   });
 });
 
-// Render kết quả
 function renderResults() {
   grid.innerHTML = "";
 
   if (!allResults.length) {
-    grid.innerHTML =
-      "<p class='search-page__placeholder'>Không tìm thấy kết quả.</p>";
+    grid.innerHTML = `<p class="searchPage__placeholder">Không tìm thấy kết quả.</p>`;
     return;
   }
 
   allResults.forEach((item) => {
     if (item.media_type === "movie") renderMovieCard(item);
     else if (item.media_type === "tv") renderTvCard(item);
-    else if (item.media_type === "person") renderPersonCard(item);
+    else if (item.media_type === "person") renderCastCard(item);
   });
 }
 
-// Render card
 function renderMovieCard(item) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-    : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
+    : "https://placehold.co/300x450?text=No+Poster";
 
   const html = movieCardTemplate
     .replace(/{{id}}/g, item.id)
@@ -149,7 +144,7 @@ function renderMovieCard(item) {
 function renderTvCard(item) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-    : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
+    : "https://placehold.co/300x450?text=No+Poster";
 
   const html = tvCardTemplate
     .replace(/{{id}}/g, item.id)
@@ -160,65 +155,59 @@ function renderTvCard(item) {
   grid.insertAdjacentHTML("beforeend", html);
 }
 
-function renderPersonCard(item) {
-  const profilePath = item.profile_path
+function renderCastCard(item) {
+  const profile = item.profile_path
     ? `https://image.tmdb.org/t/p/w300${item.profile_path}`
-    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        item.name || "Unknown"
-      )}&size=300&background=1a1a2e&color=0891b2`;
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}`;
 
   const html = castCardTemplate
     .replace(/{{id}}/g, item.id)
-    .replace(/{{profile_path}}/g, profilePath)
+    .replace(/{{profile_path}}/g, profile)
     .replace(/{{name}}/g, item.name || "Không rõ")
     .replace(/{{original_name}}/g, item.original_name || "");
 
   grid.insertAdjacentHTML("beforeend", html);
 }
 
-// Modern Pagination
-function renderPaginationModern(page, total, type) {
-  const oldPagination = document.querySelector(".pagination-modern");
-  if (oldPagination) oldPagination.remove();
+function renderPagination(page, total, type) {
+  const old = document.querySelector(".paginationModern");
+  if (old) old.remove();
 
   if (total <= 1) return;
 
-  const container = document.createElement("div");
-  container.classList.add("pagination-modern");
+  const wrapper = document.createElement("div");
+  wrapper.className = "paginationModern";
 
-  const prevBtn = document.createElement("button");
-  prevBtn.classList.add("page-circle");
-  prevBtn.innerHTML = "&#8592;";
-  prevBtn.disabled = page === 1;
-  prevBtn.addEventListener("click", () => {
+  const prev = document.createElement("button");
+  prev.className = "pageCircle";
+  prev.innerHTML = "&#8592;";
+  prev.disabled = page === 1;
+
+  prev.onclick = () => {
     if (currentPages[type] > 1) {
       currentPages[type]--;
       loadResults(type);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  });
+  };
 
-  const pageBox = document.createElement("div");
-  pageBox.classList.add("page-info-box");
-  pageBox.innerHTML = `
-    <span class="page-text">Trang</span>
-    <span class="page-current">${page}</span>
-    <span class="page-divider">/</span>
-    <span class="page-total">${total}</span>
-  `;
+  const info = document.createElement("div");
+  info.className = "pageInfo";
+  info.textContent = `Trang ${page} / ${total}`;
 
-  const nextBtn = document.createElement("button");
-  nextBtn.classList.add("page-circle");
-  nextBtn.innerHTML = "&#8594;";
-  nextBtn.disabled = page === total;
-  nextBtn.addEventListener("click", () => {
+  const next = document.createElement("button");
+  next.className = "pageCircle";
+  next.innerHTML = "&#8594;";
+  next.disabled = page === total;
+
+  next.onclick = () => {
     if (currentPages[type] < total) {
       currentPages[type]++;
       loadResults(type);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  });
+  };
 
-  container.append(prevBtn, pageBox, nextBtn);
-  pagination.after(container);
+  wrapper.append(prev, info, next);
+  pagination.after(wrapper);
 }

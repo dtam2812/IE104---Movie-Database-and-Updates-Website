@@ -1,8 +1,8 @@
 import { TMDB_API_KEY } from "../../config.js";
 
 export function searchBar() {
-  const input = document.querySelector(".search-input");
-  const dropdown = document.querySelector(".search-dropdown");
+  const input = document.querySelector(".search__input");
+  const dropdown = document.querySelector(".search__dropdown");
   let timer;
 
   async function fetchResults(query) {
@@ -54,7 +54,7 @@ export function searchBar() {
 
     if (!query) {
       dropdown.innerHTML = "";
-      dropdown.classList.remove("active");
+      dropdown.classList.remove("search__dropdown--active");
       return;
     }
 
@@ -81,13 +81,14 @@ export function searchBar() {
 
   function renderResults(results) {
     dropdown.innerHTML = "";
-    if (!results.length) return dropdown.classList.remove("active");
-    dropdown.classList.add("active");
+    if (!results.length)
+      return dropdown.classList.remove("search__dropdown--active");
+    dropdown.classList.add("search__dropdown--active");
 
     results.forEach((item) => {
       if (!(item.poster_path || item.profile_path)) return;
       const card = document.createElement("div");
-      card.classList.add("result-item");
+      card.classList.add("search__result");
 
       const img =
         item.poster_path || item.profile_path
@@ -111,14 +112,21 @@ export function searchBar() {
           ? `TV Series • ${year}`
           : "Diễn viên";
 
-      card.innerHTML = `<img src="${img}" alt="${title}"><div class="result-info"><div class="result-title">${title}</div>${
-        original && original !== title
-          ? `<div class="result-subtitle">${original}</div>`
-          : ""
-      }<div class="result-meta">${type}</div></div>`;
+      card.innerHTML = `
+        <img class="search__result-img" src="${img}" alt="${title}">
+        <div class="search__result-info">
+          <div class="search__result-title">${title}</div>
+          ${
+            original && original !== title
+              ? `<div class="search__result-subtitle">${original}</div>`
+              : ""
+          }
+          <div class="search__result-meta">${type}</div>
+        </div>
+      `;
 
       card.addEventListener("click", () => {
-        dropdown.classList.remove("active");
+        dropdown.classList.remove("search__dropdown--active");
         if (item.media_type === "movie")
           window.location.href = `/client/view/pages/MovieDetail.html?id=${item.id}`;
         else if (item.media_type === "tv")
@@ -132,6 +140,7 @@ export function searchBar() {
   }
 
   document.addEventListener("click", (e) => {
-    if (!e.target.closest(".search-box")) dropdown.classList.remove("active");
+    if (!e.target.closest(".search"))
+      dropdown.classList.remove("search__dropdown--active");
   });
 }

@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="../../Services/reset.css" />
   </head>
   <body>
-    <!-- start-header -->
+    <!-- Header -->
     <div id="header"></div>
 
     <script type="module">
@@ -45,16 +45,17 @@
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
-    <!-- end-header -->
 
     <main>
-      <section class="legal_section">
-        <div class="legal_container">
-          <div class="row_heading">
-            <h1>Bảo Mật &dash; Chính Sách Riêng Tư của UIT FILM</h1>
+      <section class="legal">
+        <div class="legal__container">
+          <div class="legal__heading">
+            <h1 class="legal__title">
+              Bảo Mật &dash; Chính Sách Riêng Tư của UIT FILM
+            </h1>
           </div>
-          <div class="row_content">
-            <p>
+          <div class="legal__content">
+            <p class="legal__text">
               Tại UIT FILM, chúng tôi cam kết bảo vệ quyền riêng tư và thông tin
               cá nhân của bạn khi bạn truy cập và sử dụng trang web của chúng
               tôi. Chính sách này cung cấp chi tiết về cách chúng tôi thu thập,
@@ -62,68 +63,74 @@
               việc quản lý dữ liệu cá nhân của người dùng.
             </p>
             <p>&nbsp;</p>
-            <h2>Thông Tin Chúng Tôi Thu Thập</h2>
-            <p>
+            <h2 class="legal__subtitle">Thông Tin Chúng Tôi Thu Thập</h2>
+            <p class="legal__text">
               Để cung cấp và cải thiện dịch vụ, UIT FILM thu thập thông tin từ
               người dùng thông qua nhiều hình thức, bao gồm:
             </p>
-            <p>
-              <strong>Thông Tin Cá Nhân:</strong> Khi bạn đăng ký tài khoản,
-              nhận bản tin, hoặc liên hệ với chúng tôi, chúng tôi có thể thu
-              thập các thông tin như tên, địa chỉ email, số điện thoại và các
-              thông tin khác mà bạn cung cấp.
+            <p class="legal__text">
+              <b class="legal__text--bold">Thông Tin Cá Nhân:</b> Khi bạn đăng
+              ký tài khoản, nhận bản tin, hoặc liên hệ với chúng tôi, chúng tôi
+              có thể thu thập các thông tin như tên, địa chỉ email, số điện
+              thoại và các thông tin khác mà bạn cung cấp.
             </p>
             <p>&nbsp;</p>
-            <h2>Mục Đích Sử Dụng Thông Tin</h2>
-            <p>Thông tin được thu thập được sử dụng để:</p>
-            <ul>
-              <li>
-                <b>Cung Cấp Dịch Vụ:</b> Sử dụng thông tin để cung cấp và duy
-                trì các dịch vụ của UIT FILM, xử lý các yêu cầu và nâng cao trải
-                nghiệm người dùng.
+            <h2 class="legal__subtitle">Mục Đích Sử Dụng Thông Tin</h2>
+            <p class="legal__text">Thông tin được thu thập được sử dụng để:</p>
+            <ul class="legal__list">
+              <li class="legal__list-item">
+                <b class="legal__text--bold">Cung Cấp Dịch Vụ:</b> Sử dụng thông
+                tin để cung cấp và duy trì các dịch vụ của UIT FILM, xử lý các
+                yêu cầu và nâng cao trải nghiệm người dùng.
               </li>
-              <li>
-                <b>Giao Tiếp với Người Dùng:</b> Gửi các thông báo, bản tin, cập
-                nhật liên quan đến dịch vụ của chúng tôi. Người dùng có thể từ
-                chối nhận các thông tin này bất kỳ lúc nào.
+              <li class="legal__list-item">
+                <b class="legal__text--bold">Giao Tiếp với Người Dùng:</b> Gửi
+                các thông báo, bản tin, cập nhật liên quan đến dịch vụ của chúng
+                tôi. Người dùng có thể từ chối nhận các thông tin này bất kỳ lúc
+                nào.
               </li>
-              <li>
-                <b>Phân Tích và Cải Thiện:</b> Sử dụng thông tin phi cá nhân để
-                hiểu rõ hơn về hành vi của người dùng và nâng cao chất lượng
-                trang web, sản phẩm, và dịch vụ.
+              <li class="legal__list-item">
+                <b class="legal__text--bold">Phân Tích và Cải Thiện:</b> Sử dụng
+                thông tin phi cá nhân để hiểu rõ hơn về hành vi của người dùng
+                và nâng cao chất lượng trang web, sản phẩm, và dịch vụ.
               </li>
-              <li>
-                <b>Bảo Mật:</b> Áp dụng các biện pháp để bảo vệ trang web và
-                người dùng khỏi các hành vi gian lận, đảm bảo an toàn thông tin
-                và tuân thủ các yêu cầu pháp lý.
+              <li class="legal__list-item">
+                <b class="legal__text--bold">Bảo Mật:</b> Áp dụng các biện pháp
+                để bảo vệ trang web và người dùng khỏi các hành vi gian lận, đảm
+                bảo an toàn thông tin và tuân thủ các yêu cầu pháp lý.
               </li>
             </ul>
             <p>&nbsp;</p>
-            <h2>Chia Sẻ Thông Tin</h2>
-            <p>
+            <h2 class="legal__subtitle">Chia Sẻ Thông Tin</h2>
+            <p class="legal__text">
               UIT FILM cam kết không bán, trao đổi hoặc chia sẻ thông tin cá
               nhân của bạn với bất kỳ bên thứ ba nào, ngoại trừ trong các trường
               hợp sau:
             </p>
-            <ul>
-              <li>
-                <b>Với Sự Đồng Ý Của Bạn:</b> Chúng tôi chỉ chia sẻ thông tin cá
-                nhân khi có sự đồng ý rõ ràng của bạn.
+            <ul class="legal__list">
+              <li class="legal__list-item">
+                <b class="legal__text--bold">Với Sự Đồng Ý Của Bạn:</b> Chúng
+                tôi chỉ chia sẻ thông tin cá nhân khi có sự đồng ý rõ ràng của
+                bạn.
               </li>
-              <li>
-                <b>Đối Tác và Nhà Cung Cấp Dịch Vụ:</b> Chia sẻ thông tin với
-                các đối tác và nhà cung cấp dịch vụ tin cậy để hỗ trợ trong việc
-                cung cấp dịch vụ, xử lý thanh toán, và phân tích dữ liệu.
+              <li class="legal__list-item">
+                <b class="legal__text--bold"
+                  >Đối Tác và Nhà Cung Cấp Dịch Vụ:</b
+                >
+                Chia sẻ thông tin với các đối tác và nhà cung cấp dịch vụ tin
+                cậy để hỗ trợ trong việc cung cấp dịch vụ, xử lý thanh toán, và
+                phân tích dữ liệu.
               </li>
-              <li>
-                <b>Tuân Thủ Pháp Luật:</b> UIT FILM có thể tiết lộ thông tin cá
-                nhân nếu được yêu cầu theo quy định pháp luật hoặc để bảo vệ
-                quyền lợi, tài sản và an toàn của công ty và người dùng.
+              <li class="legal__list-item">
+                <b class="legal__text--bold">Tuân Thủ Pháp Luật:</b> UIT FILM có
+                thể tiết lộ thông tin cá nhân nếu được yêu cầu theo quy định
+                pháp luật hoặc để bảo vệ quyền lợi, tài sản và an toàn của công
+                ty và người dùng.
               </li>
             </ul>
             <p>&nbsp;</p>
-            <h2>Bảo Mật Thông Tin Cá Nhân</h2>
-            <p>
+            <h2 class="legal__subtitle">Bảo Mật Thông Tin Cá Nhân</h2>
+            <p class="legal__text">
               Chúng tôi áp dụng các biện pháp kỹ thuật và tổ chức để bảo vệ
               thông tin cá nhân của bạn khỏi việc mất mát, lạm dụng, truy cập
               trái phép, tiết lộ và thay đổi. Tuy nhiên, mặc dù chúng tôi luôn
@@ -132,45 +139,49 @@
               pháp bảo mật để bảo vệ thông tin của bạn.
             </p>
             <p>&nbsp;</p>
-            <h2>Quyền Riêng Tư của Người Dùng</h2>
-            <p>Người dùng có quyền:</p>
-            <ul>
-              <li>
+            <h2 class="legal__subtitle">Quyền Riêng Tư của Người Dùng</h2>
+            <p class="legal__text">Người dùng có quyền:</p>
+            <ul class="legal__list">
+              <li class="legal__list-item">
                 Truy cập, chỉnh sửa và xóa thông tin cá nhân của mình mà chúng
                 tôi lưu giữ. Để thực hiện các quyền này, vui lòng liên hệ với
                 chúng tôi qua email:
-                <a href="mailto:23521749@gm.uit.edu.vn">lienhe@uitfilm.com</a>.
+                <a class="legal__link" href="mailto:23521749@gm.uit.edu.vn"
+                  >lienhe@uitfilm.com</a
+                >.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Từ chối nhận thông báo từ UIT FILM bất kỳ lúc nào thông qua tùy
                 chọn trong email hoặc liên hệ trực tiếp.
               </li>
             </ul>
             <p>&nbsp;</p>
-            <h2>Cookies và Công Nghệ Tương Tự</h2>
-            <p>
+            <h2 class="legal__subtitle">Cookies và Công Nghệ Tương Tự</h2>
+            <p class="legal__text">
               UIT FILM sử dụng cookies và các công nghệ tương tự để thu thập
               thông tin phi cá nhân về cách bạn sử dụng trang web. Cookies giúp
               chúng tôi:
             </p>
-            <ul>
-              <li>
+            <ul class="legal__list">
+              <li class="legal__list-item">
                 Cải thiện trải nghiệm người dùng bằng cách ghi nhớ sở thích của
                 bạn.
               </li>
-              <li>
+              <li class="legal__list-item">
                 Phân tích lưu lượng truy cập và hành vi của người dùng để cải
                 thiện dịch vụ.
               </li>
-              <li>Cung cấp quảng cáo phù hợp dựa trên hoạt động của bạn.</li>
+              <li class="legal__list-item">
+                Cung cấp quảng cáo phù hợp dựa trên hoạt động của bạn.
+              </li>
             </ul>
-            <p>
+            <p class="legal__text">
               Bạn có thể điều chỉnh cài đặt cookies thông qua trình duyệt của
               mình hoặc tắt cookies nếu muốn.
             </p>
             <p>&nbsp;</p>
-            <h2>Thay Đổi Chính Sách Riêng Tư</h2>
-            <p>
+            <h2 class="legal__subtitle">Thay Đổi Chính Sách Riêng Tư</h2>
+            <p class="legal__text">
               UIT FILM có thể cập nhật Chính Sách Riêng Tư này để phù hợp với
               các quy định và chính sách nội bộ mới. Mọi thay đổi sẽ được thông
               báo trên trang web và có hiệu lực ngay khi được đăng tải. Việc
@@ -178,18 +189,20 @@
               bạn chấp nhận các điều khoản mới.
             </p>
             <p>&nbsp;</p>
-            <h2>Liên Hệ</h2>
-            <p>
+            <h2 class="legal__subtitle">Liên Hệ</h2>
+            <p class="legal__text">
               Nếu có bất kỳ câu hỏi hoặc yêu cầu nào liên quan đến Chính Sách
               Riêng Tư này, vui lòng liên hệ với chúng tôi qua email:
-              <a href="mailto:23521749@gm.uit.edu.vn">lienhe@uitfilm.com</a>.
+              <a class="legal__link" href="mailto:23521749@gm.uit.edu.vn"
+                >lienhe@uitfilm.com</a
+              >.
             </p>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Start footer -->
+    <!-- Footer -->
     <footer id="footer"></footer>
 
     <script type="module">
@@ -202,6 +215,5 @@
           console.error("Fetch footer failed:", error);
         });
     </script>
-    <!-- End footer -->
   </body>
 </html>
