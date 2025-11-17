@@ -341,24 +341,33 @@ async function loadRecommendedTvShows(tvId) {
         : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
       const html = `
-          <div class="movie-box">
-            <a class="movie-card" href="TvShowDetail.html?id=${show.id}&type=tv">
-              <div class="card-info-top">
-                <div class="card-info-ep-top"><span>TV Show</span></div>
+                      <div class="movie-box">
+              <a class="movie-box__card" href="TvShowDetail.html?id=${show.id}&type=tv">
+                
+                <div class="movie-box__info-top">
+                  <div class="movie-box__info-ep-top"><span>TV Show</span></div>
+                </div>
+
+                <div class="movie-box__poster">
+                  <img class="movie-box__poster-img" src="${poster}" alt="${show.name}">
+                </div>
+
+              </a>
+
+              <div class="movie-box__info">
+                <h4 class="movie-box__vietnam-title">
+                  <a class="movie-box__title-link" href="TvShowDetail.html?id=${show.id}">
+                    ${show.name}
+                  </a>
+                </h4>
+
+                <h4 class="movie-box__other-title">
+                  <a class="movie-box__title-link" href="TvShowDetail.html?id=${show.id}">
+                    ${show.original_name}
+                  </a>
+                </h4>
               </div>
-              <div>
-                <img src="${poster}" alt="${show.name}">
-              </div>
-            </a>
-            <div class="info">
-              <h4 class="vietnam-title">
-                <a href="TvShowDetail.html?id=${show.id}">${show.name}</a>
-              </h4>
-              <h4 class="other-title">
-                <a href="TvShowDetail.html?id=${show.id}">${show.original_name}</a>
-              </h4>
             </div>
-          </div>
         `;
       container.insertAdjacentHTML("beforeend", html);
     });
