@@ -2,17 +2,19 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   // Toast functionality
-  const toast = document.querySelector(".toast");
-  const toastButton = document.querySelector(".toast button");
+  const toast = document.querySelector(".user-detail__toast");
+  const toastButton = document.querySelector(".user-detail__toast-btn");
 
   if (toastButton) {
     toastButton.addEventListener("click", function () {
-      toast.classList.remove("show");
+      toast.classList.remove("user-detail__toast--show");
     });
   }
 
   // Show toast when save button is clicked
-  const saveButtons = document.querySelectorAll(".btn:not(.secondary)");
+  const saveButtons = document.querySelectorAll(
+    ".user-detail__btn:not(.user-detail__btn--secondary)"
+  );
   saveButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
@@ -25,11 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Modal functionality
-  const modal = document.querySelector(".modal-backdrop");
-  const cancelButtons = document.querySelectorAll(".btn.secondary");
+  const modal = document.querySelector(".user-detail__modal-backdrop");
+  const cancelButtons = document.querySelectorAll(
+    ".user-detail__btn--secondary"
+  );
 
   cancelButtons.forEach((button) => {
-    if (!button.closest(".modal")) {
+    if (!button.closest(".user-detail__modal")) {
       button.addEventListener("click", function () {
         showModal();
       });
@@ -44,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Close modal with cancel button in modal
-  const modalCancel = modal.querySelector(".btn.secondary");
+  const modalCancel = modal.querySelector(".user-detail__btn--secondary");
   if (modalCancel) {
     modalCancel.addEventListener("click", function () {
       hideModal();
@@ -52,7 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Confirm action in modal
-  const modalConfirm = modal.querySelector(".btn:not(.secondary)");
+  const modalConfirm = modal.querySelector(
+    ".user-detail__btn:not(.user-detail__btn--secondary)"
+  );
   if (modalConfirm) {
     modalConfirm.addEventListener("click", function () {
       hideModal();
@@ -62,13 +68,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Navigation functionality
-  const navButtons = document.querySelectorAll(".nav button");
+  const navButtons = document.querySelectorAll(".user-detail__nav-btn");
   navButtons.forEach((button) => {
     button.addEventListener("click", function () {
       // Remove active class from all buttons
-      navButtons.forEach((btn) => btn.classList.remove("active"));
+      navButtons.forEach((btn) =>
+        btn.classList.remove("user-detail__nav-btn--active")
+      );
       // Add active class to clicked button
-      this.classList.add("active");
+      this.classList.add("user-detail__nav-btn--active");
 
       // Handle navigation based on button text
       handleNavigation(this.textContent.trim());
@@ -84,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Logout functionality
-  const logoutButton = document.querySelector(".logout");
+  const logoutButton = document.querySelector(".user-detail__logout");
   if (logoutButton) {
     logoutButton.addEventListener("click", function () {
       if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
@@ -101,30 +109,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Function to show toast message
 function showToast(message) {
-  const toast = document.querySelector(".toast");
+  const toast = document.querySelector(".user-detail__toast");
   const toastText = toast.querySelector("span");
 
   if (toastText) {
     toastText.textContent = message;
   }
 
-  toast.classList.add("show");
+  toast.classList.add("user-detail__toast--show");
 
   // Auto hide after 3 seconds
   setTimeout(() => {
-    toast.classList.remove("show");
+    toast.classList.remove("user-detail__toast--show");
   }, 3000);
 }
 
 // Function to show modal
 function showModal() {
-  const modal = document.querySelector(".modal-backdrop");
+  const modal = document.querySelector(".user-detail__modal-backdrop");
   modal.style.display = "flex";
 }
 
 // Function to hide modal
 function hideModal() {
-  const modal = document.querySelector(".modal-backdrop");
+  const modal = document.querySelector(".user-detail__modal-backdrop");
   modal.style.display = "none";
 }
 
@@ -185,17 +193,17 @@ function validatePasswordField(field) {
 
 // Function to show error message
 function showError(field, message) {
-  field.classList.add("input-invalid");
+  field.classList.add("user-detail__input--invalid");
 
   // Remove existing error message
-  const existingError = field.parentNode.querySelector(".error");
+  const existingError = field.parentNode.querySelector(".user-detail__error");
   if (existingError) {
     existingError.remove();
   }
 
   // Create and show error message
   const errorElement = document.createElement("div");
-  errorElement.className = "error";
+  errorElement.className = "user-detail__error";
   errorElement.textContent = message;
   errorElement.style.display = "block";
 
@@ -204,9 +212,9 @@ function showError(field, message) {
 
 // Function to clear error message
 function clearError(field) {
-  field.classList.remove("input-invalid");
+  field.classList.remove("user-detail__input--invalid");
 
-  const errorElement = field.parentNode.querySelector(".error");
+  const errorElement = field.parentNode.querySelector(".user-detail__error");
   if (errorElement) {
     errorElement.remove();
   }
@@ -228,15 +236,15 @@ function handleNavigation(section) {
 
 function showSection(sectionId) {
   // Hide all sections
-  const allSections = document.querySelectorAll(".content-section");
+  const allSections = document.querySelectorAll(".user-detail__section");
   allSections.forEach((section) => {
-    section.classList.remove("active");
+    section.classList.remove("user-detail__section--active");
   });
 
   // Show target section
   const targetSection = document.getElementById(sectionId);
   if (targetSection) {
-    targetSection.classList.add("active");
+    targetSection.classList.add("user-detail__section--active");
 
     // Scroll to top of the section smoothly
     setTimeout(() => {
@@ -255,9 +263,11 @@ favoritesLinks.forEach((link) => {
     e.preventDefault();
 
     // Highlight button nav
-    const navButtons = document.querySelectorAll(".nav button");
-    navButtons.forEach((btn) => btn.classList.remove("active"));
-    link.classList.add("active");
+    const navButtons = document.querySelectorAll(".user-detail__nav-btn");
+    navButtons.forEach((btn) =>
+      btn.classList.remove("user-detail__nav-btn--active")
+    );
+    link.classList.add("user-detail__nav-btn--active");
 
     // Show favorites section
     showSection("favorites-section");
@@ -266,7 +276,7 @@ favoritesLinks.forEach((link) => {
 
 // Function to update user avatar
 function updateAvatar(imageUrl) {
-  const avatar = document.querySelector(".avatar img");
+  const avatar = document.querySelector(".user-detail__avatar-img");
   if (avatar) {
     avatar.src = imageUrl;
   }
@@ -278,7 +288,7 @@ function updateUserInfo(userData) {
   const emailField = document.getElementById("email");
   const phoneField = document.getElementById("phone");
   const birthdayField = document.getElementById("birthday");
-  const userName = document.querySelector(".sidebar .name");
+  const userName = document.querySelector(".user-detail__name");
 
   if (nameField && userData.name) nameField.value = userData.name;
   if (emailField && userData.email) emailField.value = userData.email;

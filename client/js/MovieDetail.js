@@ -274,7 +274,9 @@ function initTabs() {
 
       // Bỏ active của tất cả tabs và contents
       tabs.forEach((t) => t.classList.remove("movie-tabs__item--active"));
-      tabContents.forEach((content) => content.classList.remove("movie-tabs__content--active"));
+      tabContents.forEach((content) =>
+        content.classList.remove("movie-tabs__content--active")
+      );
 
       // Thêm active cho tab được chọn
       this.classList.add("movie-tabs__item--active");
