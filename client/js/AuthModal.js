@@ -9,43 +9,27 @@ export function Auth_Modaljs() {
   const registerForm = document.querySelector(".form-wrapper.register");
   const forgotForm = document.querySelector(".form-wrapper.forgot");
   const resetForm = document.querySelector(".form-wrapper.reset");
-  const verifyForm = document.querySelector(".form-wrapper.verify");
-
   const registerFormEl = registerForm.querySelector("form");
   const resetFormEl = resetForm.querySelector("form");
-  const forgotFormEl = forgotForm.querySelector("form");
-  const verifyFormEl = verifyForm.querySelector("form");
 
+  // Biến lưu email khi forgot password
   let forgotPasswordEmail = "";
-  let resendTimer = null;
-  let resendCountdown = 0;
 
-  function showErrorMessage(formWrapper, message, isSuccess = false) {
+  // Hàm hiển thị thông báo lỗi
+  function showErrorMessage(formWrapper, message) {
     const errorDiv = formWrapper.querySelector(".auth-error-message");
     const errorText = errorDiv.querySelector(".error-text");
-    const icon = errorDiv.querySelector("i");
 
     if (errorDiv && errorText) {
       errorText.textContent = message;
-
-      if (isSuccess) {
-        errorDiv.style.background = "#d4edda";
-        errorDiv.style.color = "#155724";
-        errorDiv.style.borderColor = "#c3e6cb";
-        icon.className = "fa-solid fa-check-circle";
-      } else {
-        errorDiv.style.background = "#fff3cd";
-        errorDiv.style.color = "#856404";
-        errorDiv.style.borderColor = "#ffc107";
-        icon.className = "fa-solid fa-exclamation-triangle";
-      }
-
       errorDiv.style.display = "flex";
 
+      // Trigger animation
       setTimeout(() => {
         errorDiv.classList.add("show");
       }, 10);
 
+      // Tự động ẩn sau 5 giây
       setTimeout(() => {
         errorDiv.classList.remove("show");
         setTimeout(() => {
@@ -55,6 +39,7 @@ export function Auth_Modaljs() {
     }
   }
 
+  // Hàm ẩn thông báo lỗi
   function hideErrorMessage(formWrapper) {
     const errorDiv = formWrapper.querySelector(".auth-error-message");
     if (errorDiv) {
@@ -65,67 +50,22 @@ export function Auth_Modaljs() {
     }
   }
 
-  function startResendTimer() {
-    resendCountdown = 300; // 5 phút = 300 giây
-    const resendLink = verifyForm.querySelector(".switch-form:not([href])");
-
-    if (!resendLink) return;
-
-    function updateTimer() {
-      const minutes = Math.floor(resendCountdown / 60);
-      const seconds = resendCountdown % 60;
-      resendLink.textContent = `Gửi lại OTP (${minutes}:${seconds
-        .toString()
-        .padStart(2, "0")})`;
-      resendLink.style.color = "#ffffff80";
-      resendLink.style.cursor = "not-allowed";
-      resendLink.style.pointerEvents = "none";
-    }
-
-    updateTimer();
-
-    resendTimer = setInterval(() => {
-      resendCountdown--;
-
-      if (resendCountdown <= 0) {
-        clearInterval(resendTimer);
-        resendLink.textContent = "Gửi lại mã OTP";
-        resendLink.style.color = "#ffd875";
-        resendLink.style.cursor = "pointer";
-        resendLink.style.pointerEvents = "auto";
-      } else {
-        updateTimer();
-      }
-    }, 1000);
-  }
-
-  function stopResendTimer() {
-    if (resendTimer) {
-      clearInterval(resendTimer);
-      resendTimer = null;
-    }
-  }
-
   window.openLRFModal = function (target = "login") {
     modal.classList.remove("hidden");
-    [loginForm, registerForm, forgotForm, resetForm, verifyForm].forEach((f) =>
+    [loginForm, registerForm, forgotForm, resetForm].forEach((f) =>
       f.classList.remove("active")
     );
-
     if (target === "register") registerForm.classList.add("active");
     else if (target === "forgot") forgotForm.classList.add("active");
     else if (target === "reset") resetForm.classList.add("active");
-    else if (target === "verify") {
-      verifyForm.classList.add("active");
-      startResendTimer();
-    } else loginForm.classList.add("active");
+    else loginForm.classList.add("active");
   };
 
   function closeLRFModal() {
     modal.classList.add("hidden");
-    stopResendTimer();
-    [loginForm, registerForm, forgotForm, resetForm, verifyForm].forEach(
-      (form) => hideErrorMessage(form)
+    // Ẩn tất cả error messages khi đóng modal
+    [loginForm, registerForm, forgotForm, resetForm].forEach((form) =>
+      hideErrorMessage(form)
     );
   }
 
@@ -135,10 +75,12 @@ export function Auth_Modaljs() {
     if (e.key === "Escape") closeLRFModal();
   });
 
+  // Switch form events
   switchLink.forEach((link) => {
     link.addEventListener("click", () => {
-      [loginForm, registerForm, forgotForm, resetForm, verifyForm].forEach(
-        (form) => hideErrorMessage(form)
+      // Ẩn error messages khi chuyển form
+      [loginForm, registerForm, forgotForm, resetForm].forEach((form) =>
+        hideErrorMessage(form)
       );
 
       const text = link.textContent.trim();
@@ -146,42 +88,13 @@ export function Auth_Modaljs() {
       else if (
         text.includes("Đăng nhập") ||
         text.includes("Quay lại đăng nhập")
-      ) {
-        stopResendTimer();
+      )
         window.openLRFModal("login");
-      } else if (text.includes("Quên mật khẩu?")) window.openLRFModal("forgot");
-      else if (text.includes("Gửi lại")) {
-        if (resendCountdown <= 0 && forgotPasswordEmail) {
-          resendOTP();
-        }
-      }
+      else if (text.includes("Quên mật khẩu?")) window.openLRFModal("forgot");
     });
   });
 
-  async function resendOTP() {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: forgotPasswordEmail }),
-        }
-      );
-
-      if (response.status === 200) {
-        showErrorMessage(verifyForm, "Mã OTP mới đã được gửi!", true);
-        startResendTimer();
-      } else {
-        const errorText = await response.text();
-        showErrorMessage(verifyForm, errorText || "Không thể gửi lại OTP!");
-      }
-    } catch (error) {
-      console.error("Resend OTP error:", error);
-      showErrorMessage(verifyForm, "Lỗi kết nối. Vui lòng thử lại!");
-    }
-  }
-
+  // Password validation for register form
   const pwdInput = registerFormEl.querySelector('input[name="password"]');
   const cfPwdInput = registerFormEl.querySelector('input[name="cf_password"]');
   const submitBtn = registerFormEl.querySelector(".btn.btn-primary");
@@ -206,6 +119,7 @@ export function Auth_Modaljs() {
   pwdInput.addEventListener("input", validatePasswords);
   cfPwdInput.addEventListener("input", validatePasswords);
 
+  // Password validation for reset password form
   const newPwdInput = resetFormEl.querySelector('input[name="new_password"]');
   const cfNewPwdInput = resetFormEl.querySelector(
     'input[name="cf_new_password"]'
@@ -232,6 +146,7 @@ export function Auth_Modaljs() {
   newPwdInput.addEventListener("input", validateResetPasswords);
   cfNewPwdInput.addEventListener("input", validateResetPasswords);
 
+  // Register form submit
   registerFormEl.addEventListener("submit", async (e) => {
     e.preventDefault();
     const isValid = registerFormEl.checkValidity();
@@ -257,11 +172,6 @@ export function Auth_Modaljs() {
       if (response.status === 200) {
         registerFormEl.reset();
         window.openLRFModal("login");
-        showErrorMessage(
-          loginForm,
-          "Đăng ký thành công! Vui lòng đăng nhập.",
-          true
-        );
       } else {
         const errorText = await response.text();
         showErrorMessage(
@@ -275,6 +185,7 @@ export function Auth_Modaljs() {
     }
   });
 
+  // Login form submit
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = loginForm.querySelector('input[name="email"]').value.trim();
@@ -304,15 +215,22 @@ export function Auth_Modaljs() {
           return;
         }
 
+        // Lưu token và thông tin user
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("userName", payloadDecoded.username);
         localStorage.setItem("userEmail", payloadDecoded.email);
 
+        // Token check sẽ được start từ Header.js sau khi reload
+
+        // Dispatch event để cập nhật UI
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
 
+        // Đóng modal
         modal.classList.add("hidden");
+
+        console.log("User role:", payloadDecoded.role);
 
         if (payloadDecoded.role === "Admin") {
           window.location.href = "/client/view/pages/AdminUsers.html";
@@ -320,6 +238,7 @@ export function Auth_Modaljs() {
           window.location.href = "/client/view/pages/HomePage.html";
         }
       } else {
+        // login error (400/401)
         const errorText = await response.text();
         showErrorMessage(
           loginForm,
@@ -332,115 +251,26 @@ export function Auth_Modaljs() {
     }
   });
 
-  forgotFormEl.addEventListener("submit", async (e) => {
+  // Forgot password form submit
+  forgotForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email = forgotFormEl
-      .querySelector('input[name="email"]')
-      .value.trim();
+    const email = forgotForm.querySelector('input[name="email"]').value.trim();
 
     if (!email) {
       showErrorMessage(forgotForm, "Vui lòng nhập email!");
       return;
     }
 
-    const submitButton = forgotFormEl.querySelector(".btn-primary");
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = "Đang gửi...";
+    // Lưu email để dùng khi reset password
+    forgotPasswordEmail = email;
 
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/forgotPassword",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
-
-      if (response.status === 200) {
-        forgotPasswordEmail = email;
-        forgotFormEl.reset();
-        window.openLRFModal("verify");
-        showErrorMessage(
-          verifyForm,
-          "Mã OTP đã được gửi đến email của bạn!",
-          true
-        );
-      } else {
-        const errorText = await response.text();
-        showErrorMessage(
-          forgotForm,
-          errorText || "Không thể gửi yêu cầu. Vui lòng thử lại!"
-        );
-      }
-    } catch (error) {
-      console.error("Forgot password error:", error);
-      showErrorMessage(forgotForm, "Lỗi kết nối. Vui lòng thử lại!");
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = originalText;
-    }
+    // Reset form và chuyển sang form reset password
+    forgotForm.querySelector("form").reset();
+    window.openLRFModal("reset");
   });
 
-  verifyFormEl.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const otpInput = verifyFormEl.querySelector('input[name="otp"]');
-    const otp = otpInput.value.trim();
-
-    if (!otp) {
-      showErrorMessage(verifyForm, "Vui lòng nhập mã OTP!");
-      return;
-    }
-
-    if (!forgotPasswordEmail) {
-      showErrorMessage(
-        verifyForm,
-        "Phiên làm việc đã hết hạn. Vui lòng thử lại!"
-      );
-      return;
-    }
-
-    const submitButton = verifyFormEl.querySelector(".btn-primary");
-    const originalText = submitButton.textContent;
-    submitButton.disabled = true;
-    submitButton.textContent = "Đang xác thực...";
-
-    try {
-      const response = await fetch("http://localhost:5000/api/auth/verifyOTP", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: forgotPasswordEmail, otp }),
-      });
-
-      if (response.status === 200) {
-        stopResendTimer();
-        verifyFormEl.reset();
-        window.openLRFModal("reset");
-        showErrorMessage(
-          resetForm,
-          "Xác thực thành công! Vui lòng nhập mật khẩu mới.",
-          true
-        );
-      } else {
-        const errorText = await response.text();
-        showErrorMessage(
-          verifyForm,
-          errorText || "Mã OTP không đúng. Vui lòng thử lại!"
-        );
-        otpInput.classList.add("otp-error");
-        setTimeout(() => otpInput.classList.remove("otp-error"), 2000);
-      }
-    } catch (error) {
-      console.error("Verify OTP error:", error);
-      showErrorMessage(verifyForm, "Lỗi kết nối. Vui lòng thử lại!");
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = originalText;
-    }
-  });
-
-  resetFormEl.addEventListener("submit", async (e) => {
+  // Reset password form submit
+  resetFormEl.addEventListener("submit", (e) => {
     e.preventDefault();
     const isValid = resetFormEl.checkValidity();
     if (!isValid || resetSubmitBtn.disabled) return;
@@ -449,54 +279,14 @@ export function Auth_Modaljs() {
       .querySelector('input[name="new_password"]')
       .value.trim();
 
-    if (!forgotPasswordEmail) {
-      showErrorMessage(
-        resetForm,
-        "Phiên làm việc đã hết hạn. Vui lòng thử lại!"
-      );
-      return;
-    }
-
-    const originalText = resetSubmitBtn.textContent;
-    resetSubmitBtn.disabled = true;
-    resetSubmitBtn.textContent = "Đang xử lý...";
-
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/resetPassword",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: forgotPasswordEmail, newPassword }),
-        }
-      );
-
-      if (response.status === 200) {
-        forgotPasswordEmail = "";
-        resetFormEl.reset();
-        window.openLRFModal("login");
-        showErrorMessage(
-          loginForm,
-          "Đặt lại mật khẩu thành công! Vui lòng đăng nhập.",
-          true
-        );
-      } else {
-        const errorText = await response.text();
-        showErrorMessage(
-          resetForm,
-          errorText || "Không thể đặt lại mật khẩu. Vui lòng thử lại!"
-        );
-      }
-    } catch (error) {
-      console.error("Reset password error:", error);
-      showErrorMessage(resetForm, "Lỗi kết nối. Vui lòng thử lại!");
-    } finally {
-      resetSubmitBtn.disabled = false;
-      resetSubmitBtn.textContent = originalText;
-    }
+    // Reset form và chuyển về login
+    resetFormEl.reset();
+    forgotPasswordEmail = ""; // Clear email
+    window.openLRFModal("login");
   });
 }
 
+// Helper function để check token expired (optional, dùng khi cần)
 export function isTokenExpired(token) {
   if (!token) return true;
   try {
