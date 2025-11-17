@@ -1,40 +1,51 @@
+:root {
+  --color-bg: #121212;
+  --color-bg-dark: #1a1a1a;
+  --color-bg-card: #111;
+  --color-text: #ffffff;
+  --color-accent: #ffcc00;
+  --color-gray: #ccc;
+  --color-btn: #222;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  background-color: #121212;
-  color: white;
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-family: "Inter", sans-serif;
   overflow-x: hidden;
 }
 
-.search-result-container {
+.searchPage {
   padding: 100px 40px;
   min-height: 80vh;
   width: 100%;
 }
 
-h2 {
+.searchPage h2 {
   font-size: 22px;
   margin-bottom: 20px;
 }
 
-#query-text {
-  color: #ffcc00;
+.searchPage__query {
+  color: var(--color-accent);
   font-size: large;
 }
 
-.filter-buttons {
+/*filter buttons */
+.searchPage__filters {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
-.filter-btn {
-  background: #222;
-  color: #fff;
+.searchPage__filterBtn {
+  background: var(--color-btn);
+  color: var(--color-text);
   border: none;
   border-radius: 20px;
   padding: 8px 16px;
@@ -43,154 +54,129 @@ h2 {
   font-weight: bold;
 }
 
-.filter-btn.active {
-  background: #fff;
+.searchPage__filterBtn--active {
+  background: var(--color-text);
   color: #000;
-  font-weight: bold;
 }
 
-.results-grid {
+/* grid */
+.searchPage__grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 20px;
   padding: 20px 0;
   min-height: 400px;
-  align-content: start;
   width: 100%;
 }
 
-.placeholder-text {
+.searchPage__placeholder {
   text-align: center;
   width: 100%;
-  color: #ccc;
+  color: var(--color-gray);
   font-size: 18px;
   grid-column: 1 / -1;
 }
 
-.result-card {
-  text-align: center;
-  background: #111;
-  color: #fff;
+/* card */
+.searchPage__card {
+  background: var(--color-bg-card);
+  color: var(--color-text);
   border-radius: 10px;
   overflow: hidden;
   transition: transform 0.2s;
-  width: 100%;
 }
 
-.result-card:hover {
+.searchPage__card:hover {
   transform: scale(1.05);
 }
 
-.result-card img {
+.searchPage__cardImg {
   width: 100%;
   height: 240px;
   object-fit: cover;
 }
 
-.result-title {
+.searchPage__cardTitle {
   padding: 10px;
   font-size: 16px;
   line-height: 1.4;
-  word-wrap: break-word;
-  white-space: normal;
+  word-break: break-word;
 }
 
-.pagination {
+/* pagination */
+.searchPage__pagination {
   display: flex;
   justify-content: center;
   margin-top: 40px;
 }
 
-.pagination-container {
+.paginationModern {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background-color: #1a1a1a;
+  background-color: var(--color-bg-dark);
   padding: 10px 24px;
   border-radius: 30px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-.page-arrow {
+.pageCircle {
   background-color: #1f1f25;
-  color: #ccc;
+  color: var(--color-gray);
   border: none;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
-.page-arrow:hover:not(:disabled) {
+.pageCircle:hover:not(:disabled) {
   background-color: #2d2d34;
   color: #fff;
-  transform: scale(1.05);
 }
 
-.page-arrow:disabled {
+.pageCircle:disabled {
   opacity: 0.4;
-  cursor: not-allowed;
 }
 
-.page-info {
-  color: #fff;
+/* page info */
+.pageInfo {
+  color: var(--color-text);
   font-size: 16px;
-  font-weight: 500;
-  background-color: #292932;
   padding: 8px 16px;
+  background: #292932;
   border-radius: 12px;
-  letter-spacing: 0.5px;
 }
 
+/* responsive */
 @media (max-width: 1024px) {
-  .search-result-container {
+  .searchPage {
     padding: 100px 24px;
   }
 
-  .results-grid {
+  .searchPage__grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
   }
 }
 
 @media (max-width: 600px) {
-  .search-result-container {
+  .searchPage {
     padding: 80px 16px;
   }
 
-  .results-grid {
+  .searchPage__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    padding: 10px 0;
   }
 
-  .result-card img {
-    height: 200px;
-  }
-
-  .result-title {
-    font-size: 14px;
-  }
-
-  .pagination-container {
-    gap: 10px;
-    padding: 8px 16px;
-  }
-
-  .page-arrow {
+  .pageCircle {
     width: 36px;
     height: 36px;
     font-size: 18px;
   }
 
-  .page-info {
+  .pageInfo {
     font-size: 14px;
-    padding: 6px 12px;
   }
 }

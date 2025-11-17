@@ -8,6 +8,7 @@ a {
   text-decoration: none;
 }
 
+/* GRID LAYOUT */
 .background {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -16,6 +17,7 @@ a {
   padding: 30px;
 }
 
+/* BLOCK */
 .movie-box {
   width: 100%;
   display: flex;
@@ -24,28 +26,8 @@ a {
   position: relative;
 }
 
-.movie-card .card-info-top {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 3;
-  overflow: hidden;
-  box-shadow: 0 0 5px 2px #0000001a;
-}
-
-.card-info-top .card-info-ep-top {
-  gap: 3.5px;
-  padding: 5px 8px;
-  font-size: 11px;
-  font-weight: bold;
-  background-color: black;
-  color: #fff;
-  margin-top: 5px;
-  margin-right: 10px;
-  border-radius: 5px;
-}
-
-.movie-card {
+/* ELEMENT: card */
+.movie-box__card {
   width: 100%;
   padding-bottom: 150%;
   height: 0;
@@ -58,41 +40,64 @@ a {
   box-shadow: 0 0 5px 2px #0000001a;
 }
 
-.movie-card img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  object-fit: cover;
-}
-
-.movie-card:hover {
+.movie-box__card:hover {
   transform: translateY(-5%);
 }
 
-.movie-box .info {
+/* IMAGE */
+.movie-box__poster-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+}
+
+/* ELEMENT: info top */
+.movie-box__info-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  overflow: hidden;
+  box-shadow: 0 0 5px 2px #0000001a;
+}
+
+.movie-box__info-ep-top {
+  gap: 3.5px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  background-color: black;
+  color: #fff;
+  margin-top: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+/* ELEMENT: info */
+.movie-box__info {
   min-height: 42px;
   text-align: center;
 }
 
-.vietnam-title a {
+/* TITLES */
+.movie-box__vietnam-title a {
   cursor: pointer;
   color: #fff;
   font-size: 14px;
 }
 
-.other-title {
+.movie-box__other-title {
   font-size: 13px;
   margin-top: 5px;
 }
 
-.other-title a {
+.movie-box__other-title a {
   color: #aaa;
 }
 
+/* MEDIA QUERIES */
 @media only screen and (min-width: 1920px) {
   .background {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -127,10 +132,10 @@ a {
     gap: 16px;
     padding: 25px;
   }
-  .vietnam-title a {
+  .movie-box__vietnam-title a {
     font-size: 13px;
   }
-  .other-title {
+  .movie-box__other-title {
     font-size: 12px;
   }
 }
@@ -149,13 +154,13 @@ a {
     gap: 15px;
     padding: 15px;
   }
-  .vietnam-title a {
+  .movie-box__vietnam-title a {
     font-size: 12px;
   }
-  .other-title {
+  .movie-box__other-title {
     font-size: 11px;
   }
-  .card-info-ep-top {
+  .movie-box__info-ep-top {
     font-size: 10px;
     padding: 4px 6px;
   }
@@ -167,17 +172,17 @@ a {
     gap: 12px;
     padding: 12px;
   }
-  .vietnam-title a {
+  .movie-box__vietnam-title a {
     font-size: 11px;
   }
-  .other-title {
+  .movie-box__other-title {
     font-size: 10px;
   }
-  .card-info-ep-top {
+  .movie-box__info-ep-top {
     font-size: 9px;
     padding: 3px 6px;
   }
-  .movie-box .info {
+  .movie-box__info {
     min-height: 38px;
   }
 }
@@ -196,10 +201,10 @@ a {
     gap: 8px;
     padding: 8px;
   }
-  .vietnam-title a {
+  .movie-box__vietnam-title a {
     font-size: 10px;
   }
-  .other-title {
+  .movie-box__other-title {
     font-size: 9px;
   }
 }

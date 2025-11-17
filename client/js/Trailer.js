@@ -3,57 +3,30 @@ import { TMDB_API_KEY } from "../../config.js";
 const BASE_URL = "https://api.themoviedb.org/3";
 const trailerBtn = document.getElementById("trailer-btn");
 const trailerModal = document.getElementById("trailer-modal");
-const trailerFrame = document.getElementById("trailer-frame");
+const trailerContainer = document.getElementById("trailer-container");
 const closeTrailer = document.getElementById("close-trailer");
 
-// Xác định loại nội dung (movie hoặc tv)   
 const currentPage = window.location.pathname;
-let type = "movie"; // mặc định
+let type = currentPage.includes("TvShowDetail") ? "tv" : "movie";
 
-// Dựa vào tên file HTML để xác định type
-if (currentPage.includes("TvShowDetail")) {
-  type = "tv";
-} else if (currentPage.includes("MovieDetail")) {
-  type = "movie";
-}
-
-// Lấy params từ URL
 const params = new URLSearchParams(window.location.search);
 const contentId = params.get("id");
-
-// Cho phép override type bằng query param
 const typeParam = params.get("type");
-if (typeParam && (typeParam === "movie" || typeParam === "tv")) {
-  type = typeParam;
-}
+if (typeParam) type = typeParam;
 
-// Lấy key trailer từ TMDB
+// Lấy trailer key
 async function getTrailerKey() {
   try {
     const url = `${BASE_URL}/${type}/${contentId}/videos?api_key=${TMDB_API_KEY}&language=en-US`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const data = await (await fetch(url)).json();
 
-    if (!data.results || data.results.length === 0) {
-      return null;
-    }
+    if (!data.results?.length) return null;
 
-    // Ưu tiên 1: Trailer chính thức
-    const trailer = data.results.find(
-      (v) => v.type === "Trailer" && v.site === "YouTube"
-    );
+    const trailer = data.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+    const teaser  = data.results.find(v => v.type === "Teaser" && v.site === "YouTube");
+    const anyYT   = data.results.find(v => v.site === "YouTube");
 
-    // Ưu tiên 2: Teaser
-    const teaser = data.results.find(
-      (v) => v.type === "Teaser" && v.site === "YouTube"
-    );
-
-    // Ưu tiên 3: Bất kỳ video YouTube nào
-    const fallback = data.results.find((v) => v.site === "YouTube");
-
-    const best = trailer || teaser || fallback;
-
-    return best ? best.key : null;
+    return (trailer || teaser || anyYT)?.key ?? null;
   } catch (err) {
     console.error("Lỗi lấy trailer:", err);
     return null;
@@ -63,30 +36,38 @@ async function getTrailerKey() {
 // Mở trailer
 trailerBtn.addEventListener("click", async () => {
   const key = await getTrailerKey();
-
   if (!key) {
-    alert(
-      `Xin lỗi, không tìm thấy trailer cho ${
-        type === "tv" ? "TV Show" : "phim"
-      } này.`
-    );
+    alert(`Không tìm thấy trailer.`);
     return;
   }
 
-  trailerFrame.src = `https://www.youtube.com/embed/${key}?autoplay=1`;
+  // Không load iframe trước khi mở modal
+  trailerContainer.innerHTML = `
+    <iframe
+      width="100%"
+      height="500"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen
+      src="https://www.youtube.com/embed/${key}?autoplay=1&enablejsapi=1&widget_referrer="
+    ></iframe>
+  `;
+
   trailerModal.style.display = "flex";
   document.body.style.overflow = "hidden";
+
+  // Xóa history entry nếu có
+  history.replaceState(history.state, "", window.location.pathname + window.location.search);
 });
 
 // Đóng trailer
 function closeModal() {
   trailerModal.style.display = "none";
-  trailerFrame.src = "";
+  trailerContainer.innerHTML = ""; 
   document.body.style.overflow = "";
 }
 
 closeTrailer.addEventListener("click", closeModal);
-
 window.addEventListener("click", (e) => {
   if (e.target === trailerModal) closeModal();
 });

@@ -20,7 +20,7 @@ let allMovies = [];
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
-/* ================== LOAD TEMPLATE ================== */
+// load template
 Promise.all([
   fetch("../components/MovieCardRender.html").then((res) => res.text()),
   fetch("../components/TvShowCardRender.html").then((res) => res.text()),
@@ -33,7 +33,7 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được template:", err));
 
-/* ================== LOAD THÔNG TIN DIỄN VIÊN ================== */
+// Load diễn viên
 async function loadPersonDetail() {
   try {
     const res = await fetch(
@@ -46,7 +46,7 @@ async function loadPersonDetail() {
       return;
     }
 
-    // --- Gán dữ liệu ---
+    // Gán dữ liệu
     personName.textContent = data.name || "Đang cập nhật";
     alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
     biography.textContent = data.biography || "Đang cập nhật";
@@ -54,7 +54,7 @@ async function loadPersonDetail() {
       data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
     birthday.textContent = data.birthday || "Đang cập nhật";
 
-    // --- Ảnh diễn viên ---
+    // cast card
     const profile = data.profile_path
       ? `${IMG_URL}${data.profile_path}`
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(
@@ -71,7 +71,7 @@ async function loadPersonDetail() {
   }
 }
 
-/* ================== LOAD DANH SÁCH PHIM/TIVI ================== */
+// Load danh sách
 async function loadPersonMovies() {
   try {
     const res = await fetch(
@@ -84,7 +84,7 @@ async function loadPersonMovies() {
       return;
     }
 
-    // --- Sắp xếp giảm dần theo độ phổ biến ---
+    // Sắp xếp giảm dần theo độ phổ biến
     allMovies = data.cast.sort((a, b) => b.popularity - a.popularity);
     renderMoviesPage();
   } catch (err) {
@@ -92,7 +92,7 @@ async function loadPersonMovies() {
   }
 }
 
-/* ================== RENDER DANH SÁCH ================== */
+// render danh sách
 function renderMoviesPage() {
   if (!movieCardTemplate || !tvCardTemplate) return;
 
@@ -108,7 +108,7 @@ function renderMoviesPage() {
   }
 
   currentMovies.forEach((item) => {
-    // --- Fallback ảnh ---
+    // Fallback ảnh
     const poster = item.poster_path
       ? `${IMG_URL}${item.poster_path}`
       : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
@@ -116,7 +116,7 @@ function renderMoviesPage() {
     const title = item.title || item.name || "Không rõ";
     const original_title = item.original_title || item.original_name || "";
 
-    // --- Chọn template (phim hoặc TV show) ---
+    // Chọn template (phim hoặc TV show)
     let template =
       item.media_type === "tv" ? tvCardTemplate : movieCardTemplate;
 
@@ -138,7 +138,7 @@ function renderMoviesPage() {
   renderPaginationModern(currentPage, totalPages);
 }
 
-/* ================== PHÂN TRANG ================== */
+//pagination
 function renderPaginationModern(page, total) {
   const oldPagination = document.querySelector(".pagination-modern");
   if (oldPagination) oldPagination.remove();

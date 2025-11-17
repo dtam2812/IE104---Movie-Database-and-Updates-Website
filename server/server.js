@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -8,7 +7,10 @@ const userRoute = require("./Router/UserRoute");
 const userAdminRoute = require("./Router/UserAdminRoute");
 const authRoute = require("./Router/AuthRoute");
 
-// Middleware sử dụng cors
+
+require("dotenv").config();
+
+//middleware su dung cors
 app.use(cors());
 
 // Middleware lấy dữ liệu từ client qua req.body
