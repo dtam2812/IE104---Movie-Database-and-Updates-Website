@@ -1,9 +1,6 @@
-import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
-
 // UserDetail.js - Xử lý tương tác cho trang User Detail
-document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(() => getUserDetail(), 1500);
 
+document.addEventListener("DOMContentLoaded", function () {
   // Toast functionality
   const toast = document.querySelector(".toast");
   const toastButton = document.querySelector(".toast button");
@@ -14,25 +11,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Handle Save Personal Info button
-  const savePersonalInfoBtn = document.querySelector(".save-personal-info");
-  if (savePersonalInfoBtn) {
-    savePersonalInfoBtn.addEventListener("click", function (e) {
+  // Show toast when save button is clicked
+  const saveButtons = document.querySelectorAll(".btn:not(.secondary)");
+  saveButtons.forEach((button) => {
+    button.addEventListener("click", function (e) {
       e.preventDefault();
+
+      // Validate form before showing toast
       if (validateForm()) {
-        updateInformation();
+        showToast("Thay đổi đã được lưu");
       }
     });
-  }
-
-  // Handle Update Password button
-  const updatePasswordBtn = document.querySelector(".update-password");
-  if (updatePasswordBtn) {
-    updatePasswordBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      updatePassword();
-    });
-  }
+  });
 
   // Modal functionality
   const modal = document.querySelector(".modal-backdrop");
@@ -47,40 +37,41 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Close modal when clicking outside
-  if (modal) {
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) {
-        hideModal();
-      }
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      hideModal();
+    }
+  });
+
+  // Close modal with cancel button in modal
+  const modalCancel = modal.querySelector(".btn.secondary");
+  if (modalCancel) {
+    modalCancel.addEventListener("click", function () {
+      hideModal();
     });
-
-    // Close modal with cancel button in modal
-    const modalCancel = modal.querySelector(".btn.secondary");
-    if (modalCancel) {
-      modalCancel.addEventListener("click", function () {
-        hideModal();
-      });
-    }
-
-    // Confirm action in modal
-    const modalConfirm = modal.querySelector(".btn:not(.secondary)");
-    if (modalConfirm) {
-      modalConfirm.addEventListener("click", function () {
-        hideModal();
-        showToast("Hành động đã được xác nhận");
-      });
-    }
   }
 
-  // Navigation functionality - Handle tab switching
+  // Confirm action in modal
+  const modalConfirm = modal.querySelector(".btn:not(.secondary)");
+  if (modalConfirm) {
+    modalConfirm.addEventListener("click", function () {
+      hideModal();
+      // Perform confirmation action here
+      showToast("Hành động đã được xác nhận");
+    });
+  }
+
+  // Navigation functionality
   const navButtons = document.querySelectorAll(".nav button");
   navButtons.forEach((button) => {
     button.addEventListener("click", function () {
+      // Remove active class from all buttons
       navButtons.forEach((btn) => btn.classList.remove("active"));
+      // Add active class to clicked button
       this.classList.add("active");
 
-      const sectionId = this.getAttribute("data-section");
-      handleNavigation(sectionId);
+      // Handle navigation based on button text
+      handleNavigation(this.textContent.trim());
     });
   });
 
@@ -97,7 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
   if (logoutButton) {
     logoutButton.addEventListener("click", function () {
       if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+        // Perform logout action here
         showToast("Đã đăng xuất thành công");
+        // Redirect to login page after 1 second
         setTimeout(() => {
           window.location.href = "../../Pages/Login.html";
         }, 1000);
@@ -106,172 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Load user detail
-async function getUserDetail() {
-  try {
-    const token = localStorage.getItem("accessToken");
-    const payloadDecoded = jwtDecode(token);
-    const userId = payloadDecoded._id;
-    if (!token) {
-      setTimeout(() => {
-        window.location.href = "../../Pages/Login.html";
-      }, 1500);
-      return;
-    }
-
-    const response = await fetch(
-      `http://localhost:5000/api/authUser/userDetail/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.status !== 200) {
-      throw new Error("Không thể tải thông tin người dùng");
-    }
-
-    const userData = await response.json();
-    displayUserInformation(userData);
-  } catch (error) {
-    console.error("Error loading user info:", error);
-    showToast("Lỗi khi tải thông tin người dùng");
-  }
-}
-
-function displayUserInformation(userData) {
-  const nameField = document.getElementById("name");
-  const emailField = document.getElementById("email");
-  const joinDateField = document.getElementById("joinDate");
-  const userName = document.querySelector(".sidebar .name");
-
-  if (nameField && userData.userName) nameField.value = userData.userName;
-  if (emailField && userData.email) emailField.value = userData.email;
-
-  const joinYear = userData.joinDate.split("-")[0];
-  const joinMonth = userData.joinDate.split("-")[1];
-  const joinDay =
-    userData.joinDate.split("-")[2].split("")[0] +
-    userData.joinDate.split("-")[2].split("")[1];
-  const joinDate = joinDay + "/" + joinMonth + "/" + joinYear;
-  if (joinDateField && userData.joinDate) {
-    joinDateField.value = joinDate;
-    joinDateField.setAttribute("readonly", true);
-    joinDateField.style.cursor = "not-allowed";
-  }
-  if (userName && userData.userName) userName.textContent = userData.userName;
-}
-
-async function updateInformation() {
-  try {
-    const token = localStorage.getItem("accessToken");
-    const payloadDecoded = jwtDecode(token);
-    const userId = payloadDecoded._id;
-
-    const nameField = document.getElementById("name");
-    const emailField = document.getElementById("email");
-
-    const updatedData = {
-      name: nameField ? nameField.value.trim() : "",
-      email: emailField ? emailField.value.trim() : "",
-    };
-
-    const response = await fetch(
-      `http://localhost:5000/api/authUser/updateInfo/${userId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedData),
-      }
-    );
-
-    if (response.status !== 200) {
-      throw new Error("Không thể cập nhật thông tin");
-    }
-
-    const result = await response.json();
-    showToast("Thay đổi đã được lưu");
-    if (result.userName) {
-      const userName = document.querySelector(".sidebar .name");
-      if (userName) userName.textContent = result.userName;
-    }
-  } catch (error) {
-    console.error("Error saving user info:", error);
-    showToast("Lỗi khi lưu thông tin");
-  }
-}
-
-async function updatePassword() {
-  try {
-    const token = localStorage.getItem("accessToken");
-    const payloadDecoded = jwtDecode(token);
-    const userId = payloadDecoded._id;
-
-    const currentPasswordField = document.getElementById("current-password");
-    const newPasswordField = document.getElementById("new-password");
-    const confirmPasswordField = document.getElementById("confirm-password");
-
-    // Kiểm tra nhập hợp lệ trước khi gửi
-    if (
-      !currentPasswordField.value.trim() ||
-      !newPasswordField.value.trim() ||
-      !confirmPasswordField.value.trim()
-    ) {
-      showToast("Vui lòng nhập đầy đủ thông tin");
-      return;
-    }
-
-    if (newPasswordField.value !== confirmPasswordField.value) {
-      showToast("Mật khẩu xác nhận không khớp");
-      return;
-    }
-
-    if (newPasswordField.value.length < 6) {
-      showToast("Mật khẩu phải có ít nhất 6 ký tự");
-      return;
-    }
-
-    const updatedData = {
-      currentPassword: currentPasswordField.value.trim(),
-      newPassword: newPasswordField.value.trim(),
-    };
-
-    const response = await fetch(
-      `http://localhost:5000/api/authUser/updatePassword/${userId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedData),
-      }
-    );
-
-    const result = await response.json();
-
-    if (response.status === 200) {
-      showToast(result.message || "Đổi mật khẩu thành công");
-
-      // Reset ô input
-      currentPasswordField.value = "";
-      newPasswordField.value = "";
-      confirmPasswordField.value = "";
-    } else {
-      showToast(result.message || "Đổi mật khẩu thất bại");
-    }
-  } catch (error) {
-    console.error("Error updating password:", error);
-    showToast("Lỗi khi đổi mật khẩu");
-  }
-}
-
 // Function to show toast message
 function showToast(message) {
   const toast = document.querySelector(".toast");
@@ -279,8 +106,6 @@ function showToast(message) {
 
   if (toastText) {
     toastText.textContent = message;
-  } else {
-    toast.childNodes[0].textContent = message + " ";
   }
 
   toast.classList.add("show");
@@ -399,8 +224,6 @@ function handleNavigation(section) {
     default:
       console.log("Unknown section:", section);
   }
-
-  console.log("Navigated to:", sectionId);
 }
 
 function showSection(sectionId) {
@@ -453,11 +276,20 @@ function updateAvatar(imageUrl) {
 function updateUserInfo(userData) {
   const nameField = document.getElementById("name");
   const emailField = document.getElementById("email");
+  const phoneField = document.getElementById("phone");
+  const birthdayField = document.getElementById("birthday");
   const userName = document.querySelector(".sidebar .name");
 
   if (nameField && userData.name) nameField.value = userData.name;
   if (emailField && userData.email) emailField.value = userData.email;
+  if (phoneField && userData.phone) phoneField.value = userData.phone;
+  if (birthdayField && userData.birthday)
+    birthdayField.value = userData.birthday;
   if (userName && userData.name) userName.textContent = userData.name;
+
+  if (userData.avatar) {
+    updateAvatar(userData.avatar);
+  }
 }
 
 // Export functions for use in other modules

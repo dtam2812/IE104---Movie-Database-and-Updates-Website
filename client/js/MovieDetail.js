@@ -132,6 +132,7 @@ function renderInfo(movie) {
     console.error("Không tìm thấy .tab-panel--info container");
     return;
   }
+  const releaseDate = new Date(movie.release_date);
 
   infoPanel.innerHTML = `
     <h3>Thông tin phim</h3>
@@ -154,7 +155,7 @@ function renderInfo(movie) {
     <div class="movie-info">
       <div class="movie-info__label">Nhà sản xuất:</div>
       <div class="movie-info__value">${
-        movie.production_companies?.[0]?.name || "Không rõ"
+        movie.production_companies?.[0]?.name || "Đang cập nhật"
       }</div>
     </div>
     <div class="movie-info">
@@ -171,10 +172,15 @@ function renderInfo(movie) {
     </div>
     <div class="movie-info">
       <div class="movie-info__label">Trạng thái:</div>
-      <div class="movie-info__value">${movie.status || "Không rõ"}</div>
+      <div class="movie-info__value">${movie.status || "Đang cập nhật"}</div>
+    </div>
+    <div class="movie-info">
+      <div class="movie-info__label">Ngày ra mắt:</div>
+      <div class="movie-info__value">${
+        releaseDate.toLocaleDateString("vi-VN") || "Đang cập nhật"
+      }</div>
     </div>
   `;
-  console.log(movie);
 }
 
 // Đề xuất phim
