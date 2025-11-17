@@ -4,9 +4,9 @@ const params = new URLSearchParams(window.location.search);
 const query = params.get("query") || "";
 document.getElementById("query-text").textContent = query;
 
-const grid = document.getElementById("results-grid");
-const pagination = document.getElementById("pagination");
-const filterButtons = document.querySelectorAll(".filter-btn");
+const grid = document.getElementById("results-grid"); // id không đổi
+const pagination = document.getElementById("pagination"); // id không đổi
+const filterButtons = document.querySelectorAll(".search-page__filter-btn");
 
 let currentFilter = "all";
 let allResults = [];
@@ -32,7 +32,7 @@ Promise.all([
 
 // Hàm load dữ liệu từ TMDB
 async function loadResults(type = "all") {
-  grid.innerHTML = "<p class='placeholder-text'>Đang tải...</p>";
+  grid.innerHTML = "<p class='search-page__placeholder'>Đang tải...</p>";
   const currentPage = currentPages[type];
 
   try {
@@ -97,15 +97,17 @@ async function loadResults(type = "all") {
     renderPaginationModern(currentPage, totalPages, type);
   } catch (err) {
     console.error(err);
-    grid.innerHTML = "<p class='placeholder-text'>Lỗi tải dữ liệu.</p>";
+    grid.innerHTML = "<p class='search-page__placeholder'>Lỗi tải dữ liệu.</p>";
   }
 }
 
 // Xử lý click tab
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
-    filterButtons.forEach((b) => b.classList.remove("active"));
-    btn.classList.add("active");
+    filterButtons.forEach((b) =>
+      b.classList.remove("search-page__filter-btn--active")
+    );
+    btn.classList.add("search-page__filter-btn--active");
     currentFilter = btn.dataset.type;
     currentPages[currentFilter] = 1;
     loadResults(currentFilter);
@@ -117,7 +119,8 @@ function renderResults() {
   grid.innerHTML = "";
 
   if (!allResults.length) {
-    grid.innerHTML = "<p class='placeholder-text'>Không tìm thấy kết quả.</p>";
+    grid.innerHTML =
+      "<p class='search-page__placeholder'>Không tìm thấy kết quả.</p>";
     return;
   }
 

@@ -1,338 +1,160 @@
 import { TMDB_API_KEY } from "../../config.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
-const IMG_URL = "https://image.tmdb.org/t/p/w500";
+const IMG_URL = "https://image.tmdb.org/t/p/w300";
 
-// ========== HÀM CHÍNH ========== //
-async function fetchMovieDetails(movieId) {
+const params = new URLSearchParams(window.location.search);
+const personId = params.get("id");
+
+const personImage = document.getElementById("person-image");
+const personName = document.getElementById("person-name");
+const alsoKnownAs = document.getElementById("also-known-as");
+const biography = document.getElementById("biography");
+const gender = document.getElementById("gender");
+const birthday = document.getElementById("birthday");
+const moviesGrid = document.getElementById("movies-grid");
+
+let currentPage = 1;
+const perPage = 10;
+let allMovies = [];
+let movieCardTemplate = "";
+let tvCardTemplate = "";
+
+/* LOAD TEMPLATE */
+Promise.all([
+  fetch("../components/MovieCardRender.html").then((res) => res.text()),
+  fetch("../components/TvShowCardRender.html").then((res) => res.text()),
+])
+  .then(([movieHTML, tvHTML]) => {
+    movieCardTemplate = movieHTML;
+    tvCardTemplate = tvHTML;
+    loadPersonDetail();
+    loadPersonMovies();
+  })
+  .catch((err) => console.error("Không tải được template:", err));
+
+/* PERSON DETAIL */
+async function loadPersonDetail() {
   try {
     const res = await fetch(
-      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
     );
-    const movie = await res.json();
+    const data = await res.json();
 
-    // --- Ảnh poster ---
-    document.querySelector(".movie-content-left img").src = movie.poster_path
-      ? `${IMG_URL}${movie.poster_path}`
-      : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
+    personName.textContent = data.name || "Đang cập nhật";
+    alsoKnownAs.textContent = data.also_known_as?.[0] || "Đang cập nhật";
+    biography.textContent = data.biography || "Đang cập nhật";
 
-    // --- Tiêu đề ---
-    document.querySelector(".movie-content-title h3").textContent =
-      movie.title || movie.original_title || "Không rõ";
+    gender.textContent =
+      data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
 
-    // --- Giới thiệu ---
-    document.querySelector(".movie-content-overview").innerHTML = `
-      <span>Giới thiệu:</span><br>${movie.overview || "Không có mô tả"}
-    `;
+    birthday.textContent = data.birthday || "Đang cập nhật";
 
-    // --- Điểm IMDb ---
-    document.querySelector(".movie-content-score span").textContent =
-      movie.vote_average?.toFixed(1) || "N/A";
+    const profile = data.profile_path
+      ? `${IMG_URL}${data.profile_path}`
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          data.name || "Unknown"
+        )}&size=300&background=1a1a2e&color=0891b2`;
 
-    // --- Thể loại ---
-    document.querySelector(".movie-content-type").innerHTML =
-      movie.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
-      "<span>Không rõ</span>";
-
-    // --- Đạo diễn ---
-    const director =
-      movie.credits?.crew?.find((p) => p.job === "Director")?.name ||
-      "Không rõ";
-    document.querySelector(".movie-content-director p").innerHTML = `
-      <span>Đạo diễn:</span> ${director}
-    `;
-
-    // --- Ảnh nền ---
-    const bg = document.querySelector(".background-fade");
-    bg.style.backgroundImage = movie.backdrop_path
-      ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
-      : "none";
-    bg.style.backgroundSize = "cover";
-    bg.style.backgroundPosition = "center";
-
-    // --- Diễn viên ---
-    renderActors(movie.credits?.cast || []);
-
-    // --- Thông tin phim ---
-    renderInfo(movie);
-  } catch (error) {
-    console.error("Lỗi khi tải chi tiết phim:", error);
+    personImage.src = profile;
+  } catch (err) {
+    console.error(err);
   }
 }
 
-// ========== TẠO HTML CHO 1 DIỄN VIÊN ========== //
-function createActorHTML(actor) {
-  const img = actor.profile_path
-    ? `${IMG_URL}${actor.profile_path}`
-    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-        actor.name
-      )}&size=300&background=1a1a2e&color=0891b2`;
-
-  return `
-    <div class="cast-box">
-      <a class="cast-card" href="CastDetail.html?id=${actor.id}">
-        <div class="cast-img">
-          <img src="${img}" alt="${actor.name}" />
-        </div>
-      </a>
-      <div class="info">
-        <h4 class="name">
-          <a href="CastDetail.html?id=${actor.id}">${actor.name}</a>
-        </h4>
-        <h4 class="other-name">
-          <a href="#">${actor.original_name}</a>
-        </h4>
-      </div>
-    </div>`;
-}
-
-// ========== RENDER CÁC PHẦN ========== //
-function renderActors(actors) {
-  const actorContainer = document.querySelector("#actors .circle-actor");
-  const viewMoreBtn = document.querySelector("#actors .view-more");
-
-  if (!actorContainer) {
-    console.error("Không tìm thấy .circle-actor container");
-    return;
-  }
-
-  actorContainer.innerHTML = "";
-
-  if (!actors.length) {
-    actorContainer.innerHTML = "<p>Không có thông tin diễn viên.</p>";
-    if (viewMoreBtn) viewMoreBtn.style.display = "none";
-    return;
-  }
-
-  // Lưu toàn bộ danh sách diễn viên vào data attribute
-  actorContainer.dataset.allActors = JSON.stringify(actors);
-
-  // Hiển thị 5 diễn viên đầu tiên
-  const actorsToShow = actors.slice(0, 5);
-
-  actorsToShow.forEach((actor) => {
-    actorContainer.insertAdjacentHTML("beforeend", createActorHTML(actor));
-  });
-
-  // Ẩn nút "Xem thêm" nếu có 5 diễn viên hoặc ít hơn
-  if (viewMoreBtn) {
-    if (actors.length <= 5) {
-      viewMoreBtn.style.display = "none";
-    } else {
-      viewMoreBtn.style.display = "block";
-      viewMoreBtn.textContent = `Xem thêm (${actors.length - 5}) ⮟`;
-    }
-  }
-}
-
-function renderInfo(movie) {
-  const infoGrid = document.querySelector("#info .info-grid");
-
-  if (!infoGrid) {
-    console.error("Không tìm thấy .info-grid container");
-    return;
-  }
-  const releaseDate = new Date(movie.release_date);
-
-  infoGrid.innerHTML = `
-    <h3>Thông tin phim</h3>
-    <div class="movie-info">
-      <div class="movie-info-title">Thời lượng:</div>
-      <div class="movie-info-value">${
-        movie.runtime ? movie.runtime + " phút" : "Không rõ"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info-title">Quốc gia:</div>
-      <div class="movie-info-value">${
-        movie.production_countries?.[0]?.iso_3166_1
-          ? `<img src="https://flagcdn.com/48x36/${movie.production_countries[0].iso_3166_1.toLowerCase()}.png" 
-                alt="${movie.production_countries[0].name}" 
-                style="width: 32px; height: 24px; vertical-align: middle;">`
-          : "Không rõ"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info-title">Nhà sản xuất:</div>
-      <div class="movie-info-value">${
-        movie.production_companies?.[0]?.name || "Đang cập nhật"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info-title">Ngân sách:</div>
-      <div class="movie-info-value">${
-        movie.budget ? movie.budget.toLocaleString() + " $" : "Đang cập nhật"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info-title">Doanh thu:</div>
-      <div class="movie-info-value">${
-        movie.revenue ? movie.revenue.toLocaleString() + " $" : "Đang cập nhật"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info-title">Trạng thái:</div>
-      <div class="movie-info-value">${movie.status || "Đang cập nhật"}</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info-title">Ngày ra mắt:</div>
-      <div class="movie-info-value">${
-        releaseDate.toLocaleDateString("vi-VN") || "Đang cập nhật"
-      }</div>
-    </div>
-  `;
-}
-
-// ========== ĐỀ XUẤT PHIM ========== //
-async function loadRecommendedMovies(movieId) {
-  const container = document.getElementById("recommendations");
-
-  if (!container) {
-    console.error("Không tìm thấy #recommendations container");
-    return;
-  }
-
-  container.innerHTML = "<p>Đang tải...</p>";
-
+/* LOAD MOVIES */
+async function loadPersonMovies() {
   try {
-    let allMovies = [];
-    let page = 1;
-    let totalPages = 1;
+    const res = await fetch(
+      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
+    );
+    const data = await res.json();
 
-    do {
-      const res = await fetch(
-        `${BASE_URL}/movie/${movieId}/recommendations?api_key=${TMDB_API_KEY}&language=vi-VN&page=${page}`
-      );
-      const data = await res.json();
+    allMovies = data.cast.sort((a, b) => b.popularity - a.popularity);
 
-      if (data.results?.length) {
-        allMovies = allMovies.concat(data.results);
-      }
-
-      totalPages = data.total_pages || 1;
-      page++;
-    } while (page <= totalPages);
-
-    const movies = allMovies.slice(0, 12);
-    container.innerHTML = "";
-
-    if (!movies.length) {
-      container.innerHTML = "<p>Không có phim đề xuất.</p>";
-      return;
-    }
-
-    movies.forEach((movie) => {
-      const poster = movie.poster_path
-        ? `${IMG_URL}${movie.poster_path}`
-        : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
-
-      const html = `
-        <div class="movie-box">
-          <a class="movie-card" href="MovieDetail.html?id=${movie.id}">
-            <div class="card-info-top">
-              <div class="card-info-ep-top"><span>Movie</span></div>
-            </div>
-            <div>
-              <img src="${poster}" alt="${movie.title}">
-            </div>
-          </a>
-          <div class="info">
-            <h4 class="vietnam-title">
-              <a href="MovieDetail.html?id=${movie.id}">${movie.title}</a>
-            </h4>
-            <h4 class="other-title">
-              <a href="MovieDetail.html?id=${movie.id}">${movie.original_title}</a>
-            </h4>
-          </div>
-        </div>
-      `;
-
-      container.insertAdjacentHTML("beforeend", html);
-    });
-  } catch (error) {
-    console.error("Lỗi tải phim đề xuất:", error);
-    container.innerHTML = "<p>Có lỗi khi tải đề xuất.</p>";
+    renderMoviesPage();
+  } catch (err) {
+    console.error(err);
   }
 }
 
-// ========== CHUYỂN TAB ========== //
-function initTabs() {
-  const tabs = document.querySelectorAll(".tab");
-  const tabContents = document.querySelectorAll(".tab-content");
+/* RENDER LIST */
+function renderMoviesPage() {
+  const totalPages = Math.ceil(allMovies.length / perPage);
+  const start = (currentPage - 1) * perPage;
+  const end = start + perPage;
 
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", function () {
-      const targetTab = this.getAttribute("data-tab");
+  moviesGrid.innerHTML = "";
 
-      // Bỏ active của tất cả tabs và contents
-      tabs.forEach((t) => t.classList.remove("active"));
-      tabContents.forEach((content) => content.classList.remove("active"));
+  const currentMovies = allMovies.slice(start, end);
 
-      // Thêm active cho tab được chọn
-      this.classList.add("active");
+  currentMovies.forEach((item) => {
+    const template =
+      item.media_type === "tv" ? tvCardTemplate : movieCardTemplate;
 
-      // Thêm active cho content tương ứng
-      const targetContent = document.getElementById(targetTab);
-      if (targetContent) {
-        targetContent.classList.add("active");
-      }
-    });
+    const poster = item.poster_path
+      ? `${IMG_URL}${item.poster_path}`
+      : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
+
+    let cardHTML = template
+      .replace(/{{id}}/g, item.id)
+      .replace(/{{poster}}/g, poster)
+      .replace(/{{title}}/g, item.title || item.name)
+      .replace(
+        /{{original_title}}/g,
+        item.original_title || item.original_name
+      );
+
+    moviesGrid.insertAdjacentHTML("beforeend", cardHTML);
   });
+
+  renderPaginationModern(currentPage, totalPages);
 }
 
-// ========== XEM THÊM (DIỄN VIÊN) ========== //
-function initViewMore(buttonSelector, contentSelector) {
-  const viewMoreBtn = document.querySelector(buttonSelector);
-  const content = document.querySelector(contentSelector);
+/* PAGINATION */
+function renderPaginationModern(page, total) {
+  const old = document.querySelector(".pagination");
+  if (old) old.remove();
 
-  if (!viewMoreBtn || !content) return;
+  if (total <= 1) return;
 
-  viewMoreBtn.addEventListener("click", function (e) {
-    e.preventDefault();
+  const container = document.createElement("div");
+  container.classList.add("pagination");
 
-    const isExpanded = content.classList.contains("expanded");
+  const prev = document.createElement("button");
+  prev.classList.add("pagination__button");
+  prev.innerHTML = "&#8592;";
+  prev.disabled = page === 1;
 
-    if (isExpanded) {
-      // ====== THU GỌN ======
-      const allActors = JSON.parse(content.dataset.allActors || "[]");
-      content.innerHTML = "";
-      const actorsToShow = allActors.slice(0, 5);
+  prev.onclick = () => {
+    currentPage--;
+    renderMoviesPage();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-      actorsToShow.forEach((actor) => {
-        content.insertAdjacentHTML("beforeend", createActorHTML(actor));
-      });
-      const remaining = allActors.length - 5;
-      this.textContent =
-        remaining > 0 ? `Xem thêm (${remaining}) ⮟` : "Xem thêm ⮟";
+  const info = document.createElement("div");
+  info.classList.add("pagination__info");
+  info.innerHTML = `
+    <span>Trang</span>
+    <span class="pagination__current">${page}</span>
+    <span>/</span>
+    <span>${total}</span>
+  `;
 
-      content.classList.remove("expanded");
+  const next = document.createElement("button");
+  next.classList.add("pagination__button");
+  next.innerHTML = "&#8594;";
+  next.disabled = page === total;
 
-      // Cuộn lên đầu section
-      const parentSection = content.closest(".grid-layout");
-      if (parentSection) {
-        parentSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    } else {
-      // ====== MỞ RỘNG ======
-      const allActors = JSON.parse(content.dataset.allActors || "[]");
-      content.innerHTML = "";
-      allActors.forEach((actor) => {
-        content.insertAdjacentHTML("beforeend", createActorHTML(actor));
-      });
+  next.onclick = () => {
+    currentPage++;
+    renderMoviesPage();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-      content.classList.add("expanded");
-      this.textContent = "Thu gọn ⮝";
-    }
-  });
+  container.appendChild(prev);
+  container.appendChild(info);
+  container.appendChild(next);
+
+  moviesGrid.after(container);
 }
-
-// ========== KHỞI CHẠY ========== //
-document.addEventListener("DOMContentLoaded", () => {
-  const movieId =
-    new URLSearchParams(window.location.search).get("id") || 1242404;
-
-  fetchMovieDetails(movieId);
-  loadRecommendedMovies(movieId);
-  initTabs();
-  initViewMore("#actors .view-more", "#actors .circle-actor");
-});

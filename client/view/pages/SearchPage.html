@@ -51,19 +51,32 @@
     </script>
 
     <!-- Nội dung -->
-    <div class="search-result-container">
-      <h2>Kết quả tìm kiếm cho "<span id="query-text"></span>"</h2>
+    <div class="search-page">
+      <h2>
+        Kết quả tìm kiếm cho "<span
+          id="query-text"
+          class="search-page__query"
+        ></span
+        >"
+      </h2>
 
-      <div class="filter-buttons">
-        <button class="filter-btn active" data-type="movie">Phim</button>
-        <button class="filter-btn" data-type="person">Diễn viên</button>
+      <div class="search-page__filters">
+        <button
+          class="search-page__filter-btn search-page__filter-btn--active"
+          data-type="movie"
+        >
+          Phim
+        </button>
+        <button class="search-page__filter-btn" data-type="person">
+          Diễn viên
+        </button>
       </div>
 
-      <div id="results-grid" class="results-grid">
-        <p class="placeholder-text">Đang tải...</p>
+      <div id="results-grid" class="search-page__grid">
+        <p class="search-page__placeholder">Đang tải...</p>
       </div>
 
-      <div id="pagination" class="pagination"></div>
+      <div id="pagination" class="search-page__pagination"></div>
     </div>
 
     <!-- Footer -->
