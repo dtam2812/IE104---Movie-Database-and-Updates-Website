@@ -1,9 +1,11 @@
+
+
 <!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tài khoản — UIT FILM</title>
+    <title>Tài khoản - UIT FILM</title>
     <link
       rel="icon"
       type="image/png"
@@ -47,14 +49,25 @@
 
     <!-- main user detail -->
     <div id="userDetailMain"></div>
-    <script>
-      fetch("../components/UserDetailMain.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("userDetailMain").innerHTML = html;
-        })
-        .catch((err) => console.error("UserDetailMain load error:", err));
-    </script>
+    <script type="module">
+  import { initTranslate } from "../../js/Translate.js";
+  import { initUserDetail } from "../../js/UserDetail.js";
+  
+  fetch("../components/UserDetailMain.html")
+    .then((res) => res.text())
+    .then(async (html) => {  // ✅ Thêm async
+      document.getElementById("userDetailMain").innerHTML = html;
+      
+      // ✅ Đợi i18n init XONG
+      await initTranslate();
+      
+      // ✅ Sau đó mới init UserDetail
+      initUserDetail();
+      
+      console.log("✅ All components loaded and initialized");
+    })
+    .catch((err) => console.error("UserDetailMain load error:", err));
+</script>
 
     <!-- start-footer -->
     <div id="footer"></div>
@@ -72,21 +85,19 @@
 
     <!-- Toast -->
     <div class="toast">
-      Thay đổi đã được lưu
-      <button>Đóng</button>
+      <span data-i18n="userdetail.changesSaved">Thay đổi đã được lưu</span>
+      <button data-i18n="userdetail.close">Đóng</button>
     </div>
 
     <!-- Modal -->
     <div class="modal-backdrop">
       <div class="modal">
-        <h3>Xác nhận</h3>
-        <p>Bạn có chắc chắn muốn thay đổi thông tin?</p>
+        <h3 data-i18n="userdetail.confirmAction">Xác nhận</h3>
+        <p data-i18n="userdetail.confirmMessage">Bạn có chắc chắn muốn thay đổi thông tin?</p>
         <div class="actions">
-          <button class="btn">Xác nhận</button>
+          <button class="btn" data-i18n="userdetail.confirmAction">Xác nhận</button>
         </div>
       </div>
     </div>
-
-    <script type="module" src="../../js/UserDetail.js"></script>
   </body>
 </html>

@@ -1,8 +1,43 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 
-// UserDetail.js - Xử lý tương tác cho trang User Detail
-document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(() => getUserDetail(), 1500);
+// Global translations object
+let translations = {};
+
+// Load translations based on current language
+async function loadTranslations() {
+  const lang = localStorage.getItem('language') || 'vi';
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    translations = await res.json();
+    console.log(`✅ Loaded ${lang} translations:`, Object.keys(translations).length, 'keys');
+  } catch (error) {
+    console.error('Failed to load translations:', error);
+  }
+}
+
+// Get translation by key
+function t(key) {
+  const value = translations[key];
+  if (!value) {
+    console.warn(`⚠️ Missing translation for key: ${key}`);
+    return key;
+  }
+  return value;
+}
+
+// Listen for language changes
+window.addEventListener('languagechange', async (e) => {
+  console.log('🔄 Language changed to:', e.detail.lang);
+  await loadTranslations();
+});
+
+// Hàm khởi tạo tất cả event listeners và chức năng
+export async function initUserDetail() {
+  // Load translations first
+  await loadTranslations();
+  
+  // Load user detail sau 500ms
+  setTimeout(() => getUserDetail(), 500);
 
   // Toast functionality
   const toast = document.querySelector(".toast");
@@ -17,21 +52,27 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle Save Personal Info button
   const savePersonalInfoBtn = document.querySelector(".save-personal-info");
   if (savePersonalInfoBtn) {
+    console.log("✅ Found save button");
     savePersonalInfoBtn.addEventListener("click", function (e) {
       e.preventDefault();
       if (validateForm()) {
         updateInformation();
       }
     });
+  } else {
+    console.error("❌ Save button not found");
   }
 
   // Handle Update Password button
   const updatePasswordBtn = document.querySelector(".update-password");
   if (updatePasswordBtn) {
+    console.log("✅ Found password button");
     updatePasswordBtn.addEventListener("click", function (e) {
       e.preventDefault();
       updatePassword();
     });
+  } else {
+    console.error("❌ Password button not found");
   }
 
   // Modal functionality
@@ -67,13 +108,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (modalConfirm) {
       modalConfirm.addEventListener("click", function () {
         hideModal();
-        showToast("Hành động đã được xác nhận");
+        showToast(t("userdetail.actionConfirmed"));
       });
     }
   }
 
   // Navigation functionality - Handle tab switching
   const navButtons = document.querySelectorAll(".nav button");
+  console.log(`✅ Found ${navButtons.length} navigation buttons`);
+  
   navButtons.forEach((button) => {
     button.addEventListener("click", function () {
       navButtons.forEach((btn) => btn.classList.remove("active"));
@@ -95,29 +138,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // Logout functionality
   const logoutButton = document.querySelector(".logout");
   if (logoutButton) {
+    console.log("✅ Found logout button");
     logoutButton.addEventListener("click", function () {
-      if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-        showToast("Đã đăng xuất thành công");
+      if (confirm(t("userdetail.logoutConfirm"))) {
+        showToast(t("userdetail.logoutSuccess"));
         setTimeout(() => {
-          window.location.href = "../../Pages/Login.html";
+          window.location.href = "../pages/HomePage.html";
         }, 1000);
       }
     });
   }
-});
+
+  // Favorites links
+  const favoritesLinks = document.querySelectorAll('[data-section="favorites"]');
+  favoritesLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Highlight button nav
+      const navButtons = document.querySelectorAll(".nav button");
+      navButtons.forEach((btn) => btn.classList.remove("active"));
+      link.classList.add("active");
+
+      // Show favorites section
+      showSection("favorites-section");
+    });
+  });
+
+  console.log("✅ UserDetail initialized successfully");
+}
 
 // Load user detail
 async function getUserDetail() {
   try {
     const token = localStorage.getItem("accessToken");
-    const payloadDecoded = jwtDecode(token);
-    const userId = payloadDecoded._id;
     if (!token) {
       setTimeout(() => {
-        window.location.href = "../../Pages/Login.html";
+        window.location.href = "../pages/HomePage.html";
       }, 1500);
       return;
     }
+
+    const payloadDecoded = jwtDecode(token);
+    const userId = payloadDecoded._id;
 
     const response = await fetch(
       `http://localhost:5000/api/authUser/userDetail/${userId}`,
@@ -131,14 +194,14 @@ async function getUserDetail() {
     );
 
     if (response.status !== 200) {
-      throw new Error("Không thể tải thông tin người dùng");
+      throw new Error("Cannot load user information");
     }
 
     const userData = await response.json();
     displayUserInformation(userData);
   } catch (error) {
     console.error("Error loading user info:", error);
-    showToast("Lỗi khi tải thông tin người dùng");
+    showToast(t("userdetail.errors.loadUserFailed"));
   }
 }
 
@@ -151,17 +214,17 @@ function displayUserInformation(userData) {
   if (nameField && userData.userName) nameField.value = userData.userName;
   if (emailField && userData.email) emailField.value = userData.email;
 
-  const joinYear = userData.joinDate.split("-")[0];
-  const joinMonth = userData.joinDate.split("-")[1];
-  const joinDay =
-    userData.joinDate.split("-")[2].split("")[0] +
-    userData.joinDate.split("-")[2].split("")[1];
-  const joinDate = joinDay + "/" + joinMonth + "/" + joinYear;
-  if (joinDateField && userData.joinDate) {
-    joinDateField.value = joinDate;
-    joinDateField.setAttribute("readonly", true);
-    joinDateField.style.cursor = "not-allowed";
+  if (userData.joinDate) {
+    const [year, month, day] = userData.joinDate.split("-");
+    const joinDate = `${day.substring(0, 2)}/${month}/${year}`;
+    
+    if (joinDateField) {
+      joinDateField.value = joinDate;
+      joinDateField.setAttribute("readonly", true);
+      joinDateField.style.cursor = "not-allowed";
+    }
   }
+  
   if (userName && userData.userName) userName.textContent = userData.userName;
 }
 
@@ -192,18 +255,19 @@ async function updateInformation() {
     );
 
     if (response.status !== 200) {
-      throw new Error("Không thể cập nhật thông tin");
+      throw new Error("Cannot update information");
     }
 
     const result = await response.json();
-    showToast("Thay đổi đã được lưu");
+    showToast(t("userdetail.changesSaved"));
+    
     if (result.userName) {
       const userName = document.querySelector(".sidebar .name");
       if (userName) userName.textContent = result.userName;
     }
   } catch (error) {
     console.error("Error saving user info:", error);
-    showToast("Lỗi khi lưu thông tin");
+    showToast(t("userdetail.errors.saveInfoFailed"));
   }
 }
 
@@ -217,23 +281,22 @@ async function updatePassword() {
     const newPasswordField = document.getElementById("new-password");
     const confirmPasswordField = document.getElementById("confirm-password");
 
-    // Kiểm tra nhập hợp lệ trước khi gửi
     if (
       !currentPasswordField.value.trim() ||
       !newPasswordField.value.trim() ||
       !confirmPasswordField.value.trim()
     ) {
-      showToast("Vui lòng nhập đầy đủ thông tin");
+      showToast(t("userdetail.errors.fillAllFields"));
       return;
     }
 
     if (newPasswordField.value !== confirmPasswordField.value) {
-      showToast("Mật khẩu xác nhận không khớp");
+      showToast(t("userdetail.errors.passwordNotMatch"));
       return;
     }
 
     if (newPasswordField.value.length < 6) {
-      showToast("Mật khẩu phải có ít nhất 6 ký tự");
+      showToast(t("userdetail.errors.passwordTooShort"));
       return;
     }
 
@@ -257,26 +320,30 @@ async function updatePassword() {
     const result = await response.json();
 
     if (response.status === 200) {
-      showToast(result.message || "Đổi mật khẩu thành công");
-
-      // Reset ô input
+      showToast(result.message || t("userdetail.passwordChangeSuccess"));
       currentPasswordField.value = "";
       newPasswordField.value = "";
       confirmPasswordField.value = "";
     } else {
-      showToast(result.message || "Đổi mật khẩu thất bại");
+      showToast(result.message || t("userdetail.passwordChangeFailed"));
     }
   } catch (error) {
     console.error("Error updating password:", error);
-    showToast("Lỗi khi đổi mật khẩu");
+    showToast(t("userdetail.errors.changePasswordFailed"));
   }
 }
 
 // Function to show toast message
 function showToast(message) {
-  const toast = document.querySelector(".toast");
-  const toastText = toast.querySelector("span");
+  console.log("🔍 showToast called with:", message);
 
+  const toast = document.querySelector(".toast");
+  if (!toast) {
+    console.error("❌ Toast element not found!");
+    return;
+  }
+
+  const toastText = toast.querySelector("span");
   if (toastText) {
     toastText.textContent = message;
   } else {
@@ -284,62 +351,51 @@ function showToast(message) {
   }
 
   toast.classList.add("show");
+  console.log("✅ Toast class:", toast.className);
 
-  // Auto hide after 3 seconds
   setTimeout(() => {
     toast.classList.remove("show");
   }, 3000);
 }
 
-// Function to show modal
 function showModal() {
   const modal = document.querySelector(".modal-backdrop");
-  modal.style.display = "flex";
+  if (modal) modal.style.display = "flex";
 }
 
-// Function to hide modal
 function hideModal() {
   const modal = document.querySelector(".modal-backdrop");
-  modal.style.display = "none";
+  if (modal) modal.style.display = "none";
 }
 
-// Function to validate form
 function validateForm() {
   let isValid = true;
 
-  // Validate required fields
   const requiredFields = document.querySelectorAll("input[required]");
   requiredFields.forEach((field) => {
     if (!field.value.trim()) {
-      showError(field, "Trường này là bắt buộc");
+      showError(field, t("userdetail.errors.fieldRequired"));
       isValid = false;
     } else {
       clearError(field);
     }
   });
 
-  // Validate email format
   const emailField = document.getElementById("email");
   if (emailField && emailField.value) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailField.value)) {
-      showError(emailField, "Email không hợp lệ");
+      showError(emailField, t("userdetail.errors.invalidEmail"));
       isValid = false;
     }
   }
 
-  // Validate password match
   const newPassword = document.getElementById("new-password");
   const confirmPassword = document.getElementById("confirm-password");
 
-  if (
-    newPassword &&
-    confirmPassword &&
-    newPassword.value &&
-    confirmPassword.value
-  ) {
+  if (newPassword && confirmPassword && newPassword.value && confirmPassword.value) {
     if (newPassword.value !== confirmPassword.value) {
-      showError(confirmPassword, "Mật khẩu xác nhận không khớp");
+      showError(confirmPassword, t("userdetail.errors.passwordNotMatch"));
       isValid = false;
     }
   }
@@ -347,10 +403,9 @@ function validateForm() {
   return isValid;
 }
 
-// Function to validate password field
 function validatePasswordField(field) {
   if (field.value && field.value.length < 6) {
-    showError(field, "Mật khẩu phải có ít nhất 6 ký tự");
+    showError(field, t("userdetail.errors.passwordTooShort"));
     return false;
   } else {
     clearError(field);
@@ -358,17 +413,12 @@ function validatePasswordField(field) {
   }
 }
 
-// Function to show error message
 function showError(field, message) {
   field.classList.add("input-invalid");
 
-  // Remove existing error message
   const existingError = field.parentNode.querySelector(".error");
-  if (existingError) {
-    existingError.remove();
-  }
+  if (existingError) existingError.remove();
 
-  // Create and show error message
   const errorElement = document.createElement("div");
   errorElement.className = "error";
   errorElement.textContent = message;
@@ -377,45 +427,35 @@ function showError(field, message) {
   field.parentNode.appendChild(errorElement);
 }
 
-// Function to clear error message
 function clearError(field) {
   field.classList.remove("input-invalid");
-
   const errorElement = field.parentNode.querySelector(".error");
-  if (errorElement) {
-    errorElement.remove();
-  }
+  if (errorElement) errorElement.remove();
 }
 
-// Function to handle navigation between sections
 function handleNavigation(section) {
-  switch (section) {
-    case "Thông tin cá nhân":
-      showSection("personal-info-section");
-      break;
-    case "Yêu thích":
-      showSection("favorites-section");
-      break;
-    default:
-      console.log("Unknown section:", section);
-  }
+  const sectionMap = {
+    "personal-info": "personal-info-section",
+    "favorites": "favorites-section"
+  };
 
-  console.log("Navigated to:", sectionId);
+  const targetSectionId = sectionMap[section];
+  if (targetSectionId) {
+    showSection(targetSectionId);
+  } else {
+    console.log("Unknown section:", section);
+  }
 }
 
 function showSection(sectionId) {
-  // Hide all sections
   const allSections = document.querySelectorAll(".content-section");
   allSections.forEach((section) => {
     section.classList.remove("active");
   });
 
-  // Show target section
   const targetSection = document.getElementById(sectionId);
   if (targetSection) {
     targetSection.classList.add("active");
-
-    // Scroll to top of the section smoothly
     setTimeout(() => {
       targetSection.scrollIntoView({
         behavior: "smooth",
@@ -423,50 +463,4 @@ function showSection(sectionId) {
       });
     }, 50);
   }
-}
-
-const favoritesLinks = document.querySelectorAll('[data-section="favorites"]');
-
-favoritesLinks.forEach((link) => {
-  link.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    // Highlight button nav
-    const navButtons = document.querySelectorAll(".nav button");
-    navButtons.forEach((btn) => btn.classList.remove("active"));
-    link.classList.add("active");
-
-    // Show favorites section
-    showSection("favorites-section");
-  });
-});
-
-// Function to update user avatar
-function updateAvatar(imageUrl) {
-  const avatar = document.querySelector(".avatar img");
-  if (avatar) {
-    avatar.src = imageUrl;
-  }
-}
-
-// Function to update user information
-function updateUserInfo(userData) {
-  const nameField = document.getElementById("name");
-  const emailField = document.getElementById("email");
-  const userName = document.querySelector(".sidebar .name");
-
-  if (nameField && userData.name) nameField.value = userData.name;
-  if (emailField && userData.email) emailField.value = userData.email;
-  if (userName && userData.name) userName.textContent = userData.name;
-}
-
-// Export functions for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    showToast,
-    showModal,
-    hideModal,
-    validateForm,
-    updateUserInfo,
-  };
 }

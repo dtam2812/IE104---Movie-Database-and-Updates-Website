@@ -1,6 +1,8 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 
-export function Auth_Modaljs() {
+export async function Auth_Modaljs() {
+  // Không cần gọi initTranslate() vì HTML đã gọi rồi
+
   const modal = document.querySelector(".modal");
   const backdrop = document.querySelector(".modal_backdrop");
   const closeBtn = document.querySelector(".modal_close");
@@ -33,10 +35,16 @@ export function Auth_Modaljs() {
 
   switchLink.forEach((link) => {
     link.addEventListener("click", () => {
-      const text = link.textContent.trim();
-      if (text.includes("Đăng kí ngay")) window.openLRFModal("register");
-      else if (text.includes("Đăng nhập")) window.openLRFModal("login");
-      else if (text.includes("Quên mật khẩu?")) window.openLRFModal("forgot");
+      const key = link.getAttribute("data-i18n");
+      
+      // Kiểm tra key thay vì text để xác định form nào cần mở
+      if (key === "auth.login.register_now") {
+        window.openLRFModal("register");
+      } else if (key === "auth.register.login_now" || key === "auth.forgot.login_now") {
+        window.openLRFModal("login");
+      } else if (key === "auth.login.forgot") {
+        window.openLRFModal("forgot");
+      }
     });
   });
 

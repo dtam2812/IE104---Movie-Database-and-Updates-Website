@@ -238,6 +238,9 @@ export async function headerjs() {
           }
         });
 
+        const { initTranslate } = await import("./Translate.js");
+        await initTranslate();
+
         // Import file AuthModal.js vào
         const { Auth_Modaljs } = await import("./AuthModal.js");
         Auth_Modaljs();

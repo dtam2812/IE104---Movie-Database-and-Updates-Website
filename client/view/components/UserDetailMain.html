@@ -2,7 +2,7 @@
 <div class="container">
   <!-- Sidebar -->
   <div class="sidebar">
-    <h3>Tài khoản</h3>
+    <h3 data-i18n="userdetail.account">Tài khoản</h3>
     <div class="avatar">
       <img
         src="https://www.rophim.li/images/avatars/pack4/16.jpg"
@@ -14,17 +14,17 @@
     <div class="nav">
       <button type="button" class="active" data-section="personal-info">
         <i class="bx bx-user"></i>
-        Thông tin cá nhân
+        <span data-i18n="userdetail.personalInfo">Thông tin cá nhân</span>
       </button>
       <button type="button" data-section="favorites">
         <i class="bx bx-heart"></i>
-        Yêu thích
+        <span data-i18n="userdetail.favorites">Yêu thích</span>
       </button>
     </div>
 
     <button type="button" class="logout">
       <i class="bx bx-log-out"></i>
-      Đăng xuất
+      <span data-i18n="userdetail.logout">Đăng xuất</span>
     </button>
   </div>
 
@@ -32,57 +32,57 @@
   <div class="main">
     <!-- Personal Information Section -->
     <div class="content-section active" id="personal-info-section">
-      <h1 class="title">Thông tin cá nhân</h1>
-      <p class="subtitle">Quản lý thông tin cá nhân và tài khoản của bạn</p>
+      <h1 class="title" data-i18n="userdetail.title">Thông tin cá nhân</h1>
+      <p class="subtitle" data-i18n="userdetail.subtitle">Quản lý thông tin cá nhân và tài khoản của bạn</p>
 
       <div class="card">
         <div class="grid">
           <div class="form-group">
-            <label for="name">Họ và tên</label>
+            <label for="name" data-i18n="userdetail.fullName">Họ và tên</label>
             <input type="text" id="name" />
           </div>
 
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email" data-i18n="userdetail.email">Email</label>
             <input type="email" id="email" />
           </div>
 
           <div class="form-group">
-            <label for="joinDate">Ngày tham gia</label>
+            <label for="joinDate" data-i18n="userdetail.joinDate">Ngày tham gia</label>
             <input type="text" id="joinDate" />
           </div>
         </div>
 
         <div class="actions">
-          <button type="button" class="btn save-personal-info">
+          <button type="button" class="btn save-personal-info" data-i18n="userdetail.saveChanges">
             Lưu thay đổi
           </button>
-          <button type="button" class="btn secondary cancel-personal-info">
+          <button type="button" class="btn secondary cancel-personal-info" data-i18n="userdetail.cancel">
             Hủy
           </button>
         </div>
 
         <div class="card">
-          <h3 class="title">Đổi mật khẩu</h3>
+          <h3 class="title" data-i18n="userdetail.changePassword">Đổi mật khẩu</h3>
           <div class="grid">
             <div class="form-group">
-              <label for="current-password">Mật khẩu hiện tại</label>
+              <label for="current-password" data-i18n="userdetail.currentPassword">Mật khẩu hiện tại</label>
               <input type="password" id="current-password" />
             </div>
 
             <div class="form-group">
-              <label for="new-password">Mật khẩu mới</label>
+              <label for="new-password" data-i18n="userdetail.newPassword">Mật khẩu mới</label>
               <input type="password" id="new-password" />
             </div>
 
             <div class="form-group">
-              <label for="confirm-password">Xác nhận mật khẩu</label>
+              <label for="confirm-password" data-i18n="userdetail.confirmPassword">Xác nhận mật khẩu</label>
               <input type="password" id="confirm-password" />
             </div>
           </div>
 
           <div class="actions">
-            <button type="button" class="btn update-password">
+            <button type="button" class="btn update-password" data-i18n="userdetail.updatePassword">
               Cập nhật mật khẩu
             </button>
           </div>
@@ -91,12 +91,12 @@
 
       <!-- Favorites Section -->
       <div class="content-section" id="favorites-section">
-        <h1 class="title">Phim yêu thích</h1>
-        <p class="subtitle">Danh sách các phim bạn đã yêu thích</p>
+        <h1 class="title" data-i18n="userdetail.favoritesTitle">Phim yêu thích</h1>
+        <p class="subtitle" data-i18n="userdetail.favoritesSubtitle">Danh sách các phim bạn đã yêu thích</p>
 
         <div class="card">
           <div class="favorites-list">
-            <p class="empty-state">
+            <p class="empty-state" data-i18n="userdetail.emptyFavorites">
               Chưa có phim nào trong danh sách yêu thích
             </p>
             <!-- Favorites content will be loaded here dynamically -->
