@@ -89,11 +89,13 @@ async function fetchMovieDetails(movieId) {
 
     // Tiêu đề
     document.querySelector(".movie-banner__title h3").textContent =
-      displayTitle;
+      movie.title || movie.original_title;
 
     // Mô tả
     document.querySelector(".movie-banner__overview").innerHTML = `
-      <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${overview}
+      <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${
+      movie.overview || ""
+    }
     `;
 
     // Điểm IMDb

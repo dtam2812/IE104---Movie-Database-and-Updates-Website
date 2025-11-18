@@ -726,3 +726,44 @@ body {
     font-size: 9px;
   }
 }
+/* Nút xóa yêu thích */
+.favorite-card__remove-btn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(244, 67, 54, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 20;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.favorite-card__container:hover .favorite-card__remove-btn {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.favorite-card__remove-btn:hover {
+  background: rgba(244, 67, 54, 1);
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+.favorite-card__remove-btn:active {
+  transform: scale(0.95);
+}
+
+.favorite-card__remove-btn i {
+  pointer-events: none;
+}
