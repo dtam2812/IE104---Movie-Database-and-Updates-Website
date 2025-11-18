@@ -246,6 +246,12 @@
   margin-left: auto;
 }
 
+.user-lang {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
 /* USER SECTION */
 #user_guest {
   display: inline-flex;

@@ -172,86 +172,88 @@
       </div>
       <div class="app-download"></div>
 
-      <div class="header-button">
-        <!-- Language Switcher -->
-        <div class="language-switcher desktop-lang">
-          <button
-            class="swap-language"
-            aria-haspopup="listbox"
-            aria-expanded="false"
-          >
-            <img
-              src="../../../public/assets/image/Flag_of_Vietnam.svg"
-              alt="VN"
-              class="current-flag"
-              data-lang="vi"
-            />
-            <i class="fa-solid fa-caret-down caret"></i>
-          </button>
-
-          <ul class="select-language" role="listbox">
-            <li role="option" data-lang="vi" class="lang-option is-active">
+      <div class="user-lang">
+        <div class="header-button">
+          <!-- Language Switcher -->
+          <div class="language-switcher desktop-lang">
+            <button
+              class="swap-language"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+            >
               <img
                 src="../../../public/assets/image/Flag_of_Vietnam.svg"
                 alt="VN"
-                class="flag-icon"
+                class="current-flag"
+                data-lang="vi"
               />
-              <span>Tiếng Việt</span>
-            </li>
-            <li role="option" data-lang="en" class="lang-option">
-              <img
-                src="../../../public/assets/image/English-flag.svg"
-                alt="UK"
-                class="flag-icon"
-              />
-              <span>English</span>
-            </li>
-          </ul>
+              <i class="fa-solid fa-caret-down caret"></i>
+            </button>
+
+            <ul class="select-language" role="listbox">
+              <li role="option" data-lang="vi" class="lang-option is-active">
+                <img
+                  src="../../../public/assets/image/Flag_of_Vietnam.svg"
+                  alt="VN"
+                  class="flag-icon"
+                />
+                <span>Tiếng Việt</span>
+              </li>
+              <li role="option" data-lang="en" class="lang-option">
+                <img
+                  src="../../../public/assets/image/English-flag.svg"
+                  alt="UK"
+                  class="flag-icon"
+                />
+                <span>English</span>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
 
-      <!-- User Guest -->
-      <div id="user_guest" class="user">
-        <a id="btn-member" class="button-user button-login">
-          <i class="fa-solid fa-user ms-1"></i>
-          <span data-i18n="header.member">Thành viên</span>
-        </a>
-      </div>
-
-      <!-- User Logged In -->
-      <div id="main_user" class="user_logged hidden">
-        <div class="user-dropdown-menu">
-          <a class="header-user">
-            <div class="line-center">
-              <div class="user-avatar">
-                <img src="../../../public/assets/image/vn_flag.svg" />
-              </div>
-              <i class="fa-solid fa-caret-down"></i>
-            </div>
+        <!-- User Guest -->
+        <div id="user_guest" class="user">
+          <a id="btn-member" class="button-user button-login">
+            <i class="fa-solid fa-user ms-1"></i>
+            <span data-i18n="header.member">Thành viên</span>
           </a>
-          <ul class="dropdown-list">
-            <div class="dropdown-header">
-              <div class="user-name line-center">
-                <span></span>
+        </div>
+
+        <!-- User Logged In -->
+        <div id="main_user" class="user_logged hidden">
+          <div class="user-dropdown-menu">
+            <a class="header-user">
+              <div class="line-center">
+                <div class="user-avatar">
+                  <img src="../../../public/assets/image/vn_flag.svg" />
+                </div>
+                <i class="fa-solid fa-caret-down"></i>
               </div>
-            </div>
-            <hr />
-            <div class="ui-mobile">
-              <a class="dropdown-item" href="../pages/UserDetail.html">
-                <div class="line-center">
-                  <i class="fa-solid fa-user"></i>
-                  <span data-i18n="header.account">Tài khoản</span>
+            </a>
+            <ul class="dropdown-list">
+              <div class="dropdown-header">
+                <div class="user-name line-center">
+                  <span></span>
                 </div>
-              </a>
+              </div>
               <hr />
-              <a id="Log-out-Btn" class="dropdown-item" href="#">
-                <div class="line-center">
-                  <i class="fa-solid fa-right-from-bracket"></i>
-                  <span data-i18n="header.logout">Đăng xuất</span>
-                </div>
-              </a>
-            </div>
-          </ul>
+              <div class="ui-mobile">
+                <a class="dropdown-item" href="../pages/UserDetail.html">
+                  <div class="line-center">
+                    <i class="fa-solid fa-user"></i>
+                    <span data-i18n="header.account">Tài khoản</span>
+                  </div>
+                </a>
+                <hr />
+                <a id="Log-out-Btn" class="dropdown-item" href="#">
+                  <div class="line-center">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span data-i18n="header.logout">Đăng xuất</span>
+                  </div>
+                </a>
+              </div>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
