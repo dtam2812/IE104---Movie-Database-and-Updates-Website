@@ -1,178 +1,350 @@
 import { TMDB_API_KEY } from "../../config.js";
 
-export function searchBar() {
-  const input = document.querySelector(".search__input");
-  const dropdown = document.querySelector(".search__dropdown");
-  let timer;
+const BASE_URL = "https://api.themoviedb.org/3";
+const IMG_URL = "https://image.tmdb.org/t/p/w500";
+const BG_URL = "https://image.tmdb.org/t/p/original";
 
-  // ✅ THÊM: Hàm lấy ngôn ngữ hiện tại
-  function getCurrentLanguage() {
-    const lang =
-      localStorage.getItem("language") || document.documentElement.lang || "vi";
-    return lang === "vi" ? "vi-VN" : "en-US";
+let translations = {};
+
+async function loadTranslations(lang) {
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    translations = await res.json();
+  } catch (err) {
+    console.error("Load translations error:", err);
   }
+}
 
-  // ✅ THÊM: Hàm lấy text dịch
-  function getTranslatedText(key) {
-    const lang = localStorage.getItem("language") || "vi";
-    const translations = {
-      vi: {
-        unknown: "Không rõ",
-        movie: "Phim",
-        tvSeries: "TV Series",
-        actor: "Diễn viên",
-      },
-      en: {
-        unknown: "Unknown",
-        movie: "Movie",
-        tvSeries: "TV Series",
-        actor: "Actor",
-      },
-    };
-    return translations[lang]?.[key] || translations.vi[key];
+function t(key) {
+  return translations[key] || key;
+}
+
+function currentLang() {
+  return (
+    localStorage.getItem("language") || document.documentElement.lang || "vi"
+  );
+}
+
+function translateDOM() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const text = t(key);
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      el.placeholder = text;
+    } else {
+      el.textContent = text;
+    }
+  });
+}
+
+async function translateText(text, target = "vi") {
+  if (!text || target === "en") return text;
+  const key = `trans_${btoa(
+    unescape(encodeURIComponent(text.substring(0, 100)))
+  )}_${target}`;
+  const cached = localStorage.getItem(key);
+  if (cached) return cached;
+
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+      text
+    )}&langpair=en|${target}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const translated = data.responseData.translatedText || text;
+    localStorage.setItem(key, translated);
+    return translated;
+  } catch {
+    return text;
   }
+}
 
-  async function fetchResults(query) {
-    // ✅ SỬA: Lấy ngôn ngữ động thay vì hard-code "vi-VN"
-    const language = getCurrentLanguage();
+async function fetchMovieDetails(movieId) {
+  const lang = currentLang();
+  const apiLang = lang === "vi" ? "vi-VN" : "en-US";
 
-    const [movieRes, tvRes, personRes] = await Promise.all([
-      fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
-          query
-        )}&page=1`
-      ),
-      fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
-          query
-        )}&page=1`
-      ),
-      fetch(
-        `https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
-          query
-        )}&page=1`
-      ),
-    ]);
-
-    const [movies, tvs, persons] = await Promise.all([
-      movieRes.json(),
-      tvRes.json(),
-      personRes.json(),
-    ]);
-
-    const moviesData = (movies.results || []).map((i) => ({
-      ...i,
-      media_type: "movie",
-    }));
-    const tvsData = (tvs.results || []).map((i) => ({
-      ...i,
-      media_type: "tv",
-    }));
-    const personsData = (persons.results || []).map((i) => ({
-      ...i,
-      media_type: "person",
-    }));
-
-    return [...moviesData, ...tvsData, ...personsData].sort(
-      (a, b) => (b.popularity || 0) - (a.popularity || 0)
+  try {
+    const res = await fetch(
+      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=${apiLang}&append_to_response=credits,release_dates,images,videos`
     );
+    const movie = await res.json();
+
+    let displayTitle = movie.title || movie.original_title;
+    if (lang === "vi" && movie.title === movie.original_title) {
+      displayTitle = await translateText(movie.original_title, "vi");
+    }
+
+    let overview = movie.overview || "";
+    if (lang === "vi" && (!overview || overview.length < 20)) {
+      const enRes = await fetch(
+        `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`
+      );
+      const enMovie = await enRes.json();
+      overview = await translateText(enMovie.overview || "", "vi");
+    }
+    if (!overview) overview = t("detail.noOverview") || "Không có mô tả";
+
+    document.querySelector(".movie-banner__poster img").src = movie.poster_path
+      ? `${IMG_URL}${movie.poster_path}`
+      : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
+
+    document.querySelector(".movie-banner__title h3").textContent =
+      displayTitle;
+
+    document.querySelector(".movie-banner__overview").innerHTML = `
+      <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${overview}
+    `;
+
+    document.querySelector(".movie-banner__rating span").textContent =
+      movie.vote_average?.toFixed(1) || "N/A";
+
+    const ratings = movie.release_dates?.results || [];
+    const ratingObj =
+      ratings.find((r) => r.iso_3166_1 === "US") ||
+      ratings.find((r) => r.iso_3166_1 === "GB") ||
+      ratings[0];
+    const ageRating = ratingObj?.release_dates?.[0]?.certification || "N/A";
+    const ageEl = document.querySelector(".movie-banner__age strong");
+    if (ageEl) ageEl.textContent = ageRating;
+
+    document.querySelector(".movie-banner__genres").innerHTML =
+      movie.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
+      `<span>${t("common.unknown")}</span>`;
+
+    const director =
+      movie.credits?.crew?.find((p) => p.job === "Director")?.name ||
+      t("common.unknown");
+    document.querySelector(".movie-banner__director p").innerHTML = `
+      <span>${t("detail.director") || "Đạo diễn"}:</span> ${director}
+    `;
+
+    const bg = document.querySelector(".movie-banner__background");
+    if (bg && movie.backdrop_path) {
+      bg.style.backgroundImage = `url(${BG_URL}${movie.backdrop_path})`;
+      bg.style.backgroundSize = "cover";
+      bg.style.backgroundPosition = "center";
+    }
+
+    renderActors(movie.credits?.cast || []);
+    renderInfo(movie);
+  } catch (err) {
+    console.error("Lỗi tải chi tiết phim:", err);
+  }
+}
+
+function createActorHTML(actor) {
+  const img = actor.profile_path
+    ? `${IMG_URL}${actor.profile_path}`
+    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        actor.name
+      )}&size=300&background=1a1a2e&color=0891b2`;
+
+  return `
+    <div class="cast-box">
+      <a class="cast-card" href="CastDetail.html?id=${actor.id}">
+        <div class="cast-img"><img src="${img}" alt="${actor.name}" /></div>
+      </a>
+      <div class="info">
+        <h4 class="name"><a href="CastDetail.html?id=${actor.id}">${
+    actor.name
+  }</a></h4>
+        <h4 class="other-name"><a href="#">${actor.original_name || ""}</a></h4>
+      </div>
+    </div>`;
+}
+
+function renderActors(actors) {
+  const container = document.querySelector(".actors-grid");
+  const btn = document.querySelector(".tab-panel__view-more");
+  if (!container) return;
+
+  container.innerHTML = "";
+  if (!actors.length) {
+    container.innerHTML = `<p>${
+      t("detail.noActors") || "Không có thông tin diễn viên."
+    }</p>`;
+    if (btn) btn.style.display = "none";
+    return;
   }
 
-  input.addEventListener("input", () => {
-    const query = input.value.trim();
-    clearTimeout(timer);
+  container.dataset.allActors = JSON.stringify(actors);
+  actors
+    .slice(0, 5)
+    .forEach((a) =>
+      container.insertAdjacentHTML("beforeend", createActorHTML(a))
+    );
 
-    if (!query) {
-      dropdown.innerHTML = "";
-      dropdown.classList.remove("search__dropdown--active");
+  if (btn) {
+    const totalActors = actors.length;
+    const remain = totalActors - 5;
+
+    if (remain <= 0) {
+      btn.style.display = "none";
+    } else {
+      btn.style.display = "block";
+      const viewMoreText = t("detail.viewMore") || "Xem thêm";
+      btn.textContent = `${viewMoreText} (${remain}) ⮟`;
+    }
+  }
+}
+
+function renderInfo(movie) {
+  const panel = document.querySelector(".tab-panel--info");
+  if (!panel) return;
+
+  const flag =
+    movie.production_countries?.[0]?.iso_3166_1?.toLowerCase() || null;
+  const flagHTML = flag
+    ? `<img src="https://flagcdn.com/48x36/${flag}.png" style="width:32px;height:24px;vertical-align:middle;">`
+    : t("common.unknown");
+
+  const releaseDate = movie.release_date
+    ? new Date(movie.release_date).toLocaleDateString("vi-VN")
+    : t("common.unknown");
+
+  panel.innerHTML = `
+    <h3>${t("detail.infoTitle") || "Thông tin phim"}</h3>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.runtime") || "Thời lượng"
+    }:</div><div class="movie-info__value">${
+    movie.runtime ? movie.runtime + " phút" : t("common.unknown")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.country") || "Quốc gia"
+    }:</div><div class="movie-info__value">${flagHTML}</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.company") || "Nhà sản xuất"
+    }:</div><div class="movie-info__value">${
+    movie.production_companies?.[0]?.name || t("common.updating")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.budget") || "Ngân sách"
+    }:</div><div class="movie-info__value">${
+    movie.budget ? movie.budget.toLocaleString() + " $" : t("common.updating")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.revenue") || "Doanh thu"
+    }:</div><div class="movie-info__value">${
+    movie.revenue ? movie.revenue.toLocaleString() + " $" : t("common.updating")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.status") || "Trạng thái"
+    }:</div><div class="movie-info__value">${
+    movie.status || t("common.unknown")
+  }</div></div>
+  `;
+}
+
+async function loadRecommendedMovies(movieId) {
+  const lang = currentLang();
+  const apiLang = lang === "vi" ? "vi-VN" : "en-US";
+  const container = document.getElementById("recommendations");
+  if (!container) return;
+
+  container.innerHTML = `<p>${t("common.loading") || "Đang tải..."}</p>`;
+
+  try {
+    const res = await fetch(
+      `${BASE_URL}/movie/${movieId}/recommendations?api_key=${TMDB_API_KEY}&language=${apiLang}&page=1`
+    );
+    const data = await res.json();
+    const movies = (data.results || []).slice(0, 12);
+
+    container.innerHTML = "";
+    if (!movies.length) {
+      container.innerHTML = `<p>${
+        t("detail.noRecs") || "Không có phim đề xuất."
+      }</p>`;
       return;
     }
 
-    timer = setTimeout(async () => {
-      try {
-        const results = await fetchResults(query);
-        renderResults(results.slice(0, 10));
-      } catch (e) {
-        console.error(e);
+    for (const m of movies) {
+      let title = m.title;
+      if (lang === "vi" && m.title === m.original_title) {
+        title = await translateText(m.original_title, "vi");
       }
-    }, 400);
-  });
+      const poster = m.poster_path
+        ? `${IMG_URL}${m.poster_path}`
+        : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const query = input.value.trim();
-      if (query)
-        window.location.href = `/client/view/pages/SearchPage.html?query=${encodeURIComponent(
-          query
-        )}`;
+      const html = `
+        <div class="movie-box">
+          <a class="movie-box__card" href="MovieDetail.html?id=${m.id}">
+            <div class="movie-box__info-top"><div class="movie-box__info-ep-top"><span>Movie</span></div></div>
+            <div class="movie-box__poster"><img class="movie-box__poster-img" src="${poster}" alt="${title}"></div>
+          </a>
+          <div class="movie-box__info">
+            <h4 class="movie-box__vietnam-title"><a href="MovieDetail.html?id=${m.id}">${title}</a></h4>
+            <h4 class="movie-box__other-title"><a href="MovieDetail.html?id=${m.id}">${m.original_title}</a></h4>
+          </div>
+        </div>`;
+      container.insertAdjacentHTML("beforeend", html);
     }
-  });
-
-  function renderResults(results) {
-    dropdown.innerHTML = "";
-    if (!results.length)
-      return dropdown.classList.remove("search__dropdown--active");
-    dropdown.classList.add("search__dropdown--active");
-
-    results.forEach((item) => {
-      if (!(item.poster_path || item.profile_path)) return;
-      const card = document.createElement("div");
-      card.classList.add("search__result");
-
-      const img =
-        item.poster_path || item.profile_path
-          ? `https://image.tmdb.org/t/p/w185${
-              item.poster_path || item.profile_path
-            }`
-          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              item.name || item.title
-            )}&size=185`;
-
-      const title = item.title || item.name || getTranslatedText("unknown");
-      const original = item.original_title || item.original_name || "";
-      const year =
-        item.release_date?.split("-")[0] ||
-        item.first_air_date?.split("-")[0] ||
-        "";
-
-      // ✅ SỬA: Dùng getTranslatedText() cho type
-      const type =
-        item.media_type === "movie"
-          ? `${getTranslatedText("movie")} • ${year}`
-          : item.media_type === "tv"
-          ? `${getTranslatedText("tvSeries")} • ${year}`
-          : getTranslatedText("actor");
-
-      card.innerHTML = `
-        <img class="search__result-img" src="${img}" alt="${title}">
-        <div class="search__result-info">
-          <div class="search__result-title">${title}</div>
-          ${
-            original && original !== title
-              ? `<div class="search__result-subtitle">${original}</div>`
-              : ""
-          }
-          <div class="search__result-meta">${type}</div>
-        </div>
-      `;
-
-      card.addEventListener("click", () => {
-        dropdown.classList.remove("search__dropdown--active");
-        if (item.media_type === "movie")
-          window.location.href = `/client/view/pages/MovieDetail.html?id=${item.id}`;
-        else if (item.media_type === "tv")
-          window.location.href = `/client/view/pages/TvShowDetail.html?id=${item.id}`;
-        else if (item.media_type === "person")
-          window.location.href = `/client/view/pages/CastDetail.html?id=${item.id}`;
-      });
-
-      dropdown.appendChild(card);
-    });
+  } catch (e) {
+    container.innerHTML = `<p>${
+      t("detail.recError") || "Có lỗi khi tải đề xuất."
+    }</p>`;
   }
+}
 
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".search"))
-      dropdown.classList.remove("search__dropdown--active");
+function initTabs() {
+  const tabs = document.querySelectorAll(".movie-tabs__item");
+  const contents = document.querySelectorAll(".movie-tabs__content");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.tab;
+      tabs.forEach((t) => t.classList.remove("movie-tabs__item--active"));
+      contents.forEach((c) =>
+        c.classList.remove("movie-tabs__content--active")
+      );
+      tab.classList.add("movie-tabs__item--active");
+      document
+        .getElementById(target)
+        ?.classList.add("movie-tabs__content--active");
+    });
   });
 }
+
+function initViewMore() {
+  const btn = document.querySelector(".tab-panel__view-more");
+  const grid = document.querySelector(".actors-grid");
+  if (!btn || !grid) return;
+
+  btn.addEventListener("click", () => {
+    const expanded = grid.classList.toggle("actors-grid--expanded");
+    const all = JSON.parse(grid.dataset.allActors || "[]");
+    grid.innerHTML = "";
+    const toShow = expanded ? all : all.slice(0, 5);
+    toShow.forEach((a) =>
+      grid.insertAdjacentHTML("beforeend", createActorHTML(a))
+    );
+
+    const remain = all.length - 5;
+    const viewMoreText = t("detail.viewMore") || "Xem thêm";
+    const collapseText = t("detail.collapse") || "Thu gọn";
+
+    btn.textContent = expanded
+      ? `${collapseText} ⮝`
+      : `${viewMoreText} (${remain}) ⮟`;
+  });
+}
+
+async function boot() {
+  await loadTranslations(currentLang());
+  translateDOM();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const movieId = urlParams.get("id") || 1242404;
+
+  await fetchMovieDetails(movieId);
+  await loadRecommendedMovies(movieId);
+  initTabs();
+  initViewMore();
+}
+
+window.addEventListener("languagechange", boot);
+window.addEventListener("storage", (e) => {
+  if (e.key === "language") location.reload();
+});
+
+document.addEventListener("DOMContentLoaded", boot);
