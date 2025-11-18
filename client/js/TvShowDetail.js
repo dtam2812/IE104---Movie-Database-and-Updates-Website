@@ -128,7 +128,7 @@ async function fetchTvDetails(tvId) {
 
     // Nhà sản xuất (created_by)
     document.querySelector(".detail__director p").innerHTML = `
-      <span>${t("detail.creator") || "Nhà sản xuất"}:</span> ${tv.created_by?.[0]?.name || t("common.unknown") || "Không rõ"}
+      <span>${t("tvshow.creator") || "Nhà sản xuất"}:</span> ${tv.created_by?.[0]?.name || t("common.unknown") || "Không rõ"}
     `;
 
     // Background
