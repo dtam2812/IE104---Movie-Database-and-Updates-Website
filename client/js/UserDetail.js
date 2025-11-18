@@ -145,7 +145,6 @@ async function getUserDetail() {
     }
     const userData = await response.json();
     displayUserInformation(userData);
-    console.log(userData);
   } catch (error) {
     console.error("Error loading user info:", error);
     showToast("Lỗi khi tải thông tin người dùng");
