@@ -6,7 +6,6 @@ const BG_URL = "https://image.tmdb.org/t/p/original";
 
 let translations = {};
 
-// ==================== HỆ THỐNG DỊCH ====================
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
@@ -55,7 +54,6 @@ async function translateText(text, target = "vi") {
   }
 }
 
-// ==================== MAIN FETCH ====================
 async function fetchTvDetails(tvId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -66,13 +64,11 @@ async function fetchTvDetails(tvId) {
     );
     const tv = await res.json();
 
-    // === TITLE (dịch nếu TMDB không có bản Việt) ===
     let displayName = tv.name || tv.original_name;
     if (lang === "vi" && tv.name === tv.original_name) {
       displayName = await translateText(tv.original_name, "vi");
     }
 
-    // === OVERVIEW (fallback + dịch) ===
     let overview = tv.overview || "";
     if (lang === "vi" && (!overview || overview.length < 20)) {
       const enRes = await fetch(
@@ -109,7 +105,6 @@ async function fetchTvDetails(tvId) {
     const ageEl = document.querySelector(".detail__age span strong");
     if (ageEl) ageEl.textContent = rating?.rating || "N/A";
 
-    // Genres (TMDB không dịch genre TV → dịch thủ công)
     const genreMap = {
       "Action & Adventure": "genre.action_adventure",
       "Sci-Fi & Fantasy": "genre.scifi_fantasy",
@@ -160,7 +155,6 @@ async function fetchTvDetails(tvId) {
   }
 }
 
-// ==================== RENDER FUNCTIONS (giữ nguyên class của file 1) ====================
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -372,15 +366,9 @@ async function loadRecommendedTvShows(tvId) {
   }
 }
 
-// Tab + View more (giữ nguyên selector của file 1)
-function initTabs() {
-  /* giữ nguyên code file 1 */
-}
-function initViewMore() {
-  /* giữ nguyên code file 1 */
-}
+function initTabs() {}
+function initViewMore() {}
 
-// ==================== BOOT ====================
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();

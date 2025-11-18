@@ -44,7 +44,7 @@
         })
         .then((res) => res.text())
         .then((searchHTML) => {
-          document.querySelector(".searchBar__box").innerHTML = searchHTML;
+          document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
         })
         .catch((err) => console.error("Lỗi tải header/search:", err));
@@ -53,27 +53,35 @@
     <!-- Nội dung -->
     <div class="searchPage">
       <h2>
-        Kết quả tìm kiếm cho "<span
-          id="query-text"
-          class="searchPage__query"
-        ></span
-        >"
+        <span >
+          <span data-i18n="search.resultsFor">Kết quả tìm kiếm cho</span> "<span
+            id="query-text"
+            class="searchPage__query"
+          ></span
+          >"
       </h2>
 
       <div class="searchPage__filters">
         <button
+          data-i18n="search.filterMovie"
           class="searchPage__filterBtn searchPage__filterBtn--active"
           data-type="movie"
         >
           Phim
         </button>
-        <button class="searchPage__filterBtn" data-type="person">
+        <button
+          class="searchPage__filterBtn"
+          data-type="person"
+          data-i18n="search.filterActor"
+        >
           Diễn viên
         </button>
       </div>
 
       <div id="results-grid" class="searchPage__grid">
-        <p class="searchPage__placeholder">Đang tải...</p>
+        <p class="searchPage__placeholder" data-i18n="search.loading">
+          Đang tải...
+        </p>
       </div>
 
       <div id="pagination" class="searchPage__pagination"></div>
