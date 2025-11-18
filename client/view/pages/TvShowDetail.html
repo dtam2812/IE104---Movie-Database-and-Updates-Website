@@ -101,14 +101,17 @@
               </div>
 
               <div class="detail__overview">
-                <span>Giới thiệu:</span><br />
+                <span data-i18n="detail.intro">Giới thiệu:</span><br />
                 Trong một ngày căng thẳng, vị hiệu trưởng tận tâm của một trường
                 cải tạo cơ hội cuối nỗ lực đưa các học sinh của mình vào khuôn
                 khổ trong khi đối mặt với áp lực riêng.
               </div>
 
               <div class="detail__director">
-                <p><span>Đạo diễn:</span> Tim Mielants, Daire Glynn</p>
+                <p>
+                  <span ata-i18n="tvshow.creator">Đạo diễn:</span> Tim Mielants,
+                  Daire Glynn
+                </p>
               </div>
             </div>
           </div>
@@ -119,29 +122,64 @@
     <section class="tabs">
       <!-- Tab Navigation -->
       <div class="tabs__nav">
-        <button class="tabs__btn tabs__btn--active" data-tab="actors">
+        <button
+          class="tabs__btn tabs__btn--active"
+          data-tab="actors"
+          data-tab="actors"
+          data-i18n="detail.tab.actors"
+        >
           Diễn viên
         </button>
-        <button class="tabs__btn" data-tab="info">Thông tin</button>
-        <button class="tabs__btn" data-tab="seasons">Các mùa phim</button>
-        <button class="tabs__btn" data-tab="producers">Nhà sản xuất</button>
-        <button class="tabs__btn" data-tab="recommend">Đề xuất</button>
-        <button class="tabs__btn" data-tab="comments">Đánh giá</button>
+        <button class="tabs__btn" data-tab="info" data-i18n="tvshow.tab.info">
+          Thông tin
+        </button>
+        <button
+          class="tabs__btn"
+          data-tab="seasons"
+          data-i18n="tvshow.tab.seasons"
+        >
+          Các mùa phim
+        </button>
+        <button
+          class="tabs__btn"
+          data-tab="producers"
+          data-i18n="tvshow.tab.producers"
+        >
+          Nhà sản xuất
+        </button>
+        <button
+          class="tabs__btn"
+          data-tab="recommend"
+          data-i18n="detail.tab.recommend"
+        >
+          Đề xuất
+        </button>
+        <button
+          class="tabs__btn"
+          data-tab="comments"
+          data-i18n="detail.tab.comments"
+        >
+          Đánh giá
+        </button>
       </div>
 
       <!-- Tab 1: Actors -->
       <div class="tabs__content tabs__content--active" id="actors">
         <div class="tab-panel tab-panel--actors">
-          <h3 class="tab-panel__title">Diễn viên</h3>
+          <h3 class="tab-panel__title" data-i18n="detail.section.actors">
+            Diễn viên
+          </h3>
           <div class="actors"></div>
-          <a class="tab-panel__more">Xem thêm ⮟</a>
+          <a class="tab-panel__more" data-i18n="detail.viewMore">Xem thêm ⮟</a>
         </div>
       </div>
 
       <!-- Tab 2: Info -->
       <div class="tabs__content" id="info">
         <div class="tab-panel tab-panel--info">
-          <h3 class="tab-panel__title">Thông tin phim</h3>
+          <h3 class="tab-panel__title" data-i18n="tvshow.infoTitle">
+            Thông tin phim
+          </h3>
           <div class="info-item">
             <div class="info-item__label">Số mùa:</div>
             <div class="info-item__value">-</div>
@@ -168,7 +206,9 @@
       <!-- Tab 3: Seasons -->
       <div class="tabs__content" id="seasons">
         <div class="tab-panel tab-panel--seasons">
-          <h3 class="tab-panel__title">Các mùa phim</h3>
+          <h3 class="tab-panel__title" data-i18n="tvshow.tab.seasons">
+            Các mùa phim
+          </h3>
           <div id="season-container" class="seasons">
             <div class="season">
               <img
@@ -186,14 +226,21 @@
               </div>
             </div>
           </div>
-          <a class="tab-panel__more" id="season-view-more">Xem thêm ⮟</a>
+          <a
+            class="tab-panel__more"
+            id="season-view-more"
+            data-i18n="detail.viewMore"
+            >Xem thêm ⮟</a
+          >
         </div>
       </div>
 
       <!-- Tab 4: Producers -->
       <div class="tabs__content" id="producers">
         <div class="tab-panel tab-panel--producers">
-          <h3 class="tab-panel__title">Nhà sản xuất</h3>
+          <h3 class="tab-panel__title" data-i18n="tvshow.tab.producers">
+            Nhà sản xuất
+          </h3>
           <div class="producers"></div>
         </div>
       </div>
@@ -201,22 +248,26 @@
       <!-- Tab 5: Comments -->
       <div class="tabs__content" id="comments">
         <div class="tab-panel tab-panel--comments">
-          <h3 class="tab-panel__title">Đánh giá của khán giả</h3>
+          <h3 class="tab-panel__title" data-i18n="detail.section.comments">
+            Đánh giá của khán giả
+          </h3>
 
           <!-- Stats -->
           <div class="comment-stats">
-            <div class="comment-stats__item">
-              Đánh giá trung bình: <span id="avg-rating">0</span>/5
+            <div class="comment-stats__item" data-i18n="detail.avgRating">
+              Đánh giá trung bình:
             </div>
-            <div class="comment-stats__item">
-              Tổng số đánh giá: <span id="total-comments">0</span>
+            <span id="avg-rating">0</span>/5
+            <div class="comment-stats__item" data-i18n="detail.totalComments">
+              Tổng số đánh giá:
             </div>
+            <span id="total-comments">0</span>
           </div>
 
           <!-- Form -->
           <div class="comment-form">
             <div class="comment-form__rating">
-              <label>Đánh giá của bạn:</label>
+              <label data-i18n="detail.yourRating">Đánh giá của bạn:</label>
               <div class="star-rating" id="star-rating">
                 <i class="fas fa-star" data-rating="1"></i>
                 <i class="fas fa-star" data-rating="2"></i>
@@ -228,16 +279,21 @@
             <textarea
               class="comment-form__textarea"
               id="comment-text"
+              data-i18n-placeholder="detail.commentPlaceholder"
               placeholder="Chia sẻ cảm nhận của bạn về bộ phim..."
             ></textarea>
-            <button class="comment-form__submit" id="submit-comment">
+            <button
+              data-i18n="detail.submit"
+              class="comment-form__submit"
+              id="submit-comment"
+            >
               Gửi đánh giá
             </button>
           </div>
 
           <!-- Comments List -->
           <div class="comments-list" id="comments-list">
-            <div class="comments-list__empty">
+            <div class="comments-list__empty" data-i18n="detail.noComments">
               Chưa có đánh giá nào. Hãy là người đầu tiên!
             </div>
           </div>
@@ -247,7 +303,9 @@
       <!-- Tab 6: Recommendations -->
       <div class="tabs__content" id="recommend">
         <div class="tab-panel tab-panel--recommend">
-          <h3 class="tab-panel__title">Đề xuất</h3>
+          <h3 class="tab-panel__title" data-i18n="detail.section.recommend">
+            Đề xuất
+          </h3>
           <div id="recommendations" class="recommendations">
             <!-- Render recommendations -->
           </div>
