@@ -3,12 +3,73 @@ import { favoritesManager } from "../js/Favorite.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
+const BG_URL = "https://image.tmdb.org/t/p/original";
 
-// Hàm chính
+let translations = {};
+
+// Hệ thống dịch
+async function loadTranslations(lang) {
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    translations = await res.json();
+  } catch (err) {
+    console.error("Load translations error:", err);
+  }
+}
+
+function t(key) {
+  return translations[key] || key;
+}
+
+function currentLang() {
+  return (
+    localStorage.getItem("language") || document.documentElement.lang || "vi"
+  );
+}
+
+function translateDOM() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const text = t(key);
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      el.placeholder = text;
+    } else {
+      el.textContent = text;
+    }
+  });
+}
+
+// MyMemory Translation + Cache 30 ngày
+async function translateText(text, target = "vi") {
+  if (!text || target === "en") return text;
+  const key = `trans_${btoa(
+    unescape(encodeURIComponent(text.substring(0, 100)))
+  )}_${target}`;
+  const cached = localStorage.getItem(key);
+  if (cached) return cached;
+
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+      text
+    )}&langpair=en|${target}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const translated = data.responseData.translatedText || text;
+    localStorage.setItem(key, translated);
+    return translated;
+  } catch {
+    return text;
+  }
+}
+
+// Fetch movie details
 async function fetchMovieDetails(movieId) {
+  const lang = currentLang();
+  const apiLang = lang === "vi" ? "vi-VN" : "en-US";
+
   try {
     const res = await fetch(
-      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US&append_to_response=credits`
+      `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=${apiLang}&append_to_response=credits,release_dates,images,videos`
     );
     const movie = await res.json();
 
@@ -28,42 +89,52 @@ async function fetchMovieDetails(movieId) {
 
     // Tiêu đề
     document.querySelector(".movie-banner__title h3").textContent =
-      movie.title || movie.original_title || "Không rõ";
+      movie.title || movie.original_title;
 
-    // Giới thiệu
+    // Mô tả
     document.querySelector(".movie-banner__overview").innerHTML = `
-      <span>Giới thiệu:</span><br>${movie.overview || "Không có mô tả"}
+      <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${
+      movie.overview || ""
+    }
     `;
 
     // Điểm IMDb
     document.querySelector(".movie-banner__rating span").textContent =
       movie.vote_average?.toFixed(1) || "N/A";
 
-    // Thể loại
+    // Độ tuổi
+    const ratings = movie.release_dates?.results || [];
+    const ratingObj =
+      ratings.find((r) => r.iso_3166_1 === "US") ||
+      ratings.find((r) => r.iso_3166_1 === "GB") ||
+      ratings[0];
+    const ageRating = ratingObj?.release_dates?.[0]?.certification || "N/A";
+    const ageEl = document.querySelector(".movie-banner__age strong");
+    if (ageEl) ageEl.textContent = ageRating;
+
+    // Thể loại (TMDB có dịch → dùng luôn, không cần map thủ công)
     document.querySelector(".movie-banner__genres").innerHTML =
       movie.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
-      "<span>Không rõ</span>";
+      `<span>${t("common.unknown")}</span>`;
 
     // Đạo diễn
     const director =
       movie.credits?.crew?.find((p) => p.job === "Director")?.name ||
-      "Không rõ";
+      t("common.unknown");
     document.querySelector(".movie-banner__director p").innerHTML = `
-      <span>Đạo diễn:</span> ${director}
+      <span>${t("detail.director") || "Đạo diễn"}:</span> ${director}
     `;
 
-    // Ảnh nền
+    // Background
     const bg = document.querySelector(".movie-banner__background");
-    bg.style.backgroundImage = movie.backdrop_path
-      ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
-      : "none";
-    bg.style.backgroundSize = "cover";
-    bg.style.backgroundPosition = "center";
+    if (bg && movie.backdrop_path) {
+      bg.style.backgroundImage = `url(${BG_URL}${movie.backdrop_path})`;
+      bg.style.backgroundSize = "cover";
+      bg.style.backgroundPosition = "center";
+    }
 
-    // Diễn viên
+    // Render các phần khác
     renderActors(movie.credits?.cast || []);
-
-    // Thông tin phim
     renderInfo(movie);
 
     // Cập nhật trạng thái nút yêu thích
@@ -76,7 +147,7 @@ async function fetchMovieDetails(movieId) {
   }
 }
 
-// Tạo HTML cho 1 diễn viên
+// Render functions
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -87,200 +158,151 @@ function createActorHTML(actor) {
   return `
     <div class="cast-box">
       <a class="cast-card" href="CastDetail.html?id=${actor.id}">
-        <div class="cast-img">
-          <img src="${img}" alt="${actor.name}" />
-        </div>
+        <div class="cast-img"><img src="${img}" alt="${actor.name}" /></div>
       </a>
       <div class="info">
-        <h4 class="name">
-          <a href="CastDetail.html?id=${actor.id}">${actor.name}</a>
-        </h4>
-        <h4 class="other-name">
-          <a href="#">${actor.original_name}</a>
-        </h4>
+        <h4 class="name"><a href="CastDetail.html?id=${actor.id}">${
+    actor.name
+  }</a></h4>
+        <h4 class="other-name"><a href="#">${actor.original_name || ""}</a></h4>
       </div>
     </div>`;
 }
 
-// Render các phần
 function renderActors(actors) {
-  const actorContainer = document.querySelector(".actors-grid");
-  const viewMoreBtn = document.querySelector(".tab-panel__view-more");
+  const container = document.querySelector(".actors-grid");
+  const btn = document.querySelector(".tab-panel__view-more");
+  if (!container) return;
 
-  if (!actorContainer) {
-    console.error("Không tìm thấy .actors-grid container");
-    return;
-  }
-
-  actorContainer.innerHTML = "";
-
+  container.innerHTML = "";
   if (!actors.length) {
-    actorContainer.innerHTML = "<p>Không có thông tin diễn viên.</p>";
-    if (viewMoreBtn) viewMoreBtn.style.display = "none";
+    container.innerHTML = `<p>${
+      t("detail.noActors") || "Không có thông tin diễn viên."
+    }</p>`;
+    if (btn) btn.style.display = "none";
     return;
   }
 
-  // Lưu toàn bộ danh sách diễn viên vào data attribute
-  actorContainer.dataset.allActors = JSON.stringify(actors);
+  container.dataset.allActors = JSON.stringify(actors);
+  actors
+    .slice(0, 5)
+    .forEach((a) =>
+      container.insertAdjacentHTML("beforeend", createActorHTML(a))
+    );
 
-  // Hiển thị 5 diễn viên đầu tiên
-  const actorsToShow = actors.slice(0, 5);
-
-  actorsToShow.forEach((actor) => {
-    actorContainer.insertAdjacentHTML("beforeend", createActorHTML(actor));
-  });
-
-  // Ẩn nút "Xem thêm" nếu có 5 diễn viên hoặc ít hơn
-  if (viewMoreBtn) {
-    if (actors.length <= 5) {
-      viewMoreBtn.style.display = "none";
-    } else {
-      viewMoreBtn.style.display = "block";
-      viewMoreBtn.textContent = `Xem thêm (${actors.length - 5}) ⮟`;
-    }
+  if (btn) {
+    const remain = actors.length - 5;
+    btn.style.display = remain <= 0 ? "none" : "block";
+    btn.textContent =
+      remain > 0
+        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ⮟`
+        : t("detail.viewMore") || "Xem thêm";
   }
 }
 
 function renderInfo(movie) {
-  const infoPanel = document.querySelector(".tab-panel--info");
+  const panel = document.querySelector(".tab-panel--info");
+  if (!panel) return;
 
-  if (!infoPanel) {
-    console.error("Không tìm thấy .tab-panel--info container");
-    return;
-  }
-  const releaseDate = new Date(movie.release_date);
+  const flag =
+    movie.production_countries?.[0]?.iso_3166_1?.toLowerCase() || null;
+  const flagHTML = flag
+    ? `<img src="https://flagcdn.com/48x36/${flag}.png" style="width:32px;height:24px;vertical-align:middle;">`
+    : t("common.unknown");
 
-  infoPanel.innerHTML = `
-    <h3>Thông tin phim</h3>
-    <div class="movie-info">
-      <div class="movie-info__label">Thời lượng:</div>
-      <div class="movie-info__value">${
-        movie.runtime ? movie.runtime + " phút" : "Không rõ"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info__label">Quốc gia:</div>
-      <div class="movie-info__value">${
-        movie.production_countries?.[0]?.iso_3166_1
-          ? `<img src="https://flagcdn.com/48x36/${movie.production_countries[0].iso_3166_1.toLowerCase()}.png" 
-                alt="${movie.production_countries[0].name}" 
-                style="width: 32px; height: 24px; vertical-align: middle;">`
-          : "Không rõ"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info__label">Nhà sản xuất:</div>
-      <div class="movie-info__value">${
-        movie.production_companies?.[0]?.name || "Đang cập nhật"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info__label">Ngân sách:</div>
-      <div class="movie-info__value">${
-        movie.budget ? movie.budget.toLocaleString() + " $" : "Đang cập nhật"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info__label">Doanh thu:</div>
-      <div class="movie-info__value">${
-        movie.revenue ? movie.revenue.toLocaleString() + " $" : "Đang cập nhật"
-      }</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info__label">Trạng thái:</div>
-      <div class="movie-info__value">${movie.status || "Đang cập nhật"}</div>
-    </div>
-    <div class="movie-info">
-      <div class="movie-info__label">Ngày ra mắt:</div>
-      <div class="movie-info__value">${
-        releaseDate.toLocaleDateString("vi-VN") || "Đang cập nhật"
-      }</div>
-    </div>
+  const releaseDate = movie.release_date
+    ? new Date(movie.release_date).toLocaleDateString("vi-VN")
+    : t("common.unknown");
+
+  panel.innerHTML = `
+    <h3>${t("detail.infoTitle") || "Thông tin phim"}</h3>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.runtime") || "Thời lượng"
+    }:</div><div class="movie-info__value">${
+    movie.runtime ? movie.runtime + " phút" : t("common.unknown")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.country") || "Quốc gia"
+    }:</div><div class="movie-info__value">${flagHTML}</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.company") || "Nhà sản xuất"
+    }:</div><div class="movie-info__value">${
+    movie.production_companies?.[0]?.name || t("common.updating")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.budget") || "Ngân sách"
+    }:</div><div class="movie-info__value">${
+    movie.budget ? movie.budget.toLocaleString() + " $" : t("common.updating")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.revenue") || "Doanh thu"
+    }:</div><div class="movie-info__value">${
+    movie.revenue ? movie.revenue.toLocaleString() + " $" : t("common.updating")
+  }</div></div>
+    <div class="movie-info"><div class="movie-info__label">${
+      t("detail.status") || "Trạng thái"
+    }:</div><div class="movie-info__value">${
+    movie.status || t("common.unknown")
+  }</div></div>
   `;
 }
 
-// Đề xuất phim
+// Render recommendations
 async function loadRecommendedMovies(movieId) {
+  const lang = currentLang();
+  const apiLang = lang === "vi" ? "vi-VN" : "en-US";
   const container = document.getElementById("recommendations");
+  if (!container) return;
 
-  if (!container) {
-    console.error("Không tìm thấy #recommendations container");
-    return;
-  }
-
-  container.innerHTML = "<p>Đang tải...</p>";
+  container.innerHTML = `<p>${t("common.loading") || "Đang tải..."}</p>`;
 
   try {
-    let allMovies = [];
-    let page = 1;
-    let totalPages = 1;
+    const res = await fetch(
+      `${BASE_URL}/movie/${movieId}/recommendations?api_key=${TMDB_API_KEY}&language=${apiLang}&page=1`
+    );
+    const data = await res.json();
+    const movies = (data.results || []).slice(0, 12);
 
-    do {
-      const res = await fetch(
-        `${BASE_URL}/movie/${movieId}/recommendations?api_key=${TMDB_API_KEY}&language=vi-VN&page=${page}`
-      );
-      const data = await res.json();
-
-      if (data.results?.length) {
-        allMovies = allMovies.concat(data.results);
-      }
-
-      totalPages = data.total_pages || 1;
-      page++;
-    } while (page <= totalPages);
-
-    const movies = allMovies.slice(0, 12);
     container.innerHTML = "";
-
     if (!movies.length) {
-      container.innerHTML = "<p>Không có phim đề xuất.</p>";
+      container.innerHTML = `<p>${
+        t("detail.noRecs") || "Không có phim đề xuất."
+      }</p>`;
       return;
     }
 
-    movies.forEach((movie) => {
-      const poster = movie.poster_path
-        ? `${IMG_URL}${movie.poster_path}`
+    for (const m of movies) {
+      let title = m.title;
+      if (lang === "vi" && m.title === m.original_title) {
+        title = await translateText(m.original_title, "vi");
+      }
+      const poster = m.poster_path
+        ? `${IMG_URL}${m.poster_path}`
         : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
       const html = `
-                <div class="movie-box">
-          <a class="movie-box__card" href="MovieDetail.html?id=${movie.id}">
-            <div class="movie-box__info-top">
-              <div class="movie-box__info-ep-top"><span>Movie</span></div>
-            </div>
-
-            <div class="movie-box__poster">
-              <img class="movie-box__poster-img" src="${poster}" alt="${movie.title}">
-            </div>
+        <div class="movie-box">
+          <a class="movie-box__card" href="MovieDetail.html?id=${m.id}">
+            <div class="movie-box__info-top"><div class="movie-box__info-ep-top"><span>Movie</span></div></div>
+            <div class="movie-box__poster"><img class="movie-box__poster-img" src="${poster}" alt="${title}"></div>
           </a>
-
           <div class="movie-box__info">
-            <h4 class="movie-box__vietnam-title">
-              <a class="movie-box__title-link" href="MovieDetail.html?id=${movie.id}">
-                ${movie.title}
-              </a>
-            </h4>
-
-            <h4 class="movie-box__other-title">
-              <a class="movie-box__title-link" href="MovieDetail.html?id=${movie.id}">
-                ${movie.original_title}
-              </a>
-            </h4>
+            <h4 class="movie-box__vietnam-title"><a href="MovieDetail.html?id=${m.id}">${title}</a></h4>
+            <h4 class="movie-box__other-title"><a href="MovieDetail.html?id=${m.id}">${m.original_title}</a></h4>
           </div>
-        </div>
-
-      `;
-
+        </div>`;
       container.insertAdjacentHTML("beforeend", html);
-    });
-  } catch (error) {
-    console.error("Lỗi tải phim đề xuất:", error);
-    container.innerHTML = "<p>Có lỗi khi tải đề xuất.</p>";
+    }
+  } catch (e) {
+    container.innerHTML = `<p>${
+      t("detail.recError") || "Có lỗi khi tải đề xuất."
+    }</p>`;
   }
 }
 
-// Chuyển Tab
+// Render tabs and view more
 function initTabs() {
+  // Code tab giữ nguyên như file 2 cũ của bạn
   const tabs = document.querySelectorAll(".movie-tabs__item");
   const tabContents = document.querySelectorAll(".movie-tabs__content");
 
@@ -306,49 +328,22 @@ function initTabs() {
   });
 }
 
-// Xem thêm /thu gọn diễn viên
 function initViewMore() {
-  const viewMoreBtn = document.querySelector(".tab-panel__view-more");
-  const content = document.querySelector(".actors-grid");
+  const btn = document.querySelector(".tab-panel__view-more");
+  const grid = document.querySelector(".actors-grid");
+  if (!btn || !grid) return;
 
-  if (!viewMoreBtn || !content) return;
-
-  viewMoreBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    const isExpanded = content.classList.contains("actors-grid--expanded");
-
-    if (isExpanded) {
-      // Thu gọn
-      const allActors = JSON.parse(content.dataset.allActors || "[]");
-      content.innerHTML = "";
-      const actorsToShow = allActors.slice(0, 5);
-
-      actorsToShow.forEach((actor) => {
-        content.insertAdjacentHTML("beforeend", createActorHTML(actor));
-      });
-      const remaining = allActors.length - 5;
-      this.textContent =
-        remaining > 0 ? `Xem thêm (${remaining}) ⮟` : "Xem thêm ⮟";
-
-      content.classList.remove("actors-grid--expanded");
-
-      // Cuộn lên đầu section
-      const parentSection = content.closest(".tab-panel");
-      if (parentSection) {
-        parentSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    } else {
-      // Mở rộng
-      const allActors = JSON.parse(content.dataset.allActors || "[]");
-      content.innerHTML = "";
-      allActors.forEach((actor) => {
-        content.insertAdjacentHTML("beforeend", createActorHTML(actor));
-      });
-
-      content.classList.add("actors-grid--expanded");
-      this.textContent = "Thu gọn ⮝";
-    }
+  btn.addEventListener("click", () => {
+    const expanded = grid.classList.toggle("actors-grid--expanded");
+    const all = JSON.parse(grid.dataset.allActors || "[]");
+    grid.innerHTML = "";
+    const toShow = expanded ? all : all.slice(0, 5);
+    toShow.forEach((a) =>
+      grid.insertAdjacentHTML("beforeend", createActorHTML(a))
+    );
+    btn.textContent = expanded
+      ? `${t("detail.collapse") || "Thu gọn"} ⮝`
+      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ⮟`;
   });
 }
 
@@ -427,12 +422,13 @@ function initFavoriteButton() {
 }
 
 // Khởi chạy
-document.addEventListener("DOMContentLoaded", () => {
-  const movieId =
-    new URLSearchParams(window.location.search).get("id") || 1242404;
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const movieId = urlParams.get("id") || 1242404;
 
-  fetchMovieDetails(movieId);
-  loadRecommendedMovies(movieId);
+  await loadTranslations(currentLang());
+  await fetchMovieDetails(movieId);
+  await loadRecommendedMovies(movieId);
   initTabs();
   initViewMore();
 });
