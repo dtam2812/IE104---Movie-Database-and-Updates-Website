@@ -1,22 +1,43 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  userName: String,
-  email: { type: String, unique: true },
-  password: String,
-  role: { type: String, enum: ["user", "admin"], default: "user" },
-  status: { type: String, enum: ["active", "banned"], default: "active" },
-  joinDate: Date,
-  favoriteFilm: [
-    {
-      id: String,
-      type: { type: String, enum: ["Movie", "TV Show"] },
-      title: String,
-      originalName: String,
-      posterPath: String,
+const userSchema = new mongoose.Schema(
+  {
+    userName: {
+      type: String,
+      required: true,
+      trim: true,
     },
-  ],
-});
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: { type: String, enum: ["user", "admin"], default: "user" },
+    status: { type: String, enum: ["active", "banned"], default: "active" },
+    joinDate: {
+      type: Date,
+      default: Date.now,
+    },
+    favoriteFilm: [
+      {
+        id: String,
+        type: { type: String, enum: ["Movie", "TV Show"] },
+        title: String,
+        originalName: String,
+        posterPath: String,
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 // Đảm bảo không có validation lỗi
 userSchema.set("validateBeforeSave", false);
