@@ -6,7 +6,6 @@ const BG_URL = "https://image.tmdb.org/t/p/original";
 
 let translations = {};
 
-// Hệ thống dịch
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
@@ -36,7 +35,6 @@ function translateDOM() {
   });
 }
 
-// MyMemory Translation + Cache 30 ngày 
 async function translateText(text, target = "vi") {
   if (!text || target === "en") return text;
   const key = `trans_${btoa(unescape(encodeURIComponent(text.substring(0, 100))))}_${target}`;
@@ -55,7 +53,6 @@ async function translateText(text, target = "vi") {
   }
 }
 
-// Fetch movie details
 async function fetchMovieDetails(movieId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US"; 
@@ -66,13 +63,11 @@ async function fetchMovieDetails(movieId) {
     );
     const movie = await res.json();
 
-    // === TIÊU ĐỀ: Nếu TMDB không có bản dịch Việt → dịch thủ công 
     let displayTitle = movie.title || movie.original_title;
     if (lang === "vi" && movie.title === movie.original_title) {
       displayTitle = await translateText(movie.original_title, "vi");
     }
 
-    // === MÔ TẢ: Nếu không có hoặc quá ngắn → lấy tiếng Anh rồi dịch ===
     let overview = movie.overview || "";
     if (lang === "vi" && (!overview || overview.length < 20)) {
       const enRes = await fetch(
@@ -83,41 +78,33 @@ async function fetchMovieDetails(movieId) {
     }
     if (!overview) overview = t("detail.noOverview") || "Không có mô tả";
 
-    // Poster
     document.querySelector(".movie-banner__poster img").src = movie.poster_path
       ? `${IMG_URL}${movie.poster_path}`
       : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
-    // Tiêu đề
     document.querySelector(".movie-banner__title h3").textContent = displayTitle;
 
-    // Mô tả
     document.querySelector(".movie-banner__overview").innerHTML = `
       <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${overview}
     `;
 
-    // Điểm IMDb
     document.querySelector(".movie-banner__rating span").textContent =
       movie.vote_average?.toFixed(1) || "N/A";
 
-    // Độ tuổi
     const ratings = movie.release_dates?.results || [];
     const ratingObj = ratings.find(r => r.iso_3166_1 === "US") || ratings.find(r => r.iso_3166_1 === "GB") || ratings[0];
     const ageRating = ratingObj?.release_dates?.[0]?.certification || "N/A";
     const ageEl = document.querySelector(".movie-banner__age strong");
     if (ageEl) ageEl.textContent = ageRating;
 
-    // Thể loại (TMDB có dịch → dùng luôn, không cần map thủ công)
     document.querySelector(".movie-banner__genres").innerHTML =
       movie.genres?.map(g => `<span>${g.name}</span>`).join("") || `<span>${t("common.unknown")}</span>`;
 
-    // Đạo diễn
     const director = movie.credits?.crew?.find(p => p.job === "Director")?.name || t("common.unknown");
     document.querySelector(".movie-banner__director p").innerHTML = `
       <span>${t("detail.director") || "Đạo diễn"}:</span> ${director}
     `;
 
-    // Background
     const bg = document.querySelector(".movie-banner__background");
     if (bg && movie.backdrop_path) {
       bg.style.backgroundImage = `url(${BG_URL}${movie.backdrop_path})`;
@@ -125,7 +112,6 @@ async function fetchMovieDetails(movieId) {
       bg.style.backgroundPosition = "center";
     }
 
-    // Render các phần khác 
     renderActors(movie.credits?.cast || []);
     renderInfo(movie);
   } catch (err) {
@@ -133,7 +119,6 @@ async function fetchMovieDetails(movieId) {
   }
 }
 
-// Render functions
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -167,11 +152,16 @@ function renderActors(actors) {
   actors.slice(0, 5).forEach(a => container.insertAdjacentHTML("beforeend", createActorHTML(a)));
 
   if (btn) {
-    const remain = actors.length - 5;
-    btn.style.display = remain <= 0 ? "none" : "block";
-    btn.textContent = remain > 0
-      ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ⮟`
-      : t("detail.viewMore") || "Xem thêm";
+    const totalActors = actors.length;
+    const remain = totalActors - 5;
+    
+    if (remain <= 0) {
+      btn.style.display = "none";
+    } else {
+      btn.style.display = "block";
+      const viewMoreText = t("detail.viewMore") || "Xem thêm";
+      btn.textContent = `${viewMoreText} (${remain}) ⮟`;
+    }
   }
 }
 
@@ -197,7 +187,6 @@ function renderInfo(movie) {
   `;
 }
 
-// Render recommendations
 async function loadRecommendedMovies(movieId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -244,9 +233,7 @@ async function loadRecommendedMovies(movieId) {
   }
 }
 
-// Render tabs and view more
 function initTabs() {
-  // Code tab giữ nguyên như file 2 cũ của bạn
   const tabs = document.querySelectorAll(".movie-tabs__item");
   const contents = document.querySelectorAll(".movie-tabs__content");
   tabs.forEach(tab => {
@@ -271,13 +258,17 @@ function initViewMore() {
     grid.innerHTML = "";
     const toShow = expanded ? all : all.slice(0, 5);
     toShow.forEach(a => grid.insertAdjacentHTML("beforeend", createActorHTML(a)));
+    
+    const remain = all.length - 5;
+    const viewMoreText = t("detail.viewMore") || "Xem thêm";
+    const collapseText = t("detail.collapse") || "Thu gọn";
+    
     btn.textContent = expanded
-      ? `${t("detail.collapse") || "Thu gọn"} ⮝`
-      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ⮟`;
+      ? `${collapseText} ⮝`
+      : `${viewMoreText} (${remain}) ⮟`;
   });
 }
 
-// Render boot
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();
@@ -291,7 +282,6 @@ async function boot() {
   initViewMore();
 }
 
-// Reload khi đổi ngôn ngữ
 window.addEventListener("languagechange", boot);
 window.addEventListener("storage", e => {
   if (e.key === "language") location.reload();
