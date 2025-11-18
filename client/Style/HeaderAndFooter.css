@@ -2,7 +2,7 @@
   display: none !important;
 }
 
- /* HEADER - DESKTOP  */
+/* HEADER - DESKTOP  */
 .header .header-container {
   position: fixed;
   width: 100%;
@@ -15,7 +15,8 @@
   gap: 32px;
   z-index: 100;
   background: rgba(0, 0, 0, 0.25);
-  font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
 }
 
 .header {
@@ -53,7 +54,6 @@
 .search-box {
   position: relative;
 }
-
 
 /* LOGO  */
 .header .header-logo img {
@@ -177,8 +177,8 @@
 /* Dropdown menu */
 .select-language {
   position: absolute;
-  top: calc(100% + 8px);
-  right: calc(0px + 4%);
+  top: 70px;
+  right: calc(0px + 13%);
   min-width: 180px;
   padding: 8px;
   border-radius: 12px;
@@ -366,9 +366,8 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-
- /* RESPONSIVE */
- /* 1301px - 1514px : Tránh vỡ layout */ 
+/* RESPONSIVE */
+/* 1301px - 1514px : Tránh vỡ layout */
 @media only screen and (min-width: 1301px) and (max-width: 1514px) {
   .header .header-container {
     padding: 0 16px;
@@ -404,8 +403,8 @@
   }
 
   .language-switcher.desktop-lang {
-  display: contents; /* Hiện desktop version */
-}
+    display: contents; /* Hiện desktop version */
+  }
 
   #user_guest .button-user {
     padding: 0.5rem 1rem;
@@ -455,7 +454,6 @@
     font-size: 0.85em;
   }
 }
-
 
 /* MOBILE (<= 1100px) */
 @media only screen and (max-width: 1100px) {
@@ -692,7 +690,7 @@
   }
 
   .user-dropdown-menu .dropdown-list {
-    display: grid !important;   
+    display: grid !important;
     grid-template-columns: 1fr 1fr;
     gap: 0.8rem;
     transform: none !important;
@@ -709,7 +707,7 @@
   }
 
   .dropdown-list .dropdown-header {
-    grid-column: 1 / -1;  
+    grid-column: 1 / -1;
     padding: 0.6rem 3.5rem;
   }
 
@@ -757,8 +755,6 @@
     order: -1;
   }
 }
-
-
 
 /* FOOTER  */
 .footer .footer-container {

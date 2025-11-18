@@ -1,39 +1,100 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
+import { checkAndShowLoginPopup } from "./AutoLoginPopup.js";
 
-// Hàm kiểm tra trạng thái đăng nhập
-function checkAuthStatus() {
-  const accessToken = localStorage.getItem("accessToken");
-  const guest = document.getElementById("user_guest");
-  const logged = document.getElementById("main_user");
+// TOKEN EXPIRATION HANDLER
+const CHECK_INTERVAL_MS = 10000; // 10 giây
 
-  if (accessToken && guest && logged) {
-    // Đã đăng nhập - hiện user menu, ẩn button thành viên
-    guest.classList.add("hidden");
-    logged.classList.remove("hidden");
+// Hàm kiểm tra token có hết hạn chưa
+function isTokenExpired(token) {
+  if (!token) return true;
 
-    // Load thông tin user
-    loadUserInfo();
-  } else {
-    // Chưa đăng nhập - hiện button thành viên
-    guest.classList.remove("hidden");
-    logged.classList.add("hidden");
-  }
-}
+  try {
+    const decoded = jwtDecode(token);
+    const now = Date.now() / 1000;
 
-// Hàm load thông tin user
-function loadUserInfo() {
-  // Cập nhật tên user trong dropdown
-  const userName = document.querySelector(".user-name span");
-  if (userName) {
-    const payloadDecoded = jwtDecode(localStorage.accessToken);
-    console.log(payloadDecoded);
-    if (localStorage.accessToken) {
-      userName.textContent = payloadDecoded.username;
-    } else {
-      userName.textContent = "User"; // Tên mặc định nếu không có
+    if (decoded.exp && decoded.exp < now) {
+      console.log("Token đã hết hạn!");
+      return true;
     }
+
+    return false;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return true;
   }
 }
+
+// Hàm xử lý khi token hết hạn
+function handleTokenExpiration() {
+  console.log("Token hết hạn - Đang xử lý logout...");
+
+  // 1. Set flag để AutoLoginPopup biết là token đã hết hạn
+  sessionStorage.setItem("tokenExpired", "true");
+
+  // 2. Xóa tất cả thông tin user
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("refreshToken");
+
+  // 3. Lấy đường dẫn hiện tại
+  const currentPath = window.location.pathname;
+  const isHomePage = currentPath.includes("HomePage.html");
+
+  // 4. Luôn redirect về HomePage
+  window.location.href = "/client/view/pages/HomePage.html";
+
+  // 5. Nếu đang ở HomePage → reload và mở popup
+  if (isHomePage) {
+    window.location.reload();
+  }
+}
+
+// Hàm kiểm tra token định kỳ
+function startTokenExpirationCheck() {
+  console.log(
+    `Bắt đầu kiểm tra token expiration mỗi ${CHECK_INTERVAL_MS / 1000} giây...`
+  );
+
+  const checkInterval = setInterval(() => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (isTokenExpired(accessToken)) {
+      console.log("Token đã hết hạn!");
+      clearInterval(checkInterval);
+      handleTokenExpiration();
+    } else {
+      try {
+        const decoded = jwtDecode(accessToken);
+        const now = Date.now() / 1000;
+        const timeLeft = Math.floor(decoded.exp - now);
+        console.log(`Token còn ${timeLeft} giây`);
+      } catch (error) {
+        console.error("Error checking token:", error);
+      }
+    }
+  }, CHECK_INTERVAL_MS);
+
+  window.addEventListener("beforeunload", () => clearInterval(checkInterval));
+  return checkInterval;
+}
+
+// Hàm kiểm tra token khi vừa load trang
+function checkTokenOnPageLoad() {
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (accessToken && isTokenExpired(accessToken)) {
+    console.log("Token đã hết hạn khi load trang");
+    handleTokenExpiration();
+    return false;
+  }
+
+  return true;
+}
+
+// ============================================
+// LANGUAGE SWITCHER LOGIC
+// ============================================
 
 // Hàm lưu ngôn ngữ đã chọn
 function saveLanguagePreference(lang) {
@@ -77,10 +138,122 @@ function applyLanguagePreference(languageSwitchers) {
   });
 }
 
+// ============================================
+// HEADER LOGIC
+// ============================================
+
+// Hàm kiểm tra trạng thái đăng nhập
+function checkAuthStatus() {
+  const accessToken = localStorage.getItem("accessToken");
+  const guest = document.getElementById("user_guest");
+  const logged = document.getElementById("main_user");
+
+  if (accessToken && guest && logged) {
+    guest.classList.add("hidden");
+    logged.classList.remove("hidden");
+    loadUserInfo();
+    checkAdminRole();
+  } else {
+    if (guest) guest.classList.remove("hidden");
+    if (logged) logged.classList.add("hidden");
+    removeAdminMenu();
+  }
+}
+
+// Hàm load thông tin user
+function loadUserInfo() {
+  const userName = document.querySelector(".user-name span");
+  if (userName) {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        const payloadDecoded = jwtDecode(accessToken);
+        console.log("User info:", payloadDecoded);
+        userName.textContent = payloadDecoded.username || "User";
+      } else {
+        userName.textContent = "User";
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      userName.textContent = "User";
+    }
+  }
+}
+
+// Hàm xóa menu Admin
+function removeAdminMenu() {
+  const existingAdminMenu = document.getElementById("admin-menu-item");
+  if (existingAdminMenu) existingAdminMenu.remove();
+
+  const existingSeparator = document.getElementById("admin-menu-separator");
+  if (existingSeparator) existingSeparator.remove();
+}
+
+// Hàm tạo menu Admin động
+function createAdminMenu() {
+  removeAdminMenu();
+
+  const dropdownList = document.querySelector(
+    ".user-dropdown-menu .dropdown-list"
+  );
+  if (!dropdownList) {
+    console.error("Dropdown list not found");
+    return;
+  }
+
+  const logoutBtn = document.getElementById("Log-out-Btn");
+  if (!logoutBtn) {
+    console.error("Logout button not found");
+    return;
+  }
+
+  const adminMenuItem = document.createElement("a");
+  adminMenuItem.id = "admin-menu-item";
+  adminMenuItem.className = "dropdown-item";
+  adminMenuItem.href = "/client/view/pages/AdminUsers.html";
+  adminMenuItem.innerHTML = `
+    <div class="line-center">
+      <i class="fa-solid fa-users-gear"></i>
+      <span>Quản lý</span>
+    </div>
+  `;
+
+  const separator = document.createElement("hr");
+  separator.id = "admin-menu-separator";
+
+  dropdownList.appendChild(separator);
+  dropdownList.appendChild(adminMenuItem);
+}
+
+// Hàm kiểm tra role Admin
+function checkAdminRole() {
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (accessToken) {
+    try {
+      const payloadDecoded = jwtDecode(accessToken);
+      console.log("Checking admin role:", payloadDecoded.role);
+
+      if (payloadDecoded.role === "Admin") {
+        createAdminMenu();
+      } else {
+        removeAdminMenu();
+      }
+    } catch (error) {
+      console.error("Error checking admin role:", error);
+      removeAdminMenu();
+    }
+  } else {
+    removeAdminMenu();
+  }
+}
+
+// Main function
 export async function headerjs() {
   // ========== KHỞI TẠO HỆ THỐNG DỊCH ==========
   const { initTranslate } = await import("./Translate.js");
   await initTranslate();
+
   const menuToggle = document.querySelector(".menu-toggle");
   const searchGroup = document.querySelector(".search-group");
   const searchNav = document.querySelector(".search-toggle");
@@ -90,7 +263,22 @@ export async function headerjs() {
   const dropdownBtn = document.querySelector(".dropdown-toggle");
   const languageSwitchers = document.querySelectorAll(".language-switcher");
 
-  // Kiểm tra trạng thái đăng nhập ngay khi load trang
+  // Check token on load
+  if (!checkTokenOnPageLoad()) {
+    checkAuthStatus();
+    return;
+  }
+
+  // Start token check nếu có token
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    startTokenExpirationCheck();
+  }
+
+  // Check và show popup nếu token expired
+  checkAndShowLoginPopup();
+
+  // Kiểm tra trạng thái đăng nhập
   checkAuthStatus();
 
   // Khôi phục ngôn ngữ đã chọn ngay sau khi khởi tạo
@@ -135,7 +323,7 @@ export async function headerjs() {
         const selectedLang = opt.getAttribute("data-lang");
         const selectedFlagSrc = opt.querySelector(".flag-icon").src;
 
-        // Lưu ngôn ngữ đã chọn vào localStorage (chỉ lưu lang code, không lưu URL)
+        // Lưu ngôn ngữ đã chọn vào localStorage
         saveLanguagePreference(selectedLang);
 
         // Cập nhật TẤT CẢ language switchers (mobile + desktop)
@@ -194,12 +382,14 @@ export async function headerjs() {
     languageSwitchers.forEach((ls) => ls.classList.toggle("hidden"));
   });
 
-  dropdownBtn.addEventListener("click", () => {
-    dropdown.classList.toggle("toggled");
-  });
+  if (dropdownBtn) {
+    dropdownBtn.addEventListener("click", () => {
+      dropdown.classList.toggle("toggled");
+    });
+  }
 
   document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target)) {
+    if (dropdown && !dropdown.contains(e.target)) {
       dropdown.classList.remove("toggled");
     }
   });
@@ -213,24 +403,22 @@ export async function headerjs() {
     }
   });
 
-  // Popup modal - chỉ cho phép khi chưa đăng nhập
+  // Popup modal
   const memberBtn = document.querySelector("#btn-member");
   if (memberBtn) {
     memberBtn.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      // Kiểm tra đã đăng nhập chưa
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
-        // Đã đăng nhập rồi thì không mở modal
+        console.log("User đã đăng nhập, không mở modal");
         return;
       }
 
       let modal = document.querySelector(".modal");
       if (!modal) {
-        // Load file AuthModal.html vào header.html
         const html = await (
-          await fetch("../../view/components/AuthModal.html")
+          await fetch("/client/view/components/AuthModal.html")
         ).text();
         const doc = new DOMParser().parseFromString(html, "text/html");
         document.body.appendChild(doc.querySelector(".modal"));
@@ -238,19 +426,20 @@ export async function headerjs() {
         doc.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
           const href = link.href;
           if (!document.querySelector(`link[href="${href}"]`)) {
-            document.head.appendChild(
-              Object.assign(document.createElement("link"), {
-                rel: "stylesheet",
-                href,
-              })
-            );
+            const newLink = Object.assign(document.createElement("link"), {
+              rel: "stylesheet",
+              href: href.startsWith("http")
+                ? href
+                : `/client${href.startsWith("/") ? "" : "/"}${href}`,
+            });
+            document.head.appendChild(newLink);
           }
         });
 
+        // Khởi tạo lại hệ thống dịch cho modal
         const { initTranslate } = await import("./Translate.js");
         await initTranslate();
 
-        // Import file AuthModal.js vào
         const { Auth_Modaljs } = await import("./AuthModal.js");
         Auth_Modaljs();
         setTimeout(() => window.openLRFModal("login"), 50);
@@ -260,30 +449,22 @@ export async function headerjs() {
     });
   }
 
-  // Xử lý sự kiện sau khi user đăng nhập vào
+  // Event: user logged in
   document.addEventListener("userLoggedIn", (e) => {
-    const guest = document.getElementById("user_guest");
-    const logged = document.getElementById("main_user");
-
-    if (guest && logged) {
-      guest.classList.add("hidden");
-      logged.classList.remove("hidden");
-    }
-
-    // Load thông tin user sau khi đăng nhập
-    loadUserInfo();
+    console.log("User logged in event triggered");
+    checkAuthStatus();
   });
 
-  // Xử lý sự kiện khi click vào main user ở header
+  // User dropdown menu
   const userDropdownMenu = document.querySelector(".user-dropdown-menu");
   const dropdownList = userDropdownMenu?.querySelector(".dropdown-list");
 
   if (userDropdownMenu && dropdownList) {
     userDropdownMenu.addEventListener("click", (e) => {
+      e.stopPropagation();
       dropdownList.classList.toggle("show");
     });
 
-    // Tắt user-dropdown-menu khi click ở bên ngoài menu
     document.addEventListener("click", (e) => {
       if (!userDropdownMenu.contains(e.target)) {
         dropdownList.classList.remove("show");
@@ -291,28 +472,30 @@ export async function headerjs() {
     });
   }
 
-  // Xử lý sự kiện đăng xuất
+  // Logout button
   const logOutBtn = document.querySelector("#Log-out-Btn");
-
   if (logOutBtn) {
     logOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      console.log(jwtDecode(localStorage.accessToken));
-      // Xoá accessToken và thông tin user
+      console.log("Logging out user");
+
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          console.log("Current user:", jwtDecode(token));
+        }
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userName");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("refreshToken");
-      // Xoá các thông tin khác nếu có...
 
-      const guest = document.getElementById("user_guest");
-      const logged = document.getElementById("main_user");
-
-      if (guest && logged) {
-        logged.classList.add("hidden");
-        guest.classList.remove("hidden");
-      }
+      checkAuthStatus();
+      window.location.href = "/client/view/pages/HomePage.html";
     });
   }
 }
