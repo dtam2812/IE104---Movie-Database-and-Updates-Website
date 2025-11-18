@@ -88,8 +88,12 @@ async function fetchMovieDetails(movieId) {
       ? `${IMG_URL}${movie.poster_path}`
       : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
+<<<<<<< HEAD
     document.querySelector(".movie-banner__title h3").textContent =
       displayTitle;
+=======
+    document.querySelector(".movie-banner__title h3").textContent = displayTitle;
+>>>>>>> 7cd1dabfc7be379497e99d43a629d74d2c422622
 
     document.querySelector(".movie-banner__overview").innerHTML = `
       <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${overview}
@@ -111,9 +115,13 @@ async function fetchMovieDetails(movieId) {
       movie.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
       `<span>${t("common.unknown")}</span>`;
 
+<<<<<<< HEAD
     const director =
       movie.credits?.crew?.find((p) => p.job === "Director")?.name ||
       t("common.unknown");
+=======
+    const director = movie.credits?.crew?.find(p => p.job === "Director")?.name || t("common.unknown");
+>>>>>>> 7cd1dabfc7be379497e99d43a629d74d2c422622
     document.querySelector(".movie-banner__director p").innerHTML = `
       <span>${t("detail.director") || "Đạo diễn"}:</span> ${director}
     `;
@@ -177,7 +185,11 @@ function renderActors(actors) {
   if (btn) {
     const totalActors = actors.length;
     const remain = totalActors - 5;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 7cd1dabfc7be379497e99d43a629d74d2c422622
     if (remain <= 0) {
       btn.style.display = "none";
     } else {
@@ -315,6 +327,7 @@ function initViewMore() {
     const all = JSON.parse(grid.dataset.allActors || "[]");
     grid.innerHTML = "";
     const toShow = expanded ? all : all.slice(0, 5);
+<<<<<<< HEAD
     toShow.forEach((a) =>
       grid.insertAdjacentHTML("beforeend", createActorHTML(a))
     );
@@ -323,6 +336,14 @@ function initViewMore() {
     const viewMoreText = t("detail.viewMore") || "Xem thêm";
     const collapseText = t("detail.collapse") || "Thu gọn";
 
+=======
+    toShow.forEach(a => grid.insertAdjacentHTML("beforeend", createActorHTML(a)));
+    
+    const remain = all.length - 5;
+    const viewMoreText = t("detail.viewMore") || "Xem thêm";
+    const collapseText = t("detail.collapse") || "Thu gọn";
+    
+>>>>>>> 7cd1dabfc7be379497e99d43a629d74d2c422622
     btn.textContent = expanded
       ? `${collapseText} ⮝`
       : `${viewMoreText} (${remain}) ⮟`;

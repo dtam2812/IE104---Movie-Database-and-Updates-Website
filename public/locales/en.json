@@ -283,6 +283,7 @@
   "common.unknown": "Unknown",
   "common.loading": "Loading...",
   "common.minutes": "min",
+  "common.updating": "Updating",
   "badge.movie": "Movie",
 
   "detail.likeAria": "Favorite",
@@ -321,6 +322,7 @@
   "detail.recError": "Failed to load recommendations.",
   "detail.recommendList": "Recommendation list",
   "detail.noOverview": "No overview",
+  
 
   "tvshow.creator": "Creator",
   "tvshow.infoTitle": "TV Show Info",

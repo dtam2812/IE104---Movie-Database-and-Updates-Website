@@ -205,7 +205,7 @@ function renderResults(titles) {
     if (item.media_type === "movie") {
       const poster = item.poster_path
         ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-        : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster&font=roboto";
+        : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
       const html = movieCardTemplate
         .replace(/{{id}}/g, item.id)
@@ -217,7 +217,7 @@ function renderResults(titles) {
     } else if (item.media_type === "tv") {
       const poster = item.poster_path
         ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
-        : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster&font=roboto";
+        : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
       const html = tvCardTemplate
         .replace(/{{id}}/g, item.id)
