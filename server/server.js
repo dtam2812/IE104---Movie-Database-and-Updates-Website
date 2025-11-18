@@ -7,18 +7,19 @@ const userRoute = require("./Router/UserRoute");
 const userAdminRoute = require("./Router/UserAdminRoute");
 const authRoute = require("./Router/AuthRoute");
 
-//middleware su dung cors
+// middleware sử dụng cors
 app.use(cors());
 
-//middleware lay du lieu tu client qua req.body
+// middleware lấy dữ liệu từ client qua req.body
 app.use(express.json());
 
-//connectDB
+// connectDB
 connectDB();
 
-//Middleware Router
+// Middleware Router
 app.use("/auth/admin", userAdminRoute);
 app.use("/api/authUser", userRoute);
+app.use("/api", userRoute);
 app.use("/api/auth", authRoute);
 
 app.listen(process.env.PORT, () => {

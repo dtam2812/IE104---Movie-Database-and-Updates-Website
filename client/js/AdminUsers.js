@@ -6,7 +6,7 @@ export async function AdminUsers_js() {
   const userForm = document.querySelector(".form--user");
   const userFormEl = userForm.querySelector("form");
   const userCountHeading = document.querySelector(".data-table__title");
-  const modalTitle = document.querySelector(".form__title");
+  const modalTitle = document.querySelector(".modal__title");
   const submitBtn = userFormEl.querySelector(".form__btn--primary");
 
   let currentEditRow = null;
@@ -187,31 +187,23 @@ export async function AdminUsers_js() {
     if (!dateString) return "N/A";
 
     try {
-      const [year, month, day] = dateString.split("-");
-      return `${day.slice(0, 2)}/${month}/${year}`;
+      // Handle both Date objects and string formats
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        // If it's not a valid date, try parsing as string
+        const [year, month, day] = dateString.split("-");
+        return `${day.slice(0, 2)}/${month}/${year}`;
+      }
+
+      // Format as dd/mm/yyyy
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
     } catch (e) {
       console.error("Error formatting date:", e);
       return dateString;
     }
-  }
-
-  // GENERATE USER ID
-  function generateUserId() {
-    if (allUsers.length === 0) {
-      return "UIT001";
-    }
-
-    const maxNumber = allUsers.reduce((max, user) => {
-      const match = user.id?.match(/^UIT(\d+)$/);
-      if (match) {
-        const num = parseInt(match[1]);
-        return num > max ? num : max;
-      }
-      return max;
-    }, 0);
-
-    const newNumber = maxNumber + 1;
-    return "UIT" + String(newNumber).padStart(3, "0");
   }
 
   // PAGINATION
@@ -233,9 +225,13 @@ export async function AdminUsers_js() {
 
     filteredUsers = allUsers.filter((user) => {
       const userName = user.userName || user.name || "";
+      const userEmail = user.email || "";
+      const userId = user._id || user.id || "";
+
       const matchSearch =
         userName.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm);
+        userEmail.toLowerCase().includes(searchTerm) ||
+        userId.toLowerCase().includes(searchTerm);
 
       const matchRole = roleValue === "all" || user.role === roleValue;
       const matchStatus = statusValue === "all" || user.status === statusValue;
@@ -315,6 +311,8 @@ export async function AdminUsers_js() {
           slider.classList.toggle("active", toggle.checked);
           slider.classList.toggle("banned", !toggle.checked);
         }
+
+        alert("Cập nhật trạng thái thành công!");
       } catch (error) {
         alert("Không thể cập nhật trạng thái user!");
         toggle.checked = !toggle.checked; // Revert
@@ -323,7 +321,9 @@ export async function AdminUsers_js() {
 
     const createDateCell = document.createElement("td");
     createDateCell.classList.add("data-table__th");
-    createDateCell.textContent = formatDate(user.joinDate || user.createdDate);
+    createDateCell.textContent = formatDate(
+      user.joinDate || user.createdDate || user.createdAt
+    );
     newRow.appendChild(createDateCell);
 
     const editCell = document.createElement("td");
@@ -345,6 +345,18 @@ export async function AdminUsers_js() {
     editBtn.addEventListener("click", () => {
       console.log("Edit button clicked for user:", user);
       openEditModal(newRow);
+    });
+
+    const detailBtn = detailCell.querySelector(".data-table__btn--detail");
+    detailBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert(
+        `User Details:\n\nName: ${userName}\nEmail: ${user.email}\nRole: ${
+          user.role
+        }\nStatus: ${user.status}\nJoined: ${formatDate(
+          user.joinDate || user.createdDate
+        )}`
+      );
     });
 
     const deleteBtn = deleteCell.querySelector(".data-table__btn--delete");
@@ -555,6 +567,7 @@ export async function AdminUsers_js() {
   // PASSWORD VALIDATION
   function validatePasswords() {
     if (
+      !isEditMode &&
       pwdInput.value &&
       cfPwdInput.value &&
       pwdInput.value !== cfPwdInput.value
@@ -582,6 +595,22 @@ export async function AdminUsers_js() {
     const email = userFormEl.querySelector('input[name="email"]').value.trim();
     const role = userFormEl.querySelector('select[name="role"]').value;
     const password = pwdInput.value.trim();
+
+    // Basic validation
+    if (!name || !email || !role) {
+      alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
+      return;
+    }
+
+    if (!isEditMode && (!password || password.length < 6)) {
+      alert("Mật khẩu phải có ít nhất 6 ký tự!");
+      return;
+    }
+
+    if (!isEditMode && password !== cfPwdInput.value.trim()) {
+      alert("Mật khẩu xác nhận không khớp!");
+      return;
+    }
 
     try {
       if (isEditMode && currentEditRow) {

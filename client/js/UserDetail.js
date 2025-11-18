@@ -157,21 +157,25 @@ function displayUserInformation(userData) {
   const joinDateField = document.getElementById("joinDate");
   const userName = document.querySelector(".user-detail__name");
 
-  if (nameField && userData.userName) nameField.value = userData.userName;
-  if (emailField && userData.email) emailField.value = userData.email;
+  const user = userData.user || userData;
 
-  const joinYear = userData.joinDate.split("-")[0];
-  const joinMonth = userData.joinDate.split("-")[1];
-  const joinDay =
-    userData.joinDate.split("-")[2].split("")[0] +
-    userData.joinDate.split("-")[2].split("")[1];
-  const joinDate = joinDay + "/" + joinMonth + "/" + joinYear;
-  if (joinDateField && userData.joinDate) {
-    joinDateField.value = joinDate;
-    joinDateField.setAttribute("readonly", true);
-    joinDateField.style.cursor = "not-allowed";
+  if (nameField && user.userName) nameField.value = user.userName;
+  if (emailField && user.email) emailField.value = user.email;
+
+  if (joinDateField && user.joinDate) {
+    try {
+      const joinYear = user.joinDate.split("-")[0];
+      const joinMonth = user.joinDate.split("-")[1];
+      const joinDay = user.joinDate.split("-")[2].substring(0, 2);
+      const joinDate = joinDay + "/" + joinMonth + "/" + joinYear;
+      joinDateField.value = joinDate;
+      joinDateField.setAttribute("readonly", true);
+      joinDateField.style.cursor = "not-allowed";
+    } catch (error) {
+      console.warn("Invalid joinDate format:", user.joinDate);
+    }
   }
-  if (userName && userData.userName) userName.textContent = userData.userName;
+  if (userName && user.userName) userName.textContent = user.userName;
 }
 
 async function updateInformation() {
@@ -431,6 +435,195 @@ function updateUserInfo(userData) {
   if (emailField && userData.email) emailField.value = userData.email;
   if (userName && userData.name) userName.textContent = userData.name;
 }
+
+// Lấy thông tin user từ server
+async function fetchUserDetail() {
+  try {
+    const res = await fetch("http://localhost:5000/api/authUser/getUser", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Lỗi khi lấy dữ liệu");
+
+    const data = await res.json(); // ✅ khai báo const
+    console.log("User data:", data.user);
+
+    // Cập nhật thông tin lên giao diện
+    updateUserInfo({
+      name: data.user.userName,
+      email: data.user.email,
+      phone: data.user.phone,
+      birthday: data.user.birthday,
+      avatar: data.user.avatar, // nếu có
+    });
+
+    // Nếu có danh sách yêu thích
+    if (data.user.favoriteFilm) {
+      renderFavorites(data.user.favoriteFilm);
+    }
+  } catch (err) {
+    console.error("Fetch user detail error:", err);
+  }
+}
+
+// Render danh sách phim yêu thích
+function renderFavorites(favorites) {
+  const container = document.querySelector(".favorites-list");
+  if (!container) {
+    console.error("Favorites container not found");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  if (!favorites || favorites.length === 0) {
+    container.innerHTML = `
+      <div class="empty-favorites">
+        <i class="bx bx-heart"></i>
+        <p>Chưa có phim nào trong danh sách yêu thích</p>
+        <a href="../pages/HomePage.html" class="btn browse-movies-btn">Khám phá phim</a>
+      </div>
+    `;
+    return;
+  }
+
+  // Lọc các phim trùng lặp
+  const uniqueFavorites = favorites.filter(
+    (film, index, self) =>
+      index ===
+      self.findIndex(
+        (f) =>
+          f._id === film._id ||
+          f.id === film.id ||
+          (f.title === film.title && f.originalName === film.originalName)
+      )
+  );
+
+  if (uniqueFavorites.length === 0) {
+    container.innerHTML = `
+      <div class="empty-favorites">
+        <i class="bx bx-heart"></i>
+        <p>Chưa có phim nào trong danh sách yêu thích</p>
+        <a href="../pages/HomePage.html" class="btn browse-movies-btn">Khám phá phim</a>
+      </div>
+    `;
+    return;
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "favorites-grid";
+
+  uniqueFavorites.forEach((film, index) => {
+    const filmId = film.id;
+
+    const filmCard = document.createElement("div");
+    filmCard.className = "favorite-card";
+    filmCard.setAttribute("data-film-id", filmId);
+
+    if (!filmId) {
+      console.warn("Film missing ID:", film);
+      return;
+    }
+
+    const typeBadge =
+      film.type === "TV" || film.media_type === "tv"
+        ? `<div class="favorite-card__episode-badge">TV Show</div>`
+        : `<div class="favorite-card__episode-badge">Movie</div>`;
+
+    filmCard.innerHTML = `
+      <div class="favorite-card__container">
+        <img 
+          src="${film.posterPath || "/images/default-poster.jpg"}" 
+          alt="${film.title || film.originalName || "Unknown"}" 
+          class="favorite-card__poster"
+          onerror="this.src='/images/default-poster.jpg'"
+        />
+        <div class="favorite-card__info-top">
+          ${typeBadge}
+        </div>
+        
+          <button class="favorite-card__remove-btn" title="Remove from Favorites">
+            <i class="bx bx-trash"></i>
+          </button>
+      </div>
+      <div class="favorite-card__info">
+        <div class="favorite-card__vietnamese-title">
+          <span>${film.title || film.originalName || "Unknown Title"}</span>
+        </div>
+        <div class="favorite-card__original-title">
+          <span>${film.originalName || ""}</span>
+        </div>
+      </div>
+    `;
+
+    // Event listener để chuyển đến trang chi tiết
+    const poster = filmCard.querySelector(".favorite-card__poster");
+    if (poster) {
+      poster.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = `../pages/MovieDetail.html?id=${filmId}`;
+      });
+    }
+
+    // Event listener cho nút xóa
+    const removeBtn = filmCard.querySelector(".favorite-card__remove-btn");
+    if (removeBtn) {
+      removeBtn.addEventListener("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        await removeFromFavorites(filmId, film.title || film.originalName);
+      });
+    }
+
+    grid.appendChild(filmCard);
+  });
+
+  container.appendChild(grid);
+}
+
+// Function để xóa phim khỏi danh sách yêu thích
+async function removeFromFavorites(filmId, filmTitle) {
+  if (
+    !confirm(
+      `Bạn có chắc chắn muốn xóa "${filmTitle}" khỏi danh sách yêu thích?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem("accessToken");
+    const response = await fetch(`http://localhost:5000/api/favorites/toggle`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: filmId.toString(),
+        type: "Movie",
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      showToast("Đã xóa phim khỏi danh sách yêu thích");
+      // Reload lại danh sách yêu thích
+      fetchUserDetail();
+    } else {
+      throw new Error("Lỗi khi xóa phim yêu thích");
+    }
+  } catch (error) {
+    console.error("Remove from favorites error:", error);
+    showToast("Có lỗi xảy ra khi xóa phim");
+  }
+}
+
+// Gọi khi load trang
+document.addEventListener("DOMContentLoaded", fetchUserDetail);
 
 // Export functions for use in other modules
 if (typeof module !== "undefined" && module.exports) {
