@@ -1,7 +1,6 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 import { checkAndShowLoginPopup } from "./AutoLoginPopup.js";
 
-// TOKEN EXPIRATION HANDLER
 const CHECK_INTERVAL_MS = 10000; // 10 giây
 
 // Hàm kiểm tra token có hết hạn chưa
@@ -28,23 +27,23 @@ function isTokenExpired(token) {
 function handleTokenExpiration() {
   console.log("Token hết hạn - Đang xử lý logout...");
 
-  // 1. Set flag để AutoLoginPopup biết là token đã hết hạn
+  // Set flag để AutoLoginPopup biết là token đã hết hạn
   sessionStorage.setItem("tokenExpired", "true");
 
-  // 2. Xóa tất cả thông tin user
+  // Xóa tất cả thông tin user
   localStorage.removeItem("accessToken");
   localStorage.removeItem("userName");
   localStorage.removeItem("userEmail");
   localStorage.removeItem("refreshToken");
 
-  // 3. Lấy đường dẫn hiện tại
+  // Lấy đường dẫn hiện tại
   const currentPath = window.location.pathname;
   const isHomePage = currentPath.includes("HomePage.html");
 
-  // 4. Luôn redirect về HomePage
+  // Luôn redirect về HomePage
   window.location.href = "/client/view/pages/HomePage.html";
 
-  // 5. Nếu đang ở HomePage → reload và mở popup
+  // Nếu đang ở HomePage → reload và mở popup
   if (isHomePage) {
     window.location.reload();
   }
@@ -92,10 +91,6 @@ function checkTokenOnPageLoad() {
   return true;
 }
 
-// ============================================
-// LANGUAGE SWITCHER LOGIC
-// ============================================
-
 // Hàm lưu ngôn ngữ đã chọn
 function saveLanguagePreference(lang) {
   localStorage.setItem("selectedLanguage", lang);
@@ -137,10 +132,6 @@ function applyLanguagePreference(languageSwitchers) {
     }
   });
 }
-
-// ============================================
-// HEADER LOGIC
-// ============================================
 
 // Hàm kiểm tra trạng thái đăng nhập
 function checkAuthStatus() {
@@ -250,7 +241,6 @@ function checkAdminRole() {
 
 // Main function
 export async function headerjs() {
-  // ========== KHỞI TẠO HỆ THỐNG DỊCH ==========
   const { initTranslate } = await import("./Translate.js");
   await initTranslate();
 
@@ -301,7 +291,7 @@ export async function headerjs() {
       // Lấy trạng thái hiện tại trước khi toggle
       const wasOpen = languageSwitch.classList.contains("open");
 
-      // Đóng TẤT CẢ language switchers trước
+      // Đóng tất cả language switchers trước
       languageSwitchers.forEach((switcher) => {
         switcher.classList.remove("open");
         switcher
@@ -316,7 +306,6 @@ export async function headerjs() {
       }
     });
 
-    // Chọn ngôn ngữ -> đổi cờ và đánh dấu active cho CẢ 2 switchers
     langOptions.forEach((opt) => {
       opt.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -326,7 +315,7 @@ export async function headerjs() {
         // Lưu ngôn ngữ đã chọn vào localStorage
         saveLanguagePreference(selectedLang);
 
-        // Cập nhật TẤT CẢ language switchers (mobile + desktop)
+        // Cập nhật tất cả language switchers (mobile + desktop)
         languageSwitchers.forEach((switcher) => {
           const allOptions = switcher.querySelectorAll(".lang-option");
           const currentFlag = switcher.querySelector(".current-flag");
@@ -449,7 +438,6 @@ export async function headerjs() {
     });
   }
 
-  // Event: user logged in
   document.addEventListener("userLoggedIn", (e) => {
     console.log("User logged in event triggered");
     checkAuthStatus();

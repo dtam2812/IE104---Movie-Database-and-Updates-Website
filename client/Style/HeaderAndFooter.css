@@ -91,6 +91,11 @@
   cursor: pointer;
 }
 
+.dropdown-toggle span {
+  font-weight: 500;
+  font-size: 16px;
+}
+
 .menu-film-type.dropdown {
   position: relative;
 }
