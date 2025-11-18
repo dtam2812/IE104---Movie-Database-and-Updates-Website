@@ -49,7 +49,7 @@
     </script>
     <!-- end-header -->
 
-    <!--start-movie-banner -->
+    <!-- start-movie-banner (đổi từ movie-detail thành movie-banner) -->
     <section class="movie-banner">
       <div class="movie-banner__container">
         <div class="movie-banner__wrap">
@@ -59,25 +59,25 @@
               <img
                 alt=""
                 loading="lazy"
-                src="https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster"
+                src="https://static.nutscdn.com/vimg/300-0/ef826a2c732ac7c76a322f004111e18d.webp"
               />
             </div>
             <div class="movie-banner__info">
               <div class="movie-banner__title">
-                <h3>No Name</h3>
+                <h3>Steve</h3>
               </div>
               <div class="movie-banner__meta">
                 <div class="movie-banner__rating">
-                  <p>IMDb <span>x.x</span></p>
+                  <p>IMDb <span>6.6</span></p>
                 </div>
                 <div class="movie-banner__age">
                   <span><strong>T18</strong></span>
                 </div>
               </div>
               <div class="movie-banner__genres">
-                <span>Empty</span>
-                <span>Empty</span>
-                <span>Empty</span>
+                <span>Chính kịch</span>
+                <span>Hài</span>
+                <span>Chuyển thể</span>
               </div>
               <div class="movie-banner__actions">
                 <a
@@ -96,13 +96,13 @@
                 </a>
               </div>
               <div class="movie-banner__overview">
-                <span>Giới thiệu:</span><br />
+                <span data-i18n="detail.intro">Giới thiệu:</span><br />
                 Trong một ngày căng thẳng, vị hiệu trưởng tận tâm của một trường
                 cải tạo cơ hội cuối nỗ lực đưa các học sinh của mình vào khuôn
                 khổ trong khi đối mặt với áp lực riêng.
               </div>
               <div class="movie-banner__director">
-                <p><span>Đạo diễn:</span> Tim Mielants, Daire Glynn</p>
+                <p><span data-i18n="detail.director">Đạo diễn:</span> <span id="director-name">Tim Mielants, Daire Glynn</span></p>
               </div>
             </div>
           </div>
@@ -117,27 +117,46 @@
         <button
           class="movie-tabs__item movie-tabs__item--active"
           data-tab="actors"
+          data-i18n="detail.tab.actors"
         >
           Diễn viên
         </button>
-        <button class="movie-tabs__item" data-tab="info">Thông tin</button>
-        <button class="movie-tabs__item" data-tab="recommend">Đề xuất</button>
-        <button class="movie-tabs__item" data-tab="comments">Đánh giá</button>
+        <button
+          class="movie-tabs__item"
+          data-tab="info"
+          data-i18n="detail.tab.info"
+        >
+          Thông tin
+        </button>
+        <button
+          class="movie-tabs__item"
+          data-tab="recommend"
+          data-i18n="detail.tab.recommend"
+        >
+          Đề xuất
+        </button>
+        <button
+          class="movie-tabs__item"
+          data-tab="comments"
+          data-i18n="detail.tab.comments"
+        >
+          Đánh giá
+        </button>
       </div>
 
       <!-- TAB 1: Diễn viên -->
       <div class="movie-tabs__content movie-tabs__content--active" id="actors">
         <div class="tab-panel tab-panel--actors">
-          <h3>Diễn viên</h3>
-          <div class="actors-grid"></div>
-          <a class="tab-panel__view-more">Xem thêm ⮟</a>
+          <h3 data-i18n="detail.section.actors">Diễn viên</h3>
+          <div class="actors-grid circle-actor"></div>
+          <a class="tab-panel__view-more" data-i18n="detail.viewMore">Xem thêm ⮟</a>
         </div>
       </div>
 
       <!-- TAB 2: Thông tin -->
       <div class="movie-tabs__content" id="info">
         <div class="tab-panel tab-panel--info">
-          <h3>Thông tin phim</h3>
+          <h3 data-i18n="detail.infoTitle">Thông tin phim</h3>
           <div class="movie-info">
             <div class="movie-info__label">Thời lượng:</div>
             <div class="movie-info__value">1h 32m</div>
@@ -168,22 +187,22 @@
       <!-- TAB 3: Đánh giá -->
       <div class="movie-tabs__content" id="comments">
         <div class="tab-panel tab-panel--comments">
-          <h3>Đánh giá của khán giả</h3>
+          <h3 data-i18n="detail.section.comments">Đánh giá của khán giả</h3>
 
           <!-- Thống kê -->
           <div class="comments-stats">
             <div class="comments-stats__item">
-              Đánh giá trung bình: <span id="avg-rating">0</span>/5
+              <span data-i18n="detail.avgRating">Đánh giá trung bình:</span> <span id="avg-rating">0</span>/5
             </div>
             <div class="comments-stats__item">
-              Tổng số đánh giá: <span id="total-comments">0</span>
+              <span data-i18n="detail.totalComments">Tổng số đánh giá: </span><span id="total-comments">0</span>
             </div>
           </div>
 
           <!-- Form nhập comment -->
           <div class="comment-form">
             <div class="comment-form__rating">
-              <label>Đánh giá của bạn:</label>
+              <label data-i18n="detail.yourRating">Đánh giá của bạn:</label>
               <div class="star-rating" id="star-rating">
                 <i class="fas fa-star" data-rating="1"></i>
                 <i class="fas fa-star" data-rating="2"></i>
@@ -196,15 +215,16 @@
               id="comment-text"
               class="comment-form__textarea"
               placeholder="Chia sẻ cảm nhận của bạn về bộ phim..."
+              data-i18n-placeholder="detail.commentPlaceholder"
             ></textarea>
-            <button id="submit-comment" class="comment-form__submit">
+            <button id="submit-comment" class="comment-form__submit" data-i18n="detail.submit">
               Gửi đánh giá
             </button>
           </div>
 
           <!-- Danh sách comments -->
           <div class="comments-list" id="comments-list">
-            <div class="comments-list__empty">
+            <div class="comments-list__empty" data-i18n="detail.noComments">
               Chưa có đánh giá nào. Hãy là người đầu tiên!
             </div>
           </div>
@@ -214,18 +234,28 @@
       <!-- TAB 4: Đề xuất -->
       <div class="movie-tabs__content" id="recommend">
         <div class="tab-panel tab-panel--recommend">
-          <h3>Đề xuất</h3>
-          <div id="recommendations" class="recommendations-grid">
+          <h3 data-i18n="detail.section.recommend">Đề xuất</h3>
+          <div id="recommendations" class="recommendations-grid" data-i18n-aria-label="detail.recommendList">
             <!-- Render các phim gợi ý -->
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Trailer Modal -->
     <div id="trailer-modal" class="trailer-modal">
       <div class="trailer-modal__content">
-        <span id="close-trailer" class="trailer-modal__close">&times;</span>
-        <div id="trailer-container"></div>
+        <span id="close-trailer" class="trailer-modal__close">×</span>
+        <div id="trailer-container">
+          <iframe
+            id="trailer-frame"
+            width="100%"
+            height="500"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
       </div>
     </div>
 
@@ -243,8 +273,9 @@
         });
     </script>
     <!-- end-footer -->
+
     <script type="module" src="../../js/MovieDetail.js"></script>
     <script type="module" src="../../js/Trailer.js"></script>
-    <script type="module" src="../../js/Comment.js"></script>
+   a <script type="module" src="../../js/Comment.js"></script>
   </body>
 </html>
