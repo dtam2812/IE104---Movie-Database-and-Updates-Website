@@ -1,42 +1,42 @@
 export async function AdminTVShows_js() {
 
-    // Load dữ liệu movies từ file Data.js 
+    // Load dữ liệu từ file Data.js 
     let tvShowsData = [];
     try {
         const module = await import('./Data.js');
         tvShowsData = module.tvShowsData || [];
     } catch {
-        console.log(' No initial TV show data, starting empty');
+        console.log('No initial TV show data, starting empty');
     }
 
     // DOM ELEMENTS 
     // Modal elements
-    const modalTV = document.querySelector('.modal-tvshow');
-    const backdrop = document.querySelector('.modal-tvshow .modal_backdrop');
-    const tvFormEl = document.querySelector('.form-wrapper.tvshow-form form');
-    const modalTitle = document.querySelector('.modal-title');
-    const submitBtn = tvFormEl.querySelector('.btn.btn-primary');
+    const modalTV = document.querySelector('.modal--tvshow');
+    const backdrop = document.querySelector('.modal--tvshow .modal__backdrop');
+    const tvFormEl = document.querySelector('.form--tvshow form');
+    const modalTitle = document.querySelector('.form__title');
+    const submitBtn = tvFormEl.querySelector('.form__btn--primary');
     
     // Table & Pagination
-    const tableBody = document.querySelector('.dm-table-body');
-    const tvCountHeading = document.querySelector('.dm-table-heading h2');
-    const currentPageSpan = document.querySelector('.pagination-page-current');
-    const totalPagesSpan = document.querySelector('.pagination__main span:last-child');
-    const paginationLeft = document.querySelector('.pagination-left-arrow');
-    const paginationRight = document.querySelector('.pagination-right-arrow');
+    const tableBody = document.querySelector('.data-table__body');
+    const tvCountHeading = document.querySelector('.data-table__title');
+    const currentPageSpan = document.querySelector('.pagination__current');
+    const totalPagesSpan = document.querySelector('.pagination__info span:last-child');
+    const paginationLeft = document.querySelector('.pagination__arrow--left');
+    const paginationRight = document.querySelector('.pagination__arrow--right');
     
     // Search & Filter
-    const searchInput = document.querySelector('.search-input');
-    const countryFilter = document.querySelector('.filter-select:nth-child(1)');
-    const statusFilter = document.querySelector('.filter-select:nth-child(2)');
-    const ratingFilter = document.querySelector('.filter-select:nth-child(3)');
+    const searchInput = document.querySelector('.search-filter__input');
+    const countryFilter = document.querySelector('.search-filter__select:nth-child(1)');
+    const statusFilter = document.querySelector('.search-filter__select:nth-child(2)');
+    const ratingFilter = document.querySelector('.search-filter__select:nth-child(3)');
     
     // Media inputs
-    const mediaPreview = document.querySelector('.tvshow-media-right');
-    const bannerPreviewImg = mediaPreview.querySelector('.banner-preview img');
-    const posterPreviewImg = mediaPreview.querySelector('.poster-preview img');
-    const bannerInput = mediaPreview.querySelector('.banner-input');
-    const posterInput = mediaPreview.querySelector('.poster-input');
+    const mediaPreview = document.querySelector('.media-form__media');
+    const bannerPreviewImg = mediaPreview.querySelector('.media-form__banner img');
+    const posterPreviewImg = mediaPreview.querySelector('.media-form__poster img');
+    const bannerInput = mediaPreview.querySelector('.media-form__banner-input');
+    const posterInput = mediaPreview.querySelector('.media-form__poster-input');
 
     // Sub-modal (Seasons)
     const subModal = document.getElementById('seasons-sub-modal');
@@ -55,7 +55,27 @@ export async function AdminTVShows_js() {
     const emptySeasonsTemplate = document.getElementById('empty-seasons-template');
     const emptyActorsTemplate = document.getElementById('empty-actors-template');
 
-    // ========== STATE MANAGEMENT ==========
+    
+    // SIGN OUT FUNCTIONALITY
+    const signOutLink = document.querySelector('.admin-menu__item:last-child .admin-menu__link');
+    if (signOutLink) {
+        signOutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            console.log("Admin signing out");
+
+            // Xóa tất cả thông tin user khỏi localStorage
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("refreshToken");
+
+            // Redirect về trang HomePage
+            window.location.href = "/client/view/pages/HomePage.html";
+        });
+    }
+
+    // STATE MANAGEMENT
     let allTVShows = [...tvShowsData];
     let filteredTVShows = [...allTVShows];
     let currentSeasons = [];
@@ -144,32 +164,32 @@ export async function AdminTVShows_js() {
         const row = document.createElement('tr');
         row.dataset.tvId = show.id;
         row.innerHTML = `
-            <td>${no}</td>
-            <td>
-                <div class="movie-title">
-                    <div class="movie-poster">
-                        <img src="${show.poster}" alt="${show.title}">
+            <td class ="data-table__th">${no}</td>
+            <td class ="data-table__th">
+                <div class="movie-cell">
+                    <div class="movie-cell__poster">
+                        <img class="movie-cell__image" src="${show.poster}" alt="${show.title}">
                     </div>
-                    <div class="movie-title">
+                    <div class="movie-cell__title">
                         <span>${show.title}</span>
                     </div>
                 </div>
             </td>
-            <td>${show.genre}</td>
-            <td>${seasonsText}</td>
-            <td>${ratingHTML}</td>
-            <td>
+            <td class ="data-table__th">${show.genre}</td>
+            <td class ="data-table__th">${seasonsText}</td>
+            <td class ="data-table__th">${ratingHTML}</td>
+            <td class ="data-table__th">
                 <span style="color: ${statusColor}; font-weight: 600;">
                     ${show.status}
                 </span>
             </td>
-            <td><button class="btn btn-edit"><i class="fa-solid fa-pen"></i></button></td>
-            <td><button class="btn btn-detail"><i class="fa-solid fa-circle-info"></i></button></td>
-            <td><button class="btn btn-delete"><i class="fa-solid fa-trash"></i></button></td>
+            <td class ="data-table__th"><button class="data-table__btn data-table__btn--edit"><i class="fa-solid fa-pen"></i></button></td>
+            <td class ="data-table__th"><button class="data-table__btn data-table__btn--detail"><i class="fa-solid fa-circle-info"></i></button></td>
+            <td class ="data-table__th"><button class="data-table__btn data-table__btn--delete"><i class="fa-solid fa-trash"></i></button></td>
         `;
 
-        row.querySelector('.btn-edit').addEventListener('click', () => openEditTVModal(row));
-        row.querySelector('.btn-delete').addEventListener('click', () => {
+        row.querySelector('.data-table__btn--edit').addEventListener('click', () => openEditTVModal(row));
+        row.querySelector('.data-table__btn--delete').addEventListener('click', () => {
             if (confirm(`Are you sure you want to delete "${show.title}"?`)) {
                 allTVShows = allTVShows.filter(s => s.id !== show.id);
                 filterTVShows();
@@ -223,18 +243,18 @@ export async function AdminTVShows_js() {
     // Tạo season item từ template
     const createSeasonItem = (season, index) => {
         const seasonItem = seasonTemplate.content.cloneNode(true);
-        const seasonDiv = seasonItem.querySelector('.season-item');
+        const seasonDiv = seasonItem.querySelector('.season');
         
         // Set data
-        const header = seasonDiv.querySelector('.season-header');
-        const body = seasonDiv.querySelector('.season-body');
-        const titleEl = seasonDiv.querySelector('.season-title');
-        const titleInput = seasonDiv.querySelector('.season-title-input');
-        const episodesInput = seasonDiv.querySelector('.season-episodes');
-        const overviewInput = seasonDiv.querySelector('.season-overview');
-        const posterImg = seasonDiv.querySelector('.season-poster-img');
-        const posterInput = seasonDiv.querySelector('.season-poster-input');
-        const deleteBtn = seasonDiv.querySelector('.delete-season-btn');
+        const header = seasonDiv.querySelector('.season__header');
+        const body = seasonDiv.querySelector('.season__body');
+        const titleEl = seasonDiv.querySelector('.season__title');
+        const titleInput = seasonDiv.querySelector('.season__input--title');
+        const episodesInput = seasonDiv.querySelector('.season__input--episodes');
+        const overviewInput = seasonDiv.querySelector('.season__input--overview');
+        const posterImg = seasonDiv.querySelector('.season__poster-image');
+        const posterInput = seasonDiv.querySelector('.season__poster-input');
+        const deleteBtn = seasonDiv.querySelector('.season__delete-btn');
         
         titleEl.textContent = season.title || `Season ${index + 1}`;
         titleInput.value = season.title || '';
@@ -244,7 +264,7 @@ export async function AdminTVShows_js() {
         
         // Toggle hiển thị
         header.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-season-btn')) return;
+            if (e.target.closest('.season__delete-btn')) return;
             body.style.display = body.style.display === 'none' ? 'block' : 'none';
         });
         
@@ -326,17 +346,17 @@ export async function AdminTVShows_js() {
     // Tạo actor item từ template
     const createActorItem = (actor, index) => {
         const actorItem = actorTemplate.content.cloneNode(true);
-        const actorDiv = actorItem.querySelector('.actor-item');
+        const actorDiv = actorItem.querySelector('.actor');
         
         // Set data
-        const header = actorDiv.querySelector('.actor-header');
-        const body = actorDiv.querySelector('.actor-body');
-        const titleEl = actorDiv.querySelector('.actor-title');
-        const idInput = actorDiv.querySelector('.actor-id');
-        const nameInput = actorDiv.querySelector('.actor-name');
-        const photoImg = actorDiv.querySelector('.actor-photo-img');
-        const photoInput = actorDiv.querySelector('.actor-photo-input');
-        const deleteBtn = actorDiv.querySelector('.delete-actor-btn');
+        const header = actorDiv.querySelector('.actor__header');
+        const body = actorDiv.querySelector('.actor__body');
+        const titleEl = actorDiv.querySelector('.actor__title');
+        const idInput = actorDiv.querySelector('.actor__id');
+        const nameInput = actorDiv.querySelector('.actor__name');
+        const photoImg = actorDiv.querySelector('.actor__photo-image');
+        const photoInput = actorDiv.querySelector('.actor__photo-input');
+        const deleteBtn = actorDiv.querySelector('.actor__delete-btn');
         
         titleEl.textContent = actor.name || `Actor ${index + 1}`;
         idInput.value = actor.id || '';
@@ -345,7 +365,7 @@ export async function AdminTVShows_js() {
         
         // Toggle hiển thị
         header.addEventListener('click', (e) => {
-            if (e.target.closest('.delete-actor-btn')) return;
+            if (e.target.closest('.actor__delete-btn')) return;
             body.style.display = body.style.display === 'none' ? 'block' : 'none';
         });
         
@@ -430,11 +450,11 @@ export async function AdminTVShows_js() {
         tvFormEl.querySelector('input[name="totalEpisodes"]').value = '0';
         tvFormEl.querySelector('input[name="actorsCount"]').value = '0';
         
-        const idDisplayGroup = tvFormEl.querySelector('.tvshow-id-display');
+        const idDisplayGroup = tvFormEl.querySelector('.media-form__id-display');
         if (idDisplayGroup) idDisplayGroup.style.display = 'none';
         
         modalTV.classList.remove('hidden');
-        document.querySelector('.form-wrapper.tvshow-form').classList.add('active');
+        document.querySelector('.form--tvshow').classList.add('form--active');
     };
 
     // Mở modal chỉnh sửa TV show
@@ -451,7 +471,7 @@ export async function AdminTVShows_js() {
         bannerPreviewImg.src = show.banner;
         posterPreviewImg.src = show.poster;
         
-        const idDisplayGroup = tvFormEl.querySelector('.tvshow-id-display');
+        const idDisplayGroup = tvFormEl.querySelector('.media-form__id-display');
         const idDisplayInput = tvFormEl.querySelector('input[name="id-display"]');
         if (idDisplayGroup && idDisplayInput) {
             idDisplayGroup.style.display = 'block';
@@ -497,13 +517,13 @@ export async function AdminTVShows_js() {
         tvFormEl.querySelector('input[name="actorsCount"]').value = currentActors.length;
         
         modalTV.classList.remove('hidden');
-        document.querySelector('.form-wrapper.tvshow-form').classList.add('active');
+        document.querySelector('.form--tvshow').classList.add('form--active');
     };
 
     // Đóng modal chính
     const closeModal = () => {
         modalTV.classList.add('hidden');
-        document.querySelector('.form-wrapper.tvshow-form').classList.remove('active');
+        document.querySelector('.form--tvshow').classList.remove('form--active');
         tvFormEl.reset();
         currentEditRow = null;
         isEditMode = false;
@@ -536,9 +556,9 @@ export async function AdminTVShows_js() {
     });
 
     // Modal chính
-    document.querySelector('.add-btn').addEventListener('click', openAddTVModal);
+    document.querySelector('.admin-content__add-btn').addEventListener('click', openAddTVModal);
     backdrop.addEventListener('click', closeModal);
-    document.querySelector('.modal-tvshow .modal_close').addEventListener('click', closeModal);
+    document.querySelector('.modal--tvshow .modal__close').addEventListener('click', closeModal);
     
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modalTV.classList.contains('hidden')) {
@@ -561,12 +581,12 @@ export async function AdminTVShows_js() {
     });
 
     // Sub-modal seasons
-    tvFormEl.querySelector('.manage-seasons-btn')?.addEventListener('click', (e) => {
+    tvFormEl.querySelector('.form__manage-btn--seasons')?.addEventListener('click', (e) => {
         e.preventDefault();
         openSeasonsModal();
     });
     
-    subModal?.querySelector('.add-season-btn')?.addEventListener('click', () => {
+    subModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
         currentSeasons.push({
             title: `Season ${currentSeasons.length + 1}`,
             episodes: 0,
@@ -576,17 +596,17 @@ export async function AdminTVShows_js() {
         renderSeasonsList();
     });
     
-    subModal?.querySelector('.save-seasons-btn')?.addEventListener('click', closeSeasonsModal);
-    subModal?.querySelector('.sub-close')?.addEventListener('click', closeSeasonsModal);
+    subModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeSeasonsModal);
+    subModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeSeasonsModal);
     subModalBackdrop?.addEventListener('click', closeSeasonsModal);
 
     // Sub-modal actors
-    tvFormEl.querySelector('.manage-actors-btn')?.addEventListener('click', (e) => {
+    tvFormEl.querySelector('.form__manage-btn--actors')?.addEventListener('click', (e) => {
         e.preventDefault();
         openActorsModal();
     });
 
-    actorsSubModal?.querySelector('.add-actor-btn')?.addEventListener('click', () => {
+    actorsSubModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
         const tvId = tvFormEl.querySelector('input[name="id"]').value || generateTVId();
         const newActorId = generateActorId(tvId);
         
@@ -598,8 +618,8 @@ export async function AdminTVShows_js() {
         renderActorsList();
     });
 
-    actorsSubModal?.querySelector('.save-actors-btn')?.addEventListener('click', closeActorsModal);
-    actorsSubModal?.querySelector('.sub-close')?.addEventListener('click', closeActorsModal);
+    actorsSubModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeActorsModal);
+    actorsSubModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeActorsModal);
     actorsSubModalBackdrop?.addEventListener('click', closeActorsModal);
 
     // Submit form
@@ -660,7 +680,6 @@ export async function AdminTVShows_js() {
         
         closeModal();
     });
-
 
     renderTVShows();
 }

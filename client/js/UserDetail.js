@@ -91,18 +91,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Logout functionality
+  // SIGN OUT FUNCTIONALITY
   const logoutButton = document.querySelector(".user-detail__logout");
   if (logoutButton) {
-    logoutButton.addEventListener("click", function () {
-      if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-        // Perform logout action here
-        showToast("Đã đăng xuất thành công");
-        // Redirect to login page after 1 second
-        setTimeout(() => {
-          window.location.href = "../../Pages/Login.html";
-        }, 1000);
-      }
+    logoutButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      console.log("User signing out");
+
+      // Xóa tất cả thông tin user khỏi localStorage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("refreshToken");
+
+      window.location.href = "/client/view/pages/HomePage.html"; 
     });
   }
 });
