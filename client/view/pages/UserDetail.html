@@ -39,7 +39,7 @@
         })
         .then((res) => res.text())
         .then((searchHTML) => {
-          document.querySelector(".search").innerHTML = searchHTML;
+          document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
@@ -72,7 +72,7 @@
 
     <!-- Toast -->
     <div class="user-detail__toast">
-      <span>Thay đổi đã được lưu</span>
+      Thay đổi đã được lưu
       <button class="user-detail__toast-btn">Đóng</button>
     </div>
 

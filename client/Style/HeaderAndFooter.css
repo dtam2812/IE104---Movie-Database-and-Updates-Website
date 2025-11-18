@@ -153,7 +153,6 @@
   transition: box-shadow 0.2s ease, border-color 0.2s ease,
     background-color 0.2s ease;
   backdrop-filter: blur(6px);
-  min-width: 120px;
   justify-content: right;
 }
 
