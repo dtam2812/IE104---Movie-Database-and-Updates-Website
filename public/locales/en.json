@@ -494,6 +494,8 @@
   "auth.login.password": "Password",
   "auth.login.button": "Sign In",
   "auth.login.forgot": "Forgot password?",
+  "auth.forgot.description": "Enter your email to receive a verification code to reset your password",
+  "auth.forgot.back_to_login": "Back to Sign In",
 
   "auth.register.title": "Create a new account",
   "auth.register.have_account": "If you already have an account,",

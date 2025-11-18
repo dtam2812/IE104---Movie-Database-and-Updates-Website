@@ -493,6 +493,8 @@
   "auth.login.password": "Mật khẩu",
   "auth.login.button": "Đăng nhập",
   "auth.login.forgot": "Quên mật khẩu?",
+  "auth.verify.description": "Nhập email để nhận mã xác nhận đặt lại mật khẩu",
+  "auth.verify.back_to_login": "Quay lại Đăng nhập",
 
   "auth.register.title": "Tạo tài khoản mới",
   "auth.register.have_account": "Nếu bạn đã có tài khoản,",

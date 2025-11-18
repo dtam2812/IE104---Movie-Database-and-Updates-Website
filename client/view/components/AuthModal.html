@@ -3,15 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+    <title data-i18n="auth.modal.title">Document</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../Services/reset.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="../../style/AuthModal.css" />
-    <script type="module">
-      import { Auth_Modaljs } from "../../js/AuthModal.js";
-      Auth_Modaljs();
-    </script>
   </head>
   <body>
     <div class="modal hidden">
@@ -23,16 +19,16 @@
               <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <!-- login-form -->
+            <!-- Login Form -->
             <div class="form-wrapper login active">
               <div class="content_header mb2">
-                <h1>Đăng nhập</h1>
+                <h1 data-i18n="auth.login.title">Đăng nhập</h1>
               </div>
 
               <div class="content_body">
                 <p class="mb3">
-                  Nếu bạn chưa có tài khoản,
-                  <a class="switch-form"> Đăng ký ngay</a>
+                  <span data-i18n="auth.login.no_account">Nếu bạn chưa có tài khoản,</span>
+                  <a class="switch-form" data-i18n="auth.login.register_now"> Đăng ký ngay</a>
                 </p>
 
                 <!-- Error Message -->
@@ -48,6 +44,7 @@
                       type="email"
                       name="email"
                       placeholder="Email"
+                      data-i18n-placeholder="auth.login.email"
                       required
                     />
                   </div>
@@ -57,32 +54,32 @@
                       type="password"
                       name="password"
                       placeholder="Mật khẩu"
+                      data-i18n-placeholder="auth.login.password"
                       required
                     />
                   </div>
                   <div class="form-group action-btn- mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" data-i18n="auth.login.button">
                       Đăng nhập
                     </button>
                   </div>
                   <div class="form-pw-fogot">
-                    <a class="switch-form">Quên mật khẩu?</a>
+                    <a class="switch-form" data-i18n="auth.login.forgot">Quên mật khẩu?</a>
                   </div>
                 </form>
               </div>
             </div>
-            <!-- login-form -->
 
-            <!-- register-form -->
+            <!-- Register Form -->
             <div class="form-wrapper register">
               <div class="content_header mb2">
-                <h1>Tạo tài khoản mới</h1>
+                <h1 data-i18n="auth.register.title">Tạo tài khoản mới</h1>
               </div>
 
               <div class="content_body">
                 <p class="mb3">
-                  Nếu bạn đã có tài khoản,
-                  <a class="switch-form"> Đăng nhập</a>
+                  <span data-i18n="auth.register.have_account">Nếu bạn đã có tài khoản,</span>
+                  <a class="switch-form" data-i18n="auth.register.login_now"> Đăng nhập</a>
                 </p>
 
                 <!-- Error Message -->
@@ -98,6 +95,7 @@
                       type="text"
                       name="name"
                       placeholder="Tên hiển thị"
+                      data-i18n-placeholder="auth.register.display_name"
                       required
                     />
                   </div>
@@ -107,6 +105,7 @@
                       type="email"
                       name="email"
                       placeholder="Email"
+                      data-i18n-placeholder="auth.register.email"
                       required
                     />
                   </div>
@@ -117,6 +116,7 @@
                       name="password"
                       minlength="6"
                       placeholder="Mật khẩu"
+                      data-i18n-placeholder="auth.register.password"
                       required
                     />
                   </div>
@@ -127,28 +127,30 @@
                       name="cf_password"
                       minlength="6"
                       placeholder="Nhập lại mật khẩu"
+                      data-i18n-placeholder="auth.register.confirm_password"
                       required
                     />
-                    <small class="non-same-pw">Mật khẩu không khớp</small>
+                    <small class="non-same-pw" data-i18n="auth.register.not_match">
+                      Mật khẩu không khớp
+                    </small>
                   </div>
                   <div class="form-group action-btn- mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" data-i18n="auth.register.button">
                       Đăng ký
                     </button>
                   </div>
                 </form>
               </div>
             </div>
-            <!-- register-form -->
 
-            <!-- forgot-password-form -->
+            <!-- Forgot Password Form -->
             <div class="form-wrapper forgot">
               <div class="content_header mb2">
-                <h1>Quên mật khẩu</h1>
+                <h1 data-i18n="auth.forgot.title">Quên mật khẩu</h1>
               </div>
 
               <div class="content_body">
-                <p class="mb3">
+                <p class="mb3" data-i18n="auth.forgot.description">
                   Nhập email để nhận mã xác nhận đặt lại mật khẩu
                 </p>
 
@@ -165,30 +167,34 @@
                       type="email"
                       name="email"
                       placeholder="Email"
+                      data-i18n-placeholder="auth.forgot.email"
                       required
                     />
                   </div>
                   <div class="form-group action-btn- mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" data-i18n="auth.forgot.button">
                       Gửi yêu cầu
                     </button>
                   </div>
                   <div class="form-pw-fogot">
-                    <a class="switch-form">Quay lại đăng nhập</a>
+                    <a class="switch-form" data-i18n="auth.forgot.back_to_login">
+                      Quay lại đăng nhập
+                    </a>
                   </div>
                 </form>
               </div>
             </div>
-            <!-- forgot-password-form -->
 
-            <!-- reset-password-form -->
+            <!-- Reset Password Form -->
             <div class="form-wrapper reset">
               <div class="content_header mb2">
-                <h1>Tạo mật khẩu mới</h1>
+                <h1 data-i18n="auth.reset.title">Tạo mật khẩu mới</h1>
               </div>
 
               <div class="content_body">
-                <p class="mb3">Nhập mật khẩu mới cho tài khoản của bạn</p>
+                <p class="mb3" data-i18n="auth.reset.description">
+                  Nhập mật khẩu mới cho tài khoản của bạn
+                </p>
 
                 <!-- Error Message -->
                 <div class="auth-error-message" style="display: none">
@@ -204,6 +210,7 @@
                       name="new_password"
                       minlength="6"
                       placeholder="Mật khẩu mới"
+                      data-i18n-placeholder="auth.reset.new_password"
                       required
                     />
                   </div>
@@ -214,28 +221,32 @@
                       name="cf_new_password"
                       minlength="6"
                       placeholder="Nhập lại mật khẩu mới"
+                      data-i18n-placeholder="auth.reset.confirm_password"
                       required
                     />
-                    <small class="non-same-pw">Mật khẩu không khớp</small>
+                    <small class="non-same-pw" data-i18n="auth.reset.not_match">
+                      Mật khẩu không khớp
+                    </small>
                   </div>
                   <div class="form-group action-btn- mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" data-i18n="auth.reset.button">
                       Đặt lại mật khẩu
                     </button>
                   </div>
                 </form>
               </div>
             </div>
-            <!-- reset-password-form -->
 
-            <!-- verify-code-form -->
+            <!-- Verify OTP Form -->
             <div class="form-wrapper verify">
               <div class="content_header mb2">
-                <h1>Xác nhận mã OTP</h1>
+                <h1 data-i18n="auth.verify.title">Xác nhận mã OTP</h1>
               </div>
 
               <div class="content_body">
-                <p class="mb3">Nhập mã xác nhận đã gửi đến email của bạn</p>
+                <p class="mb3" data-i18n="auth.forgot.description">
+                  Nhập mã xác nhận đã gửi đến email của bạn
+                </p>
 
                 <!-- Error Message -->
                 <div class="auth-error-message" style="display: none">
@@ -250,24 +261,36 @@
                       type="text"
                       name="otp"
                       placeholder="Nhập mã OTP"
+                      data-i18n-placeholder="auth.verify.otp"
                       required
                     />
                   </div>
                   <div class="form-group action-btn- mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" data-i18n="auth.verify.button">
                       Xác nhận
                     </button>
                   </div>
                   <div class="form-pw-fogot">
-                    <a class="switch-form">Quay lại đăng nhập</a>
+                    <a class="switch-form" data-i18n="auth.verify.back_to_login">
+                      Quay lại đăng nhập
+                    </a>
                   </div>
                 </form>
               </div>
             </div>
-            <!-- verify-code-form -->
           </div>
         </div>
       </div>
     </div>
+
+    <script type="module">
+      import { initTranslate } from "../../js/Translate.js";
+      import { Auth_Modaljs } from "../../js/AuthModal.js";
+
+      (async () => {
+        await initTranslate();   // Dịch toàn trang trước
+        Auth_Modaljs();          // Sau đó khởi động modal
+      })();
+    </script>
   </body>
 </html>
