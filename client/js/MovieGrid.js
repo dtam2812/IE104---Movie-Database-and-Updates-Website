@@ -3,13 +3,6 @@ import { TMDB_API_KEY } from "../../config.js";
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
-// ===== THÊM MỚI: Hàm lấy ngôn ngữ =====
-function getLang() {
-  return (
-    localStorage.getItem("language") || document.documentElement.lang || "vi"
-  );
-}
-
 //Load 2 template HTML (Movie & TV)
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
@@ -22,19 +15,14 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được template:", err));
 
-// ===== SỬA HÀM createCard() =====
+//Tạo card phim hoặc TV show
 function createCard(item, type) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
     : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
-  // Xử lý title theo ngôn ngữ
-  const titleDisplay =
-    type === "tv"
-      ? item.name || item.original_name
-      : item.title || item.original_title;
-  const originalTitle =
-    type === "tv" ? item.original_name : item.original_title;
+  const title = item.title || item.name || "Không rõ";
+  const originalTitle = item.original_title || item.original_name || "";
 
   // Chọn template tương ứng (movie hoặc tv)
   const template = type === "tv" ? tvCardTemplate : movieCardTemplate;
@@ -43,7 +31,7 @@ function createCard(item, type) {
   return template
     .replace(/{{id}}/g, item.id)
     .replace(/{{poster}}/g, poster)
-    .replace(/{{title}}/g, titleDisplay)
+    .replace(/{{title}}/g, title)
     .replace(/{{original_title}}/g, originalTitle);
 }
 
@@ -74,12 +62,8 @@ function renderGrid(gridId, items = [], type = "movie") {
 //Fetch dữ liệu TMDB
 async function fetchTMDB(endpoint) {
   try {
-    // ===== SỬA: Lấy ngôn ngữ động =====
-    const lang = getLang();
-    const tmdbLang = lang === "vi" ? "vi-VN" : "en-US";
-
     const res = await fetch(
-      `https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=${tmdbLang}&page=1`
+      `https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_API_KEY}&language=vi-VN&page=1`
     );
     const data = await res.json();
 
@@ -115,11 +99,6 @@ async function loadMovieGrids() {
     console.error("Lỗi khi load grids:", error);
   }
 }
-
-// ===== THÊM MỚI: Lắng nghe sự kiện đổi ngôn ngữ =====
-window.addEventListener("languagechange", () => {
-  loadMovieGrids();
-});
 
 // Xuất ra cho module khác có thể gọi
 export const movieGrid = { renderGrid, createCard, loadMovieGrids };
