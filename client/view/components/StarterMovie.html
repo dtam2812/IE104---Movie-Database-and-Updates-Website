@@ -1,16 +1,16 @@
 <!-- start-movie-hero -->
-<main class="hero" aria-label="Movie carousel">
+<main class="hero" aria-label="Movie carousel" data-i18n-aria-label="movieCarousel">
   <div class="slides" id="slides"></div>
   <div class="container">
     <div class="stack">
       <div class="left">
-        <img id="brand" alt="Tiêu đề" class="brand" />
+        <img id="brand" alt="Tiêu đề" class="brand" data-i18n-alt="noTitle" />
         <div class="en" id="en"></div>
         <div class="row" id="meta"></div>
         <div class="row" id="genres"></div>
         <p class="desc" id="desc"></p>
         <div class="controls">
-          <button class="play" id="playBtn" aria-label="Play">
+          <button class="play" id="playBtn" data-i18n-aria-label="trailerButton">
             <svg
               width="28"
               height="28"
@@ -21,8 +21,8 @@
               <path d="M8 5v14l11-7-11-7z" fill="#191B24" />
             </svg>
           </button>
-          <div class="actions" role="group" aria-label="Actions">
-            <button aria-label="Favorite">
+          <div class="actions" role="group" data-i18n-aria-label="actionsGroup">
+            <button aria-label="Favorite" class="favorite" data-i18n-aria-label="favoriteButton">
               <svg
                 width="20"
                 height="20"
@@ -36,7 +36,7 @@
               </svg>
             </button>
             <div class="sep" aria-hidden="true"></div>
-            <button aria-label="Info">
+            <button aria-label="Info" data-i18n-aria-label="infoButton">
               <svg
                 width="20"
                 height="20"
@@ -54,8 +54,23 @@
       </div>
     </div>
   </div>
+  <!-- Trailer Modal -->
+  <div id="trailer-modal" class="trailer-modal">
+    <div class="trailer-modal__content">
+      <span id="close-trailer" class="trailer-modal__close" data-i18n-title="closeModal">&times;</span>
+      <iframe
+        id="trailer-frame"
+        class="trailer-modal__iframe"
+        width="100%"
+        height="500"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
   <div class="thumbs">
-    <div class="thumbs-inner" id="thumbs" aria-label="Thumbnails"></div>
+    <div class="thumbs-inner" id="thumbs" aria-label="Thumbnails" data-i18n-aria-label="thumbnailsLabel"></div>
   </div>
   <div class="bottom-grad" aria-hidden="true"></div>
 </main>

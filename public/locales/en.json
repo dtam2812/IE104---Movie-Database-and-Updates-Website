@@ -606,5 +606,27 @@
   "admin.tvshows.submodal.noSeasons": "No seasons added yet. Click \"Add Season\" to start.",
 
   "admin.tvshows.season": "season",
-  "admin.tvshows.seasons": "seasons"
+  "admin.tvshows.seasons": "seasons",
+  "admin.tvshows": "TV Shows",
+
+
+  "admin.movies.modal.manageActors": "Manage Actors",
+  "admin.movies.modal.addActor": "Add New Actor",
+  "admin.movies.modal.saveActors": "Save Actors",
+  "admin.movies.modal.actorId": "Actor ID:",
+  "admin.movies.modal.actorName": "Full Name:",
+  "admin.movies.modal.actorNamePlaceholder": "e.g. Robert Downey Jr.",
+  "admin.movies.modal.deleteActorConfirm": "Delete this actor?",
+  "admin.movies.noActors": "No actors added yet. Click \"Add Actor\" to start.",
+
+
+   "admin.users.modal.name": "User Name:", 
+  "admin.users.modal.namePlaceholder": "User name",
+  "admin.users.modal.emailPlaceholder": "Email",
+  "admin.users.modal.passwordPlaceholder": "Password",
+  "admin.users.modal.confirmPasswordPlaceholder": "Confirm password",
+  "admin.users.errors.passwordMismatch": "Passwords do not match.",
+  "admin.pagination.total": "/ 10"
+
+
 }

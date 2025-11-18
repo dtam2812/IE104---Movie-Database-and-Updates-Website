@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Users Management</title>
+    <title data-i18n="admin.users.title">Admin Users Management</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="../../../public/assets/image/logo-web-black.png"/>
     <link rel="stylesheet" href="../../Services/reset.css">
@@ -12,9 +12,12 @@
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <script type="module">
+        import { initTranslate } from "../../js/Translate.js";
         import { AdminUsers_js } from '../../js/AdminUsers.js';
         
-        AdminUsers_js();   
+        initTranslate().then(() => {
+            AdminUsers_js();   
+        });
     </script>
 </head>
 
@@ -50,25 +53,25 @@
                     <li class="admin-menu__item">
                         <a href="#" class="admin-menu__link admin-menu__link--active">
                             <i class="fa-solid fa-user admin-menu__icon"></i>
-                            <span class="admin-menu__text">Users</span>
+                            <span class="admin-menu__text" data-i18n="admin.users">Users</span>
                         </a>
                     </li>
                     <li class="admin-menu__item">
                         <a href="../pages/AdminMovies.html" class="admin-menu__link">
                             <i class="fa-solid fa-film admin-menu__icon"></i>
-                            <span class="admin-menu__text">Movies</span>
+                            <span class="admin-menu__text" data-i18n="admin.movies">Movies</span>
                         </a>
                     </li>
                     <li class="admin-menu__item">
                         <a href="../pages/AdminTVShows.html" class="admin-menu__link">
                             <i class="fa-solid fa-tv admin-menu__icon"></i>
-                            <span class="admin-menu__text">TV Shows</span>
+                            <span class="admin-menu__text" data-i18n="admin.tvshows">TV Shows</span>
                         </a>
                     </li>
                     <li class="admin-menu__item">
                         <a href="../pages/HomePage.html" class="admin-menu__link">
                             <i class="fa-solid fa-right-from-bracket admin-menu__icon"></i>
-                            <span class="admin-menu__text">Sign Out</span>
+                            <span class="admin-menu__text" data-i18n="admin.signout">Sign Out</span>
                         </a>
                     </li>
                 </ul>
@@ -79,8 +82,8 @@
         <div class="admin-content">
             <div class="admin-content__wrapper">
                 <div class="admin-content__header">
-                    <h1 class="admin-content__title">Users</h1>
-                    <a class="admin-content__add-btn">
+                    <h1 class="admin-content__title" data-i18n="admin.users.heading">Users</h1>
+                    <a class="admin-content__add-btn" data-i18n="admin.users.modal.add">
                         <i class="fa-solid fa-plus"></i>
                         <span>Add User</span>
                     </a>
@@ -92,18 +95,19 @@
                         <div class="search-filter__icon">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
-                        <input class="search-filter__input" placeholder="Search by user name, email or ID (e.g. UIT001)" autocomplete="off" />
+                        <input class="search-filter__input" data-i18n-placeholder="admin.users.search"
+                               placeholder="Search by user name, email or ID (e.g. UIT001)" autocomplete="off" />
                     </div>
                     <div class="search-filter__filters">
                         <select class="search-filter__select">
-                            <option value="all">All Roles</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
+                            <option value="all" data-i18n="admin.users.allRoles">All Roles</option>
+                            <option value="Admin" data-i18n="admin.users.role.admin">Admin</option>
+                            <option value="User" data-i18n="admin.users.role.user">User</option>
                         </select>
                         <select class="search-filter__select">
-                            <option value="all">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="banned">Banned</option>
+                            <option value="all" data-i18n="admin.users.allStatus">All Status</option>
+                            <option value="active" data-i18n="admin.users.status.active">Active</option>
+                            <option value="banned" data-i18n="admin.users.status.banned">Banned</option>
                         </select>
                     </div>
                 </div>
@@ -111,19 +115,19 @@
                 <!-- Table -->
                 <div class="data-table">
                     <div class="data-table__header">
-                        <h2 class="data-table__title">Users (0)</h2>
+                        <h2 class="data-table__title" data-i18n="admin.users.count">Users (0)</h2>
                     </div>
                     <table class="data-table__table">
                         <thead class="data-table__head">
                             <tr>
-                                <th class="data-table__th">No.</th>
-                                <th class="data-table__th">User</th>
-                                <th class="data-table__th">Role</th>
-                                <th class="data-table__th">Status</th>
-                                <th class="data-table__th">Created</th>
-                                <th class="data-table__th">Edit</th>
-                                <th class="data-table__th">Detail</th>
-                                <th class="data-table__th">     </th>
+                                <th class="data-table__th" data-i18n="admin.users.table.no">No.</th>
+                                <th class="data-table__th" data-i18n="admin.users.table.user">User</th>
+                                <th class="data-table__th" data-i18n="admin.users.table.role">Role</th>
+                                <th class="data-table__th" data-i18n="admin.users.table.status">Status</th>
+                                <th class="data-table__th" data-i18n="admin.users.table.created">Created</th>
+                                <th class="data-table__th" data-i18n="admin.users.table.edit">Edit</th>
+                                <th class="data-table__th" data-i18n="admin.users.table.detail">Detail</th>
+                                <th class="data-table__th"></th>
                             </tr>
                         </thead>
                         <tbody class="data-table__body"></tbody>
@@ -137,7 +141,7 @@
                     </button>
                     <div class="pagination__info">
                         <span class="pagination__current">1</span>
-                        <span>/ 10</span>
+                        <span data-i18n="admin.pagination.total">/ 10</span>
                     </div>
                     <button class="pagination__arrow pagination__arrow--right">
                         <i class="fa-solid fa-arrow-right"></i>
@@ -172,7 +176,7 @@
                     </button>
                     <div class="form form--user">
                         <div class="form__header mb2">
-                            <h1 class="modal__title">Add User</h1>
+                            <h1 class="modal__title" data-i18n="admin.users.modal.add">Add User</h1>
                         </div>
                     
                         <div class="form__body">
@@ -182,48 +186,58 @@
 
                                 <!-- ID Display (readonly, shown only in Edit mode) -->
                                 <div class="form__group mb1 form__id-display" style="display: none;">
-                                    <label>User ID:</label>
-                                    <input class="form__control" type="text" name="id-display" placeholder="Auto-generated" readonly>
+                                    <label data-i18n="admin.users.modal.userId">User ID:</label>
+                                    <input class="form__control" type="text" name="id-display" 
+                                           data-i18n-placeholder="admin.users.modal.autoGenerated"
+                                           placeholder="Auto-generated" readonly>
                                 </div>
 
                                 <!-- Name -->
                                 <div class="form__group mb1">
-                                    <label>User Name: <span style="color: red;">*</span></label>
-                                    <input class="form__control" type="text" name="name" placeholder="User name" required>
+                                    <label data-i18n="admin.users.modal.name">User Name:</label> <span style="color: red;" data-i18n="admin.required">*</span>
+                                    <input class="form__control" type="text" name="name" 
+                                           data-i18n-placeholder="admin.users.modal.namePlaceholder"
+                                           placeholder="User name" required>
                                 </div>
 
                                 <!-- Email -->
                                 <div class="form__group mb1">
-                                    <label>Email: <span style="color: red;">*</span></label>
-                                    <input class="form__control" type="email" name="email" placeholder="Email" required>
+                                    <label data-i18n="admin.users.modal.email">Email:</label> <span style="color: red;" data-i18n="admin.required">*</span>
+                                    <input class="form__control" type="email" name="email" 
+                                           data-i18n-placeholder="admin.users.modal.emailPlaceholder"
+                                           placeholder="Email" required>
                                 </div>
 
                                 <!-- Role -->
                                 <div class="form__group mb1">
-                                    <label>Role: <span style="color: red;">*</span></label>
+                                    <label data-i18n="admin.users.modal.role">Role:</label> <span style="color: red;" data-i18n="admin.required">*</span>
                                     <select class="form__control" name="role" required>
-                                        <option value="" disabled selected>Select role</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="User">User</option>
+                                        <option value="" disabled selected data-i18n="admin.users.modal.selectRole">Select role</option>
+                                        <option value="Admin" data-i18n="admin.users.role.admin">Admin</option>
+                                        <option value="User" data-i18n="admin.users.role.user">User</option>
                                     </select>
                                 </div>
 
                                 <!-- Password (only shown when adding) -->
                                 <div class="form__group mb1 form__group--password">
-                                    <label>Password: <span style="color: red;">*</span></label>
-                                    <input class="form__control" type="password" name="password" minlength="6" placeholder="Password" required>
+                                    <label data-i18n="admin.users.modal.password">Password:</label> <span style="color: red;" data-i18n="admin.required">*</span>
+                                    <input class="form__control" type="password" name="password" minlength="6" 
+                                           data-i18n-placeholder="admin.users.modal.passwordPlaceholder"
+                                           placeholder="Password" required>
                                 </div>
 
                                 <!-- Confirm Password (only shown when adding) -->
                                 <div class="form__group mb1 form__group--confirm-password">
-                                    <label>Confirm Password: <span style="color: red;">*</span></label>
-                                    <input class="form__control" type="password" name="cf_password" minlength="6" placeholder="Confirm password" required>
-                                    <small class="form__error" style="display: none; color: red;">Passwords do not match.</small>
+                                    <label data-i18n="admin.users.modal.confirmPassword">Confirm Password:</label> <span style="color: red;" data-i18n="admin.required">*</span>
+                                    <input class="form__control" type="password" name="cf_password" minlength="6" 
+                                           data-i18n-placeholder="admin.users.modal.confirmPasswordPlaceholder"
+                                           placeholder="Confirm password" required>
+                                    <small class="form__error" style="display: none; color: red;" data-i18n="admin.users.errors.passwordMismatch">Passwords do not match.</small>
                                 </div>
 
                                 <!-- Submit Button -->
                                 <div class="form__group form__actions mt3 mb3">
-                                    <button type="submit" class="form__btn form__btn--primary">Create</button>
+                                    <button type="submit" class="form__btn form__btn--primary" data-i18n="admin.users.modal.create">Create</button>
                                 </div>
                             </form>
                         </div>

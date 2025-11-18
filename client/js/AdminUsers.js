@@ -1,4 +1,13 @@
 export async function AdminUsers_js() {
+  // Import translation system
+  const { initTranslate } = await import('./Translate.js');
+  
+  // Translation function
+  const t = (key) => {
+    const translations = window.translations || {};
+    return translations[key] || key;
+  };
+
   const modalUser = document.querySelector(".modal--user");
   const addUserBtn = document.querySelector(".admin-content__add-btn");
   const backdrop = document.querySelector(".modal--user .modal__backdrop");
@@ -50,16 +59,10 @@ export async function AdminUsers_js() {
   if (signOutLink) {
     signOutLink.addEventListener("click", (e) => {
       e.preventDefault();
-
-      console.log("Admin signing out");
-
-      // Xóa tất cả thông tin user khỏi localStorage
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userName");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("refreshToken");
-
-      // Redirect về trang HomePage
       window.location.href = "/client/view/pages/HomePage.html";
     });
   }
@@ -187,15 +190,12 @@ export async function AdminUsers_js() {
     if (!dateString) return "N/A";
 
     try {
-      // Handle both Date objects and string formats
       const date = new Date(dateString);
       if (isNaN(date.getTime())) {
-        // If it's not a valid date, try parsing as string
         const [year, month, day] = dateString.split("-");
         return `${day.slice(0, 2)}/${month}/${year}`;
       }
 
-      // Format as dd/mm/yyyy
       const day = String(date.getDate()).padStart(2, "0");
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
@@ -275,20 +275,26 @@ export async function AdminUsers_js() {
 
     const roleCell = document.createElement("td");
     roleCell.classList.add("data-table__th");
-    roleCell.textContent = user.role;
+    const roleText = user.role === 'Admin' 
+      ? t('admin.users.role.admin') 
+      : t('admin.users.role.user');
+    roleCell.textContent = roleText;
     newRow.appendChild(roleCell);
 
     const statusCell = document.createElement("td");
     statusCell.classList.add("data-table__th");
     const isActive = user.status === "active";
+    const activeText = t('admin.users.status.active');
+    const bannedText = t('admin.users.status.banned');
+    
     statusCell.innerHTML = `
       <label class="status-toggle">
         <input type="checkbox" class="status-toggle__input" ${
           isActive ? "checked" : ""
         }>
         <span class="status-toggle__slider ${isActive ? "active" : "banned"}">
-          <span class="status-toggle__text status-toggle__text--active">Active</span>
-          <span class="status-toggle__text status-toggle__text--banned">Banned</span>
+          <span class="status-toggle__text status-toggle__text--active">${activeText}</span>
+          <span class="status-toggle__text status-toggle__text--banned">${bannedText}</span>
         </span>
       </label>
     `;
@@ -301,10 +307,8 @@ export async function AdminUsers_js() {
       const newStatus = toggle.checked ? "active" : "banned";
 
       try {
-        // Update via API
         await updateUserAPI(userId, { status: newStatus });
 
-        // Update local data
         const userIndex = allUsers.findIndex((u) => (u._id || u.id) === userId);
         if (userIndex !== -1) {
           allUsers[userIndex].status = newStatus;
@@ -312,10 +316,10 @@ export async function AdminUsers_js() {
           slider.classList.toggle("banned", !toggle.checked);
         }
 
-        alert("Cập nhật trạng thái thành công!");
+        alert(t('admin.users.updateSuccess') || "Cập nhật thành công!");
       } catch (error) {
         alert("Không thể cập nhật trạng thái user!");
-        toggle.checked = !toggle.checked; // Revert
+        toggle.checked = !toggle.checked;
       }
     });
 
@@ -350,27 +354,38 @@ export async function AdminUsers_js() {
     const detailBtn = detailCell.querySelector(".data-table__btn--detail");
     detailBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      const roleDisplay = user.role === 'Admin'
+        ? t('admin.users.role.admin') 
+        : t('admin.users.role.user');
+      const statusDisplay = user.status === 'active'
+        ? t('admin.users.status.active')
+        : t('admin.users.status.banned');
+      
       alert(
-        `User Details:\n\nName: ${userName}\nEmail: ${user.email}\nRole: ${
-          user.role
-        }\nStatus: ${user.status}\nJoined: ${formatDate(
-          user.joinDate || user.createdDate
-        )}`
+        `User Details:\n\n` +
+        `Name: ${userName}\n` +
+        `Email: ${user.email}\n` +
+        `Role: ${roleDisplay}\n` +
+        `Status: ${statusDisplay}\n` +
+        `Joined: ${formatDate(user.joinDate || user.createdDate)}`
       );
     });
 
     const deleteBtn = deleteCell.querySelector(".data-table__btn--delete");
     deleteBtn.addEventListener("click", async function () {
       const userName = user.userName || user.name;
-      if (confirm(`Are you sure you want to delete "${userName}"?`)) {
+      const confirmMsg = t('admin.users.modal.deleteConfirm') 
+        ? `${t('admin.users.modal.deleteConfirm')} "${userName}"?`
+        : `Are you sure you want to delete "${userName}"?`;
+      
+      if (confirm(confirmMsg)) {
         try {
           const userId = user._id || user.id;
           await deleteUserAPI(userId);
 
-          // Remove from local array
           allUsers = allUsers.filter((u) => (u._id || u.id) !== userId);
           filterUsers();
-          alert("Xóa user thành công!");
+          alert(t('admin.users.deleteSuccess') || "Xóa user thành công!");
         } catch (error) {
           alert("Không thể xóa user!");
         }
@@ -391,7 +406,7 @@ export async function AdminUsers_js() {
       tableBody.innerHTML = `
         <tr>
           <td colspan="8" style="text-align: center; padding: 2rem; color: #717182;">
-            No users found
+            ${t('admin.users.noUsers') || 'No users found'}
           </td>
         </tr>
       `;
@@ -407,10 +422,12 @@ export async function AdminUsers_js() {
   }
 
   function updateUserCount() {
+    const countText = t('admin.users.count') || 'Users';
+    
     if (filteredUsers.length === allUsers.length) {
-      userCountHeading.textContent = `Users (${allUsers.length})`;
+      userCountHeading.innerHTML = `<span data-i18n="admin.users.count">${countText}</span> (${allUsers.length})`;
     } else {
-      userCountHeading.textContent = `Users (${filteredUsers.length} / ${allUsers.length})`;
+      userCountHeading.innerHTML = `<span data-i18n="admin.users.count">${countText}</span> (${filteredUsers.length} / ${allUsers.length})`;
     }
   }
 
@@ -462,8 +479,8 @@ export async function AdminUsers_js() {
     console.log("Add button clicked");
 
     isEditMode = false;
-    modalTitle.textContent = "Add User";
-    submitBtn.textContent = "Create";
+    modalTitle.textContent = t('admin.users.modal.add') || "Add User";
+    submitBtn.textContent = t('admin.users.modal.create') || "Create";
 
     userFormEl.reset();
 
@@ -510,8 +527,8 @@ export async function AdminUsers_js() {
       return;
     }
 
-    modalTitle.textContent = "Edit User";
-    submitBtn.textContent = "Save";
+    modalTitle.textContent = t('admin.users.modal.edit') || "Edit User";
+    submitBtn.textContent = t('admin.users.modal.save') || "Save";
 
     const idDisplayGroup = userFormEl.querySelector(".form__id-display");
     const idDisplayInput = userFormEl.querySelector('input[name="id-display"]');
@@ -608,7 +625,7 @@ export async function AdminUsers_js() {
     }
 
     if (!isEditMode && password !== cfPwdInput.value.trim()) {
-      alert("Mật khẩu xác nhận không khớp!");
+      alert(t('admin.users.modal.passwordMismatch') || "Mật khẩu xác nhận không khớp!");
       return;
     }
 
@@ -618,17 +635,14 @@ export async function AdminUsers_js() {
 
         const userId = currentEditRow.dataset.userId;
 
-        // Prepare update data
         const updateData = {
           userName: name,
           email: email,
           role: role,
         };
 
-        // Call API
         await updateUserAPI(userId, updateData);
 
-        // Update local data
         const userIndex = allUsers.findIndex((u) => (u._id || u.id) === userId);
         if (userIndex !== -1) {
           allUsers[userIndex] = {
@@ -638,12 +652,11 @@ export async function AdminUsers_js() {
           console.log("Updated user:", allUsers[userIndex]);
         }
 
-        alert("Cập nhật user thành công!");
+        alert(t('admin.users.updateSuccess') || "Cập nhật user thành công!");
         filterUsers();
       } else {
         console.log("Adding new user");
 
-        // Prepare new user data
         const newUserData = {
           userName: name,
           email: email,
@@ -652,16 +665,12 @@ export async function AdminUsers_js() {
           status: "active",
         };
 
-        // Call API
         const createdUser = await createUserAPI(newUserData);
-
-        // Add to local array
         allUsers.push(createdUser);
 
-        alert("Tạo user thành công!");
+        alert(t('admin.users.addSuccess') || "Tạo user thành công!");
         filterUsers();
 
-        // Go to last page
         currentPage = getTotalPages();
         renderUsers();
       }
@@ -672,6 +681,25 @@ export async function AdminUsers_js() {
     }
   });
 
+  // LANGUAGE CHANGE LISTENER
+  window.addEventListener('languagechange', async (e) => {
+    console.log('Language change detected in AdminUsers');
+    
+    // Re-render everything with new language
+    renderUsers();
+    
+    // Update modal if open
+    if (!modalUser.classList.contains('hidden')) {
+      modalTitle.textContent = isEditMode 
+        ? t('admin.users.modal.edit') 
+        : t('admin.users.modal.add');
+      submitBtn.textContent = isEditMode 
+        ? t('admin.users.modal.save') 
+        : t('admin.users.modal.create');
+    }
+  });
+
   // INITIAL RENDER
   renderUsers();
+  console.log('AdminUsers initialized');
 }

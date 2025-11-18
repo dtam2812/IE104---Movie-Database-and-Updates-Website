@@ -1,5 +1,4 @@
 import { TMDB_API_KEY } from "../../config.js";
-
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w300";
 
@@ -20,47 +19,97 @@ let allMovies = [];
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
-// load template
-Promise.all([
-  fetch("../components/MovieCardRender.html").then((res) => res.text()),
-  fetch("../components/TvShowCardRender.html").then((res) => res.text()),
-])
-  .then(([movieHTML, tvHTML]) => {
+// Dịch
+let translations = {};
+function currentLang() {
+  const stored = localStorage.getItem("language");
+  const htmlLang = document.documentElement.lang;
+  if (stored && stored !== htmlLang) {
+    document.documentElement.lang = stored;
+    return stored;
+  }
+  if (htmlLang && htmlLang !== stored) {
+    localStorage.setItem("language", htmlLang);
+    return htmlLang;
+  }
+  return stored || htmlLang || "vi";
+}
+function tmdbLang(lang) {
+  return lang === "vi" ? "vi-VN" : "en-US";
+}
+async function loadTranslations(lang) {
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    if (!res.ok) throw new Error(`Load translations failed: ${res.status}`);
+    translations = await res.json();
+    return translations;
+  } catch (err) {
+    console.error("Load translations error:", err);
+  }
+}
+function t(key) {
+  return translations[key] || key;
+}
+function translateDOM() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const translated = t(key);
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      el.placeholder = translated;
+    } else {
+      el.textContent = translated;
+    }
+  });
+}
+// Load Template
+async function loadTemplates() {
+  try {
+    const [movieHTML, tvHTML] = await Promise.all([
+      fetch("../components/MovieCardRender.html").then((res) => res.text()),
+      fetch("../components/TvShowCardRender.html").then((res) => res.text()),
+    ]);
     movieCardTemplate = movieHTML;
     tvCardTemplate = tvHTML;
-    loadPersonDetail();
-    loadPersonMovies();
-  })
-  .catch((err) => console.error("Không tải được template:", err));
-
-// Load diễn viên
+  } catch (err) {
+    console.error("Không tải được template:", err);
+  }
+}
+//Load thông tin diễn viên
 async function loadPersonDetail() {
+  const lang = currentLang();
+
   try {
     const res = await fetch(
-      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}?api_key=${TMDB_API_KEY}&language=${tmdbLang(
+        lang
+      )}`
     );
     const data = await res.json();
-
     if (!data || data.success === false) {
-      personName.textContent = "Không tìm thấy diễn viên";
+      personName.textContent = t("cast.unknown");
       return;
     }
-
     // Gán dữ liệu
-    personName.textContent = data.name || "Đang cập nhật";
-    alsoKnownAs.textContent = data.also_known_as[0] || "Đang cập nhật";
-    biography.textContent = data.biography || "Đang cập nhật";
-    gender.textContent =
-      data.gender === 1 ? "Nữ" : data.gender === 2 ? "Nam" : "Không rõ";
-    birthday.textContent = data.birthday || "Đang cập nhật";
+    personName.textContent = data.name || t("cast.updating");
+    alsoKnownAs.textContent = data.also_known_as[0] || t("cast.updating");
+    biography.textContent = data.biography || t("cast.updating");
 
-    // cast card
+    // Dịch giới tính
+    if (data.gender === 1) {
+      gender.textContent = t("cast.female");
+    } else if (data.gender === 2) {
+      gender.textContent = t("cast.male");
+    } else {
+      gender.textContent = t("cast.unknown");
+    }
+
+    birthday.textContent = data.birthday || t("cast.updating");
+    // Ảnh diễn viên
     const profile = data.profile_path
       ? `${IMG_URL}${data.profile_path}`
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(
           data.name || "Unknown"
         )}&size=300&background=1a1a2e&color=0891b2`;
-
     personImage.src = profile;
     personImage.onerror = () => {
       personImage.src =
@@ -70,20 +119,21 @@ async function loadPersonDetail() {
     console.error("Lỗi khi tải chi tiết diễn viên:", err);
   }
 }
-
-// Load danh sách
+// Load danh sách phim
 async function loadPersonMovies() {
+  const lang = currentLang();
+
   try {
     const res = await fetch(
-      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=vi-VN`
+      `${BASE_URL}/person/${personId}/combined_credits?api_key=${TMDB_API_KEY}&language=${tmdbLang(
+        lang
+      )}`
     );
     const data = await res.json();
-
     if (!data || !data.cast) {
-      moviesGrid.innerHTML = "<p>Không có dữ liệu được tìm thấy.</p>";
+      moviesGrid.innerHTML = `<p>${t("cast.noResults")}</p>`;
       return;
     }
-
     // Sắp xếp giảm dần theo độ phổ biến
     allMovies = data.cast.sort((a, b) => b.popularity - a.popularity);
     renderMoviesPage();
@@ -91,64 +141,54 @@ async function loadPersonMovies() {
     console.error("Lỗi khi tải danh sách phim:", err);
   }
 }
-
-// render danh sách
+// Render danh sách
 function renderMoviesPage() {
   if (!movieCardTemplate || !tvCardTemplate) return;
-
   moviesGrid.innerHTML = "";
   const totalPages = Math.ceil(allMovies.length / perPage);
   const start = (currentPage - 1) * perPage;
   const end = start + perPage;
   const currentMovies = allMovies.slice(start, end);
-
   if (currentMovies.length === 0) {
-    moviesGrid.innerHTML = "<p>Không có kết quả.</p>";
+    moviesGrid.innerHTML = `<p>${t("cast.noResults")}</p>`;
     return;
   }
-
   currentMovies.forEach((item) => {
-    // Fallback ảnh
+    // --- Fallback ảnh ---
     const poster = item.poster_path
       ? `${IMG_URL}${item.poster_path}`
       : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
-
-    const title = item.title || item.name || "Không rõ";
-    const original_title = item.original_title || item.original_name || "";
-
-    // Chọn template (phim hoặc TV show)
+    let localizedTitle = item.title || item.name || "";
+    let originalTitle = item.original_title || item.original_name || "";
+    if (!localizedTitle || localizedTitle.trim().length < 1) {
+      localizedTitle = originalTitle;
+    }
+    if (!localizedTitle) localizedTitle = t("cast.unknown");
+    if (!originalTitle || originalTitle.trim().length < 1)
+      originalTitle = localizedTitle;
+    // Chọn template
     let template =
       item.media_type === "tv" ? tvCardTemplate : movieCardTemplate;
-
     let cardHTML = template
       .replace(/{{id}}/g, item.id)
       .replace(/{{poster}}/g, poster)
-      .replace(/{{title}}/g, title)
-      .replace(/{{original_title}}/g, original_title);
-
+      .replace(/{{title}}/g, localizedTitle)
+      .replace(/{{original_title}}/g, originalTitle);
     moviesGrid.insertAdjacentHTML("beforeend", cardHTML);
   });
-
-  // fallback ảnh lỗi
   moviesGrid.querySelectorAll("img").forEach((img) => {
     img.onerror = () =>
       (img.src = "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster");
   });
-
   renderPaginationModern(currentPage, totalPages);
 }
-
-//pagination
+// Phân trang
 function renderPaginationModern(page, total) {
   const oldPagination = document.querySelector(".pagination-modern");
   if (oldPagination) oldPagination.remove();
-
   if (total <= 1) return;
-
   const container = document.createElement("div");
   container.classList.add("pagination-modern");
-
-  // Nút Prev
   const prevBtn = document.createElement("button");
   prevBtn.classList.add("page-circle");
   prevBtn.innerHTML = "&#8592;";
@@ -160,18 +200,14 @@ function renderPaginationModern(page, total) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   });
-
-  // Thông tin trang
   const pageBox = document.createElement("div");
   pageBox.classList.add("page-info-box");
   pageBox.innerHTML = `
-    <span class="page-text">Trang</span>
-    <span class="page-current">${page}</span>
-    <span class="page-divider">/</span>
-    <span class="page-total">${total}</span>
-  `;
-
-  // Nút Next
+      <span class="page-text">${t("cast.page")}</span>
+      <span class="page-current">${page}</span>
+      <span class="page-divider">/</span>
+      <span class="page-total">${total}</span>
+    `;
   const nextBtn = document.createElement("button");
   nextBtn.classList.add("page-circle");
   nextBtn.innerHTML = "&#8594;";
@@ -183,10 +219,29 @@ function renderPaginationModern(page, total) {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   });
-
   container.appendChild(prevBtn);
   container.appendChild(pageBox);
   container.appendChild(nextBtn);
-
   moviesGrid.after(container);
 }
+async function boot() {
+  const lang = currentLang();
+  console.log(`🌐 Current language: ${lang}`);
+  await loadTranslations(lang);
+  translateDOM();
+  await loadTemplates();
+  await loadPersonDetail();
+  await loadPersonMovies();
+  console.log("✅ Cast detail page loaded");
+}
+document.addEventListener("DOMContentLoaded", boot);
+window.addEventListener("languagechange", async () => {
+  console.log("🔄 Language changed, reloading page...");
+  await boot();
+});
+window.addEventListener("storage", (e) => {
+  if (e.key === "language") {
+    console.log("🔄 Language changed in another tab, reloading...");
+    boot();
+  }
+});

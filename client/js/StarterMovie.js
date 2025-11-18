@@ -1,5 +1,4 @@
 import { TMDB_API_KEY } from "../../config.js";
-import { favoritesManager } from "../js/Favorite.js";
 
 const API_KEY = TMDB_API_KEY;
 const API_URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}&language=vi-VN`;
@@ -17,7 +16,6 @@ const trailerFrame = document.getElementById("trailer-frame");
 const closeTrailer = document.getElementById("close-trailer");
 const trailerBtn = document.getElementById("trailer-btn");
 const infoBtn = document.querySelector("button[aria-label='Info']");
-const favoriteBtn = document.querySelector(".favorite");
 
 let movies = [];
 let index = 0;
@@ -36,7 +34,7 @@ const createEl = (tag, cls, html) => {
 const badge = (content, cls) =>
   createEl("div", `badge${cls ? " " + cls : ""}`, content);
 
-// ----- Tạo slide -----
+//Tạo slide
 function createSlide(movie, isActive) {
   const wrap = createEl("div", `slide${isActive ? " active" : ""}`);
   const img = createEl("img", "bg");
@@ -52,7 +50,7 @@ function renderBackground() {
   );
 }
 
-// ----- Nội dung slide -----
+//  Nội dung slide
 function renderContent() {
   const m = movies[index];
   if (!m) return;
@@ -102,75 +100,9 @@ function renderContent() {
     };
     descEl.after(toggleBtn);
   }
-
-  // Cập nhật trạng thái nút yêu thích
-  updateFavoriteButtonState();
 }
 
-// ----- Cập nhật trạng thái nút yêu thích -----
-async function updateFavoriteButtonState() {
-  const currentMovie = movies[index];
-  if (!currentMovie || !favoriteBtn) return;
-
-  // Kiểm tra xem người dùng đã đăng nhập chưa
-  const token = localStorage.getItem("token");
-  if (!token) {
-    // Nếu chưa đăng nhập, đặt về trạng thái mặc định
-    resetFavoriteButton();
-    return;
-  }
-
-  try {
-    // Kiểm tra trạng thái yêu thích từ server
-    const isFavorite = await favoritesManager.checkFavoriteStatus(
-      currentMovie.id
-    );
-
-    // Cập nhật giao diện
-    if (isFavorite) {
-      favoriteBtn.classList.add("active");
-      const path = favoriteBtn.querySelector("path");
-      if (path) path.style.fill = "#ff4444";
-    } else {
-      resetFavoriteButton();
-    }
-  } catch (error) {
-    console.error("Error checking favorite status:", error);
-    resetFavoriteButton();
-  }
-}
-
-// ----- Đặt lại nút yêu thích về trạng thái mặc định -----
-function resetFavoriteButton() {
-  favoriteBtn.classList.remove("active");
-  const path = favoriteBtn.querySelector("path");
-  if (path) path.style.fill = "#fff";
-}
-
-// ----- Xử lý sự kiện click nút yêu thích -----
-async function handleFavoriteClick() {
-  const currentMovie = movies[index];
-  if (!currentMovie) return;
-
-  // Khởi tạo favoritesManager nếu chưa được khởi tạo
-  if (!favoritesManager.isInitialized) {
-    favoritesManager.init();
-  }
-
-  // Tạo film data để gửi lên server
-  const filmData = {
-    id: currentMovie.id.toString(),
-    type: "Movie",
-    title: currentMovie.title,
-    originalName: currentMovie.englishTitle,
-    posterPath: currentMovie.thumbnailImage,
-  };
-
-  // Gọi phương thức xử lý yêu thích
-  await favoritesManager.handleFavoriteClick(favoriteBtn, filmData);
-}
-
-// ----- Thumbnails -----
+//  Thumbnails
 function renderThumbs() {
   thumbsEl.replaceChildren(
     ...movies.map((m, i) => {
@@ -189,23 +121,11 @@ function renderThumbs() {
   );
 }
 
-// ----- Cập nhật carousel -----
+// Cập nhật carousel
 function update(stopAuto = false) {
   renderBackground();
   renderContent();
   renderThumbs();
-
-  // Kích hoạt sự kiện filmLoaded để thông báo cho favoritesManager
-  const currentMovie = movies[index];
-  if (currentMovie) {
-    const filmLoadedEvent = new CustomEvent("filmLoaded", {
-      detail: {
-        ...currentMovie,
-        type: "Movie",
-      },
-    });
-    document.dispatchEvent(filmLoadedEvent);
-  }
 
   if (stopAuto) {
     clearInterval(timer);
@@ -218,7 +138,7 @@ function next() {
   update();
 }
 
-// ----- Lấy danh sách phim -----
+// Lấy danh sách phim
 async function fetchMovies() {
   try {
     const res = await fetch(API_URL);
@@ -234,7 +154,7 @@ async function fetchMovies() {
           const detail = await detailRes.json();
 
           return {
-            id: m.id,
+            id: m.id, // thêm ID để lấy trailer
             title: m.title || m.original_title || "Không có tiêu đề",
             englishTitle: m.original_title || "",
             backgroundImage: m.backdrop_path
@@ -248,7 +168,6 @@ async function fetchMovies() {
             duration: detail.runtime ? `${detail.runtime} phút` : "N/A",
             genres: detail.genres?.map((g) => g.name) || [],
             description: m.overview || "Không có mô tả.",
-            isFavorite: false, // Mặc định là false, sẽ được cập nhật sau
           };
         } catch (err) {
           console.warn(`Lỗi chi tiết phim ${m.id}:`, err);
@@ -270,7 +189,7 @@ async function fetchMovies() {
   }
 }
 
-// ----- Trailer -----
+//  Trailer
 async function getTrailerKey(movieId, type = "movie") {
   try {
     const res = await fetch(
@@ -294,7 +213,6 @@ async function getTrailerKey(movieId, type = "movie") {
   }
 }
 
-// ----- Event Listeners -----
 trailerBtn.addEventListener("click", async () => {
   const currentMovie = movies[index];
   if (!currentMovie) return;
@@ -321,26 +239,21 @@ window.addEventListener("click", (e) => {
   if (e.target === trailerModal) closeModal();
 });
 
-// ----- Favorite Button Event -----
-if (favoriteBtn) {
-  favoriteBtn.addEventListener("click", handleFavoriteClick);
-}
+// Favorite
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".favorite");
+  if (!btn) return;
+  btn.classList.toggle("active");
+});
 
-// ----- Info Button -----
+//  Info Button
 infoBtn.addEventListener("click", () => {
   const currentMovie = movies[index];
   if (!currentMovie) return;
   window.location.href = `../pages/MovieDetail.html?id=${currentMovie.id}`;
 });
 
-// ----- Khởi tạo -----
-document.addEventListener("DOMContentLoaded", () => {
-  // Khởi tạo favoritesManager
-  if (favoritesManager && typeof favoritesManager.init === "function") {
-    favoritesManager.init();
-  }
-
-  fetchMovies();
-});
+//  Khởi tạo
+fetchMovies();
 
 export const starterMovie = { update };

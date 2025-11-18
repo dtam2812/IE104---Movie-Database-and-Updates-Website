@@ -6,7 +6,7 @@ const BG_URL = "https://image.tmdb.org/t/p/original";
 
 let translations = {};
 
-// === HỆ THỐNG DỊCH ===
+// Hệ thống dịch
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);

@@ -43,7 +43,6 @@ const tvOnlyGenres = [
   "10768",
 ];
 
-// ==================== THÊM LOGIC DỊCH NHƯ FILE1 ====================
 function getLang() {
   const lang =
     localStorage.getItem("language") || document.documentElement.lang || "vi";
@@ -56,9 +55,8 @@ window.addEventListener("languagechange", (e) => {
   currentPage = 1; // về trang 1 để tránh lỗi trang không tồn tại
   render(); // render lại toàn bộ danh sách với ngôn ngữ mới
 });
-// ============================================================
 
-// Khai báo các DOM hay dùng (giữ nguyên như file2)
+// Khai báo các DOM hay dùng
 const filterToggle = document.querySelector(".filter__toggle");
 const filterSelect = document.querySelector(".filter__select");
 const faFilter = document.querySelector(".fa-solid.fa-filter");
@@ -347,7 +345,6 @@ function displayMovies(movieList) {
     const isMovie = movie.title !== undefined;
     const movieId = movie.id;
 
-    // Cải thiện nhỏ từ file1: fallback về original_title/original_name nếu title/name = null
     const movieName = isMovie
       ? movie.title || movie.original_title
       : movie.name || movie.original_name;
