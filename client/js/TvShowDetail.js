@@ -72,6 +72,7 @@ async function fetchTvDetails(tvId) {
     );
     const tv = await res.json();
 
+
     // === TIÊU ĐỀ: Nếu không có bản dịch Việt → dịch thủ công ===
     let displayTitle = tv.name || tv.original_name;
     if (lang === "vi" && tv.name === tv.original_name) {
