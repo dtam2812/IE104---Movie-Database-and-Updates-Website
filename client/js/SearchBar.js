@@ -5,20 +5,47 @@ export function searchBar() {
   const dropdown = document.querySelector(".search__dropdown");
   let timer;
 
+  function getCurrentLanguage() {
+    const lang =
+      localStorage.getItem("language") || document.documentElement.lang || "vi";
+    return lang === "vi" ? "vi-VN" : "en-US";
+  }
+
+  function getTranslatedText(key) {
+    const lang = localStorage.getItem("language") || "vi";
+    const translations = {
+      vi: {
+        unknown: "Không rõ",
+        movie: "Phim",
+        tvSeries: "TV Series",
+        actor: "Diễn viên",
+      },
+      en: {
+        unknown: "Unknown",
+        movie: "Movie",
+        tvSeries: "TV Series",
+        actor: "Actor",
+      },
+    };
+    return translations[lang]?.[key] || translations.vi[key];
+  }
+
   async function fetchResults(query) {
+    const language = getCurrentLanguage();
+
     const [movieRes, tvRes, personRes] = await Promise.all([
       fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
           query
         )}&page=1`
       ),
       fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/tv?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
           query
         )}&page=1`
       ),
       fetch(
-        `https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=vi-VN&query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/person?api_key=${TMDB_API_KEY}&language=${language}&query=${encodeURIComponent(
           query
         )}&page=1`
       ),
@@ -99,18 +126,19 @@ export function searchBar() {
               item.name || item.title
             )}&size=185`;
 
-      const title = item.title || item.name || "Không rõ";
+      const title = item.title || item.name || getTranslatedText("unknown");
       const original = item.original_title || item.original_name || "";
       const year =
         item.release_date?.split("-")[0] ||
         item.first_air_date?.split("-")[0] ||
         "";
+
       const type =
         item.media_type === "movie"
-          ? `Phim • ${year}`
+          ? `${getTranslatedText("movie")} • ${year}`
           : item.media_type === "tv"
-          ? `TV Series • ${year}`
-          : "Diễn viên";
+          ? `${getTranslatedText("tvSeries")} • ${year}`
+          : getTranslatedText("actor");
 
       card.innerHTML = `
         <img class="search__result-img" src="${img}" alt="${title}">
