@@ -62,7 +62,7 @@ body {
 }
 
 .detail__background {
-  background: url(https://static.nutscdn.com/vimg/1920-0/c710b34eb7fa37b24f464e6d74c77614.webp);
+  background: url(https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -110,7 +110,6 @@ body {
   border-radius: 10px;
   color: var(--color-text-primary);
   background: var(--color-overlay-medium);
-  backdrop-filter: blur(10px);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -634,31 +633,32 @@ body {
   font-style: italic;
 }
 
-.comment {
+/* FIXED: Changed from .comment to .comment-item */
+.comment-item {
   background: var(--color-overlay);
   padding: 20px;
   border-radius: 8px;
   border: 1px solid var(--color-border);
 }
 
-.comment:hover {
+.comment-item:hover {
   background: var(--color-overlay-light);
 }
 
-.comment__header {
+.comment-item__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.comment__user {
+.comment-item__user {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.comment__avatar {
+.comment-item__avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -670,41 +670,47 @@ body {
   color: var(--color-bg-secondary);
 }
 
-.comment__username {
+.comment-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.comment-item__name {
   font-weight: 600;
   font-size: 15px;
 }
 
-.comment__date {
+.comment-item__date {
   font-size: 13px;
   color: var(--color-text-muted);
 }
 
-.comment__rating {
+.comment-item__rating {
   display: flex;
   gap: 4px;
 }
 
-.comment__rating i {
+.comment-item__rating i {
   color: var(--color-star);
 }
 
-.comment__rating i.empty {
+.comment-item__rating i.empty {
   color: var(--color-border-light);
 }
 
-.comment__text {
+.comment-item__text {
   color: var(--color-text-comment);
   line-height: 1.6;
   margin-bottom: 12px;
 }
 
-.comment__actions {
+.comment-item__actions {
   display: flex;
   gap: 15px;
 }
 
-.comment__action-btn {
+.comment-item__action-btn {
   background: none;
   border: none;
   color: var(--color-text-dimmed);
@@ -716,7 +722,7 @@ body {
   border-radius: 4px;
 }
 
-.comment__action-btn:hover {
+.comment-item__action-btn:hover {
   color: var(--color-accent-primary);
   background: var(--color-accent-bg);
 }
