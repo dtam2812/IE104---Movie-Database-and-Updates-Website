@@ -1,169 +1,190 @@
 export async function AdminTVShows_js() {
+  // Load dữ liệu từ file Data.js
+  let tvShowsData = [];
+  try {
+    const module = await import("./Data.js");
+    tvShowsData = module.tvShowsData || [];
+  } catch {
+    console.log("No initial TV show data, starting empty");
+  }
 
-    // Load dữ liệu từ file Data.js 
-    let tvShowsData = [];
-    try {
-        const module = await import('./Data.js');
-        tvShowsData = module.tvShowsData || [];
-    } catch {
-        console.log('No initial TV show data, starting empty');
-    }
+  // DOM ELEMENTS
+  // Modal elements
+  const modalTV = document.querySelector(".modal--tvshow");
+  const backdrop = document.querySelector(".modal--tvshow .modal__backdrop");
+  const tvFormEl = document.querySelector(".form--tvshow form");
+  const modalTitle = document.querySelector(".form__title");
+  const submitBtn = tvFormEl.querySelector(".form__btn--primary");
 
-    // DOM ELEMENTS 
-    // Modal elements
-    const modalTV = document.querySelector('.modal--tvshow');
-    const backdrop = document.querySelector('.modal--tvshow .modal__backdrop');
-    const tvFormEl = document.querySelector('.form--tvshow form');
-    const modalTitle = document.querySelector('.form__title');
-    const submitBtn = tvFormEl.querySelector('.form__btn--primary');
-    
-    // Table & Pagination
-    const tableBody = document.querySelector('.data-table__body');
-    const tvCountHeading = document.querySelector('.data-table__title');
-    const currentPageSpan = document.querySelector('.pagination__current');
-    const totalPagesSpan = document.querySelector('.pagination__info span:last-child');
-    const paginationLeft = document.querySelector('.pagination__arrow--left');
-    const paginationRight = document.querySelector('.pagination__arrow--right');
-    
-    // Search & Filter
-    const searchInput = document.querySelector('.search-filter__input');
-    const countryFilter = document.querySelector('.search-filter__select:nth-child(1)');
-    const statusFilter = document.querySelector('.search-filter__select:nth-child(2)');
-    const ratingFilter = document.querySelector('.search-filter__select:nth-child(3)');
-    
-    // Media inputs
-    const mediaPreview = document.querySelector('.media-form__media');
-    const bannerPreviewImg = mediaPreview.querySelector('.media-form__banner img');
-    const posterPreviewImg = mediaPreview.querySelector('.media-form__poster img');
-    const bannerInput = mediaPreview.querySelector('.media-form__banner-input');
-    const posterInput = mediaPreview.querySelector('.media-form__poster-input');
+  // Table & Pagination
+  const tableBody = document.querySelector(".data-table__body");
+  const tvCountHeading = document.querySelector(".data-table__title");
+  const currentPageSpan = document.querySelector(".pagination__current");
+  const totalPagesSpan = document.querySelector(
+    ".pagination__info span:last-child"
+  );
+  const paginationLeft = document.querySelector(".pagination__arrow--left");
+  const paginationRight = document.querySelector(".pagination__arrow--right");
 
-    // Sub-modal (Seasons)
-    const subModal = document.getElementById('seasons-sub-modal');
-    const subModalBackdrop = document.getElementById('seasons-backdrop');
-    const seasonsListEl = document.getElementById('seasons-list');
+  // Search & Filter
+  const searchInput = document.querySelector(".search-filter__input");
+  const countryFilter = document.querySelector(
+    ".search-filter__select:nth-child(1)"
+  );
+  const statusFilter = document.querySelector(
+    ".search-filter__select:nth-child(2)"
+  );
+  const ratingFilter = document.querySelector(
+    ".search-filter__select:nth-child(3)"
+  );
 
-    // Sub-modal (Actors)
-    const actorsSubModal = document.getElementById('actors-sub-modal');
-    const actorsSubModalBackdrop = document.getElementById('actors-backdrop');
-    const actorsListEl = document.getElementById('actors-list');
+  // Media inputs
+  const mediaPreview = document.querySelector(".media-form__media");
+  const bannerPreviewImg = mediaPreview.querySelector(
+    ".media-form__banner img"
+  );
+  const posterPreviewImg = mediaPreview.querySelector(
+    ".media-form__poster img"
+  );
+  const bannerInput = mediaPreview.querySelector(".media-form__banner-input");
+  const posterInput = mediaPreview.querySelector(".media-form__poster-input");
 
-    // Templates
-    const seasonTemplate = document.getElementById('season-item-template');
-    const actorTemplate = document.getElementById('actor-item-template');
-    const emptyRowTemplate = document.getElementById('empty-row-template');
-    const emptySeasonsTemplate = document.getElementById('empty-seasons-template');
-    const emptyActorsTemplate = document.getElementById('empty-actors-template');
+  // Sub-modal (Seasons)
+  const subModal = document.getElementById("seasons-sub-modal");
+  const subModalBackdrop = document.getElementById("seasons-backdrop");
+  const seasonsListEl = document.getElementById("seasons-list");
 
-    
-    // SIGN OUT FUNCTIONALITY
-    const signOutLink = document.querySelector('.admin-menu__item:last-child .admin-menu__link');
-    if (signOutLink) {
-        signOutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            console.log("Admin signing out");
+  // Sub-modal (Actors)
+  const actorsSubModal = document.getElementById("actors-sub-modal");
+  const actorsSubModalBackdrop = document.getElementById("actors-backdrop");
+  const actorsListEl = document.getElementById("actors-list");
 
-            // Xóa tất cả thông tin user khỏi localStorage
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("userName");
-            localStorage.removeItem("userEmail");
-            localStorage.removeItem("refreshToken");
+  // Templates
+  const seasonTemplate = document.getElementById("season-item-template");
+  const actorTemplate = document.getElementById("actor-item-template");
+  const emptyRowTemplate = document.getElementById("empty-row-template");
+  const emptySeasonsTemplate = document.getElementById(
+    "empty-seasons-template"
+  );
+  const emptyActorsTemplate = document.getElementById("empty-actors-template");
 
-            // Redirect về trang HomePage
-            window.location.href = "/client/view/pages/HomePage.html";
-        });
-    }
+  // SIGN OUT FUNCTIONALITY
+  const signOutLink = document.querySelector(
+    ".admin-menu__item:last-child .admin-menu__link"
+  );
+  if (signOutLink) {
+    signOutLink.addEventListener("click", (e) => {
+      e.preventDefault();
 
-    // STATE MANAGEMENT
-    let allTVShows = [...tvShowsData];
-    let filteredTVShows = [...allTVShows];
-    let currentSeasons = [];
-    let currentActors = [];
-    let currentPage = 1;
-    let currentEditRow = null;
-    let isEditMode = false;
-    const tvPerPage = 5;
-    
-    // Tạo ID tự động theo format TV001, TV002, ...
-    const generateTVId = () => {
-        if (allTVShows.length === 0) return 'TV001';
-        
-        const maxNum = allTVShows.reduce((max, show) => {
-            const match = show.id.match(/^TV(\d+)$/);
-            return match ? Math.max(max, parseInt(match[1])) : max;
-        }, 0);
-        
-        return 'TV' + String(maxNum + 1).padStart(3, '0');
-    };
+      console.log("Admin signing out");
 
-    // Tạo ID cho actor theo format TV001-AC001, TV001-AC002, ...
-    const generateActorId = (tvId) => {
-        if (currentActors.length === 0) return `${tvId}-AC001`;
-        
-        const maxNum = currentActors.reduce((max, actor) => {
-            const match = actor.id.match(/AC(\d+)$/);
-            return match ? Math.max(max, parseInt(match[1])) : max;
-        }, 0);
-        
-        return `${tvId}-AC` + String(maxNum + 1).padStart(3, '0');
-    };
+      // Xóa tất cả thông tin user khỏi localStorage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("refreshToken");
 
-    // Tính tổng số trang
-    const getTotalPages = () => Math.ceil(filteredTVShows.length / tvPerPage);
+      // Redirect về trang HomePage
+      window.location.href = "/client/view/pages/HomePage.html";
+    });
+  }
 
-    // Lấy danh sách TV shows cho trang hiện tại
-    const getTVShowsForCurrentPage = () => {
-        const start = (currentPage - 1) * tvPerPage;
-        return filteredTVShows.slice(start, start + tvPerPage);
-    };
+  // STATE MANAGEMENT
+  let allTVShows = [...tvShowsData];
+  let filteredTVShows = [...allTVShows];
+  let currentSeasons = [];
+  let currentActors = [];
+  let currentPage = 1;
+  let currentEditRow = null;
+  let isEditMode = false;
+  const tvPerPage = 5;
 
-    // Đọc file ảnh thành base64
-    const readFileAsDataURL = (file) => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.readAsDataURL(file);
-        });
-    };
+  // Tạo ID tự động theo format TV001, TV002, ...
+  const generateTVId = () => {
+    if (allTVShows.length === 0) return "TV001";
 
-    // FILTER & SEARCH 
-    // Lọc TV shows theo search và filter
-    const filterTVShows = () => {
-        const search = searchInput.value.toLowerCase().trim();
-        const country = countryFilter.value;
-        const status = statusFilter.value;
-        const rating = ratingFilter.value;
+    const maxNum = allTVShows.reduce((max, show) => {
+      const match = show.id.match(/^TV(\d+)$/);
+      return match ? Math.max(max, parseInt(match[1])) : max;
+    }, 0);
 
-        filteredTVShows = allTVShows.filter(show => {
-            const matchSearch = show.title.toLowerCase().includes(search) ||
-                              show.id.toLowerCase().includes(search);
-            const matchCountry = country === 'all' || show.country === country;
-            const matchStatus = status === 'all' || show.status === status;
-            const matchRating = rating === 'all' || show.rating >= parseFloat(rating);
+    return "TV" + String(maxNum + 1).padStart(3, "0");
+  };
 
-            return matchSearch && matchCountry && matchStatus && matchRating;
-        });
+  // Tạo ID cho actor theo format TV001-AC001, TV001-AC002, ...
+  const generateActorId = (tvId) => {
+    if (currentActors.length === 0) return `${tvId}-AC001`;
 
-        const totalPages = getTotalPages();
-        currentPage = totalPages === 0 ? 1 : Math.min(currentPage, totalPages);
-        
-        renderTVShows();
-    };
+    const maxNum = currentActors.reduce((max, actor) => {
+      const match = actor.id.match(/AC(\d+)$/);
+      return match ? Math.max(max, parseInt(match[1])) : max;
+    }, 0);
 
-    // RENDER FUNCTIONS 
-    // Tạo một row trong bảng TV shows
-    const createTVRow = (show, no) => {
-        const seasonsCount = Array.isArray(show.seasonsData) ? show.seasonsData.length : 0;
-        const seasonsText = seasonsCount > 0 ? `${seasonsCount} season${seasonsCount > 1 ? 's' : ''}` : 'N/A';
-        const ratingHTML = show.rating > 0 
-            ? `<span>${show.rating}</span>` 
-            : '<span style="color: #717182;">N/A</span>';
-        const statusColor = show.status === 'Released' ? '#4CAF50' : '#ff9800';
+    return `${tvId}-AC` + String(maxNum + 1).padStart(3, "0");
+  };
 
-        const row = document.createElement('tr');
-        row.dataset.tvId = show.id;
-        row.innerHTML = `
+  // Tính tổng số trang
+  const getTotalPages = () => Math.ceil(filteredTVShows.length / tvPerPage);
+
+  // Lấy danh sách TV shows cho trang hiện tại
+  const getTVShowsForCurrentPage = () => {
+    const start = (currentPage - 1) * tvPerPage;
+    return filteredTVShows.slice(start, start + tvPerPage);
+  };
+
+  // Đọc file ảnh thành base64
+  const readFileAsDataURL = (file) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // FILTER & SEARCH
+  // Lọc TV shows theo search và filter
+  const filterTVShows = () => {
+    const search = searchInput.value.toLowerCase().trim();
+    const country = countryFilter.value;
+    const status = statusFilter.value;
+    const rating = ratingFilter.value;
+
+    filteredTVShows = allTVShows.filter((show) => {
+      const matchSearch =
+        show.title.toLowerCase().includes(search) ||
+        show.id.toLowerCase().includes(search);
+      const matchCountry = country === "all" || show.country === country;
+      const matchStatus = status === "all" || show.status === status;
+      const matchRating = rating === "all" || show.rating >= parseFloat(rating);
+
+      return matchSearch && matchCountry && matchStatus && matchRating;
+    });
+
+    const totalPages = getTotalPages();
+    currentPage = totalPages === 0 ? 1 : Math.min(currentPage, totalPages);
+
+    renderTVShows();
+  };
+
+  // RENDER FUNCTIONS
+  // Tạo một row trong bảng TV shows
+  const createTVRow = (show, no) => {
+    const seasonsCount = Array.isArray(show.seasonsData)
+      ? show.seasonsData.length
+      : 0;
+    const seasonsText =
+      seasonsCount > 0
+        ? `${seasonsCount} season${seasonsCount > 1 ? "s" : ""}`
+        : "N/A";
+    const ratingHTML =
+      show.rating > 0
+        ? `<span>${show.rating}</span>`
+        : '<span style="color: #717182;">N/A</span>';
+    const statusColor = show.status === "Released" ? "#4CAF50" : "#ff9800";
+
+    const row = document.createElement("tr");
+    row.dataset.tvId = show.id;
+    row.innerHTML = `
             <td class ="data-table__th">${no}</td>
             <td class ="data-table__th">
                 <div class="movie-cell">
@@ -188,498 +209,555 @@ export async function AdminTVShows_js() {
             <td class ="data-table__th"><button class="data-table__btn data-table__btn--delete"><i class="fa-solid fa-trash"></i></button></td>
         `;
 
-        row.querySelector('.data-table__btn--edit').addEventListener('click', () => openEditTVModal(row));
-        row.querySelector('.data-table__btn--delete').addEventListener('click', () => {
-            if (confirm(`Are you sure you want to delete "${show.title}"?`)) {
-                allTVShows = allTVShows.filter(s => s.id !== show.id);
-                filterTVShows();
-            }
-        });
-
-        return row;
-    };
-
-    // Render toàn bộ bảng TV shows
-    const renderTVShows = () => {
-        const tvToShow = getTVShowsForCurrentPage();
-        const startNo = (currentPage - 1) * tvPerPage + 1;
-
-        tableBody.innerHTML = '';
-        
-        if (tvToShow.length === 0) {
-            tableBody.appendChild(emptyRowTemplate.content.cloneNode(true));
-        } else {
-            tvToShow.forEach((show, i) => {
-                tableBody.appendChild(createTVRow(show, startNo + i));
-            });
+    row
+      .querySelector(".data-table__btn--edit")
+      .addEventListener("click", () => openEditTVModal(row));
+    row
+      .querySelector(".data-table__btn--delete")
+      .addEventListener("click", () => {
+        if (confirm(`Are you sure you want to delete "${show.title}"?`)) {
+          allTVShows = allTVShows.filter((s) => s.id !== show.id);
+          filterTVShows();
         }
+      });
 
-        updateTVCount();
-        updatePaginationButtons();
-    };
+    return row;
+  };
 
-    // Cập nhật số lượng TV shows hiển thị
-    const updateTVCount = () => {
-        tvCountHeading.textContent = filteredTVShows.length === allTVShows.length
-            ? `TV Shows (${allTVShows.length})`
-            : `TV Shows (${filteredTVShows.length} / ${allTVShows.length})`;
-    };
+  // Render toàn bộ bảng TV shows
+  const renderTVShows = () => {
+    const tvToShow = getTVShowsForCurrentPage();
+    const startNo = (currentPage - 1) * tvPerPage + 1;
 
-    // Cập nhật trạng thái các nút phân trang
-    const updatePaginationButtons = () => {
-        const totalPages = getTotalPages();
-        
-        currentPageSpan.textContent = currentPage;
-        totalPagesSpan.textContent = `/ ${totalPages}`;
-        
-        paginationLeft.classList.toggle('disable', currentPage === 1 || totalPages === 0);
-        paginationLeft.disabled = currentPage === 1 || totalPages === 0;
-        
-        paginationRight.classList.toggle('disable', currentPage >= totalPages || totalPages === 0);
-        paginationRight.disabled = currentPage >= totalPages || totalPages === 0;
-    };
+    tableBody.innerHTML = "";
 
-    // SEASONS SUB-MODAL 
-    // Tạo season item từ template
-    const createSeasonItem = (season, index) => {
-        const seasonItem = seasonTemplate.content.cloneNode(true);
-        const seasonDiv = seasonItem.querySelector('.season');
-        
-        // Set data
-        const header = seasonDiv.querySelector('.season__header');
-        const body = seasonDiv.querySelector('.season__body');
-        const titleEl = seasonDiv.querySelector('.season__title');
-        const titleInput = seasonDiv.querySelector('.season__input--title');
-        const episodesInput = seasonDiv.querySelector('.season__input--episodes');
-        const overviewInput = seasonDiv.querySelector('.season__input--overview');
-        const posterImg = seasonDiv.querySelector('.season__poster-image');
-        const posterInput = seasonDiv.querySelector('.season__poster-input');
-        const deleteBtn = seasonDiv.querySelector('.season__delete-btn');
-        
-        titleEl.textContent = season.title || `Season ${index + 1}`;
-        titleInput.value = season.title || '';
-        episodesInput.value = season.episodes || '';
-        overviewInput.value = season.overview || '';
-        posterImg.src = season.poster || '../../public/assets/image/0891b2.svg';
-        
-        // Toggle hiển thị
-        header.addEventListener('click', (e) => {
-            if (e.target.closest('.season__delete-btn')) return;
-            body.style.display = body.style.display === 'none' ? 'block' : 'none';
-        });
-        
-        // Xóa season
-        deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (confirm('Delete this season?')) {
-                currentSeasons.splice(index, 1);
-                renderSeasonsList();
-            }
-        });
-        
-        // Upload poster
-        posterInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                posterImg.src = await readFileAsDataURL(file);
-                currentSeasons[index].poster = posterImg.src;
-            }
-        });
-        
-        // Update title
-        titleInput.addEventListener('input', (e) => {
-            titleEl.textContent = e.target.value || `Season ${index + 1}`;
-            currentSeasons[index].title = e.target.value;
-        });
-        
-        // Update episodes
-        episodesInput.addEventListener('input', (e) => {
-            currentSeasons[index].episodes = parseInt(e.target.value) || 0;
-        });
-        
-        // Update overview
-        overviewInput.addEventListener('input', (e) => {
-            currentSeasons[index].overview = e.target.value;
-        });
-        
-        return seasonItem;
-    };
+    if (tvToShow.length === 0) {
+      tableBody.appendChild(emptyRowTemplate.content.cloneNode(true));
+    } else {
+      tvToShow.forEach((show, i) => {
+        tableBody.appendChild(createTVRow(show, startNo + i));
+      });
+    }
 
-    // Render danh sách seasons trong sub-modal
-    const renderSeasonsList = () => {
-        if (!seasonsListEl) return;
+    updateTVCount();
+    updatePaginationButtons();
+  };
 
-        seasonsListEl.innerHTML = '';
-        
-        if (currentSeasons.length === 0) {
-            seasonsListEl.appendChild(emptySeasonsTemplate.content.cloneNode(true));
-            return;
-        }
-        
-        currentSeasons.forEach((season, i) => {
-            seasonsListEl.appendChild(createSeasonItem(season, i));
-        });
-    };
+  // Cập nhật số lượng TV shows hiển thị
+  const updateTVCount = () => {
+    tvCountHeading.textContent =
+      filteredTVShows.length === allTVShows.length
+        ? `TV Shows (${allTVShows.length})`
+        : `TV Shows (${filteredTVShows.length} / ${allTVShows.length})`;
+  };
 
-    // Mở sub-modal quản lý seasons
-    const openSeasonsModal = () => {
-        if (!subModal || !subModalBackdrop) return;
+  // Cập nhật trạng thái các nút phân trang
+  const updatePaginationButtons = () => {
+    const totalPages = getTotalPages();
+
+    currentPageSpan.textContent = currentPage;
+    totalPagesSpan.textContent = `/ ${totalPages}`;
+
+    paginationLeft.classList.toggle(
+      "disable",
+      currentPage === 1 || totalPages === 0
+    );
+    paginationLeft.disabled = currentPage === 1 || totalPages === 0;
+
+    paginationRight.classList.toggle(
+      "disable",
+      currentPage >= totalPages || totalPages === 0
+    );
+    paginationRight.disabled = currentPage >= totalPages || totalPages === 0;
+  };
+
+  // SEASONS SUB-MODAL
+  // Tạo season item từ template
+  const createSeasonItem = (season, index) => {
+    const seasonItem = seasonTemplate.content.cloneNode(true);
+    const seasonDiv = seasonItem.querySelector(".season");
+
+    // Set data
+    const header = seasonDiv.querySelector(".season__header");
+    const body = seasonDiv.querySelector(".season__body");
+    const titleEl = seasonDiv.querySelector(".season__title");
+    const titleInput = seasonDiv.querySelector(".season__input--title");
+    const episodesInput = seasonDiv.querySelector(".season__input--episodes");
+    const overviewInput = seasonDiv.querySelector(".season__input--overview");
+    const posterImg = seasonDiv.querySelector(".season__poster-image");
+    const posterInput = seasonDiv.querySelector(".season__poster-input");
+    const deleteBtn = seasonDiv.querySelector(".season__delete-btn");
+
+    titleEl.textContent = season.title || `Season ${index + 1}`;
+    titleInput.value = season.title || "";
+    episodesInput.value = season.episodes || "";
+    overviewInput.value = season.overview || "";
+    posterImg.src = season.poster || "../../public/assets/image/0891b2.svg";
+
+    // Toggle hiển thị
+    header.addEventListener("click", (e) => {
+      if (e.target.closest(".season__delete-btn")) return;
+      body.style.display = body.style.display === "none" ? "block" : "none";
+    });
+
+    // Xóa season
+    deleteBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (confirm("Delete this season?")) {
+        currentSeasons.splice(index, 1);
         renderSeasonsList();
-        subModal.classList.remove('hidden');
-        subModalBackdrop.classList.remove('hidden');
-    };
+      }
+    });
 
-    // Đóng sub-modal và cập nhật dữ liệu
-    const closeSeasonsModal = () => {
-        if (!subModal || !subModalBackdrop) return;
+    // Upload poster
+    posterInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        posterImg.src = await readFileAsDataURL(file);
+        currentSeasons[index].poster = posterImg.src;
+      }
+    });
 
-        // Cập nhật số seasons và tổng episodes vào form chính
-        tvFormEl.querySelector('input[name="seasons"]').value = currentSeasons.length;
-        const totalEps = currentSeasons.reduce((sum, s) => sum + (parseInt(s.episodes) || 0), 0);
-        tvFormEl.querySelector('input[name="totalEpisodes"]').value = totalEps;
+    // Update title
+    titleInput.addEventListener("input", (e) => {
+      titleEl.textContent = e.target.value || `Season ${index + 1}`;
+      currentSeasons[index].title = e.target.value;
+    });
 
-        subModal.classList.add('hidden');
-        subModalBackdrop.classList.add('hidden');
-    };
+    // Update episodes
+    episodesInput.addEventListener("input", (e) => {
+      currentSeasons[index].episodes = parseInt(e.target.value) || 0;
+    });
 
-    // ACTORS SUB-MODAL 
-    // Tạo actor item từ template
-    const createActorItem = (actor, index) => {
-        const actorItem = actorTemplate.content.cloneNode(true);
-        const actorDiv = actorItem.querySelector('.actor');
-        
-        // Set data
-        const header = actorDiv.querySelector('.actor__header');
-        const body = actorDiv.querySelector('.actor__body');
-        const titleEl = actorDiv.querySelector('.actor__title');
-        const idInput = actorDiv.querySelector('.actor__id');
-        const nameInput = actorDiv.querySelector('.actor__name');
-        const photoImg = actorDiv.querySelector('.actor__photo-image');
-        const photoInput = actorDiv.querySelector('.actor__photo-input');
-        const deleteBtn = actorDiv.querySelector('.actor__delete-btn');
-        
-        titleEl.textContent = actor.name || `Actor ${index + 1}`;
-        idInput.value = actor.id || '';
-        nameInput.value = actor.name || '';
-        photoImg.src = actor.photo || '../../public/assets/image/user_avatar_default.jpg';
-        
-        // Toggle hiển thị
-        header.addEventListener('click', (e) => {
-            if (e.target.closest('.actor__delete-btn')) return;
-            body.style.display = body.style.display === 'none' ? 'block' : 'none';
-        });
-        
-        // Xóa actor
-        deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (confirm('Delete this actor?')) {
-                currentActors.splice(index, 1);
-                renderActorsList();
-            }
-        });
-        
-        // Upload photo
-        photoInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                photoImg.src = await readFileAsDataURL(file);
-                currentActors[index].photo = photoImg.src;
-            }
-        });
-        
-        // Update name
-        nameInput.addEventListener('input', (e) => {
-            titleEl.textContent = e.target.value || `Actor ${index + 1}`;
-            currentActors[index].name = e.target.value;
-        });
-        
-        return actorItem;
-    };
+    // Update overview
+    overviewInput.addEventListener("input", (e) => {
+      currentSeasons[index].overview = e.target.value;
+    });
 
-    // Render danh sách actors trong sub-modal
-    const renderActorsList = () => {
-        if (!actorsListEl) return;
+    return seasonItem;
+  };
 
-        actorsListEl.innerHTML = '';
-        
-        if (currentActors.length === 0) {
-            actorsListEl.appendChild(emptyActorsTemplate.content.cloneNode(true));
-            return;
-        }
-        
-        currentActors.forEach((actor, i) => {
-            actorsListEl.appendChild(createActorItem(actor, i));
-        });
-    };
+  // Render danh sách seasons trong sub-modal
+  const renderSeasonsList = () => {
+    if (!seasonsListEl) return;
 
-    // Mở sub-modal quản lý actors
-    const openActorsModal = () => {
-        if (!actorsSubModal || !actorsSubModalBackdrop) return;
+    seasonsListEl.innerHTML = "";
+
+    if (currentSeasons.length === 0) {
+      seasonsListEl.appendChild(emptySeasonsTemplate.content.cloneNode(true));
+      return;
+    }
+
+    currentSeasons.forEach((season, i) => {
+      seasonsListEl.appendChild(createSeasonItem(season, i));
+    });
+  };
+
+  // Mở sub-modal quản lý seasons
+  const openSeasonsModal = () => {
+    if (!subModal || !subModalBackdrop) return;
+    renderSeasonsList();
+    subModal.classList.remove("hidden");
+    subModalBackdrop.classList.remove("hidden");
+  };
+
+  // Đóng sub-modal và cập nhật dữ liệu
+  const closeSeasonsModal = () => {
+    if (!subModal || !subModalBackdrop) return;
+
+    // Cập nhật số seasons và tổng episodes vào form chính
+    tvFormEl.querySelector('input[name="seasons"]').value =
+      currentSeasons.length;
+    const totalEps = currentSeasons.reduce(
+      (sum, s) => sum + (parseInt(s.episodes) || 0),
+      0
+    );
+    tvFormEl.querySelector('input[name="totalEpisodes"]').value = totalEps;
+
+    subModal.classList.add("hidden");
+    subModalBackdrop.classList.add("hidden");
+  };
+
+  // ACTORS SUB-MODAL
+  // Tạo actor item từ template
+  const createActorItem = (actor, index) => {
+    const actorItem = actorTemplate.content.cloneNode(true);
+    const actorDiv = actorItem.querySelector(".actor");
+
+    // Set data
+    const header = actorDiv.querySelector(".actor__header");
+    const body = actorDiv.querySelector(".actor__body");
+    const titleEl = actorDiv.querySelector(".actor__title");
+    const idInput = actorDiv.querySelector(".actor__id");
+    const nameInput = actorDiv.querySelector(".actor__name");
+    const photoImg = actorDiv.querySelector(".actor__photo-image");
+    const photoInput = actorDiv.querySelector(".actor__photo-input");
+    const deleteBtn = actorDiv.querySelector(".actor__delete-btn");
+
+    titleEl.textContent = actor.name || `Actor ${index + 1}`;
+    idInput.value = actor.id || "";
+    nameInput.value = actor.name || "";
+    photoImg.src =
+      actor.photo || "../../public/assets/image/user_avatar_default.jpg";
+
+    // Toggle hiển thị
+    header.addEventListener("click", (e) => {
+      if (e.target.closest(".actor__delete-btn")) return;
+      body.style.display = body.style.display === "none" ? "block" : "none";
+    });
+
+    // Xóa actor
+    deleteBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (confirm("Delete this actor?")) {
+        currentActors.splice(index, 1);
         renderActorsList();
-        actorsSubModal.classList.remove('hidden');
-        actorsSubModalBackdrop.classList.remove('hidden');
+      }
+    });
+
+    // Upload photo
+    photoInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        photoImg.src = await readFileAsDataURL(file);
+        currentActors[index].photo = photoImg.src;
+      }
+    });
+
+    // Update name
+    nameInput.addEventListener("input", (e) => {
+      titleEl.textContent = e.target.value || `Actor ${index + 1}`;
+      currentActors[index].name = e.target.value;
+    });
+
+    return actorItem;
+  };
+
+  // Render danh sách actors trong sub-modal
+  const renderActorsList = () => {
+    if (!actorsListEl) return;
+
+    actorsListEl.innerHTML = "";
+
+    if (currentActors.length === 0) {
+      actorsListEl.appendChild(emptyActorsTemplate.content.cloneNode(true));
+      return;
+    }
+
+    currentActors.forEach((actor, i) => {
+      actorsListEl.appendChild(createActorItem(actor, i));
+    });
+  };
+
+  // Mở sub-modal quản lý actors
+  const openActorsModal = () => {
+    if (!actorsSubModal || !actorsSubModalBackdrop) return;
+    renderActorsList();
+    actorsSubModal.classList.remove("hidden");
+    actorsSubModalBackdrop.classList.remove("hidden");
+  };
+
+  // Đóng sub-modal và cập nhật dữ liệu
+  const closeActorsModal = () => {
+    if (!actorsSubModal || !actorsSubModalBackdrop) return;
+
+    // Cập nhật số actors vào form chính
+    const actorNames = currentActors
+      .map((a) => a.name)
+      .filter(Boolean)
+      .join(", ");
+    tvFormEl.querySelector('input[name="actors"]').value = actorNames || "";
+    tvFormEl.querySelector('input[name="actorsCount"]').value =
+      currentActors.length;
+
+    actorsSubModal.classList.add("hidden");
+    actorsSubModalBackdrop.classList.add("hidden");
+  };
+
+  // MODAL ADD/EDIT TV SHOW
+  // Mở modal thêm TV show mới
+  const openAddTVModal = () => {
+    isEditMode = false;
+    modalTitle.textContent = "Add TV Show";
+    submitBtn.textContent = "Create";
+
+    tvFormEl.reset();
+    bannerPreviewImg.src = "../../public/assets/image/movie_banner_default.png";
+    posterPreviewImg.src = "../../public/assets/image/0891b2.svg";
+
+    currentSeasons = [];
+    currentActors = [];
+    tvFormEl.querySelector('input[name="seasons"]').value = "0";
+    tvFormEl.querySelector('input[name="totalEpisodes"]').value = "0";
+    tvFormEl.querySelector('input[name="actorsCount"]').value = "0";
+
+    const idDisplayGroup = tvFormEl.querySelector(".media-form__id-display");
+    if (idDisplayGroup) idDisplayGroup.style.display = "none";
+
+    modalTV.classList.remove("hidden");
+    document.querySelector(".form--tvshow").classList.add("form--active");
+  };
+
+  // Mở modal chỉnh sửa TV show
+  const openEditTVModal = (row) => {
+    isEditMode = true;
+    currentEditRow = row;
+
+    const show = allTVShows.find((s) => s.id === row.dataset.tvId);
+    if (!show) return;
+
+    modalTitle.textContent = "Edit TV Show";
+    submitBtn.textContent = "Save";
+
+    bannerPreviewImg.src = show.banner;
+    posterPreviewImg.src = show.poster;
+
+    const idDisplayGroup = tvFormEl.querySelector(".media-form__id-display");
+    const idDisplayInput = tvFormEl.querySelector('input[name="id-display"]');
+    if (idDisplayGroup && idDisplayInput) {
+      idDisplayGroup.style.display = "block";
+      idDisplayInput.value = show.id;
+    }
+
+    // Điền dữ liệu vào form
+    const fields = {
+      id: show.id,
+      title: show.title,
+      overview: show.overview || "",
+      genre: show.genre,
+      country: show.country,
+      creator: show.creator || "",
+      producer: show.producer || "",
+      budget: show.budget || "",
+      revenue: show.revenue || "",
+      trailer: show.trailer || "",
+      rating: show.rating || "",
+      status: show.status,
     };
 
-    // Đóng sub-modal và cập nhật dữ liệu
-    const closeActorsModal = () => {
-        if (!actorsSubModal || !actorsSubModalBackdrop) return;
-
-        // Cập nhật số actors vào form chính
-        const actorNames = currentActors.map(a => a.name).filter(Boolean).join(', ');
-        tvFormEl.querySelector('input[name="actors"]').value = actorNames || '';
-        tvFormEl.querySelector('input[name="actorsCount"]').value = currentActors.length;
-
-        actorsSubModal.classList.add('hidden');
-        actorsSubModalBackdrop.classList.add('hidden');
-    };
-
-    // MODAL ADD/EDIT TV SHOW 
-    // Mở modal thêm TV show mới
-    const openAddTVModal = () => {
-        isEditMode = false;
-        modalTitle.textContent = 'Add TV Show';
-        submitBtn.textContent = 'Create';
-        
-        tvFormEl.reset();
-        bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.png';
-        posterPreviewImg.src = '../../public/assets/image/0891b2.svg';
-        
-        currentSeasons = [];
-        currentActors = [];
-        tvFormEl.querySelector('input[name="seasons"]').value = '0';
-        tvFormEl.querySelector('input[name="totalEpisodes"]').value = '0';
-        tvFormEl.querySelector('input[name="actorsCount"]').value = '0';
-        
-        const idDisplayGroup = tvFormEl.querySelector('.media-form__id-display');
-        if (idDisplayGroup) idDisplayGroup.style.display = 'none';
-        
-        modalTV.classList.remove('hidden');
-        document.querySelector('.form--tvshow').classList.add('form--active');
-    };
-
-    // Mở modal chỉnh sửa TV show
-    const openEditTVModal = (row) => {
-        isEditMode = true;
-        currentEditRow = row;
-        
-        const show = allTVShows.find(s => s.id === row.dataset.tvId);
-        if (!show) return;
-        
-        modalTitle.textContent = 'Edit TV Show';
-        submitBtn.textContent = 'Save';
-        
-        bannerPreviewImg.src = show.banner;
-        posterPreviewImg.src = show.poster;
-        
-        const idDisplayGroup = tvFormEl.querySelector('.media-form__id-display');
-        const idDisplayInput = tvFormEl.querySelector('input[name="id-display"]');
-        if (idDisplayGroup && idDisplayInput) {
-            idDisplayGroup.style.display = 'block';
-            idDisplayInput.value = show.id;
-        }
-        
-        // Điền dữ liệu vào form
-        const fields = {
-            id: show.id,
-            title: show.title,
-            overview: show.overview || '',
-            genre: show.genre,
-            country: show.country,
-            creator: show.creator || '',
-            producer: show.producer || '',
-            budget: show.budget || '',
-            revenue: show.revenue || '',
-            trailer: show.trailer || '',
-            rating: show.rating || '',
-            status: show.status
-        };
-        
-        Object.entries(fields).forEach(([name, value]) => {
-            const el = tvFormEl.querySelector(`[name="${name}"]`);
-            if (el) el.value = value;
-        });
-        
-        currentSeasons = Array.isArray(show.seasonsData) 
-            ? JSON.parse(JSON.stringify(show.seasonsData)) 
-            : [];
-        
-        tvFormEl.querySelector('input[name="seasons"]').value = currentSeasons.length;
-        const totalEps = currentSeasons.reduce((sum, s) => sum + (parseInt(s.episodes) || 0), 0);
-        tvFormEl.querySelector('input[name="totalEpisodes"]').value = totalEps;
-        
-        // Load actors data
-        currentActors = Array.isArray(show.actorsData) 
-            ? JSON.parse(JSON.stringify(show.actorsData)) 
-            : [];
-
-        const actorNames = currentActors.map(a => a.name).filter(Boolean).join(', ');
-        tvFormEl.querySelector('input[name="actors"]').value = actorNames || '';
-        tvFormEl.querySelector('input[name="actorsCount"]').value = currentActors.length;
-        
-        modalTV.classList.remove('hidden');
-        document.querySelector('.form--tvshow').classList.add('form--active');
-    };
-
-    // Đóng modal chính
-    const closeModal = () => {
-        modalTV.classList.add('hidden');
-        document.querySelector('.form--tvshow').classList.remove('form--active');
-        tvFormEl.reset();
-        currentEditRow = null;
-        isEditMode = false;
-        currentSeasons = [];
-        currentActors = [];
-        bannerInput.value = '';
-        posterInput.value = '';
-    };
-
-    // EVENT LISTENERS
-    // Search & Filter
-    searchInput.addEventListener('input', filterTVShows);
-    countryFilter.addEventListener('change', filterTVShows);
-    statusFilter.addEventListener('change', filterTVShows);
-    ratingFilter.addEventListener('change', filterTVShows);
-
-    // Pagination
-    paginationLeft.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderTVShows();
-        }
-    });
-    
-    paginationRight.addEventListener('click', () => {
-        if (currentPage < getTotalPages()) {
-            currentPage++;
-            renderTVShows();
-        }
+    Object.entries(fields).forEach(([name, value]) => {
+      const el = tvFormEl.querySelector(`[name="${name}"]`);
+      if (el) el.value = value;
     });
 
-    // Modal chính
-    document.querySelector('.admin-content__add-btn').addEventListener('click', openAddTVModal);
-    backdrop.addEventListener('click', closeModal);
-    document.querySelector('.modal--tvshow .modal__close').addEventListener('click', closeModal);
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !modalTV.classList.contains('hidden')) {
-            if (subModal && subModal.classList.contains('hidden') && 
-                actorsSubModal && actorsSubModal.classList.contains('hidden')) {
-                closeModal();
-            }
-        }
-    });
+    currentSeasons = Array.isArray(show.seasonsData)
+      ? JSON.parse(JSON.stringify(show.seasonsData))
+      : [];
 
-    // Upload ảnh
-    bannerInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (file) bannerPreviewImg.src = await readFileAsDataURL(file);
-    });
+    tvFormEl.querySelector('input[name="seasons"]').value =
+      currentSeasons.length;
+    const totalEps = currentSeasons.reduce(
+      (sum, s) => sum + (parseInt(s.episodes) || 0),
+      0
+    );
+    tvFormEl.querySelector('input[name="totalEpisodes"]').value = totalEps;
 
-    posterInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (file) posterPreviewImg.src = await readFileAsDataURL(file);
-    });
+    // Load actors data
+    currentActors = Array.isArray(show.actorsData)
+      ? JSON.parse(JSON.stringify(show.actorsData))
+      : [];
 
-    // Sub-modal seasons
-    tvFormEl.querySelector('.form__manage-btn--seasons')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        openSeasonsModal();
-    });
-    
-    subModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
-        currentSeasons.push({
-            title: `Season ${currentSeasons.length + 1}`,
-            episodes: 0,
-            overview: '',
-            poster: '../../public/assets/image/0891b2.svg'
-        });
-        renderSeasonsList();
-    });
-    
-    subModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeSeasonsModal);
-    subModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeSeasonsModal);
-    subModalBackdrop?.addEventListener('click', closeSeasonsModal);
+    const actorNames = currentActors
+      .map((a) => a.name)
+      .filter(Boolean)
+      .join(", ");
+    tvFormEl.querySelector('input[name="actors"]').value = actorNames || "";
+    tvFormEl.querySelector('input[name="actorsCount"]').value =
+      currentActors.length;
 
-    // Sub-modal actors
-    tvFormEl.querySelector('.form__manage-btn--actors')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        openActorsModal();
-    });
+    modalTV.classList.remove("hidden");
+    document.querySelector(".form--tvshow").classList.add("form--active");
+  };
 
-    actorsSubModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
-        const tvId = tvFormEl.querySelector('input[name="id"]').value || generateTVId();
-        const newActorId = generateActorId(tvId);
-        
-        currentActors.push({
-            id: newActorId,
-            name: '',
-            photo: '../../public/assets/image/user_avatar_default.jpg'
-        });
-        renderActorsList();
-    });
+  // Đóng modal chính
+  const closeModal = () => {
+    modalTV.classList.add("hidden");
+    document.querySelector(".form--tvshow").classList.remove("form--active");
+    tvFormEl.reset();
+    currentEditRow = null;
+    isEditMode = false;
+    currentSeasons = [];
+    currentActors = [];
+    bannerInput.value = "";
+    posterInput.value = "";
+  };
 
-    actorsSubModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeActorsModal);
-    actorsSubModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeActorsModal);
-    actorsSubModalBackdrop?.addEventListener('click', closeActorsModal);
+  // EVENT LISTENERS
+  // Search & Filter
+  searchInput.addEventListener("input", filterTVShows);
+  countryFilter.addEventListener("change", filterTVShows);
+  statusFilter.addEventListener("change", filterTVShows);
+  ratingFilter.addEventListener("change", filterTVShows);
 
-    // Submit form
-    tvFormEl.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const getData = (name) => {
-            const el = tvFormEl.querySelector(`[name="${name}"]`);
-            return el ? el.value : '';
-        };
-        
-        const tvData = {
-            title: getData('title'),
-            overview: getData('overview'),
-            genre: getData('genre'),
-            seasonsData: currentSeasons,
-            actorsData: currentActors,
-            country: getData('country'),
-            creator: getData('creator'),
-            actors: getData('actors'),
-            producer: getData('producer'),
-            budget: parseInt(getData('budget')) || 0,
-            revenue: parseInt(getData('revenue')) || 0,
-            trailer: getData('trailer'),
-            rating: parseFloat(getData('rating')) || 0,
-            status: getData('status')
-        };
+  // Pagination
+  paginationLeft.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderTVShows();
+    }
+  });
 
-        const bannerFile = bannerInput.files[0];
-        const posterFile = posterInput.files[0];
-        
-        tvData.banner = bannerFile ? await readFileAsDataURL(bannerFile) : bannerPreviewImg.src;
-        tvData.poster = posterFile ? await readFileAsDataURL(posterFile) : posterPreviewImg.src;
+  paginationRight.addEventListener("click", () => {
+    if (currentPage < getTotalPages()) {
+      currentPage++;
+      renderTVShows();
+    }
+  });
 
-        if (isEditMode && currentEditRow) {
-            const tvId = currentEditRow.dataset.tvId;
-            const index = allTVShows.findIndex(s => s.id === tvId);
-            
-            if (index !== -1) {
-                allTVShows[index] = { ...allTVShows[index], ...tvData };
-                filterTVShows();
-            }
-        } else {
-            tvData.id = generateTVId();
-            
-            // Cập nhật actor IDs
-            currentActors.forEach((actor, i) => {
-                actor.id = `${tvData.id}-AC${String(i + 1).padStart(3, '0')}`;
-            });
-            tvData.actorsData = currentActors;
-            
-            allTVShows.push(tvData);
-            filterTVShows();
-            
-            currentPage = getTotalPages();
-            renderTVShows();
-        }
-        
+  // Modal chính
+  document
+    .querySelector(".admin-content__add-btn")
+    .addEventListener("click", openAddTVModal);
+  backdrop.addEventListener("click", closeModal);
+  document
+    .querySelector(".modal--tvshow .modal__close")
+    .addEventListener("click", closeModal);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modalTV.classList.contains("hidden")) {
+      if (
+        subModal &&
+        subModal.classList.contains("hidden") &&
+        actorsSubModal &&
+        actorsSubModal.classList.contains("hidden")
+      ) {
         closeModal();
+      }
+    }
+  });
+
+  // Upload ảnh
+  bannerInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (file) bannerPreviewImg.src = await readFileAsDataURL(file);
+  });
+
+  posterInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (file) posterPreviewImg.src = await readFileAsDataURL(file);
+  });
+
+  // Sub-modal seasons
+  tvFormEl
+    .querySelector(".form__manage-btn--seasons")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      openSeasonsModal();
     });
 
-    renderTVShows();
+  subModal
+    ?.querySelector(".sub-modal__add-btn")
+    ?.addEventListener("click", () => {
+      currentSeasons.push({
+        title: `Season ${currentSeasons.length + 1}`,
+        episodes: 0,
+        overview: "",
+        poster: "../../public/assets/image/0891b2.svg",
+      });
+      renderSeasonsList();
+    });
+
+  subModal
+    ?.querySelector(".sub-modal__save-btn")
+    ?.addEventListener("click", closeSeasonsModal);
+  subModal
+    ?.querySelector(".sub-modal__close")
+    ?.addEventListener("click", closeSeasonsModal);
+  subModalBackdrop?.addEventListener("click", closeSeasonsModal);
+
+  // Sub-modal actors
+  tvFormEl
+    .querySelector(".form__manage-btn--actors")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      openActorsModal();
+    });
+
+  actorsSubModal
+    ?.querySelector(".sub-modal__add-btn")
+    ?.addEventListener("click", () => {
+      const tvId =
+        tvFormEl.querySelector('input[name="id"]').value || generateTVId();
+      const newActorId = generateActorId(tvId);
+
+      currentActors.push({
+        id: newActorId,
+        name: "",
+        photo: "../../public/assets/image/user_avatar_default.jpg",
+      });
+      renderActorsList();
+    });
+
+  actorsSubModal
+    ?.querySelector(".sub-modal__save-btn")
+    ?.addEventListener("click", closeActorsModal);
+  actorsSubModal
+    ?.querySelector(".sub-modal__close")
+    ?.addEventListener("click", closeActorsModal);
+  actorsSubModalBackdrop?.addEventListener("click", closeActorsModal);
+
+  // Submit form
+  tvFormEl.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const getData = (name) => {
+      const el = tvFormEl.querySelector(`[name="${name}"]`);
+      return el ? el.value : "";
+    };
+
+    const tvData = {
+      title: getData("title"),
+      overview: getData("overview"),
+      genre: getData("genre"),
+      seasonsData: currentSeasons,
+      actorsData: currentActors,
+      country: getData("country"),
+      creator: getData("creator"),
+      actors: getData("actors"),
+      producer: getData("producer"),
+      budget: parseInt(getData("budget")) || 0,
+      revenue: parseInt(getData("revenue")) || 0,
+      trailer: getData("trailer"),
+      rating: parseFloat(getData("rating")) || 0,
+      status: getData("status"),
+    };
+
+    const bannerFile = bannerInput.files[0];
+    const posterFile = posterInput.files[0];
+
+    tvData.banner = bannerFile
+      ? await readFileAsDataURL(bannerFile)
+      : bannerPreviewImg.src;
+    tvData.poster = posterFile
+      ? await readFileAsDataURL(posterFile)
+      : posterPreviewImg.src;
+
+    if (isEditMode && currentEditRow) {
+      const tvId = currentEditRow.dataset.tvId;
+      const index = allTVShows.findIndex((s) => s.id === tvId);
+
+      if (index !== -1) {
+        allTVShows[index] = { ...allTVShows[index], ...tvData };
+        filterTVShows();
+      }
+    } else {
+      tvData.id = generateTVId();
+
+      // Cập nhật actor IDs
+      currentActors.forEach((actor, i) => {
+        actor.id = `${tvData.id}-AC${String(i + 1).padStart(3, "0")}`;
+      });
+      tvData.actorsData = currentActors;
+
+      allTVShows.push(tvData);
+      filterTVShows();
+
+      currentPage = getTotalPages();
+      renderTVShows();
+    }
+
+    closeModal();
+  });
+
+  renderTVShows();
 }
