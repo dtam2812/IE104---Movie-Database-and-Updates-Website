@@ -605,5 +605,25 @@
   "admin.tvshows.submodal.noSeasons": "Chưa có mùa phim nào. Nhấn \"Thêm mùa mới\" để bắt đầu.",
 
   "admin.tvshows.season": "mùa",
-  "admin.tvshows.seasons": "mùa"
+  "admin.tvshows.seasons": "mùa",
+  "admin.tvshows": "Phim bộ",
+  "admin.tvshows.status.released" : "Released",
+  "admin.tvshows.status.comingSoon" : "Coming Soon",
+
+  "admin.movies.modal.manageActors": "Quản lý diễn viên",
+  "admin.movies.modal.addActor": "Thêm diễn viên mới",
+  "admin.movies.modal.saveActors": "Lưu diễn viên",
+  "admin.movies.modal.actorId": "ID diễn viên:",
+  "admin.movies.modal.actorName": "Họ và tên:",
+  "admin.movies.modal.actorNamePlaceholder": "vd: Robert Downey Jr.",
+  "admin.movies.modal.deleteActorConfirm": "Xóa diễn viên này?",
+  "admin.movies.noActors": "Chưa có diễn viên nào. Nhấn \"Thêm diễn viên mới\" để bắt đầu.",
+
+  "admin.users.modal.name": "Tên người dùng:",
+  "admin.users.modal.namePlaceholder": "Tên người dùng",
+  "admin.users.modal.emailPlaceholder": "Email",
+  "admin.users.modal.passwordPlaceholder": "Mật khẩu",
+  "admin.users.modal.confirmPasswordPlaceholder": "Xác nhận mật khẩu",
+  "admin.users.errors.passwordMismatch": "Mật khẩu không khớp.",
+  "admin.pagination.total": "/ 10"
 }

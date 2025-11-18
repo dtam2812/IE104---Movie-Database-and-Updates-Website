@@ -1,6 +1,51 @@
 export async function AdminMovies_js() {
+    // Import global translation system
+    const { initTranslate } = await import('./Translate.js');
+    
+    // Get translation function from global scope (set by Translate.js)
+    const t = (key) => {
+        const translations = window.translations || {};
+        return translations[key] || key;
+    };
 
-    // Load dữ liệu movies từ file Data.js 
+    function translateGenre(genreStr) {
+        if (!genreStr) return '';
+        
+        const genreMap = {
+            'Animation': 'genre.animation',
+            'Fantasy': 'genre.fantasy',
+            'Thriller': 'genre.thriller',
+            'Drama': 'genre.drama',
+            'Action': 'genre.action',
+            'Crime': 'genre.crime',
+            'Romance': 'genre.romance',
+            'Horror': 'genre.horror',
+            'Comedy': 'genre.comedy',
+            'Adventure': 'genre.adventure',
+            'Mystery': 'genre.mystery',
+            'Sci-Fi': 'genre.scifi',
+            'Science Fiction': 'genre.scifi',
+            'War': 'genre.war',
+            'Western': 'genre.western',
+            'Music': 'genre.music',
+            'Family': 'genre.family',
+            'Documentary': 'genre.documentary',
+            'History': 'genre.history'
+        };
+        
+        const genres = genreStr.split(',').map(g => g.trim());
+        const translatedGenres = genres.map(genre => {
+            const key = genreMap[genre];
+            if (key && t(key) !== key) {
+                return t(key);
+            }
+            return genre;
+        });
+        
+        return translatedGenres.join(', ');
+    }
+
+    // ========== LOAD DATA ==========
     let allMovies = [];
     try {
         const { moviesData } = await import('./Data.js');
@@ -9,15 +54,13 @@ export async function AdminMovies_js() {
         console.log('No initial movie data, starting empty');
     }
 
-    // DOM ELEMENTS
-    // Modal elements
+    // ========== DOM ELEMENTS ==========
     const modalMovie = document.querySelector('.modal--movie');
     const backdrop = document.querySelector('.modal--movie .modal__backdrop');
     const movieFormEl = document.querySelector('.form--movie form');
-    const modalTitle = document.querySelector('.form__title');
+    const modalTitle = document.querySelector('.modal__title');
     const submitBtn = movieFormEl.querySelector('.form__btn--primary');
     
-    // Table & Pagination
     const tableBody = document.querySelector('.data-table__body');
     const movieCountHeading = document.querySelector('.data-table__title');
     const currentPageSpan = document.querySelector('.pagination__current');
@@ -25,50 +68,36 @@ export async function AdminMovies_js() {
     const paginationLeft = document.querySelector('.pagination__arrow--left');
     const paginationRight = document.querySelector('.pagination__arrow--right');
     
-    // Search & Filter
     const searchInput = document.querySelector('.search-filter__input');
     const countryFilter = document.querySelector('.search-filter__select:nth-child(1)');
     const statusFilter = document.querySelector('.search-filter__select:nth-child(2)');
     const ratingFilter = document.querySelector('.search-filter__select:nth-child(3)');
     
-    // Media inputs
     const mediaPreview = document.querySelector('.media-form__media');
     const bannerPreviewImg = mediaPreview.querySelector('.media-form__banner img');
     const posterPreviewImg = mediaPreview.querySelector('.media-form__poster img');
     const bannerInput = mediaPreview.querySelector('.media-form__banner-input');
     const posterInput = mediaPreview.querySelector('.media-form__poster-input');
 
-    // Sub-modal (Actors)
     const subModal = document.getElementById('actors-sub-modal');
     const subModalBackdrop = document.getElementById('actors-backdrop');
     const actorsListEl = document.getElementById('actors-list');
-
-    // Templates
     const actorTemplate = document.getElementById('actor-item-template');
-    const emptyRowTemplate = document.getElementById('empty-row-template');
-    const emptyActorsTemplate = document.getElementById('empty-actors-template');
 
-    
-    // SIGN OUT FUNCTIONALITY
+    // ========== SIGN OUT FUNCTIONALITY ==========
     const signOutLink = document.querySelector('.admin-menu__item:last-child .admin-menu__link');
     if (signOutLink) {
         signOutLink.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            console.log("Admin signing out");
-
-            // Xóa tất cả thông tin user khỏi localStorage
             localStorage.removeItem("accessToken");
             localStorage.removeItem("userName");
             localStorage.removeItem("userEmail");
             localStorage.removeItem("refreshToken");
-
-            // Redirect về trang HomePage
             window.location.href = "/client/view/pages/HomePage.html";
         });
     }
 
-    // STATE MANAGEMENT 
+    // ========== STATE MANAGEMENT ==========
     let filteredMovies = [...allMovies];
     let currentActors = [];
     let currentPage = 1;
@@ -76,40 +105,32 @@ export async function AdminMovies_js() {
     let isEditMode = false;
     const moviesPerPage = 5;
     
-    // Tạo ID tự động theo format MV001, MV002, ...
+    // ========== HELPER FUNCTIONS ==========
     const generateMovieId = () => {
         if (allMovies.length === 0) return 'MV001';
-        
         const maxNum = allMovies.reduce((max, movie) => {
             const match = movie.id.match(/^MV(\d+)$/);
             return match ? Math.max(max, parseInt(match[1])) : max;
         }, 0);
-        
         return 'MV' + String(maxNum + 1).padStart(3, '0');
     };
 
-    // Tạo ID cho actor theo format MV001-AC001, MV001-AC002, ...
     const generateActorId = (movieId) => {
         if (currentActors.length === 0) return `${movieId}-AC001`;
-        
         const maxNum = currentActors.reduce((max, actor) => {
             const match = actor.id.match(/AC(\d+)$/);
             return match ? Math.max(max, parseInt(match[1])) : max;
         }, 0);
-        
         return `${movieId}-AC` + String(maxNum + 1).padStart(3, '0');
     };
 
-    // Tính tổng số trang
     const getTotalPages = () => Math.ceil(filteredMovies.length / moviesPerPage);
 
-    // Lấy danh sách movies cho trang hiện tại
     const getMoviesForCurrentPage = () => {
         const start = (currentPage - 1) * moviesPerPage;
         return filteredMovies.slice(start, start + moviesPerPage);
     };
 
-    // Đọc file ảnh thành base64
     const readFileAsDataURL = (file) => {
         return new Promise((resolve) => {
             const reader = new FileReader();
@@ -118,8 +139,7 @@ export async function AdminMovies_js() {
         });
     };
 
-    // FILTER & SEARCH 
-    // Lọc movies theo search và filter
+    // ========== FILTER & SEARCH ==========
     const filterMovies = () => {
         const search = searchInput.value.toLowerCase().trim();
         const country = countryFilter.value;
@@ -142,20 +162,25 @@ export async function AdminMovies_js() {
         renderMovies();
     };
 
-    // RENDER FUNCTIONS
-    // Tạo một row trong bảng movies
+    // ========== RENDER FUNCTIONS ==========
     const createMovieRow = (movie, no) => {
-        const durationText = movie.duration > 0 ? `${movie.duration} min` : 'N/A';
+        const translatedGenre = translateGenre(movie.genre);
+        const durationText = movie.duration > 0 
+            ? `${movie.duration} ${t('common.minutes')}` 
+            : 'N/A';
         const ratingHTML = movie.rating > 0 
             ? `<span>${movie.rating}</span>` 
             : '<span style="color: #717182;">N/A</span>';
         const statusColor = movie.status === 'Released' ? '#4CAF50' : '#ff9800';
+        const statusText = movie.status === 'Released' 
+            ? t('admin.movies.status.released') 
+            : t('admin.movies.status.comingSoon');
 
         const row = document.createElement('tr');
         row.dataset.movieId = movie.id;
         row.innerHTML = `
-            <td class ="data-table__th">${no}</td>
-            <td class ="data-table__th">
+            <td class="data-table__th">${no}</td>
+            <td class="data-table__th">
                 <div class="movie-cell">
                     <div class="movie-cell__poster">
                         <img class="movie-cell__image" src="${movie.poster}" alt="${movie.title}">
@@ -165,22 +190,23 @@ export async function AdminMovies_js() {
                     </div>
                 </div>
             </td>
-            <td class ="data-table__th">${movie.genre}</td>
-            <td class ="data-table__th">${durationText}</td>
-            <td class ="data-table__th">${ratingHTML}</td>
-            <td class ="data-table__th">
+            <td class="data-table__th">${translatedGenre}</td>
+            <td class="data-table__th">${durationText}</td>
+            <td class="data-table__th">${ratingHTML}</td>
+            <td class="data-table__th">
                 <span style="color: ${statusColor}; font-weight: 600;">
-                    ${movie.status}
+                    ${statusText}
                 </span>
             </td>
-            <td class ="data-table__th"><button class="data-table__btn data-table__btn--edit"><i class="fa-solid fa-pen"></i></button></td>
-            <td class ="data-table__th"><button class="data-table__btn data-table__btn--detail"><i class="fa-solid fa-circle-info"></i></button></td>
-            <td class ="data-table__th"><button class="data-table__btn data-table__btn--delete"><i class="fa-solid fa-trash"></i></button></td>
+            <td class="data-table__th"><button class="data-table__btn data-table__btn--edit"><i class="fa-solid fa-pen"></i></button></td>
+            <td class="data-table__th"><button class="data-table__btn data-table__btn--detail"><i class="fa-solid fa-circle-info"></i></button></td>
+            <td class="data-table__th"><button class="data-table__btn data-table__btn--delete"><i class="fa-solid fa-trash"></i></button></td>
         `;
 
         row.querySelector('.data-table__btn--edit').addEventListener('click', () => openEditModal(row));
         row.querySelector('.data-table__btn--delete').addEventListener('click', () => {
-            if (confirm(`Are you sure you want to delete "${movie.title}"?`)) {
+            const confirmMsg = t('admin.movies.modal.deleteConfirm').replace('{title}', movie.title);
+            if (confirm(confirmMsg)) {
                 allMovies = allMovies.filter(m => m.id !== movie.id);
                 filterMovies();
             }
@@ -189,7 +215,6 @@ export async function AdminMovies_js() {
         return row;
     };
 
-    // Render toàn bộ bảng movies
     const renderMovies = () => {
         const moviesToShow = getMoviesForCurrentPage();
         const startNo = (currentPage - 1) * moviesPerPage + 1;
@@ -197,7 +222,13 @@ export async function AdminMovies_js() {
         tableBody.innerHTML = '';
         
         if (moviesToShow.length === 0) {
-            tableBody.appendChild(emptyRowTemplate.content.cloneNode(true));
+            const emptyRow = document.createElement('tr');
+            emptyRow.innerHTML = `
+                <td colspan="9" style="text-align: center; padding: 2rem; color: #717182;">
+                    ${t('admin.movies.noMovies')}
+                </td>
+            `;
+            tableBody.appendChild(emptyRow);
         } else {
             moviesToShow.forEach((movie, i) => {
                 tableBody.appendChild(createMovieRow(movie, startNo + i));
@@ -208,14 +239,16 @@ export async function AdminMovies_js() {
         updatePaginationButtons();
     };
 
-    // Cập nhật số lượng movies hiển thị
     const updateMovieCount = () => {
-        movieCountHeading.textContent = filteredMovies.length === allMovies.length
-            ? `Movies (${allMovies.length})`
-            : `Movies (${filteredMovies.length} / ${allMovies.length})`;
+        const countText = t('admin.movies.count');
+        
+        if (filteredMovies.length === allMovies.length) {
+            movieCountHeading.innerHTML = `<span data-i18n="admin.movies.count">${countText}</span> (${allMovies.length})`;
+        } else {
+            movieCountHeading.innerHTML = `<span data-i18n="admin.movies.count">${countText}</span> (${filteredMovies.length} / ${allMovies.length})`;
+        }
     };
 
-    // Cập nhật trạng thái các nút phân trang
     const updatePaginationButtons = () => {
         const totalPages = getTotalPages();
         
@@ -229,13 +262,11 @@ export async function AdminMovies_js() {
         paginationRight.disabled = currentPage >= totalPages || totalPages === 0;
     };
 
-    // ACTORS SUB-MODAL 
-    // Tạo actor item từ template
+    // ========== ACTORS SUB-MODAL ==========
     const createActorItem = (actor, index) => {
         const actorItem = actorTemplate.content.cloneNode(true);
         const actorDiv = actorItem.querySelector('.actor');
         
-        // Set data
         const header = actorDiv.querySelector('.actor__header');
         const body = actorDiv.querySelector('.actor__body');
         const titleEl = actorDiv.querySelector('.actor__title');
@@ -250,22 +281,27 @@ export async function AdminMovies_js() {
         nameInput.value = actor.name || '';
         photoImg.src = actor.photo || '../../public/assets/image/user_avatar_default.jpg';
         
-        // Toggle hiển thị
+        // Thêm data-i18n cho placeholder
+        idInput.setAttribute('data-i18n-placeholder', 'admin.movies.modal.autoGenerated');
+        nameInput.setAttribute('data-i18n-placeholder', 'admin.movies.modal.actorNamePlaceholder');
+        
+        // Áp dụng translation ngay lập tức
+        idInput.placeholder = t('admin.movies.modal.autoGenerated');
+        nameInput.placeholder = t('admin.movies.modal.actorNamePlaceholder');
+        
         header.addEventListener('click', (e) => {
             if (e.target.closest('.actor__delete-btn')) return;
             body.style.display = body.style.display === 'none' ? 'block' : 'none';
         });
         
-        // Xóa actor
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm('Delete this actor?')) {
+            if (confirm(t('admin.movies.modal.deleteActorConfirm'))) {
                 currentActors.splice(index, 1);
                 renderActorsList();
             }
         });
         
-        // Upload photo
         photoInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -274,7 +310,6 @@ export async function AdminMovies_js() {
             }
         });
         
-        // Update name
         nameInput.addEventListener('input', (e) => {
             titleEl.textContent = e.target.value || `Actor ${index + 1}`;
             currentActors[index].name = e.target.value;
@@ -283,14 +318,16 @@ export async function AdminMovies_js() {
         return actorItem;
     };
 
-    // Render danh sách actors trong sub-modal
     const renderActorsList = () => {
         if (!actorsListEl) return;
 
         actorsListEl.innerHTML = '';
         
         if (currentActors.length === 0) {
-            actorsListEl.appendChild(emptyActorsTemplate.content.cloneNode(true));
+            const emptyMsg = document.createElement('p');
+            emptyMsg.style.cssText = 'text-align: center; color: #717182; padding: 2rem;';
+            emptyMsg.textContent = t('admin.movies.noActors');
+            actorsListEl.appendChild(emptyMsg);
             return;
         }
         
@@ -299,7 +336,6 @@ export async function AdminMovies_js() {
         });
     };
 
-    // Mở sub-modal quản lý actors
     const openActorsModal = () => {
         if (!subModal || !subModalBackdrop) return;
         renderActorsList();
@@ -307,11 +343,9 @@ export async function AdminMovies_js() {
         subModalBackdrop.classList.remove('hidden');
     };
 
-    // Đóng sub-modal và cập nhật dữ liệu
     const closeActorsModal = () => {
         if (!subModal || !subModalBackdrop) return;
 
-        // Cập nhật số actors vào form chính
         const actorNames = currentActors.map(a => a.name).filter(Boolean).join(', ');
         movieFormEl.querySelector('input[name="actors"]').value = actorNames || '';
         movieFormEl.querySelector('input[name="actorsCount"]').value = currentActors.length;
@@ -320,12 +354,11 @@ export async function AdminMovies_js() {
         subModalBackdrop.classList.add('hidden');
     };
 
-    // MODAL ADD/EDIT 
-    // Mở modal thêm movie mới
+    // ========== MODAL ADD/EDIT ==========
     const openAddModal = () => {
         isEditMode = false;
-        modalTitle.textContent = 'Add Movie';
-        submitBtn.textContent = 'Create';
+        modalTitle.textContent = t('admin.movies.modal.add');
+        submitBtn.textContent = t('admin.movies.modal.create');
         
         movieFormEl.reset();
         bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.png';
@@ -341,7 +374,6 @@ export async function AdminMovies_js() {
         document.querySelector('.form--movie').classList.add('form--active');
     };
 
-    // Mở modal chỉnh sửa movie
     const openEditModal = (row) => {
         isEditMode = true;
         currentEditRow = row;
@@ -349,8 +381,8 @@ export async function AdminMovies_js() {
         const movie = allMovies.find(m => m.id === row.dataset.movieId);
         if (!movie) return;
         
-        modalTitle.textContent = 'Edit Movie';
-        submitBtn.textContent = 'Save';
+        modalTitle.textContent = t('admin.movies.modal.edit');
+        submitBtn.textContent = t('admin.movies.modal.save');
         
         bannerPreviewImg.src = movie.banner;
         posterPreviewImg.src = movie.poster;
@@ -362,7 +394,6 @@ export async function AdminMovies_js() {
             idDisplayInput.value = movie.id;
         }
         
-        // Điền dữ liệu vào form
         const fields = {
             id: movie.id,
             title: movie.title,
@@ -396,7 +427,6 @@ export async function AdminMovies_js() {
         document.querySelector('.form--movie').classList.add('form--active');
     };
 
-    // Đóng modal
     const closeModal = () => {
         modalMovie.classList.add('hidden');
         document.querySelector('.form--movie').classList.remove('form--active');
@@ -408,14 +438,12 @@ export async function AdminMovies_js() {
         posterInput.value = '';
     };
 
-    // EVENT LISTENERS 
-    // Search & Filter
+    // ========== EVENT LISTENERS ==========
     searchInput.addEventListener('input', filterMovies);
     countryFilter.addEventListener('change', filterMovies);
     statusFilter.addEventListener('change', filterMovies);
     ratingFilter.addEventListener('change', filterMovies);
 
-    // Pagination
     paginationLeft.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -430,7 +458,6 @@ export async function AdminMovies_js() {
         }
     });
 
-    // Modal
     document.querySelector('.admin-content__add-btn').addEventListener('click', openAddModal);
     backdrop.addEventListener('click', closeModal);
     document.querySelector('.modal--movie .modal__close').addEventListener('click', closeModal);
@@ -443,7 +470,6 @@ export async function AdminMovies_js() {
         }
     });
 
-    // Upload ảnh
     bannerInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) bannerPreviewImg.src = await readFileAsDataURL(file);
@@ -454,7 +480,6 @@ export async function AdminMovies_js() {
         if (file) posterPreviewImg.src = await readFileAsDataURL(file);
     });
 
-    // Sub-modal actors
     movieFormEl.querySelector('.form__manage-btn--actors')?.addEventListener('click', (e) => {
         e.preventDefault();
         openActorsModal();
@@ -476,7 +501,6 @@ export async function AdminMovies_js() {
     subModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeActorsModal);
     subModalBackdrop?.addEventListener('click', closeActorsModal);
 
-    // Submit form
     movieFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -533,5 +557,31 @@ export async function AdminMovies_js() {
         closeModal();
     });
 
+    // ========== LANGUAGE CHANGE LISTENER ==========
+    window.addEventListener('languagechange', async (e) => {
+        console.log('Language change detected in AdminMovies');
+        
+        // Re-render everything with new language
+        await initTranslate();
+        renderMovies();
+        
+        // Update modal if open
+        if (!modalMovie.classList.contains('hidden')) {
+            modalTitle.textContent = isEditMode 
+                ? t('admin.movies.modal.edit') 
+                : t('admin.movies.modal.add');
+            submitBtn.textContent = isEditMode 
+                ? t('admin.movies.modal.save') 
+                : t('admin.movies.modal.create');
+        }
+        
+        // Update actors modal if open
+        if (subModal && !subModal.classList.contains('hidden')) {
+            renderActorsList();
+        }
+    });
+
+    // ========== INITIALIZE ==========
     renderMovies();
+    console.log('AdminMovies initialized');
 }

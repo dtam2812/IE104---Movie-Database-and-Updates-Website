@@ -1,4 +1,78 @@
 export async function AdminTVShows_js() {
+    // Import global translation system
+    const { initTranslate } = await import('./Translate.js');
+    
+    // Get translation function from global scope (set by Translate.js)
+    const t = (key) => {
+        const translations = window.translations || {};
+        return translations[key] || key;
+    };
+
+    // Hàm re-translate cho dynamic elements (templates)
+    const reTranslateElement = (el) => {
+        if (!el) return;
+        
+        // Translate text content for data-i18n
+        const textElements = el.querySelectorAll('[data-i18n]');
+        textElements.forEach(elem => {
+            const key = elem.getAttribute('data-i18n');
+            if (key) elem.textContent = t(key);
+        });
+        
+        // Translate placeholders for data-i18n-placeholder
+        const placeholderElements = el.querySelectorAll('[data-i18n-placeholder]');
+        placeholderElements.forEach(elem => {
+            const key = elem.getAttribute('data-i18n-placeholder');
+            if (key) elem.placeholder = t(key);
+        });
+        
+        // Translate labels if they have data-i18n (set textContent)
+        const labelElements = el.querySelectorAll('label[data-i18n]');
+        labelElements.forEach(label => {
+            const key = label.getAttribute('data-i18n');
+            if (key) {
+                // Keep inner structure (e.g. span for required *)
+                label.innerHTML = t(key);
+            }
+        });
+    };
+
+    function translateGenre(genreStr) {
+        if (!genreStr) return '';
+        
+        const genreMap = {
+            'Animation': 'genre.animation',
+            'Fantasy': 'genre.fantasy',
+            'Thriller': 'genre.thriller',
+            'Drama': 'genre.drama',
+            'Action': 'genre.action',
+            'Crime': 'genre.crime',
+            'Romance': 'genre.romance',
+            'Horror': 'genre.horror',
+            'Comedy': 'genre.comedy',
+            'Adventure': 'genre.adventure',
+            'Mystery': 'genre.mystery',
+            'Sci-Fi': 'genre.scifi',
+            'Science Fiction': 'genre.scifi',
+            'War': 'genre.war',
+            'Western': 'genre.western',
+            'Music': 'genre.music',
+            'Family': 'genre.family',
+            'Documentary': 'genre.documentary',
+            'History': 'genre.history'
+        };
+        
+        const genres = genreStr.split(',').map(g => g.trim());
+        const translatedGenres = genres.map(genre => {
+            const key = genreMap[genre];
+            if (key && t(key) !== key) {
+                return t(key);
+            }
+            return genre;
+        });
+        
+        return translatedGenres.join(', ');
+    }
 
     // Load dữ liệu từ file Data.js 
     let tvShowsData = [];
@@ -9,13 +83,18 @@ export async function AdminTVShows_js() {
         console.log('No initial TV show data, starting empty');
     }
 
-    // DOM ELEMENTS 
+    // Đợi DOM ready trước khi query selectors
+    if (document.readyState === 'loading') {
+        await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+    }
+
+    // DOM ELEMENTS (query sau khi DOM ready)
     // Modal elements
     const modalTV = document.querySelector('.modal--tvshow');
     const backdrop = document.querySelector('.modal--tvshow .modal__backdrop');
     const tvFormEl = document.querySelector('.form--tvshow form');
-    const modalTitle = document.querySelector('.form__title');
-    const submitBtn = tvFormEl.querySelector('.form__btn--primary');
+    const modalTitle = document.querySelector('.modal__title');
+    const submitBtn = tvFormEl?.querySelector('.form__btn--primary');
     
     // Table & Pagination
     const tableBody = document.querySelector('.data-table__body');
@@ -33,10 +112,10 @@ export async function AdminTVShows_js() {
     
     // Media inputs
     const mediaPreview = document.querySelector('.media-form__media');
-    const bannerPreviewImg = mediaPreview.querySelector('.media-form__banner img');
-    const posterPreviewImg = mediaPreview.querySelector('.media-form__poster img');
-    const bannerInput = mediaPreview.querySelector('.media-form__banner-input');
-    const posterInput = mediaPreview.querySelector('.media-form__poster-input');
+    const bannerPreviewImg = mediaPreview?.querySelector('.media-form__banner img');
+    const posterPreviewImg = mediaPreview?.querySelector('.media-form__poster img');
+    const bannerInput = mediaPreview?.querySelector('.media-form__banner-input');
+    const posterInput = mediaPreview?.querySelector('.media-form__poster-input');
 
     // Sub-modal (Seasons)
     const subModal = document.getElementById('seasons-sub-modal');
@@ -54,6 +133,11 @@ export async function AdminTVShows_js() {
     const emptyRowTemplate = document.getElementById('empty-row-template');
     const emptySeasonsTemplate = document.getElementById('empty-seasons-template');
     const emptyActorsTemplate = document.getElementById('empty-actors-template');
+
+    // Debug logs cho selectors
+    console.log('Modal TV found:', modalTV);
+    console.log('Add button found:', document.querySelector('.admin-content__add-btn'));
+    console.log('Submit btn found:', submitBtn);
 
     
     // SIGN OUT FUNCTIONALITY
@@ -154,12 +238,16 @@ export async function AdminTVShows_js() {
     // RENDER FUNCTIONS 
     // Tạo một row trong bảng TV shows
     const createTVRow = (show, no) => {
+        const translatedGenre = translateGenre(show.genre);
         const seasonsCount = Array.isArray(show.seasonsData) ? show.seasonsData.length : 0;
-        const seasonsText = seasonsCount > 0 ? `${seasonsCount} season${seasonsCount > 1 ? 's' : ''}` : 'N/A';
+        const seasonsText = seasonsCount > 0 ? `${seasonsCount} ${t('admin.tvshows.season' + (seasonsCount > 1 ? 's' : ''))}` : t('common.na');
         const ratingHTML = show.rating > 0 
             ? `<span>${show.rating}</span>` 
-            : '<span style="color: #717182;">N/A</span>';
+            : `<span style="color: #717182;">${t('common.na')}</span>`;
         const statusColor = show.status === 'Released' ? '#4CAF50' : '#ff9800';
+        const statusText = show.status === 'Released' 
+            ? t('admin.tvshows.status.released') 
+            : t('admin.tvshows.status.comingSoon');
 
         const row = document.createElement('tr');
         row.dataset.tvId = show.id;
@@ -175,12 +263,12 @@ export async function AdminTVShows_js() {
                     </div>
                 </div>
             </td>
-            <td class ="data-table__th">${show.genre}</td>
+            <td class ="data-table__th">${translatedGenre}</td>
             <td class ="data-table__th">${seasonsText}</td>
             <td class ="data-table__th">${ratingHTML}</td>
             <td class ="data-table__th">
                 <span style="color: ${statusColor}; font-weight: 600;">
-                    ${show.status}
+                    ${statusText}
                 </span>
             </td>
             <td class ="data-table__th"><button class="data-table__btn data-table__btn--edit"><i class="fa-solid fa-pen"></i></button></td>
@@ -190,7 +278,8 @@ export async function AdminTVShows_js() {
 
         row.querySelector('.data-table__btn--edit').addEventListener('click', () => openEditTVModal(row));
         row.querySelector('.data-table__btn--delete').addEventListener('click', () => {
-            if (confirm(`Are you sure you want to delete "${show.title}"?`)) {
+            const confirmMsg = t('admin.tvshows.modal.deleteConfirm').replace('{title}', show.title);
+            if (confirm(confirmMsg)) {
                 allTVShows = allTVShows.filter(s => s.id !== show.id);
                 filterTVShows();
             }
@@ -207,7 +296,13 @@ export async function AdminTVShows_js() {
         tableBody.innerHTML = '';
         
         if (tvToShow.length === 0) {
-            tableBody.appendChild(emptyRowTemplate.content.cloneNode(true));
+            const emptyRow = document.createElement('tr');
+            emptyRow.innerHTML = `
+                <td colspan="9" style="text-align: center; padding: 2rem; color: #717182;">
+                    ${t('admin.tvshows.noTVShows')}
+                </td>
+            `;
+            tableBody.appendChild(emptyRow);
         } else {
             tvToShow.forEach((show, i) => {
                 tableBody.appendChild(createTVRow(show, startNo + i));
@@ -220,9 +315,13 @@ export async function AdminTVShows_js() {
 
     // Cập nhật số lượng TV shows hiển thị
     const updateTVCount = () => {
-        tvCountHeading.textContent = filteredTVShows.length === allTVShows.length
-            ? `TV Shows (${allTVShows.length})`
-            : `TV Shows (${filteredTVShows.length} / ${allTVShows.length})`;
+        const countText = t('admin.tvshows.count');
+        
+        if (filteredTVShows.length === allTVShows.length) {
+            tvCountHeading.innerHTML = `<span data-i18n="admin.tvshows.count">${countText}</span> (${allTVShows.length})`;
+        } else {
+            tvCountHeading.innerHTML = `<span data-i18n="admin.tvshows.count">${countText}</span> (${filteredTVShows.length} / ${allTVShows.length})`;
+        }
     };
 
     // Cập nhật trạng thái các nút phân trang
@@ -256,11 +355,19 @@ export async function AdminTVShows_js() {
         const posterInput = seasonDiv.querySelector('.season__poster-input');
         const deleteBtn = seasonDiv.querySelector('.season__delete-btn');
         
-        titleEl.textContent = season.title || `Season ${index + 1}`;
+        titleEl.textContent = season.title || `${t('admin.tvshows.modal.season')} ${index + 1}`;
         titleInput.value = season.title || '';
         episodesInput.value = season.episodes || '';
         overviewInput.value = season.overview || '';
         posterImg.src = season.poster || '../../public/assets/image/0891b2.svg';
+        
+        // Áp dụng translation ngay lập tức (không cần setAttribute nữa vì dynamic)
+        titleInput.placeholder = t('admin.tvshows.submodal.seasonTitlePlaceholder');
+        episodesInput.placeholder = t('admin.tvshows.submodal.episodesPlaceholder');
+        overviewInput.placeholder = t('admin.tvshows.submodal.overviewPlaceholder');
+        
+        // Re-translate toàn bộ element để apply labels
+        reTranslateElement(seasonDiv);
         
         // Toggle hiển thị
         header.addEventListener('click', (e) => {
@@ -271,7 +378,7 @@ export async function AdminTVShows_js() {
         // Xóa season
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm('Delete this season?')) {
+            if (confirm(t('admin.tvshows.submodal.deleteConfirm'))) {
                 currentSeasons.splice(index, 1);
                 renderSeasonsList();
             }
@@ -288,7 +395,7 @@ export async function AdminTVShows_js() {
         
         // Update title
         titleInput.addEventListener('input', (e) => {
-            titleEl.textContent = e.target.value || `Season ${index + 1}`;
+            titleEl.textContent = e.target.value || `${t('admin.tvshows.modal.season')} ${index + 1}`;
             currentSeasons[index].title = e.target.value;
         });
         
@@ -312,7 +419,10 @@ export async function AdminTVShows_js() {
         seasonsListEl.innerHTML = '';
         
         if (currentSeasons.length === 0) {
-            seasonsListEl.appendChild(emptySeasonsTemplate.content.cloneNode(true));
+            const emptyMsg = document.createElement('p');
+            emptyMsg.style.cssText = 'text-align: center; color: #717182; padding: 2rem;';
+            emptyMsg.textContent = t('admin.tvshows.submodal.noSeasons');
+            seasonsListEl.appendChild(emptyMsg);
             return;
         }
         
@@ -329,7 +439,7 @@ export async function AdminTVShows_js() {
         subModalBackdrop.classList.remove('hidden');
     };
 
-    // Đóng sub-modal và cập nhật dữ liệu
+    // Đóng sub-modal seasons và cập nhật dữ liệu
     const closeSeasonsModal = () => {
         if (!subModal || !subModalBackdrop) return;
 
@@ -358,10 +468,17 @@ export async function AdminTVShows_js() {
         const photoInput = actorDiv.querySelector('.actor__photo-input');
         const deleteBtn = actorDiv.querySelector('.actor__delete-btn');
         
-        titleEl.textContent = actor.name || `Actor ${index + 1}`;
+        titleEl.textContent = actor.name || `${t('admin.tvshows.modal.actor')} ${index + 1}`;
         idInput.value = actor.id || '';
         nameInput.value = actor.name || '';
         photoImg.src = actor.photo || '../../public/assets/image/user_avatar_default.jpg';
+        
+        // Áp dụng translation ngay lập tức
+        idInput.placeholder = t('admin.movies.modal.autoGenerated');
+        nameInput.placeholder = t('admin.movies.modal.actorNamePlaceholder');
+        
+        // Re-translate toàn bộ element để apply labels
+        reTranslateElement(actorDiv);
         
         // Toggle hiển thị
         header.addEventListener('click', (e) => {
@@ -372,7 +489,7 @@ export async function AdminTVShows_js() {
         // Xóa actor
         deleteBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm('Delete this actor?')) {
+            if (confirm(t('admin.tvshows.modal.deleteActorConfirm'))) {
                 currentActors.splice(index, 1);
                 renderActorsList();
             }
@@ -389,7 +506,7 @@ export async function AdminTVShows_js() {
         
         // Update name
         nameInput.addEventListener('input', (e) => {
-            titleEl.textContent = e.target.value || `Actor ${index + 1}`;
+            titleEl.textContent = e.target.value || `${t('admin.tvshows.modal.actor')} ${index + 1}`;
             currentActors[index].name = e.target.value;
         });
         
@@ -403,7 +520,10 @@ export async function AdminTVShows_js() {
         actorsListEl.innerHTML = '';
         
         if (currentActors.length === 0) {
-            actorsListEl.appendChild(emptyActorsTemplate.content.cloneNode(true));
+            const emptyMsg = document.createElement('p');
+            emptyMsg.style.cssText = 'text-align: center; color: #717182; padding: 2rem;';
+            emptyMsg.textContent = t('admin.tvshows.noActors');
+            actorsListEl.appendChild(emptyMsg);
             return;
         }
         
@@ -436,9 +556,15 @@ export async function AdminTVShows_js() {
     // MODAL ADD/EDIT TV SHOW 
     // Mở modal thêm TV show mới
     const openAddTVModal = () => {
+        console.log('Opening add modal...');  // Debug
+        if (!modalTV) {
+            console.error('Modal not found! Selector issue.');
+            return;
+        }
+        
         isEditMode = false;
-        modalTitle.textContent = 'Add TV Show';
-        submitBtn.textContent = 'Create';
+        modalTitle.textContent = t('admin.tvshows.modal.add');
+        submitBtn.textContent = t('admin.tvshows.modal.create');
         
         tvFormEl.reset();
         bannerPreviewImg.src = '../../public/assets/image/movie_banner_default.png';
@@ -465,8 +591,8 @@ export async function AdminTVShows_js() {
         const show = allTVShows.find(s => s.id === row.dataset.tvId);
         if (!show) return;
         
-        modalTitle.textContent = 'Edit TV Show';
-        submitBtn.textContent = 'Save';
+        modalTitle.textContent = t('admin.tvshows.modal.edit');
+        submitBtn.textContent = t('admin.tvshows.modal.save');
         
         bannerPreviewImg.src = show.banner;
         posterPreviewImg.src = show.poster;
@@ -533,32 +659,43 @@ export async function AdminTVShows_js() {
         posterInput.value = '';
     };
 
-    // EVENT LISTENERS
+    // EVENT LISTENERS (attach sau khi query DOM)
     // Search & Filter
-    searchInput.addEventListener('input', filterTVShows);
-    countryFilter.addEventListener('change', filterTVShows);
-    statusFilter.addEventListener('change', filterTVShows);
-    ratingFilter.addEventListener('change', filterTVShows);
+    if (searchInput) searchInput.addEventListener('input', filterTVShows);
+    if (countryFilter) countryFilter.addEventListener('change', filterTVShows);
+    if (statusFilter) statusFilter.addEventListener('change', filterTVShows);
+    if (ratingFilter) ratingFilter.addEventListener('change', filterTVShows);
 
     // Pagination
-    paginationLeft.addEventListener('click', () => {
+    if (paginationLeft) paginationLeft.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
             renderTVShows();
         }
     });
     
-    paginationRight.addEventListener('click', () => {
+    if (paginationRight) paginationRight.addEventListener('click', () => {
         if (currentPage < getTotalPages()) {
             currentPage++;
             renderTVShows();
         }
     });
 
-    // Modal chính
-    document.querySelector('.admin-content__add-btn').addEventListener('click', openAddTVModal);
-    backdrop.addEventListener('click', closeModal);
-    document.querySelector('.modal--tvshow .modal__close').addEventListener('click', closeModal);
+    // Modal chính - Attach event sau debug
+    const addBtn = document.querySelector('.admin-content__add-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', (e) => {
+            console.log('Add button clicked!');  // Debug
+            e.preventDefault();  // Ngăn <a> default
+            openAddTVModal();
+        });
+    } else {
+        console.error('Add button not found!');
+    }
+
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+    const closeBtn = document.querySelector('.modal--tvshow .modal__close');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
     
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modalTV.classList.contains('hidden')) {
@@ -570,25 +707,26 @@ export async function AdminTVShows_js() {
     });
 
     // Upload ảnh
-    bannerInput.addEventListener('change', async (e) => {
+    if (bannerInput) bannerInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) bannerPreviewImg.src = await readFileAsDataURL(file);
     });
 
-    posterInput.addEventListener('change', async (e) => {
+    if (posterInput) posterInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (file) posterPreviewImg.src = await readFileAsDataURL(file);
     });
 
     // Sub-modal seasons
-    tvFormEl.querySelector('.form__manage-btn--seasons')?.addEventListener('click', (e) => {
+    const manageSeasonsBtn = tvFormEl?.querySelector('.form__manage-btn--seasons');
+    if (manageSeasonsBtn) manageSeasonsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         openSeasonsModal();
     });
     
-    subModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
+    if (subModal?.querySelector('.sub-modal__add-btn')) subModal.querySelector('.sub-modal__add-btn').addEventListener('click', () => {
         currentSeasons.push({
-            title: `Season ${currentSeasons.length + 1}`,
+            title: `${t('admin.tvshows.modal.season')} ${currentSeasons.length + 1}`,
             episodes: 0,
             overview: '',
             poster: '../../public/assets/image/0891b2.svg'
@@ -596,17 +734,18 @@ export async function AdminTVShows_js() {
         renderSeasonsList();
     });
     
-    subModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeSeasonsModal);
-    subModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeSeasonsModal);
-    subModalBackdrop?.addEventListener('click', closeSeasonsModal);
+    if (subModal?.querySelector('.sub-modal__save-btn')) subModal.querySelector('.sub-modal__save-btn').addEventListener('click', closeSeasonsModal);
+    if (subModal?.querySelector('.sub-modal__close')) subModal.querySelector('.sub-modal__close').addEventListener('click', closeSeasonsModal);
+    if (subModalBackdrop) subModalBackdrop.addEventListener('click', closeSeasonsModal);
 
     // Sub-modal actors
-    tvFormEl.querySelector('.form__manage-btn--actors')?.addEventListener('click', (e) => {
+    const manageActorsBtn = tvFormEl?.querySelector('.form__manage-btn--actors');
+    if (manageActorsBtn) manageActorsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         openActorsModal();
     });
 
-    actorsSubModal?.querySelector('.sub-modal__add-btn')?.addEventListener('click', () => {
+    if (actorsSubModal?.querySelector('.sub-modal__add-btn')) actorsSubModal.querySelector('.sub-modal__add-btn').addEventListener('click', () => {
         const tvId = tvFormEl.querySelector('input[name="id"]').value || generateTVId();
         const newActorId = generateActorId(tvId);
         
@@ -618,12 +757,12 @@ export async function AdminTVShows_js() {
         renderActorsList();
     });
 
-    actorsSubModal?.querySelector('.sub-modal__save-btn')?.addEventListener('click', closeActorsModal);
-    actorsSubModal?.querySelector('.sub-modal__close')?.addEventListener('click', closeActorsModal);
-    actorsSubModalBackdrop?.addEventListener('click', closeActorsModal);
+    if (actorsSubModal?.querySelector('.sub-modal__save-btn')) actorsSubModal.querySelector('.sub-modal__save-btn').addEventListener('click', closeActorsModal);
+    if (actorsSubModal?.querySelector('.sub-modal__close')) actorsSubModal.querySelector('.sub-modal__close').addEventListener('click', closeActorsModal);
+    if (actorsSubModalBackdrop) actorsSubModalBackdrop.addEventListener('click', closeActorsModal);
 
     // Submit form
-    tvFormEl.addEventListener('submit', async (e) => {
+    if (tvFormEl) tvFormEl.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const getData = (name) => {
@@ -681,5 +820,36 @@ export async function AdminTVShows_js() {
         closeModal();
     });
 
+    // ========== LANGUAGE CHANGE LISTENER ==========
+    window.addEventListener('languagechange', async (e) => {
+        console.log('Language change detected in AdminTVShows');
+        
+        // Re-render everything with new language
+        await initTranslate();
+        renderTVShows();
+        
+        // Update modal if open
+        if (!modalTV.classList.contains('hidden')) {
+            modalTitle.textContent = isEditMode 
+                ? t('admin.tvshows.modal.edit') 
+                : t('admin.tvshows.modal.add');
+            submitBtn.textContent = isEditMode 
+                ? t('admin.tvshows.modal.save') 
+                : t('admin.tvshows.modal.create');
+        }
+        
+        // Update seasons modal if open
+        if (subModal && !subModal.classList.contains('hidden')) {
+            renderSeasonsList();
+        }
+        
+        // Update actors modal if open
+        if (actorsSubModal && !actorsSubModal.classList.contains('hidden')) {
+            renderActorsList();
+        }
+    });
+
+    // Initial render
     renderTVShows();
+    console.log('AdminTVShows initialized');
 }

@@ -7,11 +7,35 @@ let listenersBound = false;
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
-    return await res.json();
+    const data = await res.json();
+
+    // Lưu vào window.translations để các module khác dùng
+    window.translations = flattenTranslations(data);
+
+    return window.translations;
   } catch (error) {
     console.error("Load translations failed:", error);
+    window.translations = {};
     return {};
   }
+}
+
+// Flatten nested translations object thành flat object
+// Ví dụ: {admin: {movies: {count: "Phim"}}} => {"admin.movies.count": "Phim"}
+function flattenTranslations(obj, prefix = "") {
+  let result = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    const newKey = prefix ? `${prefix}.${key}` : key;
+
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      Object.assign(result, flattenTranslations(value, newKey));
+    } else {
+      result[newKey] = value;
+    }
+  }
+
+  return result;
 }
 
 // Áp bản dịch cho text và các thuộc tính có prefix data-i18n-
@@ -19,7 +43,9 @@ function translatePage(translations) {
   // text node
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
-    if (translations[key] !== undefined) el.textContent = translations[key];
+    if (translations[key] !== undefined) {
+      el.textContent = translations[key];
+    }
   });
 
   // thuộc tính bất kỳ: data-i18n-attrName="key"
@@ -56,7 +82,7 @@ export async function initTranslate() {
 
   if (!listenersBound) {
     document.querySelectorAll(".lang-option").forEach((btn) => {
-      btn.addEventListener("click", async (e) => {
+      btn.addEventListener("click", (e) => {
         const lang = e.currentTarget.getAttribute("data-lang");
         if (!lang || lang === currentLang) return;
 
@@ -64,14 +90,7 @@ export async function initTranslate() {
         localStorage.setItem("language", lang);
         document.documentElement.lang = lang;
 
-        const newTranslations = await loadTranslations(lang);
-        translatePage(newTranslations);
-        updateLanguageLabel(lang);
-
-        // báo cho các module động (hero, grid...) tự nạp lại theo lang
-        window.dispatchEvent(
-          new CustomEvent("languagechange", { detail: { lang } })
-        );
+        location.reload();
       });
     });
     listenersBound = true;
