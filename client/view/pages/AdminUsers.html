@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Users Management</title>
+    <title data-i18n="admin.users.title">Admin Users Management</title>
     <link
       rel="icon"
       type="image/png"
@@ -20,10 +20,6 @@
     />
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
     <link rel="stylesheet" href="../../Style/AdminPage.css" />
-    <script type="module">
-      import { AdminUsers_js } from "../../js/AdminUsers.js";
-      AdminUsers_js();
-    </script>
   </head>
 
   <body>
@@ -33,7 +29,10 @@
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
+      import { initTranslate } from "../../js/Translate.js";
+      import { AdminUsers_js } from "../../js/AdminUsers.js";
 
+      // Load header & search bar
       fetch("../components/Header.html")
         .then((res) => res.text())
         .then((html) => {
@@ -45,8 +44,14 @@
         .then((searchHTML) => {
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
+          // Initialize translation after DOM is ready
+          return initTranslate();
         })
-        .catch((error) => console.error("Fetch header/search failed:", error));
+        .then(() => {
+          // Initialize AdminUsers after translation
+          AdminUsers_js();
+        })
+        .catch((error) => console.error("Initialization failed:", error));
     </script>
 
     <!-- end-header -->
@@ -60,25 +65,25 @@
             <li>
               <a class="active" href="#">
                 <i class="fa-solid fa-user"></i>
-                <span>Users</span>
+                <span data-i18n="admin.users">Users</span>
               </a>
             </li>
             <li>
               <a href="../pages/AdminMovies.html">
                 <i class="fa-solid fa-film"></i>
-                <span>Movies</span>
+                <span data-i18n="admin.movies">Movies</span>
               </a>
             </li>
             <li>
               <a href="../pages/AdminTVShows.html">
                 <i class="fa-solid fa-tv"></i>
-                <span>TV Shows</span>
+                <span data-i18n="admin.tvshows">TV Shows</span>
               </a>
             </li>
             <li>
               <a href="../pages/HomePage.html">
                 <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Sign Out</span>
+                <span data-i18n="admin.signout">Sign Out</span>
               </a>
             </li>
           </ul>
@@ -89,10 +94,10 @@
       <div class="admin-main-container">
         <div class="admin-main-content">
           <div class="am-content-heading">
-            <h1>Users</h1>
+            <h1 data-i18n="admin.users.heading">Users</h1>
             <a class="add-btn">
               <i class="fa-solid fa-plus"></i>
-              <span>Add User</span>
+              <span data-i18n="admin.addUser">Add User</span>
             </a>
           </div>
 
@@ -104,20 +109,21 @@
               </div>
               <input
                 class="search-input"
+                data-i18n-placeholder="admin.users.search"
                 placeholder="Search by user name, email or ID (e.g. UIT001)"
                 autocomplete="off"
               />
             </div>
             <div class="filter-bar">
               <select class="filter-select">
-                <option value="all">All Roles</option>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
+                <option value="all" data-i18n="admin.users.allRoles">All Roles</option>
+                <option value="Admin" data-i18n="admin.users.role.admin">Admin</option>
+                <option value="User" data-i18n="admin.users.role.user">User</option>
               </select>
               <select class="filter-select">
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="banned">Banned</option>
+                <option value="all" data-i18n="admin.users.allStatus">All Status</option>
+                <option value="active" data-i18n="admin.users.status.active">Active</option>
+                <option value="banned" data-i18n="admin.users.status.banned">Banned</option>
               </select>
             </div>
           </div>
@@ -125,18 +131,20 @@
           <!-- Table -->
           <div class="dm-table-container">
             <div class="dm-table-heading">
-              <h2>Users (0)</h2>
+              <h2>
+                <span data-i18n="admin.users.count">Users</span> (0)
+              </h2>
             </div>
             <table class="dm-table">
               <thead>
                 <tr>
-                  <th>No.</th>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Created</th>
-                  <th>Edit</th>
-                  <th>Detail</th>
+                  <th data-i18n="admin.users.table.no">No.</th>
+                  <th data-i18n="admin.users.table.user">User</th>
+                  <th data-i18n="admin.users.table.role">Role</th>
+                  <th data-i18n="admin.users.table.status">Status</th>
+                  <th data-i18n="admin.users.table.created">Created</th>
+                  <th data-i18n="admin.users.table.edit">Edit</th>
+                  <th data-i18n="admin.users.table.detail">Detail</th>
                   <th></th>
                 </tr>
               </thead>
@@ -172,7 +180,7 @@
             </button>
             <div class="form-wrapper user-form">
               <div class="content_header mb2">
-                <h1 class="modal-title">Add User</h1>
+                <h1 class="modal-title" data-i18n="admin.users.modal.add">Add User</h1>
               </div>
 
               <div class="content_body">
@@ -183,9 +191,11 @@
                     alt="User Avatar"
                   />
                   <div class="upload-img">
-                    <label class="avatar-label" for="avatar-input"
-                      >Upload image</label
-                    >
+                    <label 
+                      class="avatar-label" 
+                      for="avatar-input"
+                      data-i18n="admin.users.modal.uploadImage"
+                    >Upload image</label>
                     <input
                       type="file"
                       class="avatar-input"
@@ -204,11 +214,14 @@
                     class="form-group mb1 user-id-display"
                     style="display: none"
                   >
-                    <label>User ID:</label>
+                    <label>
+                      <span data-i18n="admin.users.modal.userId">User ID:</span>
+                    </label>
                     <input
                       class="form-control"
                       type="text"
                       name="id-display"
+                      data-i18n-placeholder="admin.users.modal.autoGenerated"
                       placeholder="Auto-generated"
                       readonly
                     />
@@ -216,11 +229,15 @@
 
                   <!-- Name -->
                   <div class="form-group mb1">
-                    <label>User Name: <span style="color: red">*</span></label>
+                    <label>
+                      <span data-i18n="admin.users.modal.userName">User Name:</span>
+                      <span style="color: red" data-i18n="admin.required">*</span>
+                    </label>
                     <input
                       class="form-control"
                       type="text"
                       name="name"
+                      data-i18n-placeholder="admin.users.modal.userName"
                       placeholder="User name"
                       required
                     />
@@ -228,7 +245,10 @@
 
                   <!-- Email -->
                   <div class="form-group mb1">
-                    <label>Email: <span style="color: red">*</span></label>
+                    <label>
+                      <span data-i18n="admin.users.modal.email">Email:</span>
+                      <span style="color: red" data-i18n="admin.required">*</span>
+                    </label>
                     <input
                       class="form-control"
                       type="email"
@@ -240,22 +260,34 @@
 
                   <!-- Role -->
                   <div class="form-group mb1">
-                    <label>Role: <span style="color: red">*</span></label>
+                    <label>
+                      <span data-i18n="admin.users.modal.role">Role:</span>
+                      <span style="color: red" data-i18n="admin.required">*</span>
+                    </label>
                     <select class="form-control" name="role" required>
-                      <option value="" disabled selected>Select role</option>
-                      <option value="Admin">Admin</option>
-                      <option value="User">User</option>
+                      <option 
+                        value="" 
+                        disabled 
+                        selected 
+                        data-i18n="admin.users.modal.selectRole"
+                      >Select role</option>
+                      <option value="Admin" data-i18n="admin.users.role.admin">Admin</option>
+                      <option value="User" data-i18n="admin.users.role.user">User</option>
                     </select>
                   </div>
 
                   <!-- Password (only shown when adding) -->
                   <div class="form-group mb1 password-group">
-                    <label>Password: <span style="color: red">*</span></label>
+                    <label>
+                      <span data-i18n="admin.users.modal.password">Password:</span>
+                      <span style="color: red" data-i18n="admin.required">*</span>
+                    </label>
                     <input
                       class="form-control"
                       type="password"
                       name="password"
                       minlength="6"
+                      data-i18n-placeholder="admin.users.modal.password"
                       placeholder="Password"
                       required
                     />
@@ -263,28 +295,33 @@
 
                   <!-- Confirm Password (only shown when adding) -->
                   <div class="form-group mb1 cf-password-group">
-                    <label
-                      >Confirm Password:
-                      <span style="color: red">*</span></label
-                    >
+                    <label>
+                      <span data-i18n="admin.users.modal.confirmPassword">Confirm Password:</span>
+                      <span style="color: red" data-i18n="admin.required">*</span>
+                    </label>
                     <input
                       class="form-control"
                       type="password"
                       name="cf_password"
                       minlength="6"
+                      data-i18n-placeholder="admin.users.modal.confirmPassword"
                       placeholder="Confirm password"
                       required
                     />
-                    <small class="non-same-pw" style="display: none; color: red"
-                      >Passwords do not match.</small
-                    >
+                    <small 
+                      class="non-same-pw" 
+                      style="display: none; color: red"
+                      data-i18n="admin.users.modal.passwordMismatch"
+                    >Passwords do not match.</small>
                   </div>
 
                   <!-- Submit Button -->
                   <div class="form-group action-btn-center mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
-                      Create
-                    </button>
+                    <button 
+                      type="submit" 
+                      class="btn btn-primary"
+                      data-i18n="admin.users.modal.create"
+                    >Create</button>
                   </div>
                 </form>
               </div>

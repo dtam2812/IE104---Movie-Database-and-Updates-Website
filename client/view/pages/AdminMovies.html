@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Movies Management</title>
+    <title data-i18n="admin.movies.title">Admin Movies Management</title>
     <link
       rel="icon"
       type="image/png"
@@ -14,10 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <link rel="stylesheet" href="../../Style/AdminPage.css">
-    <script type="module">
-        import { AdminMovies_js } from '../../js/AdminMovies.js';
-        AdminMovies_js();
-    </script>
 </head>
 
 <body>
@@ -27,7 +23,10 @@
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
+      import { initTranslate } from "../../js/Translate.js";
+      import { AdminMovies_js } from '../../js/AdminMovies.js';
 
+      // Load header & search bar
       fetch("../components/Header.html")
         .then((res) => res.text())
         .then((html) => {
@@ -39,8 +38,14 @@
         .then((searchHTML) => {
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
+          // Initialize translation after DOM is ready
+          return initTranslate();
         })
-        .catch((error) => console.error("Fetch header/search failed:", error));
+        .then(() => {
+          // Initialize AdminMovies after translation
+          AdminMovies_js();
+        })
+        .catch((error) => console.error("Initialization failed:", error));
     </script>
 
     <!-- end-header -->
@@ -54,25 +59,25 @@
                     <li>
                         <a href="../pages/AdminUsers.html">
                             <i class="fa-solid fa-user"></i>
-                            <span>Users</span>
+                            <span data-i18n="admin.users">Users</span>
                         </a>
                     </li>
                     <li>
                         <a class="active" href="#">
                             <i class="fa-solid fa-film"></i>
-                            <span>Movies</span>
+                            <span data-i18n="admin.movies">Movies</span>
                         </a>
                     </li>
                     <li>
                         <a href="../pages/AdminTVShows.html">
                             <i class="fa-solid fa-tv"></i>
-                            <span>TV Shows</span>
+                            <span data-i18n="admin.tvshows">TV Shows</span>
                         </a>
                     </li>
                     <li>
-                        <a href="../pages/HomePage.html"">
+                        <a href="../pages/HomePage.html">
                             <i class="fa-solid fa-right-from-bracket"></i>
-                            <span>Sign Out</span>
+                            <span data-i18n="admin.signout">Sign Out</span>
                         </a>
                     </li>
                 </ul>
@@ -83,10 +88,10 @@
         <div class="admin-main-container">
             <div class="admin-main-content">
                 <div class="am-content-heading">
-                    <h1>Movies</h1>
+                    <h1 data-i18n="admin.movies.heading">Movies</h1>
                     <a class="add-btn">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Add Movie</span>
+                        <span data-i18n="admin.movies.addMovie">Add Movie</span>
                     </a>
                 </div>
 
@@ -96,24 +101,28 @@
                         <div class="search-icon">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
-                        <input class="search-input" placeholder="Search by movie name or ID (e.g. MV001)" autocomplete="off" />
+                        <input 
+                            class="search-input" 
+                            data-i18n-placeholder="admin.movies.search"
+                            placeholder="Search by movie name or ID (e.g. MV001)" 
+                            autocomplete="off" />
                     </div>
                     <div class="filter-bar">
                         <select class="filter-select">
-                            <option value="all">All Country</option>
-                            <option value="America">America</option>
-                            <option value="Japan">Japan</option>
-                            <option value="Korea">Korea</option>
-                            <option value="China">China</option>
-                            <option value="England">England</option>
+                            <option value="all" data-i18n="admin.movies.allCountry">All Country</option>
+                            <option value="America" data-i18n="admin.movies.country.america">America</option>
+                            <option value="Japan" data-i18n="admin.movies.country.japan">Japan</option>
+                            <option value="Korea" data-i18n="admin.movies.country.korea">Korea</option>
+                            <option value="China" data-i18n="admin.movies.country.china">China</option>
+                            <option value="England" data-i18n="admin.movies.country.england">England</option>
                         </select>
                         <select class="filter-select">
-                            <option value="all">All Status</option>
-                            <option value="Released">Released</option>
-                            <option value="Coming Soon">Coming Soon</option>
+                            <option value="all" data-i18n="admin.movies.allStatus">All Status</option>
+                            <option value="Released" data-i18n="admin.movies.status.released">Released</option>
+                            <option value="Coming Soon" data-i18n="admin.movies.status.comingSoon">Coming Soon</option>
                         </select>
                         <select class="filter-select">
-                            <option value="all">All Rating</option>
+                            <option value="all" data-i18n="admin.movies.allRating">All Rating</option>
                             <option value="9+">9.0+</option>
                             <option value="8+">8.0+</option>
                             <option value="7+">7.0+</option>
@@ -126,19 +135,21 @@
                 <!-- Table -->
                 <div class="dm-table-container">
                     <div class="dm-table-heading">
-                        <h2>Movies (0)</h2>
+                        <h2>
+                            <span data-i18n="admin.movies.count">Movies</span> (0)
+                        </h2>
                     </div>
                     <table class="dm-table">
                         <thead>
                             <tr>
-                                <th>No.</th>
-                                <th>Poster</th>
-                                <th>Genre</th>
-                                <th>Duration</th>
-                                <th>Rating</th>
-                                <th>Status</th>
-                                <th>Edit</th>
-                                <th>Detail</th>
+                                <th data-i18n="admin.movies.table.no">No.</th>
+                                <th data-i18n="admin.movies.table.poster">Poster</th>
+                                <th data-i18n="admin.movies.table.genre">Genre</th>
+                                <th data-i18n="admin.movies.table.duration">Duration</th>
+                                <th data-i18n="admin.movies.table.rating">Rating</th>
+                                <th data-i18n="admin.movies.table.status">Status</th>
+                                <th data-i18n="admin.movies.table.edit">Edit</th>
+                                <th data-i18n="admin.movies.table.detail">Detail</th>
                                 <th>     </th>
                             </tr>
                         </thead>
@@ -174,7 +185,7 @@
                     </button>
                     <div class="form-wrapper movie-form">
                         <div class="content_header mb2">
-                            <h1 class="modal-title">Add Movie</h1>
+                            <h1 class="modal-title" data-i18n="admin.movies.modal.add">Add Movie</h1>
                         </div>
                     
                         <div class="content_body">
@@ -187,29 +198,53 @@
                                     <!-- Left: Title + Overview -->
                                     <div class="movie-info-left">
                                         <div class="form-group mb2">
-                                            <label>Title: <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="text" name="title" placeholder="Movie title" required>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.title">Title:</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="title" 
+                                                data-i18n-placeholder="admin.movies.modal.titlePlaceholder"
+                                                placeholder="Movie title" 
+                                                required>
                                         </div>
 
                                         <div class="form-group mb2">
-                                            <label>Overview: <span style="color: red;">*</span></label>
-                                            <textarea class="form-control form-textarea" name="overview" placeholder="Movie overview/description" rows="8" required></textarea>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.overview">Overview:</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
+                                            <textarea 
+                                                class="form-control form-textarea" 
+                                                name="overview" 
+                                                data-i18n-placeholder="admin.movies.modal.overviewPlaceholder"
+                                                placeholder="Movie overview/description" 
+                                                rows="8" 
+                                                required></textarea>
                                         </div>
                                     </div>
 
                                     <!-- Right: Banner + Poster -->
                                     <div class="movie-media-right">
                                         <div class="banner-preview mb2">
-                                            <label>Banner (16:9): <span style="color: red;">*</span></label>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.banner">Banner (16:9):</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
                                             <img src="" alt="Banner">
                                             <input type="file" class="banner-input" name="banner" accept="image/*">
-                                            <small>Ratio: 16:9 (e.g. 1920x1080)</small>
+                                            <small data-i18n="admin.movies.modal.bannerRatio">Ratio: 16:9 (e.g. 1920x1080)</small>
                                         </div>
                                         <div class="poster-preview">
-                                            <label>Poster (2:3): <span style="color: red;">*</span></label>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.poster">Poster (2:3):</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
                                             <img src="" alt="Poster">
                                             <input type="file" class="poster-input" name="poster" accept="image/*">
-                                            <small>Ratio: 2:3 (e.g. 600x900)</small>
+                                            <small data-i18n="admin.movies.modal.posterRatio">Ratio: 2:3 (e.g. 600x900)</small>
                                         </div>
                                     </div>
                                 </div>
@@ -220,23 +255,59 @@
                                     <div class="movie-info-column">
                                         <!-- Hiển thị ID khi Edit (readonly) -->
                                         <div class="form-group mb1 movie-id-display" style="display: none;">
-                                            <label>Movie ID:</label>
-                                            <input class="form-control" type="text" name="id-display" placeholder="Auto-generated" readonly>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.movieId">Movie ID:</span>
+                                            </label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="id-display" 
+                                                data-i18n-placeholder="admin.movies.modal.autoGenerated"
+                                                placeholder="Auto-generated" 
+                                                readonly>
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Genre: <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="text" name="genre" placeholder="e.g. Horror, Action" required>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.genre">Genre:</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="genre" 
+                                                data-i18n-placeholder="admin.movies.modal.genrePlaceholder"
+                                                placeholder="e.g. Horror, Action" 
+                                                required>
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Duration (min): <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="number" name="duration" placeholder="e.g. 120" required>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.duration">Duration (min):</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
+                                            <input 
+                                                class="form-control" 
+                                                type="number" 
+                                                name="duration" 
+                                                data-i18n-placeholder="admin.movies.modal.durationPlaceholder"
+                                                placeholder="e.g. 120" 
+                                                required>
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Country: <span style="color: red;">*</span></label>
-                                            <input class="form-control" type="text" name="country" list="country-list" placeholder="Type or select" required>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.country">Country:</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="country" 
+                                                list="country-list" 
+                                                data-i18n-placeholder="admin.movies.modal.countryPlaceholder"
+                                                placeholder="Type or select" 
+                                                required>
                                             <datalist id="country-list">
                                                 <option value="America">
                                                 <option value="Japan">
@@ -251,48 +322,89 @@
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Director:</label>
-                                            <input class="form-control" type="text" name="director" placeholder="Director name">
+                                            <label data-i18n="admin.movies.modal.director">Director:</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="director" 
+                                                data-i18n-placeholder="admin.movies.modal.directorPlaceholder"
+                                                placeholder="Director name">
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Actors:</label>
-                                            <input class="form-control" type="text" name="actors" placeholder="Actor1, Actor2">
+                                            <label data-i18n="admin.movies.modal.actors">Actors:</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="actors" 
+                                                data-i18n-placeholder="admin.movies.modal.actorsPlaceholder"
+                                                placeholder="Actor1, Actor2">
                                         </div>
                                     </div>
 
                                     <!-- Column 2 -->
                                     <div class="movie-info-column">
                                         <div class="form-group mb1">
-                                            <label>Producer:</label>
-                                            <input class="form-control" type="text" name="producer" placeholder="Producer name">
+                                            <label data-i18n="admin.movies.modal.producer">Producer:</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="producer" 
+                                                data-i18n-placeholder="admin.movies.modal.producerPlaceholder"
+                                                placeholder="Producer name">
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Budget (USD):</label>
-                                            <input class="form-control" type="number" name="budget" placeholder="e.g. 50000000">
+                                            <label data-i18n="admin.movies.modal.budget">Budget (USD):</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="number" 
+                                                name="budget" 
+                                                data-i18n-placeholder="admin.movies.modal.budgetPlaceholder"
+                                                placeholder="e.g. 50000000">
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Revenue (USD):</label>
-                                            <input class="form-control" type="number" name="revenue" placeholder="e.g. 150000000">
+                                            <label data-i18n="admin.movies.modal.revenue">Revenue (USD):</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="number" 
+                                                name="revenue" 
+                                                data-i18n-placeholder="admin.movies.modal.revenuePlaceholder"
+                                                placeholder="e.g. 150000000">
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>YouTube Trailer Link:</label>
-                                            <input class="form-control" type="url" name="trailer" placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                                            <label data-i18n="admin.movies.modal.trailer">YouTube Trailer Link:</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="url" 
+                                                name="trailer" 
+                                                data-i18n-placeholder="admin.movies.modal.trailerPlaceholder"
+                                                placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>IMDb Rating:</label>
-                                            <input class="form-control" type="number" name="rating" placeholder="e.g. 8.5" step="0.1" min="0" max="10">
+                                            <label data-i18n="admin.movies.modal.rating">IMDb Rating:</label>
+                                            <input 
+                                                class="form-control" 
+                                                type="number" 
+                                                name="rating" 
+                                                data-i18n-placeholder="admin.movies.modal.ratingPlaceholder"
+                                                placeholder="e.g. 8.5" 
+                                                step="0.1" 
+                                                min="0" 
+                                                max="10">
                                         </div>
 
                                         <div class="form-group mb1">
-                                            <label>Status: <span style="color: red;">*</span></label>
+                                            <label>
+                                                <span data-i18n="admin.movies.modal.status">Status:</span> 
+                                                <span style="color: red;" data-i18n="admin.required">*</span>
+                                            </label>
                                             <select class="form-control" name="status" required>
-                                                <option value="Released">Released</option>
-                                                <option value="Coming Soon">Coming Soon</option>
+                                                <option value="Released" data-i18n="admin.movies.status.released">Released</option>
+                                                <option value="Coming Soon" data-i18n="admin.movies.status.comingSoon">Coming Soon</option>
                                             </select>
                                         </div>
                                     </div>
@@ -300,7 +412,11 @@
 
                                 <!-- Submit Button -->
                                 <div class="form-group action-btn-center mt3 mb3">
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <button 
+                                        type="submit" 
+                                        class="btn btn-primary"
+                                        data-i18n="admin.movies.modal.create"
+                                    >Create</button>
                                 </div>
                             </form>
                         </div>

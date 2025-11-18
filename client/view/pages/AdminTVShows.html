@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin TV Shows Management</title>
+    <title data-i18n="admin.tvshows.title">Admin TV Shows Management</title>
     <link
       rel="icon"
       type="image/png"
@@ -20,15 +20,6 @@
     />
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
     <link rel="stylesheet" href="../../Style/AdminPage.css" />
-    <script type="module">
-      // Import và gọi function async
-      import { AdminTVShows_js } from "../../js/AdminTVShows.js";
-
-      // Gọi function và xử lý async
-      AdminTVShows_js().catch((error) => {
-        console.error("Error initializing AdminTVShows:", error);
-      });
-    </script>
   </head>
 
   <body>
@@ -38,7 +29,10 @@
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
+      import { initTranslate } from "../../js/Translate.js";
+      import { AdminTVShows_js } from "../../js/AdminTVShows.js";
 
+      // Load header & search bar
       fetch("../components/Header.html")
         .then((res) => res.text())
         .then((html) => {
@@ -50,8 +44,14 @@
         .then((searchHTML) => {
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
+          // Initialize translation after DOM is ready
+          return initTranslate();
         })
-        .catch((error) => console.error("Fetch header/search failed:", error));
+        .then(() => {
+          // Initialize AdminTVShows after translation
+          AdminTVShows_js();
+        })
+        .catch((error) => console.error("Initialization failed:", error));
     </script>
 
     <!-- end-header -->
@@ -65,25 +65,25 @@
             <li>
               <a href="../pages/AdminUsers.html">
                 <i class="fa-solid fa-user"></i>
-                <span>Users</span>
+                <span data-i18n="admin.users">Users</span>
               </a>
             </li>
             <li>
               <a href="../pages/AdminMovies.html">
                 <i class="fa-solid fa-film"></i>
-                <span>Movies</span>
+                <span data-i18n="admin.movies">Movies</span>
               </a>
             </li>
             <li>
               <a class="active" href="#">
                 <i class="fa-solid fa-tv"></i>
-                <span>TV Shows</span>
+                <span data-i18n="admin.tvshows">TV Shows</span>
               </a>
             </li>
             <li>
               <a href="../pages/HomePage.html">
                 <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Sign Out</span>
+                <span data-i18n="admin.signout">Sign Out</span>
               </a>
             </li>
           </ul>
@@ -94,10 +94,10 @@
       <div class="admin-main-container">
         <div class="admin-main-content">
           <div class="am-content-heading">
-            <h1>TV Shows</h1>
+            <h1 data-i18n="admin.tvshows.heading">TV Shows</h1>
             <a class="add-btn">
               <i class="fa-solid fa-plus"></i>
-              <span>Add TV Show</span>
+              <span data-i18n="admin.tvshows.modal.add">Add TV Show</span>
             </a>
           </div>
 
@@ -109,26 +109,27 @@
               </div>
               <input
                 class="search-input"
+                data-i18n-placeholder="admin.tvshows.search"
                 placeholder="Search by TV show name or ID (e.g. TV001)"
                 autocomplete="off"
               />
             </div>
             <div class="filter-bar">
               <select class="filter-select">
-                <option value="all">All Country</option>
-                <option value="America">America</option>
-                <option value="Japan">Japan</option>
-                <option value="Korea">Korea</option>
-                <option value="China">China</option>
-                <option value="England">England</option>
+                <option value="all" data-i18n="admin.movies.allCountry">All Country</option>
+                <option value="America" data-i18n="admin.movies.country.america">America</option>
+                <option value="Japan" data-i18n="admin.movies.country.japan">Japan</option>
+                <option value="Korea" data-i18n="admin.movies.country.korea">Korea</option>
+                <option value="China" data-i18n="admin.movies.country.china">China</option>
+                <option value="England" data-i18n="admin.movies.country.england">England</option>
               </select>
               <select class="filter-select">
-                <option value="all">All Status</option>
-                <option value="Released">Released</option>
-                <option value="Coming Soon">Coming Soon</option>
+                <option value="all" data-i18n="admin.movies.allStatus">All Status</option>
+                <option value="Released" data-i18n="admin.movies.status.released">Released</option>
+                <option value="Coming Soon" data-i18n="admin.movies.status.comingSoon">Coming Soon</option>
               </select>
               <select class="filter-select">
-                <option value="all">All Rating</option>
+                <option value="all" data-i18n="admin.movies.allRating">All Rating</option>
                 <option value="9+">9.0+</option>
                 <option value="8+">8.0+</option>
                 <option value="7+">7.0+</option>
@@ -141,19 +142,21 @@
           <!-- Table -->
           <div class="dm-table-container">
             <div class="dm-table-heading">
-              <h2>TV Shows (0)</h2>
+              <h2>
+                <span data-i18n="admin.tvshows.count">TV Shows</span> (0)
+              </h2>
             </div>
             <table class="dm-table">
               <thead>
                 <tr>
-                  <th>No.</th>
-                  <th>Poster</th>
-                  <th>Genre</th>
-                  <th>Seasons</th>
-                  <th>Rating</th>
-                  <th>Status</th>
-                  <th>Edit</th>
-                  <th>Detail</th>
+                  <th data-i18n="admin.movies.table.no">No.</th>
+                  <th data-i18n="admin.movies.table.poster">Poster</th>
+                  <th data-i18n="admin.movies.table.genre">Genre</th>
+                  <th data-i18n="admin.tvshows.table.seasons">Seasons</th>
+                  <th data-i18n="admin.movies.table.rating">Rating</th>
+                  <th data-i18n="admin.movies.table.status">Status</th>
+                  <th data-i18n="admin.movies.table.edit">Edit</th>
+                  <th data-i18n="admin.movies.table.detail">Detail</th>
                   <th></th>
                 </tr>
               </thead>
@@ -189,7 +192,7 @@
             </button>
             <div class="form-wrapper tvshow-form">
               <div class="content_header mb2">
-                <h1 class="modal-title">Add TV Show</h1>
+                <h1 class="modal-title" data-i18n="admin.tvshows.modal.add">Add TV Show</h1>
               </div>
 
               <div class="content_body">
@@ -202,23 +205,29 @@
                     <!-- Left: Title + Overview -->
                     <div class="movie-info-left">
                       <div class="form-group mb2">
-                        <label>Title: <span style="color: red">*</span></label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.title">Title:</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="title"
+                          data-i18n-placeholder="admin.tvshows.modal.titlePlaceholder"
                           placeholder="TV Show title"
                           required
                         />
                       </div>
 
                       <div class="form-group mb2">
-                        <label
-                          >Overview: <span style="color: red">*</span></label
-                        >
+                        <label>
+                          <span data-i18n="admin.movies.modal.overview">Overview:</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <textarea
                           class="form-control form-textarea"
                           name="overview"
+                          data-i18n-placeholder="admin.tvshows.modal.overviewPlaceholder"
                           placeholder="TV Show overview/description"
                           rows="8"
                           required
@@ -229,10 +238,10 @@
                     <!-- Right: Banner + Poster -->
                     <div class="tvshow-media-right movie-media-right">
                       <div class="banner-preview mb2">
-                        <label
-                          >Banner (16:9):
-                          <span style="color: red">*</span></label
-                        >
+                        <label>
+                          <span data-i18n="admin.movies.modal.banner">Banner (16:9):</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <img src="" alt="Banner" />
                         <input
                           type="file"
@@ -240,13 +249,13 @@
                           name="banner"
                           accept="image/*"
                         />
-                        <small>Ratio: 16:9 (e.g. 1920x1080)</small>
+                        <small data-i18n="admin.movies.modal.bannerRatio">Ratio: 16:9 (e.g. 1920x1080)</small>
                       </div>
                       <div class="poster-preview">
-                        <label
-                          >Poster (2:3):
-                          <span style="color: red">*</span></label
-                        >
+                        <label>
+                          <span data-i18n="admin.movies.modal.poster">Poster (2:3):</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <img src="" alt="Poster" />
                         <input
                           type="file"
@@ -254,7 +263,7 @@
                           name="poster"
                           accept="image/*"
                         />
-                        <small>Ratio: 2:3 (e.g. 600x900)</small>
+                        <small data-i18n="admin.movies.modal.posterRatio">Ratio: 2:3 (e.g. 600x900)</small>
                       </div>
                     </div>
                   </div>
@@ -268,33 +277,43 @@
                         class="form-group mb1 tvshow-id-display"
                         style="display: none"
                       >
-                        <label>TV Show ID:</label>
+                        <label>
+                          <span data-i18n="admin.tvshows.modal.tvshowId">TV Show ID:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="id-display"
+                          data-i18n-placeholder="admin.movies.modal.autoGenerated"
                           placeholder="Auto-generated"
                           readonly
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Genre: <span style="color: red">*</span></label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.genre">Genre:</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="genre"
+                          data-i18n-placeholder="admin.movies.modal.genrePlaceholder"
                           placeholder="e.g. Comedy, Drama"
                           required
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Number of Seasons:</label>
+                        <label>
+                          <span data-i18n="admin.tvshows.modal.seasons">Number of Seasons:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="number"
                           name="seasons"
+                          data-i18n-placeholder="admin.movies.modal.autoGenerated"
                           placeholder="Auto-calculated"
                           readonly
                         />
@@ -303,30 +322,36 @@
                           class="btn btn-secondary manage-seasons-btn"
                           style="margin-top: 0.5rem; width: 100%"
                         >
-                          <i class="fa-solid fa-list"></i> Manage Seasons
+                          <i class="fa-solid fa-list"></i>
+                          <span data-i18n="admin.tvshows.modal.manageSeasons">Manage Seasons</span>
                         </button>
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Total Episodes:</label>
+                        <label>
+                          <span data-i18n="admin.tvshows.modal.totalEpisodes">Total Episodes:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="number"
                           name="totalEpisodes"
+                          data-i18n-placeholder="admin.movies.modal.autoGenerated"
                           placeholder="Auto-calculated"
                           readonly
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label
-                          >Country: <span style="color: red">*</span></label
-                        >
+                        <label>
+                          <span data-i18n="admin.movies.modal.country">Country:</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="country"
                           list="country-list"
+                          data-i18n-placeholder="admin.movies.modal.countryPlaceholder"
                           placeholder="Type or select"
                           required
                         />
@@ -344,21 +369,27 @@
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Creator:</label>
+                        <label>
+                          <span data-i18n="admin.tvshows.modal.creator">Creator:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="creator"
+                          data-i18n-placeholder="admin.tvshows.modal.creatorPlaceholder"
                           placeholder="Creator name"
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Main Cast:</label>
+                        <label>
+                          <span data-i18n="admin.tvshows.modal.actors">Main Cast:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="actors"
+                          data-i18n-placeholder="admin.tvshows.modal.actorsPlaceholder"
                           placeholder="Actor1, Actor2"
                         />
                       </div>
@@ -367,51 +398,66 @@
                     <!-- Column 2 -->
                     <div class="movie-info-column">
                       <div class="form-group mb1">
-                        <label>Producer:</label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.producer">Producer:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="text"
                           name="producer"
+                          data-i18n-placeholder="admin.movies.modal.producerPlaceholder"
                           placeholder="Producer name"
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Budget (USD):</label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.budget">Budget (USD):</span>
+                        </label>
                         <input
                           class="form-control"
                           type="number"
                           name="budget"
+                          data-i18n-placeholder="admin.movies.modal.budgetPlaceholder"
                           placeholder="e.g. 50000000"
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Revenue (USD):</label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.revenue">Revenue (USD):</span>
+                        </label>
                         <input
                           class="form-control"
                           type="number"
                           name="revenue"
+                          data-i18n-placeholder="admin.movies.modal.revenuePlaceholder"
                           placeholder="e.g. 150000000"
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>YouTube Trailer Link:</label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.trailer">YouTube Trailer Link:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="url"
                           name="trailer"
+                          data-i18n-placeholder="admin.movies.modal.trailerPlaceholder"
                           placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                         />
                       </div>
 
                       <div class="form-group mb1">
-                        <label>IMDb Rating:</label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.rating">IMDb Rating:</span>
+                        </label>
                         <input
                           class="form-control"
                           type="number"
                           name="rating"
+                          data-i18n-placeholder="admin.movies.modal.ratingPlaceholder"
                           placeholder="e.g. 8.5"
                           step="0.1"
                           min="0"
@@ -420,10 +466,13 @@
                       </div>
 
                       <div class="form-group mb1">
-                        <label>Status: <span style="color: red">*</span></label>
+                        <label>
+                          <span data-i18n="admin.movies.modal.status">Status:</span>
+                          <span style="color: red" data-i18n="admin.required">*</span>
+                        </label>
                         <select class="form-control" name="status" required>
-                          <option value="Released">Released</option>
-                          <option value="Coming Soon">Coming Soon</option>
+                          <option value="Released" data-i18n="admin.movies.status.released">Released</option>
+                          <option value="Coming Soon" data-i18n="admin.movies.status.comingSoon">Coming Soon</option>
                         </select>
                       </div>
                     </div>
@@ -431,9 +480,11 @@
 
                   <!-- Submit Button -->
                   <div class="form-group action-btn-center mt3 mb3">
-                    <button type="submit" class="btn btn-primary">
-                      Create
-                    </button>
+                    <button 
+                      type="submit" 
+                      class="btn btn-primary"
+                      data-i18n="admin.movies.modal.create"
+                    >Create</button>
                   </div>
                 </form>
               </div>
@@ -447,7 +498,7 @@
     <div class="sub-modal-backdrop hidden" id="seasons-backdrop"></div>
     <div class="sub-modal hidden" id="seasons-sub-modal">
       <div class="sub-modal-header">
-        <h3>Manage Seasons</h3>
+        <h3 data-i18n="admin.tvshows.submodal.title">Manage Seasons</h3>
         <button class="sub-close" type="button">×</button>
       </div>
       <div class="sub-modal-body">
@@ -456,16 +507,19 @@
           class="btn btn-primary add-season-btn"
           style="width: 100%; margin-bottom: 1rem"
         >
-          <i class="fa-solid fa-plus"></i> Add New Season
+          <i class="fa-solid fa-plus"></i>
+          <span data-i18n="admin.tvshows.submodal.addSeason">Add New Season</span>
         </button>
         <div id="seasons-list" class="seasons-accordion">
           <!-- JS sẽ render seasons ở đây -->
         </div>
       </div>
       <div class="sub-modal-footer">
-        <button type="button" class="btn btn-primary save-seasons-btn">
-          Save Seasons
-        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary save-seasons-btn"
+          data-i18n="admin.tvshows.submodal.saveSeasons"
+        >Save Seasons</button>
       </div>
     </div>
 

@@ -1,5 +1,72 @@
+// Get current translations
+let translations = {};
+async function loadTranslations() {
+  const lang = localStorage.getItem('language') || 'vi';
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    translations = await res.json();
+  } catch (error) {
+    console.error('Load translations failed:', error);
+  }
+}
+
+// Helper function to get translated text
+function t(key) {
+  return translations[key] || key;
+}
+
+// Genre translation mapping
+function translateGenre(genreStr) {
+  if (!genreStr) return '';
+  
+  const genreMap = {
+    'Animation': 'genre.animation',
+    'Fantasy': 'genre.fantasy',
+    'Thriller': 'genre.thriller',
+    'Drama': 'genre.drama',
+    'Action': 'genre.action',
+    'Crime': 'genre.crime',
+    'Romance': 'genre.romance',
+    'Horror': 'genre.horror',
+    'Comedy': 'genre.comedy',
+    'Adventure': 'genre.adventure',
+    'Mystery': 'genre.mystery',
+    'Sci-Fi': 'genre.scifi',
+    'Science Fiction': 'genre.scifi',
+    'War': 'genre.war',
+    'Western': 'genre.western',
+    'Music': 'genre.music',
+    'Family': 'genre.family',
+    'Documentary': 'genre.documentary',
+    'History': 'genre.history',
+    'Action & Adventure': 'genre.action_adventure',
+    'Kids': 'genre.kids',
+    'News': 'genre.news',
+    'Reality': 'genre.reality',
+    'Sci-Fi & Fantasy': 'genre.scifi_fantasy',
+    'Soap': 'genre.soap',
+    'Talk': 'genre.talk',
+    'War & Politics': 'genre.war_politics'
+  };
+  
+  // Split by comma if multiple genres
+  const genres = genreStr.split(',').map(g => g.trim());
+  const translatedGenres = genres.map(genre => {
+    const key = genreMap[genre];
+    if (key && translations[key]) {
+      return translations[key];
+    }
+    return genre; // fallback to original if no translation
+  });
+  
+  return translatedGenres.join(', ');
+}
+
 // Hàm khởi tạo - tự động load data nếu có file TVShowData.js
 export async function AdminTVShows_js() {
+    // Load translations first
+    await loadTranslations();
+
     let tvShowsData = [];
     try {
         const module = await import('./Data.js');
@@ -36,7 +103,7 @@ export async function AdminTVShows_js() {
     const currentPageSpan = document.querySelector('.pagination-page-current');
     const totalPagesSpan = document.querySelector('.pagination__main span:last-child');
 
-    // TÌM KIẾM VÀ LỌC
+    // TÌMKIẾM VÀ LỌC
     const searchInput = document.querySelector('.search-input');
     const countryFilter = document.querySelector('.filter-select:nth-child(1)');
     const statusFilter = document.querySelector('.filter-select:nth-child(2)');
@@ -90,7 +157,7 @@ export async function AdminTVShows_js() {
         return filteredTVShows.slice(startIndex, endIndex);
     }
 
-    // HÀM TÌM KIẾM VÀ LỌC
+    // HÀM TÌMKIẾM VÀ LỌC
     function filterTVShows() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         const countryValue = countryFilter.value;
@@ -153,26 +220,35 @@ export async function AdminTVShows_js() {
         newRow.appendChild(posterCell);
 
         const genreCell = document.createElement('td');
-        genreCell.textContent = show.genre;
+        const translatedGenre = translateGenre(show.genre);  
+        genreCell.textContent = translatedGenre;
         newRow.appendChild(genreCell);
 
         // Hiển thị số seasons
         const seasonsCell = document.createElement('td');
         const seasonsCount = Array.isArray(show.seasonsData) ? show.seasonsData.length : 0;
-        seasonsCell.textContent = seasonsCount > 0 ? `${seasonsCount} season${seasonsCount > 1 ? 's' : ''}` : 'N/A';
+        if (seasonsCount > 0) {
+            const seasonText = seasonsCount > 1 ? t('admin.tvshows.seasons') : t('admin.tvshows.season');
+            seasonsCell.textContent = `${seasonsCount} ${seasonText}`;
+        } else {
+            seasonsCell.textContent = t('common.na');
+        }
         newRow.appendChild(seasonsCell);
 
         const ratingCell = document.createElement('td');
         ratingCell.innerHTML = show.rating > 0 
             ? `<span>${show.rating}</span>`
-            : '<span style="color: #717182;">N/A</span>';
+            : `<span style="color: #717182;">${t('common.na')}</span>`;
         newRow.appendChild(ratingCell);
 
         const statusCell = document.createElement('td');
         const statusColor = show.status === 'Released' ? '#4CAF50' : '#ff9800';
+        const statusText = show.status === 'Released' 
+            ? t('admin.movies.status.released') 
+            : t('admin.movies.status.comingSoon');
         statusCell.innerHTML = `
             <span style="color: ${statusColor}; font-weight: 600;">
-                ${show.status}
+                ${statusText}
             </span>
         `;
         newRow.appendChild(statusCell);
@@ -196,7 +272,8 @@ export async function AdminTVShows_js() {
 
         const deleteBtn = deleteCell.querySelector('.btn-delete');
         deleteBtn.addEventListener('click', function() {
-            if(confirm(`Are you sure you want to delete "${show.title}"?`)) {
+            const confirmMsg = t('admin.tvshows.modal.deleteConfirm').replace('{title}', show.title);
+            if(confirm(confirmMsg)) {
                 const tvId = newRow.dataset.tvId;
                 allTVShows = allTVShows.filter(s => s.id !== tvId);
                 filterTVShows();
@@ -217,7 +294,7 @@ export async function AdminTVShows_js() {
             tableBody.innerHTML = `
                 <tr>
                     <td colspan="9" style="text-align: center; padding: 2rem; color: #717182;">
-                        No TV shows found
+                        ${t('admin.tvshows.noTVShows')}
                     </td>
                 </tr>
             `;
@@ -234,10 +311,11 @@ export async function AdminTVShows_js() {
 
     // Cập nhật số lượng TV show
     function updateTVCount() {
+        const countSpan = tvCountHeading.querySelector('span[data-i18n="admin.tvshows.count"]');
         if (filteredTVShows.length === allTVShows.length) {
-            tvCountHeading.textContent = `TV Shows (${allTVShows.length})`;
+            tvCountHeading.innerHTML = `<span data-i18n="admin.tvshows.count">${t('admin.tvshows.count')}</span> (${allTVShows.length})`;
         } else {
-            tvCountHeading.textContent = `TV Shows (${filteredTVShows.length} / ${allTVShows.length})`;
+            tvCountHeading.innerHTML = `<span data-i18n="admin.tvshows.count">${t('admin.tvshows.count')}</span> (${filteredTVShows.length} / ${allTVShows.length})`;
         }
     }
 
@@ -286,8 +364,8 @@ export async function AdminTVShows_js() {
     // ========== MODAL ADD/EDIT ==========
     addTVBtn.addEventListener('click', () => {
         isEditMode = false;
-        modalTitle.textContent = 'Add TV Show';
-        submitBtn.textContent = 'Create';
+        modalTitle.textContent = t('admin.tvshows.modal.add');
+        submitBtn.textContent = t('admin.movies.modal.create');
         
         // Reset form và preview
         tvFormEl.reset();
@@ -316,8 +394,8 @@ export async function AdminTVShows_js() {
         
         if (!tvShow) return;
         
-        modalTitle.textContent = 'Edit TV Show';
-        submitBtn.textContent = 'Save';
+        modalTitle.textContent = t('admin.tvshows.modal.edit');
+        submitBtn.textContent = t('admin.movies.modal.save');
         
         // Hiển thị preview với data hiện tại
         bannerPreviewImg.src = tvShow.banner;
@@ -412,7 +490,7 @@ export async function AdminTVShows_js() {
         seasonsListEl.innerHTML = '';
         
         if (currentSeasons.length === 0) {
-            seasonsListEl.innerHTML = '<p style="text-align: center; color: #717182; padding: 2rem;">No seasons added yet. Click "Add Season" to start.</p>';
+            seasonsListEl.innerHTML = `<p style="text-align: center; color: #717182; padding: 2rem;">${t('admin.tvshows.submodal.noSeasons')}</p>`;
             return;
         }
         
@@ -421,26 +499,26 @@ export async function AdminTVShows_js() {
             seasonDiv.className = 'season-item';
             seasonDiv.innerHTML = `
                 <div class="season-header" data-index="${index}">
-                    <h4>Season ${index + 1}</h4>
+                    <h4>${t('admin.tvshows.season')} ${index + 1}</h4>
                     <button type="button" class="btn-icon delete-season-btn" data-index="${index}">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
                 <div class="season-body" data-index="${index}">
                     <div class="form-group mb1">
-                        <label>Season Title:</label>
-                        <input type="text" class="form-control season-title" value="${season.title || ''}" placeholder="e.g. Season 1" data-index="${index}">
+                        <label><span data-i18n="admin.tvshows.submodal.seasonTitle">${t('admin.tvshows.submodal.seasonTitle')}</span></label>
+                        <input type="text" class="form-control season-title" value="${season.title || ''}" placeholder="${t('admin.tvshows.submodal.seasonTitlePlaceholder')}" data-index="${index}">
                     </div>
                     <div class="form-group mb1">
-                        <label>Episodes:</label>
-                        <input type="number" class="form-control season-episodes" value="${season.episodes || ''}" placeholder="Number of episodes" min="1" data-index="${index}">
+                        <label><span data-i18n="admin.tvshows.submodal.episodes">${t('admin.tvshows.submodal.episodes')}</span></label>
+                        <input type="number" class="form-control season-episodes" value="${season.episodes || ''}" placeholder="${t('admin.tvshows.submodal.episodesPlaceholder')}" min="1" data-index="${index}">
                     </div>
                     <div class="form-group mb1">
-                        <label>Overview:</label>
-                        <textarea class="form-control season-overview" placeholder="Season description" rows="3" data-index="${index}">${season.overview || ''}</textarea>
+                        <label><span data-i18n="admin.tvshows.submodal.overview">${t('admin.tvshows.submodal.overview')}</span></label>
+                        <textarea class="form-control season-overview" placeholder="${t('admin.tvshows.submodal.overviewPlaceholder')}" rows="3" data-index="${index}">${season.overview || ''}</textarea>
                     </div>
                     <div class="form-group">
-                        <label>Season Poster:</label>
+                        <label><span data-i18n="admin.tvshows.submodal.seasonPoster">${t('admin.tvshows.submodal.seasonPoster')}</span></label>
                         <div class="season-poster-preview">
                             <img src="${season.poster || '../../public/assets/image/movie_poster_default.jpg'}" alt="Season Poster" class="season-poster-img">
                             <input type="file" class="season-poster-input" accept="image/*" data-index="${index}">
@@ -472,7 +550,7 @@ export async function AdminTVShows_js() {
             const deleteBtn = seasonDiv.querySelector('.delete-season-btn');
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent header click
-                if (confirm('Delete this season?')) {
+                if (confirm(t('admin.tvshows.submodal.deleteConfirm'))) {
                     currentSeasons.splice(index, 1);
                     renderSeasonsList();
                 }
@@ -547,8 +625,9 @@ export async function AdminTVShows_js() {
 
     if (addSeasonBtn) {
         addSeasonBtn.addEventListener('click', () => {
+            const seasonNumber = currentSeasons.length + 1;
             const newSeason = {
-                title: `Season ${currentSeasons.length + 1}`,
+                title: `${t('admin.tvshows.season')} ${seasonNumber}`,
                 episodes: 0,
                 overview: '',
                 poster: '../../public/assets/image/movie_poster_default.jpg'
@@ -692,5 +771,11 @@ export async function AdminTVShows_js() {
             
             closeModal();
         }
+    });
+
+    // Listen for language change
+    window.addEventListener('languagechange', async (e) => {
+        await loadTranslations();
+        renderTVShows();
     });
 }

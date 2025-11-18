@@ -1,6 +1,26 @@
 import { usersData } from "./Data.js";
 
+// Get current translations
+let translations = {};
+async function loadTranslations() {
+  const lang = localStorage.getItem('language') || 'vi';
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    translations = await res.json();
+  } catch (error) {
+    console.error('Load translations failed:', error);
+  }
+}
+
+// Helper function to get translated text
+function t(key) {
+  return translations[key] || key;
+}
+
 export async function AdminUsers_js() {
+  // Load translations first
+  await loadTranslations();
+
   const modalUser = document.querySelector(".modal-user");
   const addUserBtn = document.querySelector(".add-btn");
   const backdrop = document.querySelector(".modal-user .modal_backdrop");
@@ -28,12 +48,11 @@ export async function AdminUsers_js() {
     ".pagination__main span:last-child"
   );
 
-  // TÌM KIẾM VÀ LỌC
+  // SEARCH & FILTER
   const searchInput = document.querySelector(".search-input");
   const roleFilter = document.querySelector(".filter-select:nth-child(1)");
   const statusFilter = document.querySelector(".filter-select:nth-child(2)");
 
-  // Phân trang - Khởi tạo mảng rỗng nếu không có usersData
   let allUsers = [];
 
   const getListUser = async () => {
@@ -53,7 +72,7 @@ export async function AdminUsers_js() {
       filteredUsers = [...allUsers];
       renderUsers();
     } catch (error) {
-      console.error("Lỗi khi tải danh sách người dùng:", error);
+      console.error("Error loading users:", error);
     }
   };
 
@@ -68,7 +87,7 @@ export async function AdminUsers_js() {
   const cfPwdInput = userFormEl.querySelector('input[name="cf_password"]');
   const errorMessage = userFormEl.querySelector(".non-same-pw");
 
-  // Tạo ID tự động tăng theo format UIT001, UIT002, ...
+  // Auto-generate user ID
   function generateUserId() {
     if (allUsers.length === 0) {
       return "UIT001";
@@ -87,28 +106,34 @@ export async function AdminUsers_js() {
     return "UIT" + String(newNumber).padStart(3, "0");
   }
 
-  // Tính tổng số trang
+  // Calculate total pages
   function getTotalPages() {
     return Math.ceil(filteredUsers.length / usersPerPage);
   }
 
-  // Lấy users cho trang hiện tại
+  // Get users for current page
   function getUsersForCurrentPage() {
     const startIndex = (currentPage - 1) * usersPerPage;
     const endIndex = startIndex + usersPerPage;
     return filteredUsers.slice(startIndex, endIndex);
   }
 
-  // HÀM TÌM KIẾM VÀ LỌC - Giữ nguyên trang hiện tại nếu có thể
+  // SEARCH & FILTER
   function filterUsers() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const roleValue = roleFilter.value;
     const statusValue = statusFilter.value;
 
     filteredUsers = allUsers.filter((user) => {
+      // Safely access properties with fallback
+      const userName = (user.userName || user.name || '').toLowerCase();
+      const userEmail = (user.email || '').toLowerCase();
+      const userId = (user.id || '').toLowerCase();
+      
       const matchSearch =
-        user.name.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm);
+        userName.includes(searchTerm) ||
+        userEmail.includes(searchTerm) ||
+        userId.includes(searchTerm);
 
       const matchRole = roleValue === "all" || user.role === roleValue;
       const matchStatus = statusValue === "all" || user.status === statusValue;
@@ -126,12 +151,12 @@ export async function AdminUsers_js() {
     renderUsers();
   }
 
-  // Event listeners cho tìm kiếm và lọc
+  // Event listeners for search & filter
   searchInput.addEventListener("input", filterUsers);
   roleFilter.addEventListener("change", filterUsers);
   statusFilter.addEventListener("change", filterUsers);
 
-  // Tạo row cho user
+  // Create user row
   function createUserRow(user, no) {
     const newRow = document.createElement("tr");
     newRow.dataset.userId = user.id;
@@ -143,16 +168,16 @@ export async function AdminUsers_js() {
     const userCell = document.createElement("td");
     userCell.classList.add("user-column");
     userCell.innerHTML = `
-            <div class="td-user-info">
-                <div class="td-user-avatar">
-                    <img src="${user.avatar}" alt="User Avatar" class="user-avatar-img">
-                </div>
-                <div class="td-user-name-email">
-                    <span class="name">${user.userName}</span><br>
-                    <span class="email">${user.email}</span>
-                </div>
-            </div>
-        `;
+      <div class="td-user-info">
+        <div class="td-user-avatar">
+          <img src="${user.avatar}" alt="User Avatar" class="user-avatar-img">
+        </div>
+        <div class="td-user-name-email">
+          <span class="name">${user.userName}</span><br>
+          <span class="email">${user.email}</span>
+        </div>
+      </div>
+    `;
     newRow.appendChild(userCell);
 
     const roleCell = document.createElement("td");
@@ -162,28 +187,39 @@ export async function AdminUsers_js() {
     const statusCell = document.createElement("td");
     const isActive = user.status === "active";
     statusCell.innerHTML = `
-            <label class="switch">
-                <input type="checkbox" class="status-toggle" ${
-                  isActive ? "checked" : ""
-                }>
-                <span class="slider ${isActive ? "active" : "banned"}">
-                    <span class="text active-text">Active</span>
-                    <span class="text banned-text">Banned</span>
-                </span>
-            </label>
-        `;
+      <label class="switch">
+        <input type="checkbox" class="status-toggle" ${isActive ? "checked" : ""}>
+        <span class="slider ${isActive ? "active" : "banned"}">
+          <span class="text active-text">${t('admin.users.status.active')}</span>
+          <span class="text banned-text">${t('admin.users.status.banned')}</span>
+        </span>
+      </label>
+    `;
     newRow.appendChild(statusCell);
 
     const toggle = statusCell.querySelector(".status-toggle");
     const slider = statusCell.querySelector(".slider");
-    toggle.addEventListener("change", () => {
-      const userIndex = allUsers.findIndex((u) => u.id === user.id);
+    toggle.addEventListener("change", async () => {
+      const userId = user.id;
+      const newStatus = toggle.checked ? "active" : "banned";
+      
+      // Update in allUsers array
+      const userIndex = allUsers.findIndex((u) => u.id === userId);
       if (userIndex !== -1) {
-        allUsers[userIndex].status = toggle.checked ? "active" : "banned";
+        allUsers[userIndex].status = newStatus;
+        
+        // Update in filteredUsers array if exists
+        const filteredIndex = filteredUsers.findIndex((u) => u.id === userId);
+        if (filteredIndex !== -1) {
+          filteredUsers[filteredIndex].status = newStatus;
+        }
+        
+        // Update UI without re-rendering entire table
         slider.classList.toggle("active", toggle.checked);
         slider.classList.toggle("banned", !toggle.checked);
-
-        filterUsers();
+        
+        // Optional: Call API to update in backend
+        // await updateUserStatus(userId, newStatus);
       }
     });
 
@@ -216,7 +252,8 @@ export async function AdminUsers_js() {
 
     const deleteBtn = deleteCell.querySelector(".btn-delete");
     deleteBtn.addEventListener("click", function () {
-      if (confirm(`Are you sure you want to delete "${user.name}"?`)) {
+      const confirmMsg = `${t('admin.users.modal.deleteConfirm')} "${user.name}"?`;
+      if (confirm(confirmMsg)) {
         const userId = newRow.dataset.userId;
         allUsers = allUsers.filter((u) => u.id !== userId);
         filterUsers();
@@ -226,7 +263,7 @@ export async function AdminUsers_js() {
     return newRow;
   }
 
-  // Render bảng users
+  // Render users table
   function renderUsers() {
     tableBody.innerHTML = "";
 
@@ -235,12 +272,12 @@ export async function AdminUsers_js() {
 
     if (usersToShow.length === 0) {
       tableBody.innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; padding: 2rem; color: #717182;">
-                        No users found
-                    </td>
-                </tr>
-            `;
+        <tr>
+          <td colspan="8" style="text-align: center; padding: 2rem; color: #717182;">
+            ${t('admin.users.noUsers')}
+          </td>
+        </tr>
+      `;
     } else {
       usersToShow.forEach((user, index) => {
         const newRow = createUserRow(user, startNo + index);
@@ -252,16 +289,17 @@ export async function AdminUsers_js() {
     updatePaginationButtons();
   }
 
-  // Cập nhật số lượng user
+  // Update user count
   function updateUserCount() {
+    const countSpan = userCountHeading.querySelector('span[data-i18n="admin.users.count"]');
     if (filteredUsers.length === allUsers.length) {
-      userCountHeading.textContent = `Users (${allUsers.length})`;
+      userCountHeading.innerHTML = `<span data-i18n="admin.users.count">${t('admin.users.count')}</span> (${allUsers.length})`;
     } else {
-      userCountHeading.textContent = `Users (${filteredUsers.length} / ${allUsers.length})`;
+      userCountHeading.innerHTML = `<span data-i18n="admin.users.count">${t('admin.users.count')}</span> (${filteredUsers.length} / ${allUsers.length})`;
     }
   }
 
-  // Cập nhật nút phân trang
+  // Update pagination buttons
   function updatePaginationButtons() {
     const totalPages = getTotalPages();
 
@@ -285,7 +323,7 @@ export async function AdminUsers_js() {
     }
   }
 
-  // Event listeners cho phân trang
+  // Pagination event listeners
   paginationLeft.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
@@ -300,21 +338,21 @@ export async function AdminUsers_js() {
     }
   });
 
-  // KHỞI TẠO
+  // INITIALIZE
   renderUsers();
 
   // ========== MODAL ADD/EDIT ==========
   addUserBtn.addEventListener("click", () => {
     isEditMode = false;
-    modalTitle.textContent = "Add User";
-    submitBtn.textContent = "Create";
+    modalTitle.textContent = t('admin.users.modal.add');
+    submitBtn.textContent = t('admin.users.modal.create');
 
-    // Reset form và preview
+    // Reset form and preview
     userFormEl.reset();
     avatarPreviewImg.src =
       "../../../public/assets/image/user_avatar_default.jpg";
 
-    // Ẩn trường ID display và password khi Add
+    // Hide ID display and show password fields for Add mode
     const idDisplayGroup = userFormEl.querySelector(".user-id-display");
     const passwordGroup = userFormEl.querySelector(".password-group");
     const cfPasswordGroup = userFormEl.querySelector(".cf-password-group");
@@ -341,13 +379,13 @@ export async function AdminUsers_js() {
 
     if (!user) return;
 
-    modalTitle.textContent = "Edit User";
-    submitBtn.textContent = "Save";
+    modalTitle.textContent = t('admin.users.modal.edit');
+    submitBtn.textContent = t('admin.users.modal.save');
 
-    // Hiển thị preview với data hiện tại
+    // Show preview with current data
     avatarPreviewImg.src = user.avatar;
 
-    // Hiển thị ID (readonly)
+    // Show ID (readonly)
     const idDisplayGroup = userFormEl.querySelector(".user-id-display");
     const idDisplayInput = userFormEl.querySelector('input[name="id-display"]');
     if (idDisplayGroup && idDisplayInput) {
@@ -355,13 +393,13 @@ export async function AdminUsers_js() {
       idDisplayInput.value = user.id;
     }
 
-    // Ẩn password fields khi edit
+    // Hide password fields in edit mode
     const passwordGroup = userFormEl.querySelector(".password-group");
     const cfPasswordGroup = userFormEl.querySelector(".cf-password-group");
     if (passwordGroup) passwordGroup.style.display = "none";
     if (cfPasswordGroup) cfPasswordGroup.style.display = "none";
 
-    // Điền dữ liệu
+    // Fill data
     userFormEl.querySelector('input[name="id"]').value = user.id;
     userFormEl.querySelector('input[name="name"]').value = user.name;
     userFormEl.querySelector('input[name="email"]').value = user.email;
@@ -390,7 +428,7 @@ export async function AdminUsers_js() {
     }
   });
 
-  // Upload avatar mới
+  // Upload new avatar
   avatarInput.addEventListener("change", function (e) {
     const file = e.target.files[0];
     if (file) {
@@ -402,7 +440,7 @@ export async function AdminUsers_js() {
     }
   });
 
-  // XÁC THỰC MẬT KHẨU
+  // PASSWORD VALIDATION
   function validatePasswords() {
     if (
       pwdInput.value &&
@@ -435,7 +473,7 @@ export async function AdminUsers_js() {
 
     function saveUser() {
       if (isEditMode && currentEditRow) {
-        // EDIT MODE - Cập nhật trực tiếp vào allUsers
+        // EDIT MODE - Update directly in allUsers
         const userId = currentEditRow.dataset.userId;
         const userIndex = allUsers.findIndex((u) => u.id === userId);
 
@@ -467,7 +505,7 @@ export async function AdminUsers_js() {
         allUsers.push(newUser);
         filterUsers();
 
-        // Chuyển đến trang cuối nơi có user mới
+        // Go to last page where new user is
         currentPage = getTotalPages();
         renderUsers();
       }
@@ -486,5 +524,11 @@ export async function AdminUsers_js() {
       avatarURL = avatarPreviewImg.src;
       saveUser();
     }
+  });
+
+  // Listen for language change
+  window.addEventListener('languagechange', async (e) => {
+    await loadTranslations();
+    renderUsers();
   });
 }

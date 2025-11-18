@@ -1,6 +1,65 @@
 import { moviesData } from "./Data.js";
 
-export function AdminMovies_js() {
+// Get current translations
+let translations = {};
+async function loadTranslations() {
+  const lang = localStorage.getItem('language') || 'vi';
+  try {
+    const res = await fetch(`../../../public/locales/${lang}.json`);
+    translations = await res.json();
+  } catch (error) {
+    console.error('Load translations failed:', error);
+  }
+}
+
+// Helper function to get translated text
+function t(key) {
+  return translations[key] || key;
+}
+
+// Genre translation mapping
+function translateGenre(genreStr) {
+  if (!genreStr) return '';
+  
+  const genreMap = {
+    'Animation': 'genre.animation',
+    'Fantasy': 'genre.fantasy',
+    'Thriller': 'genre.thriller',
+    'Drama': 'genre.drama',
+    'Action': 'genre.action',
+    'Crime': 'genre.crime',
+    'Romance': 'genre.romance',
+    'Horror': 'genre.horror',
+    'Comedy': 'genre.comedy',
+    'Adventure': 'genre.adventure',
+    'Mystery': 'genre.mystery',
+    'Sci-Fi': 'genre.scifi',
+    'Science Fiction': 'genre.scifi',
+    'War': 'genre.war',
+    'Western': 'genre.western',
+    'Music': 'genre.music',
+    'Family': 'genre.family',
+    'Documentary': 'genre.documentary',
+    'History': 'genre.history'
+  };
+  
+  // Split by comma if multiple genres
+  const genres = genreStr.split(',').map(g => g.trim());
+  const translatedGenres = genres.map(genre => {
+    const key = genreMap[genre];
+    if (key && translations[key]) {
+      return translations[key];
+    }
+    return genre; // fallback to original if no translation
+  });
+  
+  return translatedGenres.join(', ');
+}
+
+export async function AdminMovies_js() {
+  // Load translations first
+  await loadTranslations();
+
   const modalMovie = document.querySelector(".modal-movie");
   const addMovieBtn = document.querySelector(".add-btn");
   const backdrop = document.querySelector(".modal-movie .modal_backdrop");
@@ -16,7 +75,6 @@ export function AdminMovies_js() {
 
   const tableBody = document.querySelector(".dm-table-body");
 
-  // Lấy đúng selector theo HTML
   const mediaPreview = movieForm.querySelector(".movie-media-right");
   const bannerPreviewImg = mediaPreview.querySelector(".banner-preview img");
   const posterPreviewImg = mediaPreview.querySelector(".poster-preview img");
@@ -30,23 +88,18 @@ export function AdminMovies_js() {
     ".pagination__main span:last-child"
   );
 
-  // TÌM KIẾM VÀ LỌC
   const searchInput = document.querySelector(".search-input");
   const countryFilter = document.querySelector(".filter-select:nth-child(1)");
   const statusFilter = document.querySelector(".filter-select:nth-child(2)");
   const ratingFilter = document.querySelector(".filter-select:nth-child(3)");
 
-  // Phân trang - Khởi tạo mảng rỗng nếu không có moviesData
   let allMovies = [];
 
-  // Thử import moviesData nếu có
   try {
-    // Nếu có moviesData từ import, sử dụng nó
     if (typeof moviesData !== "undefined") {
       allMovies = [...moviesData];
     }
   } catch (error) {
-    // Nếu không có, sử dụng mảng rỗng
     console.log("No initial movie data, starting with empty array");
   }
 
@@ -54,13 +107,11 @@ export function AdminMovies_js() {
   let currentPage = 1;
   const moviesPerPage = 5;
 
-  // Tạo ID tự động tăng theo format MV001, MV002, ...
   function generateMovieId() {
     if (allMovies.length === 0) {
       return "MV001";
     }
 
-    // Tìm số lớn nhất trong các ID hiện có
     const maxNumber = allMovies.reduce((max, movie) => {
       const match = movie.id.match(/^MV(\d+)$/);
       if (match) {
@@ -70,24 +121,20 @@ export function AdminMovies_js() {
       return max;
     }, 0);
 
-    // Tạo ID mới = số lớn nhất + 1
     const newNumber = maxNumber + 1;
     return "MV" + String(newNumber).padStart(3, "0");
   }
 
-  // Tính tổng số trang
   function getTotalPages() {
     return Math.ceil(filteredMovies.length / moviesPerPage);
   }
 
-  // Lấy movies cho trang hiện tại
   function getMoviesForCurrentPage() {
     const startIndex = (currentPage - 1) * moviesPerPage;
     const endIndex = startIndex + moviesPerPage;
     return filteredMovies.slice(startIndex, endIndex);
   }
 
-  // HÀM TÌM KIẾM VÀ LỌC - SỬA: Giữ nguyên trang hiện tại nếu có thể
   function filterMovies() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const countryValue = countryFilter.value;
@@ -112,7 +159,6 @@ export function AdminMovies_js() {
       return matchSearch && matchCountry && matchStatus && matchRating;
     });
 
-    // SỬA: Giữ trang hiện tại, chỉ reset về 1 nếu vượt quá tổng số trang
     const totalPages = getTotalPages();
     if (currentPage > totalPages && totalPages > 0) {
       currentPage = totalPages;
@@ -123,13 +169,11 @@ export function AdminMovies_js() {
     renderMovies();
   }
 
-  // Event listeners cho tìm kiếm và lọc
   searchInput.addEventListener("input", filterMovies);
   countryFilter.addEventListener("change", filterMovies);
   statusFilter.addEventListener("change", filterMovies);
   ratingFilter.addEventListener("change", filterMovies);
 
-  // Tạo row cho movie
   function createMovieRow(movie, no) {
     const newRow = document.createElement("tr");
     newRow.dataset.movieId = movie.id;
@@ -152,12 +196,13 @@ export function AdminMovies_js() {
     newRow.appendChild(posterCell);
 
     const genreCell = document.createElement("td");
-    genreCell.textContent = movie.genre;
+    const translatedGenre = translateGenre(movie.genre);
+    genreCell.textContent = translatedGenre;
     newRow.appendChild(genreCell);
 
     const durationCell = document.createElement("td");
     durationCell.textContent =
-      movie.duration > 0 ? `${movie.duration} min` : "N/A";
+      movie.duration > 0 ? `${movie.duration} ${t('common.minutes')}` : "N/A";
     newRow.appendChild(durationCell);
 
     const ratingCell = document.createElement("td");
@@ -169,9 +214,12 @@ export function AdminMovies_js() {
 
     const statusCell = document.createElement("td");
     const statusColor = movie.status === "Released" ? "#4CAF50" : "#ff9800";
+    const statusText = movie.status === "Released" 
+      ? t('admin.movies.status.released') 
+      : t('admin.movies.status.comingSoon');
     statusCell.innerHTML = `
             <span style="color: ${statusColor}; font-weight: 600;">
-                ${movie.status}
+                ${statusText}
             </span>
         `;
     newRow.appendChild(statusCell);
@@ -195,7 +243,8 @@ export function AdminMovies_js() {
 
     const deleteBtn = deleteCell.querySelector(".btn-delete");
     deleteBtn.addEventListener("click", function () {
-      if (confirm(`Are you sure you want to delete "${movie.title}"?`)) {
+      const confirmMsg = `${t('admin.movies.modal.deleteConfirm').replace('{title}', movie.title)}`;
+      if (confirm(confirmMsg)) {
         const movieId = newRow.dataset.movieId;
         allMovies = allMovies.filter((m) => m.id !== movieId);
         filterMovies();
@@ -205,7 +254,6 @@ export function AdminMovies_js() {
     return newRow;
   }
 
-  // Render bảng movies
   function renderMovies() {
     tableBody.innerHTML = "";
 
@@ -216,7 +264,7 @@ export function AdminMovies_js() {
       tableBody.innerHTML = `
                 <tr>
                     <td colspan="9" style="text-align: center; padding: 2rem; color: #717182;">
-                        No movies found
+                        ${t('admin.movies.noMovies')}
                     </td>
                 </tr>
             `;
@@ -231,16 +279,14 @@ export function AdminMovies_js() {
     updatePaginationButtons();
   }
 
-  // Cập nhật số lượng movie
   function updateMovieCount() {
     if (filteredMovies.length === allMovies.length) {
-      movieCountHeading.textContent = `Movies (${allMovies.length})`;
+      movieCountHeading.innerHTML = `<span data-i18n="admin.movies.count">${t('admin.movies.count')}</span> (${allMovies.length})`;
     } else {
-      movieCountHeading.textContent = `Movies (${filteredMovies.length} / ${allMovies.length})`;
+      movieCountHeading.innerHTML = `<span data-i18n="admin.movies.count">${t('admin.movies.count')}</span> (${filteredMovies.length} / ${allMovies.length})`;
     }
   }
 
-  // Cập nhật nút phân trang
   function updatePaginationButtons() {
     const totalPages = getTotalPages();
 
@@ -264,7 +310,6 @@ export function AdminMovies_js() {
     }
   }
 
-  // Event listeners cho phân trang
   paginationLeft.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
@@ -279,21 +324,19 @@ export function AdminMovies_js() {
     }
   });
 
-  // KHỞI TẠO
+  // INITIALIZE
   renderMovies();
 
   // ========== MODAL ADD/EDIT ==========
   addMovieBtn.addEventListener("click", () => {
     isEditMode = false;
-    modalTitle.textContent = "Add Movie";
-    submitBtn.textContent = "Create";
+    modalTitle.textContent = t('admin.movies.modal.add');
+    submitBtn.textContent = t('admin.movies.modal.create');
 
-    // Reset form và preview
     movieFormEl.reset();
     bannerPreviewImg.src = "../../public/assets/image/movie_banner_default.jpg";
     posterPreviewImg.src = "../../public/assets/image/movie_poster_default.jpg";
 
-    // Ẩn trường ID display khi Add
     const idDisplayGroup = movieFormEl.querySelector(".movie-id-display");
     if (idDisplayGroup) idDisplayGroup.style.display = "none";
 
@@ -310,14 +353,12 @@ export function AdminMovies_js() {
 
     if (!movie) return;
 
-    modalTitle.textContent = "Edit Movie";
-    submitBtn.textContent = "Save";
+    modalTitle.textContent = t('admin.movies.modal.edit');
+    submitBtn.textContent = t('admin.movies.modal.save');
 
-    // Hiển thị preview với data hiện tại
     bannerPreviewImg.src = movie.banner;
     posterPreviewImg.src = movie.poster;
 
-    // Hiển thị ID (readonly)
     const idDisplayGroup = movieFormEl.querySelector(".movie-id-display");
     const idDisplayInput = movieFormEl.querySelector(
       'input[name="id-display"]'
@@ -327,7 +368,6 @@ export function AdminMovies_js() {
       idDisplayInput.value = movie.id;
     }
 
-    // Điền dữ liệu
     movieFormEl.querySelector('input[name="id"]').value = movie.id;
     movieFormEl.querySelector('input[name="title"]').value = movie.title;
     movieFormEl.querySelector('textarea[name="overview"]').value =
@@ -361,7 +401,6 @@ export function AdminMovies_js() {
     movieFormEl.reset();
     currentEditRow = null;
     isEditMode = false;
-    // Reset preview images
     bannerInput.value = "";
     posterInput.value = "";
   }
@@ -374,7 +413,6 @@ export function AdminMovies_js() {
     }
   });
 
-  // Upload banner mới
   bannerInput.addEventListener("change", function (e) {
     const file = e.target.files[0];
     if (file) {
@@ -386,7 +424,6 @@ export function AdminMovies_js() {
     }
   });
 
-  // Upload poster mới
   posterInput.addEventListener("change", function (e) {
     const file = e.target.files[0];
     if (file) {
@@ -398,7 +435,6 @@ export function AdminMovies_js() {
     }
   });
 
-  // SUBMIT FORM - SỬA LOGIC
   movieFormEl.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -463,12 +499,10 @@ export function AdminMovies_js() {
 
     function saveMovie() {
       if (isEditMode && currentEditRow) {
-        // EDIT MODE - SỬA: Cập nhật trực tiếp vào allMovies
         const movieId = currentEditRow.dataset.movieId;
         const movieIndex = allMovies.findIndex((m) => m.id === movieId);
 
         if (movieIndex !== -1) {
-          // Cập nhật movie trong allMovies
           allMovies[movieIndex] = {
             ...allMovies[movieIndex],
             title: title,
@@ -488,12 +522,9 @@ export function AdminMovies_js() {
             poster: posterURL,
           };
 
-          // Gọi filterMovies để cập nhật lại filteredMovies
-          // filterMovies sẽ giữ nguyên trang hiện tại
           filterMovies();
         }
       } else {
-        // ADD MODE
         const newMovie = {
           id: generateMovieId(),
           title: title,
@@ -516,12 +547,17 @@ export function AdminMovies_js() {
         allMovies.push(newMovie);
         filterMovies();
 
-        // Chuyển đến trang cuối nơi có movie mới
         currentPage = getTotalPages();
         renderMovies();
       }
 
       closeModal();
     }
+  });
+
+  // Listen for language change
+  window.addEventListener('languagechange', async (e) => {
+    await loadTranslations();
+    renderMovies();
   });
 }
