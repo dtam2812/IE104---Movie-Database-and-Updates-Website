@@ -1,94 +1,77 @@
 <!-- components/UserDetailMain.html -->
-<div class="container">
+<div class="user-detail">
   <!-- Sidebar -->
-  <div class="sidebar">
-    <h3>Tài khoản</h3>
-    <div class="avatar">
+  <div class="user-detail__sidebar">
+    <h3 class="user-detail__sidebar-title">Tài khoản</h3>
+    <div class="user-detail__avatar">
       <img
+        class="user-detail__avatar-img"
         src="https://www.rophim.li/images/avatars/pack4/16.jpg"
         alt="Avatar"
       />
     </div>
-    <div class="name">Nguyễn Văn A</div>
+    <div class="user-detail__name"></div>
 
-    <div class="nav">
-      <button type="button" class="active" data-section="personal-info">
+    <div class="user-detail__nav">
+      <button
+        class="user-detail__nav-btn user-detail__nav-btn--active"
+        data-section="personal-info"
+      >
         <i class="bx bx-user"></i>
         Thông tin cá nhân
       </button>
-      <button type="button" data-section="favorites">
+      <button class="user-detail__nav-btn" data-section="favorites">
         <i class="bx bx-heart"></i>
         Yêu thích
       </button>
     </div>
 
-    <button type="button" class="logout">
+    <button class="user-detail__logout">
       <i class="bx bx-log-out"></i>
       Đăng xuất
     </button>
   </div>
 
   <!-- Main Content -->
-  <div class="main">
+  <div class="user-detail__main">
     <!-- Personal Information Section -->
-    <div class="content-section active" id="personal-info-section">
-      <h1 class="title">Thông tin cá nhân</h1>
-      <p class="subtitle">Quản lý thông tin cá nhân và tài khoản của bạn</p>
+    <div
+      class="user-detail__section user-detail__section--active"
+      id="personal-info-section"
+    >
+      <h1 class="user-detail__title">Thông tin cá nhân</h1>
+      <p class="user-detail__subtitle">
+        Quản lý thông tin cá nhân và tài khoản của bạn
+      </p>
 
-      <div class="card">
-        <div class="grid">
-          <div class="form-group">
-            <label for="name">Họ và tên</label>
-            <input type="text" id="name" />
+      <div class="user-detail__card">
+        <div class="user-detail__grid">
+          <div class="user-detail__form-group">
+            <label class="user-detail__label" for="name">Họ và tên</label>
+            <input class="user-detail__input" type="text" id="name" />
           </div>
 
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" />
+          <div class="user-detail__form-group">
+            <label class="user-detail__label" for="email">Email</label>
+            <input class="user-detail__input" type="email" id="email" />
           </div>
 
-          <div class="form-group">
-            <label for="joinDate">Ngày tham gia</label>
-            <input type="text" id="joinDate" />
+          <div class="user-detail__form-group">
+            <label class="user-detail__label" for="joinDate"
+              >Ngày tham gia</label
+            >
+            <input class="user-detail__input" type="text" id="joinDate" />
           </div>
         </div>
 
-        <div class="actions">
-          <button type="button" class="btn save-personal-info">
+        <div class="user-detail__actions">
+          <button class="user-detail__btn save-personal-info">
             Lưu thay đổi
           </button>
-          <button type="button" class="btn secondary cancel-personal-info">
-            Hủy
-          </button>
-        </div>
-
-        <div class="card">
-          <h3 class="title">Đổi mật khẩu</h3>
-          <div class="grid">
-            <div class="form-group">
-              <label for="current-password">Mật khẩu hiện tại</label>
-              <input type="password" id="current-password" />
-            </div>
-
-            <div class="form-group">
-              <label for="new-password">Mật khẩu mới</label>
-              <input type="password" id="new-password" />
-            </div>
-
-            <div class="form-group">
-              <label for="confirm-password">Xác nhận mật khẩu</label>
-              <input type="password" id="confirm-password" />
-            </div>
-          </div>
-
-          <div class="actions">
-            <button type="button" class="btn update-password">
-              Cập nhật mật khẩu
-            </button>
-          </div>
         </div>
       </div>
 
+<<<<<<< HEAD
       <!-- Favorites Section -->
       <div class="content-section" id="favorites-section">
         <h1 class="title">Phim yêu thích</h1>
@@ -104,7 +87,64 @@
               >
             </div>
             <!-- Favorites grid will be loaded here dynamically -->
+=======
+      <div class="user-detail__card">
+        <h3 class="user-detail__title">Đổi mật khẩu</h3>
+        <div class="user-detail__grid">
+          <div class="user-detail__form-group">
+            <label class="user-detail__label" for="current-password"
+              >Mật khẩu hiện tại</label
+            >
+            <input
+              class="user-detail__input"
+              type="password"
+              id="current-password"
+            />
+>>>>>>> 203c3b52919e16ca5eb55cc6d1738867df5e0983
           </div>
+
+          <div class="user-detail__form-group">
+            <label class="user-detail__label" for="new-password"
+              >Mật khẩu mới</label
+            >
+            <input
+              class="user-detail__input"
+              type="password"
+              id="new-password"
+            />
+          </div>
+
+          <div class="user-detail__form-group">
+            <label class="user-detail__label" for="confirm-password"
+              >Xác nhận mật khẩu</label
+            >
+            <input
+              class="user-detail__input"
+              type="password"
+              id="confirm-password"
+            />
+          </div>
+        </div>
+
+        <div class="user-detail__actions">
+          <button class="user-detail__btn update-password">
+            Cập nhật mật khẩu
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites Section -->
+    <div class="user-detail__section" id="favorites-section">
+      <h1 class="user-detail__title">Phim yêu thích</h1>
+      <p class="user-detail__subtitle">Danh sách các phim bạn đã yêu thích</p>
+
+      <div class="user-detail__card">
+        <div class="user-detail__favorites">
+          <p class="user-detail__empty-state">
+            Chưa có phim nào trong danh sách yêu thích
+          </p>
+          <!-- Favorites content will be loaded here dynamically -->
         </div>
       </div>
     </div>

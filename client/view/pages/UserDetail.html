@@ -75,18 +75,23 @@
     </script>
 
     <!-- Toast -->
-    <div class="toast">
+    <div class="user-detail__toast">
       Thay đổi đã được lưu
-      <button>Đóng</button>
+      <button class="user-detail__toast-btn">Đóng</button>
     </div>
 
     <!-- Modal -->
-    <div class="modal-backdrop">
-      <div class="modal">
-        <h3>Xác nhận</h3>
-        <p>Bạn có chắc chắn muốn thay đổi thông tin?</p>
-        <div class="actions">
-          <button class="btn">Xác nhận</button>
+    <div class="user-detail__modal-backdrop">
+      <div class="user-detail__modal">
+        <h3 class="user-detail__modal-title">Xác nhận</h3>
+        <p class="user-detail__modal-text">
+          Bạn có chắc chắn muốn thay đổi thông tin?
+        </p>
+        <div class="user-detail__actions">
+          <button class="user-detail__btn">Xác nhận</button>
+          <button class="user-detail__btn user-detail__btn--secondary">
+            Hủy
+          </button>
         </div>
       </div>
     </div>

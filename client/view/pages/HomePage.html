@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UIT FILM</title>
-    <link rel="icon" type="image/png" href="../../../public/assets/image/logo-web-black.png"/>
+    <link rel="icon" type="image/png" href="../../..z/public/assets/image/logo-web-black.png"/>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
@@ -97,16 +97,19 @@
       </div>
        <!-- Trailer Modal -->
       <div id="trailer-modal" class="trailer-modal">
-        <div class="trailer-content">
-          <span id="close-trailer" class="close">&times;</span>
-          <iframe
-            id="trailer-frame"
-            src=""
-            allow="autoplay; encrypted-media"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </div> 
+      <div class="trailer-modal__content">
+        <span id="close-trailer" class="trailer-modal__close">&times;</span>
+        <iframe
+          id="trailer-frame"
+          class="trailer-modal__iframe"
+          width="100%"
+          height="500"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
       <div class="thumbs">
         <div class="thumbs-inner" id="thumbs" aria-label="Thumbnails"></div>
       </div>

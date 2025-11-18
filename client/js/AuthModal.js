@@ -314,7 +314,11 @@ export function Auth_Modaljs() {
 
         modal.classList.add("hidden");
 
+        console.log("User role:", payloadDecoded.role);  
+        
         if (payloadDecoded.role === "Admin") {
+          console.log("Redirecting admin to AdminUsers.html");
+
           window.location.href = "/client/view/pages/AdminUsers.html";
         } else {
           window.location.href = "/client/view/pages/HomePage.html";

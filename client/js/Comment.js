@@ -1,14 +1,14 @@
 let commentsData = [];
 let currentRating = 0;
 
-//Tính điểm trung bình//
+// Tính điểm trung bình
 function calculateAverage(comments) {
   if (comments.length === 0) return 0;
   const total = comments.reduce((sum, comment) => sum + comment.rating, 0);
   return (total / comments.length).toFixed(1);
 }
 
-// Cập nhật thống kê//
+// Cập nhật thống kê
 function updateStats() {
   const avgRating = calculateAverage(commentsData);
   const totalComments = commentsData.length;
@@ -17,7 +17,7 @@ function updateStats() {
   document.getElementById("total-comments").textContent = totalComments;
 }
 
-//Tạo comment//
+// Tạo comment
 function createComment(comment) {
   const stars = Array(5)
     .fill(0)
@@ -39,19 +39,19 @@ function createComment(comment) {
 
   return `
     <div class="comment-item" data-id="${comment.id}">
-      <div class="comment-header">
-        <div class="comment-user">
-          <div class="user-avatar">${avatar}</div>
-          <div class="user-info">
-            <div class="user-name">${comment.userName}</div>
-            <div class="comment-date">${date}</div>
+      <div class="comment-item__header">
+        <div class="comment-item__user">
+          <div class="comment-item__avatar">${avatar}</div>
+          <div class="comment-item__info">
+            <div class="comment-item__name">${comment.userName}</div>
+            <div class="comment-item__date">${date}</div>
           </div>
         </div>
-        <div class="comment-rating">${stars}</div>
+        <div class="comment-item__rating">${stars}</div>
       </div>
-      <div class="comment-text">${comment.text}</div>
-      <div class="comment-actions">
-        <button class="comment-action-btn like-btn" data-id="${comment.id}">
+      <div class="comment-item__text">${comment.text}</div>
+      <div class="comment-item__actions">
+        <button class="comment-item__action-btn" data-id="${comment.id}">
           <i class="fas fa-thumbs-up"></i>
           <span>Hữu ích (${comment.likes || 0})</span>
         </button>
@@ -60,13 +60,13 @@ function createComment(comment) {
   `;
 }
 
-//Hiển thị danh sách comment//
+// Hiển thị danh sách comment
 function renderComments() {
   const commentsList = document.getElementById("comments-list");
 
   if (commentsData.length === 0) {
     commentsList.innerHTML =
-      '<div class="no-comments">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>';
+      '<div class="comments-list__empty">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>';
     return;
   }
 
@@ -78,7 +78,7 @@ function renderComments() {
   commentsList.innerHTML = sortedComments.map(createComment).join("");
 
   // Thêm sự kiện cho nút like
-  commentsList.querySelectorAll(".like-btn").forEach((btn) => {
+  commentsList.querySelectorAll(".comment-item__action-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
       const commentId = this.getAttribute("data-id");
       handleLike(commentId);
@@ -86,7 +86,7 @@ function renderComments() {
   });
 }
 
-// Xử lý like//
+// Xử lý like
 function handleLike(commentId) {
   const comment = commentsData.find((c) => c.id === commentId);
 
@@ -103,7 +103,7 @@ function handleLike(commentId) {
   }
 }
 
-//Xử lý chọn sao//
+// Xử lý chọn sao
 function initStarRating() {
   const stars = document.querySelectorAll("#star-rating i");
 
@@ -143,7 +143,7 @@ function initStarRating() {
   });
 }
 
-// Xử lý comment//
+// Xử lý comment form
 function initCommentForm() {
   const submitBtn = document.getElementById("submit-comment");
   const commentText = document.getElementById("comment-text");
@@ -178,14 +178,12 @@ function initCommentForm() {
       likedByUser: false,
     };
 
-   
     commentsData.push(newComment);
 
-   
     renderComments();
     updateStats();
 
-    
+    // Reset form
     commentText.value = "";
     currentRating = 0;
     document.querySelectorAll("#star-rating i").forEach((s) => {
@@ -201,7 +199,7 @@ function initCommentForm() {
   });
 }
 
-// Tạo tên ngẫu nhiên //
+// Tạo tên ngẫu nhiên
 function generateRandomName() {
   const firstNames = [
     "Nguyễn",
@@ -234,12 +232,10 @@ function generateRandomName() {
   return `${firstName} ${lastName}`;
 }
 
-//Khởi tạo comment //
+// Khởi tạo comments
 export function initComments() {
   initStarRating();
-
   initCommentForm();
-
   updateStats();
 }
 

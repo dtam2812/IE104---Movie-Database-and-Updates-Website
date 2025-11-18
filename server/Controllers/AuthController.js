@@ -31,8 +31,8 @@ const register = async (req, res) => {
       userName: userName,
       email: email,
       password: bcrypt.hashSync(password, 10),
-      role: "user",
-      status: "active",
+      role: "User",
+      status: "Active",
       joinDate: new Date(),
     });
 

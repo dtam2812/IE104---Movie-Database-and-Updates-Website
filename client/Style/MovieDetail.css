@@ -1,4 +1,3 @@
-
 html,
 body {
   overflow-x: hidden;
@@ -29,7 +28,7 @@ body {
 }
 
 .movie-banner__background {
-  background: url(https://static.nutscdn.com/vimg/1920-0/c710b34eb7fa37b24f464e6d74c77614.webp);
+  background: url(https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -99,7 +98,11 @@ body {
   gap: 16px;
   padding: 12px 28px;
   border-radius: 32px;
-  background: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  background: linear-gradient(
+    39deg,
+    rgba(254, 207, 89, 1),
+    rgba(255, 241, 204, 1)
+  );
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -516,44 +519,6 @@ body {
   background: rgba(254, 207, 89, 0.1);
 }
 
-/*Trailer-modal*/
-.trailer-modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-}
-
-.trailer-modal__content {
-  position: relative;
-  margin: 5% auto;
-  width: 80%;
-  max-width: 900px;
-}
-
-.trailer-modal__close {
-  color: #fff;
-  font-size: 35px;
-  font-weight: bold;
-  position: absolute;
-  right: -40px;
-  top: -40px;
-  cursor: pointer;
-}
-
-.trailer-modal__close:hover {
-  color: #fecf59;
-}
-
-.trailer-modal__iframe {
-  width: 100%;
-  height: 500px;
-  border: none;
-}
 
 /* Responsive mobile*/
 @media only screen and (max-width: 1090px) {
