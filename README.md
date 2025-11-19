@@ -76,6 +76,7 @@ cd IE104---Movie-Database-and-Updates-Website/server
 
 # Bước 2. Tạo file .env trong thư mục server
 ![image alt](https://github.com/MinhThienMina/Image/blob/2e9f586905997af8ec324105db1ff7797d16ef53/image.png)
+
 Nội dung tham khảo:
 SECRET_JWT=jwtSecret
 PORT=5000
