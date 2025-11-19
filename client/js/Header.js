@@ -239,6 +239,21 @@ function checkAdminRole() {
   }
 }
 
+// Hàm đóng tất cả dropdowns
+function closeAllDropdowns() {
+  // Đóng language switchers
+  document.querySelectorAll('.language-switcher').forEach(switcher => {
+    switcher.classList.remove('open');
+    switcher.querySelector('.swap-language')?.setAttribute('aria-expanded', 'false');
+  });
+
+  // Đóng user dropdown
+  document.querySelector('.user-dropdown-menu .dropdown-list')?.classList.remove('show');
+
+  // Đóng country dropdown
+  document.querySelector('.menu-film-type.dropdown')?.classList.remove('toggled');
+}
+
 // Main function
 export async function headerjs() {
   const { initTranslate } = await import("./Translate.js");
@@ -252,6 +267,8 @@ export async function headerjs() {
   const dropdown = document.querySelector(".menu-film-type.dropdown");
   const dropdownBtn = document.querySelector(".dropdown-toggle");
   const languageSwitchers = document.querySelectorAll(".language-switcher");
+  const userDropdownMenu = document.querySelector(".user-dropdown-menu");
+  const dropdownList = userDropdownMenu?.querySelector(".dropdown-list");
 
   // Check token on load
   if (!checkTokenOnPageLoad()) {
@@ -291,13 +308,8 @@ export async function headerjs() {
       // Lấy trạng thái hiện tại trước khi toggle
       const wasOpen = languageSwitch.classList.contains("open");
 
-      // Đóng tất cả language switchers trước
-      languageSwitchers.forEach((switcher) => {
-        switcher.classList.remove("open");
-        switcher
-          .querySelector(".swap-language")
-          .setAttribute("aria-expanded", "false");
-      });
+      // Đóng TẤT CẢ dropdowns trước
+      closeAllDropdowns();
 
       // Nếu menu đang đóng thì mở nó, nếu đang mở thì giữ đóng
       if (!wasOpen) {
@@ -348,21 +360,6 @@ export async function headerjs() {
     });
   });
 
-  // Click ngoài để đóng tất cả language switchers
-  document.addEventListener("click", (e) => {
-    languageSwitchers.forEach((languageSwitch) => {
-      if (
-        !languageSwitch.contains(e.target) &&
-        languageSwitch.classList.contains("open")
-      ) {
-        languageSwitch.classList.remove("open");
-        languageSwitch
-          .querySelector(".swap-language")
-          .setAttribute("aria-expanded", "false");
-      }
-    });
-  });
-
   searchNav.addEventListener("click", () => {
     searchNav.classList.toggle("toggled");
     searchBox.classList.toggle("toggled");
@@ -371,15 +368,51 @@ export async function headerjs() {
     languageSwitchers.forEach((ls) => ls.classList.toggle("hidden"));
   });
 
+  // Country dropdown
   if (dropdownBtn) {
-    dropdownBtn.addEventListener("click", () => {
-      dropdown.classList.toggle("toggled");
+    dropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      
+      // Lấy trạng thái hiện tại
+      const wasOpen = dropdown.classList.contains("toggled");
+      
+      // Đóng TẤT CẢ dropdowns trước
+      closeAllDropdowns();
+      
+      // Toggle dropdown này
+      if (!wasOpen) {
+        dropdown.classList.add("toggled");
+      }
     });
   }
 
+  // User dropdown menu
+  if (userDropdownMenu && dropdownList) {
+    userDropdownMenu.addEventListener("click", (e) => {
+      e.stopPropagation();
+      
+      // Lấy trạng thái hiện tại
+      const wasOpen = dropdownList.classList.contains("show");
+      
+      // Đóng TẤT CẢ dropdowns trước
+      closeAllDropdowns();
+      
+      // Toggle dropdown này
+      if (!wasOpen) {
+        dropdownList.classList.add("show");
+      }
+    });
+  }
+
+  // Click ngoài để đóng TẤT CẢ dropdowns
   document.addEventListener("click", (e) => {
-    if (dropdown && !dropdown.contains(e.target)) {
-      dropdown.classList.remove("toggled");
+    // Kiểm tra nếu click không phải vào bất kỳ dropdown nào
+    const isLanguageSwitcher = Array.from(languageSwitchers).some(ls => ls.contains(e.target));
+    const isUserDropdown = userDropdownMenu?.contains(e.target);
+    const isCountryDropdown = dropdown?.contains(e.target);
+
+    if (!isLanguageSwitcher && !isUserDropdown && !isCountryDropdown) {
+      closeAllDropdowns();
     }
   });
 
@@ -442,23 +475,6 @@ export async function headerjs() {
     console.log("User logged in event triggered");
     checkAuthStatus();
   });
-
-  // User dropdown menu
-  const userDropdownMenu = document.querySelector(".user-dropdown-menu");
-  const dropdownList = userDropdownMenu?.querySelector(".dropdown-list");
-
-  if (userDropdownMenu && dropdownList) {
-    userDropdownMenu.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdownList.classList.toggle("show");
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!userDropdownMenu.contains(e.target)) {
-        dropdownList.classList.remove("show");
-      }
-    });
-  }
 
   // Logout button
   const logOutBtn = document.querySelector("#Log-out-Btn");

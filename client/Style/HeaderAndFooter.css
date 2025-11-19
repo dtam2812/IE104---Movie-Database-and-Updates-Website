@@ -182,7 +182,7 @@
 .select-language {
   position: absolute;
   top: 70px;
-  right: calc(0px + 13%);
+  right: calc(0px + 40%);
   min-width: 180px;
   padding: 8px;
   border-radius: 12px;
@@ -193,6 +193,7 @@
   margin: 0;
   display: none;
   z-index: 2000000000;
+  transform: translate3d(-15.5px, -18px, 0px);
 }
 
 .language-switcher.open .select-language {
@@ -248,6 +249,7 @@
 
 .user-lang {
   display: flex;
+  position: relative;
   gap: 20px;
   align-items: center;
 }
@@ -654,6 +656,12 @@
     gap: 0.5rem;
   }
 
+  .select-language {
+
+  right: calc(0px + 6%);
+ 
+}
+
   .language-switcher.desktop-lang {
     display: none !important;
   }
@@ -678,7 +686,8 @@
     height: 20px;
   }
 
-  .user_logged {
+  .user-lang {
+    display: inline-grid;
     align-items: self-start;
     padding: 1.5rem;
     margin: -1.5rem -1.5rem;
@@ -686,6 +695,7 @@
     height: auto;
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 0.75rem 0.75rem 0 0;
+    gap: 0;
   }
 
   .user_logged .header-user {
