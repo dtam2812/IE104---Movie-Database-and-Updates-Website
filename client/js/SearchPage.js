@@ -18,6 +18,7 @@ let castCardTemplate = "";
 
 let translations = {};
 
+// Load file ngôn ngữ JSON tương ứng
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
@@ -27,16 +28,19 @@ async function loadTranslations(lang) {
   }
 }
 
+// Lấy text theo key trong file dịch
 function t(key) {
   return translations[key] || key;
 }
 
+// Lấy ngôn ngữ hiện tại từ LocalStorage hoặc thẻ HTML
 function currentLang() {
   return (
     localStorage.getItem("language") || document.documentElement.lang || "vi"
   );
 }
 
+// Dịch toàn bộ DOM có thuộc tính [data-i18n]
 function translateDOM() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
@@ -44,6 +48,7 @@ function translateDOM() {
   });
 }
 
+// Lấy tiêu đề đã dịch sang tiếng Việt (nếu cần), có cache
 async function getLocalizedTitle(item) {
   const lang = currentLang();
   if (lang !== "vi") {
@@ -79,6 +84,7 @@ async function getLocalizedTitle(item) {
   }
 }
 
+// Load các template thẻ card rồi khởi chạy ứng dụng
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
   fetch("../components/TvShowCardRender.html").then((r) => r.text()),
@@ -92,6 +98,7 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được component:", err));
 
+// Load danh sách kết quả theo loại (all, movie, tv, person)
 async function loadResults(type = "all") {
   grid.innerHTML = `<p class="searchPage__placeholder">${
     t("search.loading") || "Đang tải..."
@@ -102,6 +109,7 @@ async function loadResults(type = "all") {
     let results = [];
     let totalPages = 1;
 
+    // Trường hợp search "all": search thêm movie + tv và gộp lại
     if (type === "all") {
       const [movieRes, tvRes] = await Promise.all([
         fetch(
@@ -138,6 +146,7 @@ async function loadResults(type = "all") {
         tvData.total_pages || 1
       );
     } else {
+      // Search theo từng loại cụ thể
       const endpoint = {
         movie: "search/movie",
         tv: "search/tv",
@@ -158,8 +167,10 @@ async function loadResults(type = "all") {
       totalPages = data.total_pages || 1;
     }
 
+    // Giới hạn 18 kết quả render
     allResults = results.slice(0, 18);
 
+    // Load tiêu đề dịch song song
     const titlePromises = allResults.map((item) => getLocalizedTitle(item));
     const titles = await Promise.all(titlePromises);
 
@@ -173,6 +184,7 @@ async function loadResults(type = "all") {
   }
 }
 
+// Gắn sự kiện click khi chuyển bộ lọc xem kết quả
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) =>
@@ -185,6 +197,7 @@ filterButtons.forEach((btn) => {
   });
 });
 
+// Render danh sách kết quả ra màn hình
 function renderResults(titles) {
   grid.innerHTML = "";
 
@@ -240,19 +253,20 @@ function renderResults(titles) {
   });
 }
 
+// Render pagination (trang trước / trang sau)
 function renderPagination(page, total, type) {
-  const old = document.querySelector(".paginationModern");
+  const old = document.querySelector(".content__pagination");
   if (old) old.remove();
 
   if (total <= 1) return;
 
   const wrapper = document.createElement("div");
-  wrapper.className = "paginationModern";
+  wrapper.className = "content__pagination";
 
   const prev = document.createElement("button");
-  prev.className = "pageCircle";
+  prev.className = "pagination-left-arrow";
   prev.innerHTML = "&#8592;";
-  prev.disabled = page === 1;
+  if (page === 1) prev.classList.add("disable");
   prev.onclick = () => {
     if (currentPages[type] > 1) {
       currentPages[type]--;
@@ -262,13 +276,24 @@ function renderPagination(page, total, type) {
   };
 
   const info = document.createElement("div");
-  info.className = "pageInfo";
-  info.textContent = `Trang ${page} / ${total}`;
+  info.className = "pagination__main";
+
+  const currentSpan = document.createElement("span");
+  currentSpan.className = "pagination-page-current";
+  currentSpan.textContent = page;
+
+  const separator = document.createElement("span");
+  separator.textContent = "/";
+
+  const totalSpan = document.createElement("span");
+  totalSpan.textContent = total;
+
+  info.append(currentSpan, separator, totalSpan);
 
   const next = document.createElement("button");
-  next.className = "pageCircle";
+  next.className = "pagination-right-arrow";
   next.innerHTML = "&#8594;";
-  next.disabled = page === total;
+  if (page === total) next.classList.add("disable");
   next.onclick = () => {
     if (currentPages[type] < total) {
       currentPages[type]++;
@@ -281,22 +306,26 @@ function renderPagination(page, total, type) {
   pagination.after(wrapper);
 }
 
+// Khởi chạy ứng dụng: dịch UI, load kết quả, load lang
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();
   loadResults(currentFilter);
 }
 
+// Reload khi đổi ngôn ngữ trong browser
 window.addEventListener("languagechange", async () => {
   await boot();
 });
 
+// Reload trang nếu language lưu trong localStorage thay đổi
 window.addEventListener("storage", (e) => {
   if (e.key === "language") {
     location.reload();
   }
 });
 
+// Khi DOM load xong, nếu template đã sẵn sàng thì khởi động app
 document.addEventListener("DOMContentLoaded", () => {
   if (movieCardTemplate) boot();
 });
