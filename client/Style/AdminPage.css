@@ -526,6 +526,11 @@ body {
     color: white;
 }
 
+.modal__title{
+    font-size: 16px;
+    color: white;
+}
+
 /* ========== FORM ELEMENTS ========== */
 .form {
     display: none;

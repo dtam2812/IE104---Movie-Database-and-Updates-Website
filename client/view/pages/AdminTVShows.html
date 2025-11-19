@@ -11,40 +11,51 @@
     <link rel="stylesheet" href="../../Style/AdminPage.css">
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
-    <script type="module">
-        import { initTranslate } from "../../js/Translate.js";
-        import { AdminTVShows_js } from '../../js/AdminTVShows.js';
-        
-        // Đợi DOM load xong
-        document.addEventListener('DOMContentLoaded', async () => {
-            await initTranslate();  // Translate trước
-            AdminTVShows_js();      // JS chính sau
-        });
-    </script>
 </head>
 
 <body>
     <!-- Header -->
     <div id="header"></div>
 
+        <!-- SCRIPTS - Load theo thứ tự đúng -->
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
+      import { initTranslate } from "../../js/Translate.js";
+      import { AdminTVShows_js } from '../../js/AdminTVShows.js';
 
-      fetch("../components/Header.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("header").innerHTML = html;
+      // Đợi DOM load xong
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          // 1. Init translate trước
+          await initTranslate();
+          
+          // 2. Load header
+          const headerResponse = await fetch("../components/Header.html");
+          const headerHTML = await headerResponse.text();
+          document.getElementById("header").innerHTML = headerHTML;
           headerjs();
-          return fetch("../components/SearchBar.html");
-        })
-        .then((res) => res.text())
-        .then((searchHTML) => {
+          
+          // 3. Load search bar
+          const searchResponse = await fetch("../components/SearchBar.html");
+          const searchHTML = await searchResponse.text();
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
-        })
-        .catch((error) => console.error("Fetch header/search failed:", error));
+          
+          // 4. Load footer
+          const footerResponse = await fetch("../components/footer.html");
+          const footerHTML = await footerResponse.text();
+          document.getElementById("footer").innerHTML = footerHTML;
+          
+          // 5. QUAN TRỌNG: Chạy AdminTVShows_js() sau cùng
+          AdminTVShows_js();
+          
+        } catch (error) {
+          console.error("Error loading components:", error);
+        }
+      });
     </script>
+
 
     <!-- Main Section -->
     <section class="main">
@@ -170,17 +181,6 @@
     <!-- Footer -->
     <div id="footer"></div>
 
-    <script type="module">
-      fetch("../components/footer.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("footer").innerHTML = html;
-        })
-        .catch((error) => {
-          console.error("Fetch footer failed:", error);
-        });
-    </script>
-
     <!-- Modal: Add/Edit TV Show -->
     <div class="modal modal--tvshow hidden">
         <div class="modal__backdrop"></div>
@@ -192,7 +192,7 @@
                     </button>
                     <div class="form form--tvshow">
                         <div class="form__header mb2">
-                            <h1 class="modal__title" data-i18n="admin.tvshows.modal.add">Add TV Show</h1>
+                            <h1 class="form__title modal__title" data-i18n="admin.tvshows.modal.add">Add TV Show</h1>
                         </div>
                     
                         <div class="form__body">
@@ -231,7 +231,7 @@
                                                 <span data-i18n="admin.movies.modal.banner">Banner (16:9):</span> 
                                                 <span style="color: red;" data-i18n="admin.required">*</span>
                                             </label>
-                                            <img src="" alt="Banner">
+                                            <img src="../../public/assets/image/movie_banner_default.png" alt="Banner">
                                             <input type="file" class="media-form__banner-input" name="banner" accept="image/*">
                                             <small data-i18n="admin.movies.modal.bannerRatio">Ratio: 16:9 (e.g. 1920x1080)</small>
                                         </div>
@@ -240,7 +240,7 @@
                                                 <span data-i18n="admin.movies.modal.poster">Poster (2:3):</span> 
                                                 <span style="color: red;" data-i18n="admin.required">*</span>
                                             </label>
-                                            <img src="" alt="Poster">
+                                            <img src="../../public/assets/image/0891b2.svg" alt="Poster">
                                             <input type="file" class="media-form__poster-input" name="poster" accept="image/*">
                                             <small data-i18n="admin.movies.modal.posterRatio">Ratio: 2:3 (e.g. 600x900)</small>
                                         </div>
@@ -432,7 +432,7 @@
         </div>
     </div>
 
-    <!-- TEMPLATES (Hidden) !-->
+    <!-- TEMPLATES (Hidden) -->
     <!-- Template: Season Item -->
     <template id="season-item-template">
         <div class="season">

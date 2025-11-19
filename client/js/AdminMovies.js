@@ -310,7 +310,7 @@ export async function AdminMovies_js() {
     idInput.value = actor.id || "";
     nameInput.value = actor.name || "";
     photoImg.src =
-      actor.photo || "../../public/assets/image/user_avatar_default.jpg";
+      actor.photo || "/public/assets/image/user_avatar_default.jpg";
 
     // Thêm data-i18n cho placeholder
     idInput.setAttribute(
@@ -403,8 +403,8 @@ export async function AdminMovies_js() {
     submitBtn.textContent = t("admin.movies.modal.create");
 
     movieFormEl.reset();
-    bannerPreviewImg.src = "../../public/assets/image/movie_banner_default.png";
-    posterPreviewImg.src = "../../public/assets/image/0891b2.svg";
+    bannerPreviewImg.src = "/public/assets/image/movie_banner_default.png";
+    posterPreviewImg.src = "/public/assets/image/movie_poster_default.jpg";
 
     currentActors = [];
     movieFormEl.querySelector('input[name="actorsCount"]').value = "0";
@@ -550,7 +550,7 @@ export async function AdminMovies_js() {
       currentActors.push({
         id: newActorId,
         name: "",
-        photo: "../../public/assets/image/user_avatar_default.jpg",
+        photo: "/public/assets/image/user_avatar_default.jpg",
       });
       renderActorsList();
     });

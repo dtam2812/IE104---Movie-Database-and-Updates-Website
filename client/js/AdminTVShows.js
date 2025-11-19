@@ -292,7 +292,7 @@ export async function AdminTVShows_js() {
     titleInput.value = season.title || "";
     episodesInput.value = season.episodes || "";
     overviewInput.value = season.overview || "";
-    posterImg.src = season.poster || "../../public/assets/image/0891b2.svg";
+    posterImg.src = season.poster || "/public/assets/image/movie_poster_default.jpg";
 
     // Toggle hiển thị
     header.addEventListener("click", (e) => {
@@ -398,7 +398,7 @@ export async function AdminTVShows_js() {
     idInput.value = actor.id || "";
     nameInput.value = actor.name || "";
     photoImg.src =
-      actor.photo || "../../public/assets/image/user_avatar_default.jpg";
+      actor.photo || "/public/assets/image/user_avatar_default.jpg";
 
     // Toggle hiển thị
     header.addEventListener("click", (e) => {
@@ -482,8 +482,8 @@ export async function AdminTVShows_js() {
     submitBtn.textContent = "Create";
 
     tvFormEl.reset();
-    bannerPreviewImg.src = "../../public/assets/image/movie_banner_default.png";
-    posterPreviewImg.src = "../../public/assets/image/0891b2.svg";
+    bannerPreviewImg.src = "/public/assets/image/movie_banner_default.png";
+    posterPreviewImg.src = "/public/assets/image/movie_poster_default.jpg";
 
     currentSeasons = [];
     currentActors = [];
@@ -652,7 +652,7 @@ export async function AdminTVShows_js() {
         title: `Season ${currentSeasons.length + 1}`,
         episodes: 0,
         overview: "",
-        poster: "../../public/assets/image/0891b2.svg",
+        poster: "/public/assets/image/movie_poster_default.jpg",
       });
       renderSeasonsList();
     });
@@ -683,7 +683,7 @@ export async function AdminTVShows_js() {
       currentActors.push({
         id: newActorId,
         name: "",
-        photo: "../../public/assets/image/user_avatar_default.jpg",
+        photo: "/public/assets/image/user_avatar_default.jpg",
       });
       renderActorsList();
     });
