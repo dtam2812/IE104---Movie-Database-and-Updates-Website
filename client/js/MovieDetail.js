@@ -1,5 +1,5 @@
 import { TMDB_API_KEY } from "../../config.js";
-import { favoritesManager } from "../js/Favorite.js";
+import { favoritesManager } from "./Favorite.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";

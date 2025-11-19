@@ -1,5 +1,4 @@
 // StarterMovie.js - Gộp logic Dịch Tự Động, Trailer và Favorites
-
 import { TMDB_API_KEY } from "../../config.js";
 import { favoritesManager } from "../js/Favorite.js";
 
@@ -316,17 +315,21 @@ async function updateFavoriteButtonState() {
   const currentMovie = movies[index];
   if (!currentMovie || !favoriteBtn) return;
 
-  const token = localStorage.getItem("token");
-  if (!token || !favoritesManager.isValidToken(token)) {
+  const token =
+    localStorage.getItem("token") || localStorage.getItem("accessToken");
+
+  if (!token) {
     resetFavoriteButton();
     return;
   }
 
   try {
+    // Kiểm tra trạng thái yêu thích từ server
     const isFavorite = await favoritesManager.checkFavoriteStatus(
       currentMovie.id
     );
 
+    // Cập nhật giao diện dựa trên kết quả
     if (isFavorite) {
       favoriteBtn.classList.add("active");
       const path = favoriteBtn.querySelector("path");
@@ -340,24 +343,24 @@ async function updateFavoriteButtonState() {
   }
 }
 
+// ----- Đặt lại nút yêu thích về trạng thái mặc định -----
 function resetFavoriteButton() {
-  favoriteBtn?.classList.remove("active");
-  const path = favoriteBtn?.querySelector("path");
+  favoriteBtn.classList.remove("active");
+  const path = favoriteBtn.querySelector("path");
   if (path) path.style.fill = "#fff";
 }
 
-async function handleFavoriteClick(e) {
-  e.preventDefault();
-
+// ----- Xử lý sự kiện click nút yêu thích -----
+async function handleFavoriteClick() {
   const currentMovie = movies[index];
   if (!currentMovie) return;
 
-  const token = localStorage.getItem("token");
-  if (!token || !favoritesManager.isValidToken(token)) {
-    favoritesManager.showLoginPrompt();
-    return;
+  // Khởi tạo favoritesManager nếu chưa được khởi tạo
+  if (!favoritesManager.isInitialized) {
+    favoritesManager.init();
   }
 
+  // Tạo film data để gửi lên server
   const filmData = {
     id: currentMovie.id.toString(),
     type: "Movie",
@@ -366,8 +369,8 @@ async function handleFavoriteClick(e) {
     posterPath: currentMovie.thumbnailImage,
   };
 
+  // Gọi phương thức xử lý yêu thích
   await favoritesManager.handleFavoriteClick(favoriteBtn, filmData);
-  updateFavoriteButtonState();
 }
 // ===================================
 
@@ -518,13 +521,11 @@ if (favoriteBtn) {
 }
 
 // ----- Info Button -----
-if (infoBtn) {
-  infoBtn.addEventListener("click", () => {
-    const currentMovie = movies[index];
-    if (!currentMovie) return;
-    window.location.href = `../pages/MovieDetail.html?id=${currentMovie.id}`;
-  });
-}
+infoBtn.addEventListener("click", () => {
+  const currentMovie = movies[index];
+  if (!currentMovie) return;
+  window.location.href = `../pages/MovieDetail.html?id=${currentMovie.id}`;
+});
 
 // Listen for language change (giữ nguyên)
 window.addEventListener("languagechange", async () => {
