@@ -129,6 +129,7 @@ body {
   gap: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .detail__btn--play {
@@ -148,6 +149,7 @@ body {
   padding: 17px 17px;
   border-radius: 100%;
   background: var(--gradient-primary);
+  position: relative;
 }
 
 .detail__btn--like:hover {
@@ -155,6 +157,61 @@ body {
   border-color: var(--color-accent-border);
   transform: translateY(-3px);
   box-shadow: 0 4px 10px var(--color-accent-shadow);
+}
+
+
+.detail__btn--like.active svg path {
+  fill: #ff4444;
+}
+
+.detail__btn--like.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.detail__btn--like.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+  z-index: 10000;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 300px;
+}
+
+.toast-notification.success {
+  background-color: #4CAF50;
+}
+
+.toast-notification.error {
+  background-color: #f44336;
+}
+
+.toast-notification.info {
+  background-color: #2196F3;
 }
 
 .detail__review {
@@ -633,7 +690,6 @@ body {
   font-style: italic;
 }
 
-/* FIXED: Changed from .comment to .comment-item */
 .comment-item {
   background: var(--color-overlay);
   padding: 20px;
