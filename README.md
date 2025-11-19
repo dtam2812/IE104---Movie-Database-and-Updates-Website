@@ -70,8 +70,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 * [HTML-CSS-Javascript] - Bộ ba công nghệ web, hiện thức hóa giao diện
 
 ## Hướng dẫn và Cài đặt
-1. **Clone repository**
-```bash
+#Bước 1. **Clone repository**
 git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
 cd IE104---Movie-Database-and-Updates-Website/server
 
@@ -83,7 +82,7 @@ PORT=5000
 DB_URL=mongodb+srv://nguyenductam98765_db_user:ie104Nhom2@cluster0.rhi4hs0.mongodb.net/movieDB?retryWrites=true&w=majority&appName=Cluster0
 DATABASE_NAME=MovieWeb
 
-3. ài đặt các package cần thiết
+3. Cài đặt các package cần thiết
 
 npm install bcrypt bcryptjs cors dotenv express jsonwebtoken mongodb mongoose nodemailer
 npm install -D nodemon
