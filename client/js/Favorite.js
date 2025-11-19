@@ -97,7 +97,7 @@ class FavoritesManager {
           },
           body: JSON.stringify({
             id: film.id.toString(),
-            type: film.type || "Movie",
+            type: film.type === "TVShow" ? "TVShow" : "Movie",
             title: film.title,
             originalName: film.englishTitle || film.originalName,
             posterPath: film.thumbnailImage || film.posterPath,
