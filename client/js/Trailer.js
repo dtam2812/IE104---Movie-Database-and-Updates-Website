@@ -68,6 +68,6 @@ function closeModal() {
 }
 
 closeTrailer.addEventListener("click", closeModal);
-window.addEventListener("click", (e) => {
+window.addEventListener("click", (e) => { 
   if (e.target === trailerModal) closeModal();
 });

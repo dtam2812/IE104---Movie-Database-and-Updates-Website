@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     favoriteFilm: [
       {
         id: String,
-        type: { type: String, enum: ["Movie", "TV Show"] },
+        type: { type: String, enum: ["Movie", "TV"] },
         title: String,
         originalName: String,
         posterPath: String,

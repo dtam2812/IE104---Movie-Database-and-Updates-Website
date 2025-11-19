@@ -1,5 +1,5 @@
 import { TMDB_API_KEY } from "../../config.js";
-import { favoritesManager } from "../js/Favorite.js";
+import { favoritesManager } from "./Favorite.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
@@ -85,7 +85,7 @@ async function fetchTvDetails(tvId) {
       title: tv.name || tv.original_name,
       originalName: tv.original_name,
       posterPath: tv.poster_path,
-      type: "TVShow",
+      type: "TV",
     };
 
     // TIÊU ĐỀ: Nếu không có bản dịch Việt → dịch thủ công
@@ -469,12 +469,22 @@ function initFavoriteButton() {
       return;
     }
 
-    if (!window.currentMovie) return;
+    if (!window.currentMovie) {
+      return;
+    }
 
     try {
+      console.log("📤 Sending favorite request:", {
+        id: window.currentMovie.id.toString(),
+        type: "TV",
+        title: window.currentMovie.title,
+        originalName: window.currentMovie.originalName,
+        posterPath: IMG_URL + window.currentMovie.posterPath,
+      });
+
       await favoritesManager.handleFavoriteClick(favoriteBtn, {
         id: window.currentMovie.id.toString(),
-        type: window.currentMovie.type,
+        type: "TV",
         title: window.currentMovie.title,
         originalName: window.currentMovie.originalName,
         posterPath: IMG_URL + window.currentMovie.posterPath,
