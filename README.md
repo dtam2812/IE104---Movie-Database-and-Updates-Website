@@ -72,6 +72,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 ## Hướng dẫn và Cài đặt
 # Bước 1. **Clone repository**
 git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
+
 cd IE104---Movie-Database-and-Updates-Website/server
 
 # Bước 2. Tạo file .env trong thư mục server
