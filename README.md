@@ -66,3 +66,37 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 * [Express] - Framework nằm trên chức năng máy chủ web của NodeJS
 * [MongoDB] - Hệ quản trị cơ sở dữ liệu quan hệ sử dụng để lưu trữ dữ liệu cho trang web
 * [HTML-CSS-Javascript] - Bộ ba công nghệ web, hiện thức hóa giao diện
+
+## Hướng dẫn và Cài đặt
+#Bước 1. **Clone repository**
+git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
+cd IE104---Movie-Database-and-Updates-Website/server
+
+2. Tạo file .env trong thư mục server
+Nội dung tham khảo:
+
+SECRET_JWT=jwtSecret
+PORT=5000
+DB_URL=mongodb+srv://nguyenductam98765_db_user:ie104Nhom2@cluster0.rhi4hs0.mongodb.net/movieDB?retryWrites=true&w=majority&appName=Cluster0
+DATABASE_NAME=MovieWeb
+
+3. Cài đặt các package cần thiết
+
+npm install bcrypt bcryptjs cors dotenv express jsonwebtoken mongodb mongoose nodemailer
+npm install -D nodemon
+
+4. Chạy server
+cd server
+npm start
+
+5. Mở trình duyệt và vào trang HomePage:
+Tài khoản mẫu
+
+Admin
+
+Email: 23521384@uit.edu.gm.vn
+
+Mật khẩu: 123456
+
+Khách hàng mới: bạn có thể đăng ký tài khoản mới để thử các chức năng. 
+
