@@ -24,7 +24,6 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |:-------------:|:-----:|
 |Unauthenticated User (Người dùng chưa xác thực) |	Người dùng chưa có tài khoản hoặc có tài khoản nhưng chưa đăng nhập. Người dùng này được quyền sử dụng các chức năng công khai của hệ thống.|
 |Authenticated User (Người dùng đã xác thực) |	Người dùng có tài khoản và đã đăng nhập, có một số quyền hạn sử dụng trong hệ thống.|
-|Customer (Khách hàng)|	Đây là người dùng cuối sử dụng các chức năng của hệ thống như tìm phim, xem trailer phim...|
 |Admin | Là người dùng có quyền hạn cao nhất trong hệ thống. Quản trị viên có thể quản lý người dùng, quản lý thông tin phim, xem và cập nhật phim, cấu hình hệ thống và xem các báo cáo. Quản trị viên đảm bảo hoạt động chung của hệ thống, bảo mật, và có quyền cấp phép và phân quyền cho các tài khoản khác trong hệ thống.|
 
 |	Tên chức năng	|	Tác nhân	| Hoàn thành |
@@ -47,7 +46,6 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |	Xem thông báo	|	Authentication User	| 100%|
 |	Đổi mật khẩu	|	Authentication User	| 100%|
 |	Đăng xuất	|	Authentication User	| 100%|
-|	Yêu cầu bảo hành	|	Customer	| 50%|
 |	Đánh giá	|	Customer	| 100%|
 |	Thêm phim yêu thích vào mục yêu thích	|	Customer	| 100%|
 |	Xem lại phim yêu thích vào mục yêu thích	|	Customer	| 100%|
@@ -59,7 +57,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |	Quản lý người dùng	|	Admin	| 100%|
 |	Thêm người dùng	|	Admin	| 100%|
 |	Xóa người dùng	|	Admin	| 100%|
-|	Sửa người dùng	|	Admin	| 100%|
+|	Sửa thông tin người dùng	|	Admin	| 100%|
 
 
 
