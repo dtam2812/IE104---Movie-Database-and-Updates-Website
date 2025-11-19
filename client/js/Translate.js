@@ -21,7 +21,6 @@ async function loadTranslations(lang) {
 }
 
 // Flatten nested translations object thành flat object
-// Ví dụ: {admin: {movies: {count: "Phim"}}} => {"admin.movies.count": "Phim"}
 function flattenTranslations(obj, prefix = "") {
   let result = {};
 

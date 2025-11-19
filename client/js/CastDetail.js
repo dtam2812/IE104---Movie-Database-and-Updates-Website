@@ -226,22 +226,18 @@ function renderPaginationModern(page, total) {
 }
 async function boot() {
   const lang = currentLang();
-  console.log(`🌐 Current language: ${lang}`);
   await loadTranslations(lang);
   translateDOM();
   await loadTemplates();
   await loadPersonDetail();
   await loadPersonMovies();
-  console.log("✅ Cast detail page loaded");
 }
 document.addEventListener("DOMContentLoaded", boot);
 window.addEventListener("languagechange", async () => {
-  console.log("🔄 Language changed, reloading page...");
   await boot();
 });
 window.addEventListener("storage", (e) => {
   if (e.key === "language") {
-    console.log("🔄 Language changed in another tab, reloading...");
     boot();
   }
 });

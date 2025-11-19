@@ -16,7 +16,6 @@ let movieCardTemplate = "";
 let tvCardTemplate = "";
 let castCardTemplate = "";
 
-// ==================== HỆ THỐNG DỊCH NHẸ ====================
 let translations = {};
 
 async function loadTranslations(lang) {
@@ -45,7 +44,6 @@ function translateDOM() {
   });
 }
 
-// Dịch title khi cần (fallback MyMemory + cache)
 async function getLocalizedTitle(item) {
   const lang = currentLang();
   if (lang !== "vi") {
@@ -80,7 +78,6 @@ async function getLocalizedTitle(item) {
     return original;
   }
 }
-// =====================================================================
 
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
@@ -163,7 +160,6 @@ async function loadResults(type = "all") {
 
     allResults = results.slice(0, 18);
 
-    // Dịch title trước khi render
     const titlePromises = allResults.map((item) => getLocalizedTitle(item));
     const titles = await Promise.all(titlePromises);
 
@@ -285,7 +281,6 @@ function renderPagination(page, total, type) {
   pagination.after(wrapper);
 }
 
-// ==================== BOOT + ĐỔI NGÔN NGỮ ====================
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();

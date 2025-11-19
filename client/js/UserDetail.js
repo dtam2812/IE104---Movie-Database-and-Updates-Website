@@ -1,6 +1,5 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 
-// UserDetail.js - Xử lý tương tác cho trang User Detail
 document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => getUserDetail(), 1500);
 

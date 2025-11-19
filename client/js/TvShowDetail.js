@@ -61,13 +61,12 @@ function translateDOM() {
   });
 }
 
-// === CHẠY LẠI KHI ĐỔI NGÔN NGỮ ===
 window.addEventListener("languagechange", () => location.reload());
 window.addEventListener("storage", (e) => {
   if (e.key === "language") location.reload();
 });
 
-// === FETCH CHI TIẾT TV SHOW (giữ nguyên logic cũ + thêm dịch) ===
+// Chi tiết tv show
 async function fetchTvDetails(tvId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -78,13 +77,13 @@ async function fetchTvDetails(tvId) {
     );
     const tv = await res.json();
 
-    // === TIÊU ĐỀ: Nếu không có bản dịch Việt → dịch thủ công ===
+    // Tiêu đề
     let displayTitle = tv.name || tv.original_name;
     if (lang === "vi" && tv.name === tv.original_name) {
       displayTitle = await translateText(tv.original_name, "vi");
     }
 
-    // === MÔ TẢ: Nếu không có hoặc quá ngắn → lấy tiếng Anh rồi dịch ===
+    // Mô tả
     let overview = tv.overview || "";
     if (lang === "vi" && (!overview || overview.length < 30)) {
       const enRes = await fetch(
@@ -157,7 +156,7 @@ async function fetchTvDetails(tvId) {
   }
 }
 
-// === GIỮ NGUYÊN CÁC HÀM RENDER (chỉ thêm t() cho text tĩnh) ===
+//  GIỮ NGUYÊN CÁC HÀM RENDER
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -444,7 +443,7 @@ function initViewMore(buttonSelector, contentSelector) {
   });
 }
 
-// === KHỞI ĐỘNG ===
+// Khởi động
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();
