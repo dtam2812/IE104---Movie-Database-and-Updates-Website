@@ -78,9 +78,13 @@ cd IE104---Movie-Database-and-Updates-Website/server
 ![image alt](https://github.com/MinhThienMina/Image/blob/2e9f586905997af8ec324105db1ff7797d16ef53/image.png)
 
 Nội dung tham khảo:
+
 SECRET_JWT=jwtSecret
+
 PORT=5000
+
 DB_URL=mongodb+srv://nguyenductam98765_db_user:ie104Nhom2@cluster0.rhi4hs0.mongodb.net/movieDB?retryWrites=true&w=majority&appName=Cluster0
+
 DATABASE_NAME=MovieWeb
 
 # Bước 3. Cài đặt các package cần thiết
