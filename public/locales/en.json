@@ -609,7 +609,8 @@
   "admin.tvshows.season": "season",
   "admin.tvshows.seasons": "seasons",
   "admin.tvshows": "TV Shows",
-
+   "admin.tvshows.status.released" : "Released",
+  "admin.tvshows.status.comingSoon" : "Coming Soon",
 
   "admin.movies.modal.manageActors": "Manage Actors",
   "admin.movies.modal.addActor": "Add New Actor",
@@ -622,12 +623,11 @@
 
 
    "admin.users.modal.name": "User Name:", 
-  "admin.users.modal.namePlaceholder": "User name",
-  "admin.users.modal.emailPlaceholder": "Email",
-  "admin.users.modal.passwordPlaceholder": "Password",
-  "admin.users.modal.confirmPasswordPlaceholder": "Confirm password",
-  "admin.users.errors.passwordMismatch": "Passwords do not match.",
-  "admin.pagination.total": "/ 10"
-
+    "admin.users.modal.namePlaceholder": "User name",
+    "admin.users.modal.emailPlaceholder": "Email",
+    "admin.users.modal.passwordPlaceholder": "Password",
+    "admin.users.modal.confirmPasswordPlaceholder": "Confirm password",
+    "admin.users.errors.passwordMismatch": "Passwords do not match.",
+    "admin.pagination.total": "/ 10"
 
 }

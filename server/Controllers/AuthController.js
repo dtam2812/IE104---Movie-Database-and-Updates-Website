@@ -48,10 +48,11 @@ const login = async (req, res) => {
 
   try {
     const user = await userModel.findOne({ email });
-    if (!user) return res.status(400).send("invalid user");
+    if (!user) return res.status(400).send("Email hoặc password không đúng");
 
     const validPass = bcrypt.compareSync(password, user.password);
-    if (!validPass) return res.status(400).send("invalid password");
+    if (!validPass)
+      return res.status(400).send("Email hoặc password không đúng");
 
     const jwtToken = jwt.sign(
       {

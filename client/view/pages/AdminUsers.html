@@ -11,14 +11,6 @@
     <link rel="stylesheet" href="../../Style/AdminPage.css">
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
-    <script type="module">
-        import { initTranslate } from "../../js/Translate.js";
-        import { AdminUsers_js } from '../../js/AdminUsers.js';
-        
-        initTranslate().then(() => {
-            AdminUsers_js();   
-        });
-    </script>
 </head>
 
 <body>
@@ -28,7 +20,10 @@
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
+      import { initTranslate } from "../../js/Translate.js";
+      import { AdminUsers_js } from '../../js/AdminUsers.js';
 
+      // Load header & search bar
       fetch("../components/Header.html")
         .then((res) => res.text())
         .then((html) => {
@@ -40,8 +35,14 @@
         .then((searchHTML) => {
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
+          // Initialize translation after DOM is ready
+          return initTranslate();
         })
-        .catch((error) => console.error("Fetch header/search failed:", error));
+        .then(() => {
+          // Initialize AdminUsers after translation
+          AdminUsers_js();
+        })
+        .catch((error) => console.error("Initialization failed:", error));
     </script>
 
     <!-- Main Section -->
@@ -83,9 +84,9 @@
             <div class="admin-content__wrapper">
                 <div class="admin-content__header">
                     <h1 class="admin-content__title" data-i18n="admin.users.heading">Users</h1>
-                    <a class="admin-content__add-btn" data-i18n="admin.users.modal.add">
+                    <a class="admin-content__add-btn">
                         <i class="fa-solid fa-plus"></i>
-                        <span>Add User</span>
+                        <span data-i18n="admin.users.addUser">Add User</span>
                     </a>
                 </div>
 
@@ -141,7 +142,7 @@
                     </button>
                     <div class="pagination__info">
                         <span class="pagination__current">1</span>
-                        <span data-i18n="admin.pagination.total">/ 10</span>
+                        <span>/ 10</span>
                     </div>
                     <button class="pagination__arrow pagination__arrow--right">
                         <i class="fa-solid fa-arrow-right"></i>
@@ -232,7 +233,7 @@
                                     <input class="form__control" type="password" name="cf_password" minlength="6" 
                                            data-i18n-placeholder="admin.users.modal.confirmPasswordPlaceholder"
                                            placeholder="Confirm password" required>
-                                    <small class="form__error" style="display: none; color: red;" data-i18n="admin.users.errors.passwordMismatch">Passwords do not match.</small>
+                                    <small class="form__error" style="display: none; color: red;" data-i18n="admin.users.modal.passwordMismatch">Passwords do not match.</small>
                                 </div>
 
                                 <!-- Submit Button -->

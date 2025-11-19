@@ -3,7 +3,7 @@ import { TMDB_API_KEY } from "../../config.js";
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
-// ===== THÊM MỚI: Hàm lấy ngôn ngữ =====
+//  Hàm lấy ngôn ngữ
 function getLang() {
   return (
     localStorage.getItem("language") || document.documentElement.lang || "vi"
@@ -22,7 +22,7 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được template:", err));
 
-// ===== SỬA HÀM createCard() =====
+//  createCard()
 function createCard(item, type) {
   const poster = item.poster_path
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
@@ -74,7 +74,7 @@ function renderGrid(gridId, items = [], type = "movie") {
 //Fetch dữ liệu TMDB
 async function fetchTMDB(endpoint) {
   try {
-    // ===== SỬA: Lấy ngôn ngữ động =====
+    //  Lấy ngôn ngữ động
     const lang = getLang();
     const tmdbLang = lang === "vi" ? "vi-VN" : "en-US";
 
@@ -116,7 +116,7 @@ async function loadMovieGrids() {
   }
 }
 
-// ===== THÊM MỚI: Lắng nghe sự kiện đổi ngôn ngữ =====
+// Lắng nghe sự kiện đổi ngôn ngữ
 window.addEventListener("languagechange", () => {
   loadMovieGrids();
 });
