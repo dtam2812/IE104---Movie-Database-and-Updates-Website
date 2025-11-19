@@ -10,11 +10,16 @@ const getUser = async (req, res) => {
     const user = await userModel.findById(req.user._id).select("-password");
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "Người dùng không tồn tại",
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
+
+    // ✅ NORMALIZE type của favorites trước khi gửi về client
+    const normalizedFavorites = user.favoriteFilm.map((film) => ({
+      ...(film.toObject ? film.toObject() : film),
+      type: normalizeFilmType(film.type), // Gọi hàm normalize
+    }));
 
     return res.status(200).json({
       success: true,
@@ -25,7 +30,7 @@ const getUser = async (req, res) => {
         role: user.role,
         status: user.status,
         joinDate: user.joinDate,
-        favoriteFilm: user.favoriteFilm || [],
+        favoriteFilm: normalizedFavorites, // ✅ Dùng normalized
         phone: user.phone || "",
         birthday: user.birthday || "",
       },
@@ -38,6 +43,24 @@ const getUser = async (req, res) => {
     });
   }
 };
+
+// ✅ Thêm hàm normalize type
+function normalizeFilmType(type) {
+  if (!type) return "Movie";
+
+  const typeStr = String(type).trim().toLowerCase();
+
+  // Nếu là TV Show, trả về "TV"
+  if (
+    typeStr.includes("tv") ||
+    typeStr.includes("tvshow") ||
+    typeStr === "series"
+  ) {
+    return "TV";
+  }
+
+  return "Movie";
+}
 
 const getUserDetail = async (req, res) => {
   try {
@@ -131,8 +154,9 @@ const toggleFavorite = async (req, res) => {
       });
     }
 
+    // ✅ Sửa: So sánh đúng - convert thành string
     const existingIndex = user.favoriteFilm.findIndex(
-      (film) => film.id === id && film.type === type
+      (film) => film.id.toString() === id.toString() && film.type === type
     );
 
     let action;
@@ -228,7 +252,9 @@ const checkFavoriteStatus = async (req, res) => {
       });
     }
 
-    const isFavorite = user.favoriteFilm.some((film) => film.id === filmId);
+    const isFavorite = user.favoriteFilm.some(
+      (film) => film.id.toString() === filmId.toString()
+    );
 
     res.json({
       success: true,
