@@ -9,7 +9,6 @@
   --color-border: #1f1f25;
 }
 
-/*body*/
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -19,7 +18,6 @@ body {
   overflow-x: hidden;
 }
 
-/*person detail*/
 .person-detail {
   display: flex;
   flex-direction: row;
@@ -67,7 +65,6 @@ body {
   color: var(--color-text);
 }
 
-/*Movie*/
 .person-detail__movies {
   flex: 3;
   display: flex;
@@ -85,7 +82,6 @@ body {
   gap: 20px;
 }
 
-/*Movie card*/
 .movie-card {
   background-color: var(--color-bg-dark);
   border-radius: 10px;
@@ -121,55 +117,55 @@ body {
   margin-bottom: 8px;
 }
 
-/*pagination*/
-.pagination {
+.pagination-modern {
+  margin: 64px 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 24px;
-  margin: 40px auto;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.pagination__button {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background-color: var(--color-border);
-  color: var(--color-text-light);
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.pagination__button:hover:not(:disabled) {
-  background-color: #2d2d34;
+.page-circle {
+  background-color: #2f3346;
+  border-radius: 48px;
+  width: 50px;
+  height: 50px;
+  padding: 11.2px;
   color: var(--color-text);
-  transform: scale(1.05);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-.pagination__button:disabled {
-  opacity: 0.3;
+.page-circle:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.page-circle:disabled {
+  background-color: #282a3a;
+  color: #afafb2;
   cursor: not-allowed;
 }
 
-.pagination__info {
-  background-color: var(--color-border);
+.page-info-box {
+  height: 50px;
+  padding: 0 19.2px;
+  border-radius: 48px;
+  background-color: #2f3346;
   color: var(--color-text);
-  border-radius: 12px;
-  padding: 8px 18px;
+  font-size: 15px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 16px;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.05) inset;
+  gap: 8px;
+  line-height: 24px;
 }
 
-.pagination__current {
-  background-color: var(--color-secondary);
-  padding: 4px 10px;
-  border-radius: 6px;
+.page-current {
+  width: 60px;
   font-weight: 600;
+  border: solid 1px #ffffff20;
+  border-radius: 4px;
+  text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -185,5 +181,20 @@ body {
 
   .movie-card__image {
     height: 180px;
+  }
+
+  .page-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .page-info-box {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .page-current {
+    width: 50px;
   }
 }

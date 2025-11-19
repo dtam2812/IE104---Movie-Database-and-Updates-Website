@@ -1,16 +1,19 @@
 import { TMDB_API_KEY } from "../../config.js";
 
+// Hàm khởi tạo Search Bar và các sự kiện
 export function searchBar() {
   const input = document.querySelector(".search__input");
   const dropdown = document.querySelector(".search__dropdown");
   let timer;
 
+  // Hàm lấy ngôn ngữ hiện tại để gọi API
   function getCurrentLanguage() {
     const lang =
       localStorage.getItem("language") || document.documentElement.lang || "vi";
     return lang === "vi" ? "vi-VN" : "en-US";
   }
 
+  // Hàm lấy text theo key và theo ngôn ngữ đã lưu
   function getTranslatedText(key) {
     const lang = localStorage.getItem("language") || "vi";
     const translations = {
@@ -30,6 +33,7 @@ export function searchBar() {
     return translations[lang]?.[key] || translations.vi[key];
   }
 
+  // Hàm gọi API để lấy danh sách tìm kiếm từ Movie, TV, Person
   async function fetchResults(query) {
     const language = getCurrentLanguage();
 
@@ -75,6 +79,7 @@ export function searchBar() {
     );
   }
 
+  // Sự kiện khi nhập text vào ô search --> debounce và fetch data
   input.addEventListener("input", () => {
     const query = input.value.trim();
     clearTimeout(timer);
@@ -95,6 +100,7 @@ export function searchBar() {
     }, 400);
   });
 
+  // Sự kiện Enter --> chuyển sang trang SearchPage
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -106,6 +112,7 @@ export function searchBar() {
     }
   });
 
+  // Hàm hiển thị danh sách kết quả xuống dropdown
   function renderResults(results) {
     dropdown.innerHTML = "";
     if (!results.length)
@@ -167,6 +174,7 @@ export function searchBar() {
     });
   }
 
+  // Ẩn dropdown khi click ra ngoài
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".search"))
       dropdown.classList.remove("search__dropdown--active");

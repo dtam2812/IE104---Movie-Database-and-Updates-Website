@@ -1,4 +1,5 @@
 import { TMDB_API_KEY } from "../../config.js";
+import { favoritesManager } from "../js/Favorite.js";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMG_URL = "https://image.tmdb.org/t/p/w500";
@@ -6,7 +7,7 @@ const BG_URL = "https://image.tmdb.org/t/p/original";
 
 let translations = {};
 
-// === HỆ THỐNG DỊCH ===
+// HỆ THỐNG DỊCH
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
@@ -61,13 +62,13 @@ function translateDOM() {
   });
 }
 
-// === CHẠY LẠI KHI ĐỔI NGÔN NGỮ ===
+// CHẠY LẠI KHI ĐỔI NGÔN NGỮ
 window.addEventListener("languagechange", () => location.reload());
 window.addEventListener("storage", (e) => {
   if (e.key === "language") location.reload();
 });
 
-// === FETCH CHI TIẾT TV SHOW (giữ nguyên logic cũ + thêm dịch) ===
+// FETCH CHI TIẾT TV SHOW
 async function fetchTvDetails(tvId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -78,13 +79,22 @@ async function fetchTvDetails(tvId) {
     );
     const tv = await res.json();
 
-    // === TIÊU ĐỀ: Nếu không có bản dịch Việt → dịch thủ công ===
+    // Lưu thông tin TV show vào window.currentMovie để sử dụng cho favorite
+    window.currentMovie = {
+      id: tvId,
+      title: tv.name || tv.original_name,
+      originalName: tv.original_name,
+      posterPath: tv.poster_path,
+      type: "TVShow",
+    };
+
+    // TIÊU ĐỀ: Nếu không có bản dịch Việt → dịch thủ công
     let displayTitle = tv.name || tv.original_name;
     if (lang === "vi" && tv.name === tv.original_name) {
       displayTitle = await translateText(tv.original_name, "vi");
     }
 
-    // === MÔ TẢ: Nếu không có hoặc quá ngắn → lấy tiếng Anh rồi dịch ===
+    // MÔ TẢ: Nếu không có hoặc quá ngắn → lấy tiếng Anh rồi dịch
     let overview = tv.overview || "";
     if (lang === "vi" && (!overview || overview.length < 30)) {
       const enRes = await fetch(
@@ -147,17 +157,23 @@ async function fetchTvDetails(tvId) {
       bg.style.backgroundPosition = "center";
     }
 
-    // Các phần render khác (giữ nguyên)
+    // Các phần render khác
     renderActors(tv.credits?.cast || []);
     renderInfo(tv);
     renderSeasons(tv.seasons || []);
     renderProducers(tv.production_companies || []);
+
+    // Cập nhật trạng thái nút yêu thích
+    updateFavoriteButtonState();
+
+    // Khởi tạo event listener cho nút yêu thích
+    initFavoriteButton();
   } catch (error) {
     console.error("Lỗi khi tải chi tiết TV Show:", error);
   }
 }
 
-// === GIỮ NGUYÊN CÁC HÀM RENDER (chỉ thêm t() cho text tĩnh) ===
+// CÁC HÀM RENDER
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -280,6 +296,9 @@ function renderInfo(tv) {
     }:</div><div class="info-item__value">${
     tv.status || t("common.unknown")
   }</div></div>
+    <div class="info-item"><div class="info-item__label">${
+      t("detail.firstAirDate") || "Ngày phát sóng đầu"
+    }:</div><div class="info-item__value">${firstAirDate}</div></div>
   `;
 }
 
@@ -341,7 +360,7 @@ function renderProducers(producers) {
   });
 }
 
-// Recommended (giữ nguyên, thêm dịch title nếu cần)
+// Recommended
 async function loadRecommendedTvShows(tvId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -394,7 +413,82 @@ async function loadRecommendedTvShows(tvId) {
   }
 }
 
-// Tabs & View More (giữ nguyên)
+// FAVORITE FUNCTIONS
+// Cập nhật trạng thái nút yêu thích
+async function updateFavoriteButtonState() {
+  const favoriteBtn = document.querySelector(
+    ".detail__btn--like, .favorite-btn, .favorite"
+  );
+  if (!favoriteBtn || !window.currentMovie) return;
+
+  const token =
+    localStorage.getItem("accessToken") || localStorage.getItem("token");
+  if (!token) {
+    favoriteBtn.classList.remove("active");
+    return;
+  }
+
+  try {
+    const isFavorite = await favoritesManager.checkFavoriteStatus(
+      window.currentMovie.id
+    );
+    updateFavoriteButtonAppearance(favoriteBtn, isFavorite);
+  } catch (error) {
+    console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
+  }
+}
+
+// Cập nhật giao diện nút yêu thích
+function updateFavoriteButtonAppearance(button, isFavorite) {
+  const svg = button.querySelector("svg");
+  const path = svg?.querySelector("path");
+
+  if (isFavorite) {
+    button.classList.add("active");
+    if (path) path.style.fill = "#ff4444";
+  } else {
+    button.classList.remove("active");
+    if (path) path.style.fill = "none";
+  }
+}
+
+// Khởi tạo event listener cho nút yêu thích
+function initFavoriteButton() {
+  const favoriteBtn = document.querySelector(
+    ".detail__btn--like, .favorite-btn, .favorite"
+  );
+  if (!favoriteBtn) return;
+
+  favoriteBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const token =
+      localStorage.getItem("accessToken") || localStorage.getItem("token");
+    if (!token || !favoritesManager.isValidToken(token)) {
+      favoritesManager.showLoginPrompt();
+      return;
+    }
+
+    if (!window.currentMovie) return;
+
+    try {
+      await favoritesManager.handleFavoriteClick(favoriteBtn, {
+        id: window.currentMovie.id.toString(),
+        type: window.currentMovie.type,
+        title: window.currentMovie.title,
+        originalName: window.currentMovie.originalName,
+        posterPath: IMG_URL + window.currentMovie.posterPath,
+      });
+
+      // Cập nhật lại trạng thái nút
+      updateFavoriteButtonState();
+    } catch (error) {
+      console.error("Lỗi khi xử lý yêu thích:", error);
+    }
+  });
+}
+
+// Tabs & View More
 function initTabs() {
   const tabs = document.querySelectorAll(".tabs__btn");
   const tabContents = document.querySelectorAll(".tabs__content");
@@ -444,7 +538,7 @@ function initViewMore(buttonSelector, contentSelector) {
   });
 }
 
-// === KHỞI ĐỘNG ===
+// KHỞI ĐỘNG
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();
