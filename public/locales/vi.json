@@ -322,11 +322,12 @@
   "detail.recError": "Có lỗi khi tải đề xuất.",
   "detail.recommendList": "Danh sách phim đề xuất",
   "detail.noOverview": "Không có mô tả",
+  "detail.firstAirDate": "Ngày phát sóng ",
 
   "tvshow.creator": "Nhà sản xuất",
   "tvshow.infoTitle": "Thông tin phim",
   "tvshow.seasons": "Số mùa",
-  "tvshow.totalEpisodes": "Tổng số tập",
+  "tvshow.totalEpisodes": "Số tập",
   "tvshow.firstAirDate": "Ngày phát sóng đầu",
   "tvshow.airDate": "Ngày phát sóng",
   "tvshow.episodes": "Số tập",

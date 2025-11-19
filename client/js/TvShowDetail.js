@@ -218,10 +218,10 @@ function createSeasonHTML(season) {
               )}</span></p>`
             : ""
         }
-        <p><strong>${t("detail.airDate") || "Ngày phát sóng"}:</strong> ${
+        <p><strong>${t("detail.firstAirDate") || "Ngày phát sóng"}:</strong> ${
     season.air_date || "N/A"
   }</p>
-        <p><strong>${t("detail.episodes") || "Số tập"}:</strong> ${
+        <p><strong>${t("tvshow.totalEpisodes") || "Số tập"}:</strong> ${
     season.episode_count || "N/A"
   }</p>
         <p><strong>${t("detail.intro") || "Giới thiệu"}:</strong> ${

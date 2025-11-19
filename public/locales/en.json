@@ -322,6 +322,7 @@
   "detail.recError": "Failed to load recommendations.",
   "detail.recommendList": "Recommendation list",
   "detail.noOverview": "No overview",
+  "detail.firstAirDate": "First air date",
   
 
   "tvshow.creator": "Creator",
