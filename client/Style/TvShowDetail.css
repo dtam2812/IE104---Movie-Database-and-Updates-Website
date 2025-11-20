@@ -816,7 +816,6 @@ body {
 
   .tabs__btn--active {
     color: var(--color-text-primary);
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
     transform: scale(1.05);
   }
 
@@ -957,7 +956,7 @@ body {
   }
 
   .tabs__nav::-webkit-scrollbar-thumb:hover {
-    background: #fecf59;
+    background: #ffd84d;
   }
 
   .tabs__nav {
