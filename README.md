@@ -24,7 +24,6 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |:-------------:|:-----:|
 |Unauthenticated User (Người dùng chưa xác thực) |	Người dùng chưa có tài khoản hoặc có tài khoản nhưng chưa đăng nhập. Người dùng này được quyền sử dụng các chức năng công khai của hệ thống.|
 |Authenticated User (Người dùng đã xác thực) |	Người dùng có tài khoản và đã đăng nhập, có một số quyền hạn sử dụng trong hệ thống.|
-|Customer (Khách hàng)|	Đây là người dùng cuối sử dụng các chức năng của hệ thống như tìm phim, xem trailer phim...|
 |Admin | Là người dùng có quyền hạn cao nhất trong hệ thống. Quản trị viên có thể quản lý người dùng, quản lý thông tin phim, xem và cập nhật phim, cấu hình hệ thống và xem các báo cáo. Quản trị viên đảm bảo hoạt động chung của hệ thống, bảo mật, và có quyền cấp phép và phân quyền cho các tài khoản khác trong hệ thống.|
 
 |	Tên chức năng	|	Tác nhân	| Hoàn thành |
@@ -47,7 +46,6 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 |	Xem thông báo	|	Authentication User	| 100%|
 |	Đổi mật khẩu	|	Authentication User	| 100%|
 |	Đăng xuất	|	Authentication User	| 100%|
-|	Yêu cầu bảo hành	|	Customer	| 50%|
 |	Đánh giá	|	Customer	| 100%|
 |	Thêm phim yêu thích vào mục yêu thích	|	Customer	| 100%|
 |	Xem lại phim yêu thích vào mục yêu thích	|	Customer	| 100%|
@@ -68,3 +66,56 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 * [Express] - Framework nằm trên chức năng máy chủ web của NodeJS
 * [MongoDB] - Hệ quản trị cơ sở dữ liệu quan hệ sử dụng để lưu trữ dữ liệu cho trang web
 * [HTML-CSS-Javascript] - Bộ ba công nghệ web, hiện thức hóa giao diện
+
+## Hướng dẫn và Cài đặt
+# Bước 1. **Clone repository**
+git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
+
+cd IE104---Movie-Database-and-Updates-Website/server
+
+# Bước 2. Tạo file .env trong thư mục server
+![image alt](https://github.com/MinhThienMina/Image/blob/2e9f586905997af8ec324105db1ff7797d16ef53/image.png)
+
+# Nội dung tham khảo:
+
+SECRET_JWT=jwtSecret
+
+PORT=5000
+
+DB_URL=mongodb+srv://nguyenductam98765_db_user:ie104Nhom2@cluster0.rhi4hs0.mongodb.net/movieDB?retryWrites=true&w=majority&appName=Cluster0
+
+DATABASE_NAME=MovieWeb
+
+# Bước 3. Cài đặt các package cần thiết
+cd server
+
+npm install bcrypt bcryptjs cors dotenv express jsonwebtoken mongodb mongoose nodemailer
+
+npm install -D nodemon
+
+![image alt](https://github.com/MinhThienMina/Image/blob/5aacb1423079dd21acce0f6ada438eef73f9ccef/Screenshot%202025-11-19%20230531.png)
+
+# Bước 4. Chạy server
+npm start
+
+![image alt](https://github.com/MinhThienMina/Image/blob/4eebaaf4d35bb6cba6908330b899c7b7c135aa62/image.png)
+
+# Bước 5. Mở trình duyệt và vào trang HomePage trong mục view/pages ở bên client:
+
+![image alt](https://github.com/MinhThienMina/Image/blob/030136bd51c4a07ec58894204e00724f19515081/s.png)
+
+Tài khoản mẫu
+
+Admin
+
+Email: 23521384@uit.edu.gm.vn
+
+Mật khẩu: 123456
+
+![image alt](https://github.com/MinhThienMina/Image/blob/bdb54caf0776ad0da5e86ef2eb385e1a9f1af343/ad.png)
+
+
+Bạn có thể đăng ký tài khoản mới để thử các chức năng. 
+![image alt](https://github.com/MinhThienMina/Image/blob/d7ef3095cd6dbd155b37d3f75ddc67debffdab48/film.png)
+
+## Chúc các bạn thành công!!!
