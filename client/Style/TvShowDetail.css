@@ -792,6 +792,9 @@ body {
     background-color: var(--color-bg-primary);
     border-bottom: 1px solid var(--color-border);
     overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
   .tabs__btn {
@@ -998,6 +1001,7 @@ body {
     gap: 12px;
     justify-items: center;
   }
+
 
   .actor__link {
     width: 100px;
