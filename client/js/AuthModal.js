@@ -1,4 +1,5 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export async function Auth_Modaljs() {
   const modal = document.querySelector(".modal");
@@ -164,7 +165,7 @@ export async function Auth_Modaljs() {
   async function resendOTP() {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
+        `${API_BASE_URL}/api/auth/forgot-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -238,7 +239,7 @@ export async function Auth_Modaljs() {
       .value.trim();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, email, password }),
@@ -275,7 +276,7 @@ export async function Auth_Modaljs() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -328,7 +329,7 @@ export async function Auth_Modaljs() {
     btn.textContent = "Đang gửi...";
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/forgotPassword", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/forgotPassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -366,7 +367,7 @@ export async function Auth_Modaljs() {
     btn.textContent = "Đang xác thực...";
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/verifyOTP", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/verifyOTP`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: forgotPasswordEmail, otp }),
@@ -407,7 +408,7 @@ export async function Auth_Modaljs() {
     btn.textContent = "Đang xử lý...";
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/resetPassword", {
+      const res = await fetch(`${API_BASE_URL}/api/auth/resetPassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: forgotPasswordEmail, newPassword }),
