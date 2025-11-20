@@ -81,11 +81,11 @@ git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website
 
 cd IE104---Movie-Database-and-Updates-Website/server
 
-# Bước 2. Tạo file .env trong thư mục server
+# Bước 2. Tạo file .env trong thư mục server (nếu clone từ github không có)
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/2e9f586905997af8ec324105db1ff7797d16ef53/image.png)
 
-# Nội dung tham khảo:
+# Nội dung:
 
 SECRET_JWT=jwtSecret
 
