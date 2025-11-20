@@ -952,12 +952,12 @@ body {
   }
 
   .tabs__nav::-webkit-scrollbar-thumb {
-    background: var(--color-accent-primary);
+    background: #fecf59;
     border-radius: 3px;
   }
 
   .tabs__nav::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-hover);
+    background: #fecf59;
   }
 
   .tabs__nav {
