@@ -38,7 +38,7 @@ app.use("/api", userRoute);           // có thể bạn đang dùng 2 cái này
 app.use("/api/auth", authRoute);
 
 // 404 cho các route không tồn tại
-app.use("* classics", (req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({ message: "Route không tồn tại" });
 });
 
