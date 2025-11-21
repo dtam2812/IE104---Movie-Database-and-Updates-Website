@@ -73,7 +73,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 
 # Mở link Deploy Frontend
 
-https://friendly-quokka-810172.netlify.app/client/view/pages/homepage?fbclid=IwY2xjawOL7qpleHRuA2FlbQIxMABicmlkETFDY1U0OXZPMVVsb2daUjJQc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgWttgTe7RNA4r0s0Jna-8Ub8BQAls4MPVb1FmupPob4meTTTkjGc-TGquon_aem_7k70B5BYq3KKAl_fXlTKvg
+[https://friendly-quokka-810172.netlify.app/client/view/pages/homepage?fbclid=IwY2xjawOL7qpleHRuA2FlbQIxMABicmlkETFDY1U0OXZPMVVsb2daUjJQc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgWttgTe7RNA4r0s0Jna-8Ub8BQAls4MPVb1FmupPob4meTTTkjGc-TGquon_aem_7k70B5BYq3KKAl_fXlTKvg](https://benevolent-pika-a1291f.netlify.app/client/view/pages/homepage)
 
 # Bước 1. **Clone repository**
 
