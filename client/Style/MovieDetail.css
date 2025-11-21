@@ -18,7 +18,11 @@
   --color-rating: #f0d25c;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(39deg, rgba(254, 207, 89, 1), rgba(255, 241, 204, 1));
+  --gradient-primary: linear-gradient(
+    39deg,
+    rgba(254, 207, 89, 1),
+    rgba(255, 241, 204, 1)
+  );
   --gradient-primary-hover: linear-gradient(39deg, #ffd84d, #ffe9a8);
   --gradient-avatar: linear-gradient(135deg, #fecf59, #ff9a44);
   --gradient-overlay: linear-gradient(to bottom, transparent, #000);
@@ -556,6 +560,12 @@ body {
   color: var(--color-black);
 }
 
+.comment-item__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .comment-item__name {
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-base);
@@ -770,7 +780,10 @@ body {
 
 @media only screen and (max-width: 980px) {
   .recommendations-grid {
-    grid-template-columns: repeat(auto-fill, minmax(var(--grid-recommend-min), 1fr));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--grid-recommend-min), 1fr)
+    );
     gap: var(--spacing-lg);
   }
 }
