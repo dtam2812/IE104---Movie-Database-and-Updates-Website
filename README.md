@@ -77,16 +77,18 @@ https://friendly-quokka-810172.netlify.app/client/view/pages/homepage?fbclid=IwY
 
 # Bước 1. **Clone repository**
 
+``` bash
 git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
 
 cd IE104---Movie-Database-and-Updates-Website/server
+```
 
 # Bước 2. Tạo file .env trong thư mục server (nếu clone từ github không có)
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/2e9f586905997af8ec324105db1ff7797d16ef53/image.png)
 
 # Nội dung:
-
+``` bash
 SECRET_JWT=jwtSecret
 
 PORT=5000
@@ -94,24 +96,27 @@ PORT=5000
 DB_URL=mongodb+srv://nguyenductam98765_db_user:ie104Nhom2@cluster0.rhi4hs0.mongodb.net/movieDB?retryWrites=true&w=majority&appName=Cluster0
 
 DATABASE_NAME=MovieWeb
+```
 
 # Bước 3. Cài đặt các package cần thiết
 
+``` bash
 cd server
 
 npm install bcrypt bcryptjs cors dotenv express jsonwebtoken mongodb mongoose nodemailer
 
 npm install -D nodemon
+```
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/5aacb1423079dd21acce0f6ada438eef73f9ccef/Screenshot%202025-11-19%20230531.png)
 
 # Bước 4. Chạy server
 
+``` bash
 npm start
+```
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/4eebaaf4d35bb6cba6908330b899c7b7c135aa62/image.png)
-
-# Bước 5. Mở trình duyệt và vào trang HomePage trong mục view/pages ở bên client:
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/030136bd51c4a07ec58894204e00724f19515081/s.png)
 
