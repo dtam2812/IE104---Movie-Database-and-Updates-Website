@@ -671,7 +671,6 @@
     touch-action: pan-x;
   }
 
-  /* Ẩn scrollbar */
   .movie-tabs::-webkit-scrollbar {
     height: 6px;
     width: 0px;
