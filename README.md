@@ -118,17 +118,20 @@ npm start
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/4eebaaf4d35bb6cba6908330b899c7b7c135aa62/image.png)
 
-Tài khoản mẫu
+``` bash
+# Tài khoản mẫu
 
 Admin
 
 Email: 23521384@uit.edu.gm.vn
 
 Mật khẩu: 123456
+```
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/bdb54caf0776ad0da5e86ef2eb385e1a9f1af343/ad.png)
 
-Bạn có thể đăng ký tài khoản mới để thử các chức năng.
+### Bạn có thể đăng ký tài khoản mới để thử các chức năng.
+
 ![image alt](https://github.com/MinhThienMina/Image/blob/d7ef3095cd6dbd155b37d3f75ddc67debffdab48/film.png)
 
 ## Chúc các bạn thành công!!!
