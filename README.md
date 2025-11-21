@@ -118,6 +118,11 @@ npm start
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/4eebaaf4d35bb6cba6908330b899c7b7c135aa62/image.png)
 
+# Bước 5: Mở trình duyệt và vào trang HomePage ở bên client ( Nếu mà trang demo không khả dụng )
+
+![image alt](https://github.com/MinhThienMina/Image/blob/bdb54caf0776ad0da5e86ef2eb385e1a9f1af343/s.png)
+
+## Tài khoản
 ``` bash
 # Tài khoản mẫu
 
