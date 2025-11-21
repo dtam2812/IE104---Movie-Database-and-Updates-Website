@@ -116,7 +116,7 @@ npm install -D nodemon
 npm start
 ```
 
-![image alt](https://github.com/MinhThienMina/Image/blob/030136bd51c4a07ec58894204e00724f19515081/s.png)
+![image alt](https://github.com/MinhThienMina/Image/blob/4eebaaf4d35bb6cba6908330b899c7b7c135aa62/image.png)
 
 Tài khoản mẫu
 
