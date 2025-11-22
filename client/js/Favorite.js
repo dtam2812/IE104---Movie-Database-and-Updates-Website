@@ -77,56 +77,57 @@ class FavoritesManager {
       return;
     }
 
+    // Sử dụng filmData nếu được truyền vào, nếu không dùng currentFilm
     const film = filmData || this.currentFilm;
 
     if (!film) {
-      this.showNotification("Không tìm thấy thông tin phim", "error");
       return;
     }
 
     try {
       this.setButtonLoading(button, true);
 
-      console.log("🎬 handleFavoriteClick - Film data:", {
-        id: film.id,
-        type: film.type,
-        title: film.title,
-      });
-
       const response = await fetch(
         `${this.API_BASE_URL}/api/favorites/toggle`,
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            id: film.id,
-            type: film.type,
+            id: film.id.toString(),
+            type: film.type || "Movie",
             title: film.title,
-            originalName: film.originalName,
-            posterPath: film.posterPath,
+            originalName: film.englishTitle || film.originalName,
+            posterPath: film.thumbnailImage || film.posterPath,
           }),
         }
       );
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
       const data = await response.json();
 
-      if (response.ok) {
-        console.log("✅ Favorite toggled:", data.action);
-        const message =
-          data.action === "added"
-            ? "Đã thêm vào danh sách yêu thích"
-            : "Đã xóa khỏi danh sách yêu thích";
-        this.showNotification(message, "success");
+      if (data.success) {
         this.updateButtonAppearance(button, data.action === "added");
+        this.showNotification(
+          data.message,
+          data.action === "added" ? "success" : "info"
+        );
+
+        if (this.currentFilm && this.currentFilm.id === film.id) {
+          this.currentFilm.isFavorite = data.action === "added";
+        }
       } else {
-        throw new Error(data.message || "Lỗi không xác định");
+        throw new Error(data.message);
       }
     } catch (error) {
-      console.error("❌ handleFavoriteClick error:", error);
-      this.showNotification("Có lỗi xảy ra", "error");
+      let errorMessage = "Có lỗi xảy ra: " + error.message;
+      this.showNotification(errorMessage, "error");
     } finally {
       this.setButtonLoading(button, false);
     }
