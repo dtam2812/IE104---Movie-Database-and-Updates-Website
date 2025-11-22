@@ -1,27 +1,38 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
+const path = require("path");
 const cors = require("cors");
+
+const app = express();
 const connectDB = require("./Service/ConnectDBService");
+
 const userRoute = require("./Router/UserRoute");
 const userAdminRoute = require("./Router/UserAdminRoute");
 const authRoute = require("./Router/AuthRoute");
 
-// middleware sử dụng cors
+// middleware
 app.use(cors());
-
-// middleware lấy dữ liệu từ client qua req.body
 app.use(express.json());
 
-// connectDB
+// connect DB
 connectDB();
 
-// Middleware Router
+// Serve FE static
+app.use(express.static(path.join(__dirname, "../client")));
+
+// API routes
 app.use("/auth/admin", userAdminRoute);
 app.use("/api/authUser", userRoute);
 app.use("/api", userRoute);
 app.use("/api/auth", authRoute);
 
+app.use((req, res) => {
+  res
+    .status(404)
+    .sendFile(path.join(__dirname, "../client/view/pages/404.html"));
+});
+
+// start server
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on port ${process.env.PORT}`);
 });
