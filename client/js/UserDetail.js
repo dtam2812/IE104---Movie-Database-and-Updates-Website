@@ -1,18 +1,22 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 
+
 // UserDetail.js - Xử lý tương tác cho trang User Detail
 document.addEventListener("DOMContentLoaded", function () {
   setTimeout(() => getUserDetail(), 1500);
 
+
   // Toast functionality
   const toast = document.querySelector(".user-detail__toast");
   const toastButton = document.querySelector(".user-detail__toast-btn");
+
 
   if (toastButton) {
     toastButton.addEventListener("click", function () {
       toast.classList.remove("user-detail__toast--show");
     });
   }
+
 
   // Handle Save Personal Info button
   const savePersonalInfoBtn = document.querySelector(".save-personal-info");
@@ -25,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
   // Handle Update Password button
   const updatePasswordBtn = document.querySelector(".update-password");
   if (updatePasswordBtn) {
@@ -34,11 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
   // Modal functionality
   const modal = document.querySelector(".user-detail__modal-backdrop");
   const cancelButtons = document.querySelectorAll(
     ".user-detail__btn--secondary"
   );
+
 
   cancelButtons.forEach((button) => {
     if (!button.closest(".user-detail__modal")) {
@@ -48,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+
   // Close modal when clicking outside
   if (modal) {
     modal.addEventListener("click", function (e) {
@@ -56,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
+
     // Close modal with cancel button in modal
     const modalCancel = modal.querySelector(".user-detail__btn--secondary");
     if (modalCancel) {
@@ -63,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideModal();
       });
     }
+
 
     // Confirm action in modal
     const modalConfirm = modal.querySelector(
@@ -76,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+
   // Navigation functionality - Handle tab switching
   const navButtons = document.querySelectorAll(".user-detail__nav-btn");
   navButtons.forEach((button) => {
@@ -85,10 +96,31 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       this.classList.add("user-detail__nav-btn--active");
 
+
       const sectionId = this.getAttribute("data-section");
       handleNavigation(sectionId);
+
+
+      // Cuộn lên khi mở Thông tin cá nhân
+      if (sectionId === "personal-info") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+
+      // Cuộn xuống khi mở Favorites
+      if (sectionId === "favorites") {
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            const favSection = document.getElementById("favorites-section");
+            if (favSection) {
+              favSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+        }, 350);
+      }
     });
   });
+
 
   // Form validation for password fields
   const passwordInputs = document.querySelectorAll('input[type="password"]');
@@ -98,11 +130,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+
   // Logout functionality
   const logoutButton = document.querySelector(".user-detail__logout");
   if (logoutButton) {
     logoutButton.addEventListener("click", function (e) {
       e.preventDefault();
+
 
       // Xóa tất cả thông tin user khỏi localStorage
       localStorage.removeItem("accessToken");
@@ -110,10 +144,12 @@ document.addEventListener("DOMContentLoaded", function () {
       localStorage.removeItem("userEmail");
       localStorage.removeItem("refreshToken");
 
+
       window.location.href = "/client/view/pages/HomePage.html";
     });
   }
 });
+
 
 // Load user detail
 async function getUserDetail() {
@@ -128,6 +164,7 @@ async function getUserDetail() {
       return;
     }
 
+
     const response = await fetch(
       `http://localhost:5000/api/authUser/userDetail/${userId}`,
       {
@@ -138,6 +175,7 @@ async function getUserDetail() {
         },
       }
     );
+
 
     if (response.status !== 200) {
       throw new Error("Không thể tải thông tin người dùng");
@@ -150,16 +188,20 @@ async function getUserDetail() {
   }
 }
 
+
 function displayUserInformation(userData) {
   const nameField = document.getElementById("name");
   const emailField = document.getElementById("email");
   const joinDateField = document.getElementById("joinDate");
   const userName = document.querySelector(".user-detail__name");
 
+
   const user = userData.user || userData;
+
 
   if (nameField && user.userName) nameField.value = user.userName;
   if (emailField && user.email) emailField.value = user.email;
+
 
   if (joinDateField && user.joinDate) {
     try {
@@ -177,19 +219,23 @@ function displayUserInformation(userData) {
   if (userName && user.userName) userName.textContent = user.userName;
 }
 
+
 async function updateInformation() {
   try {
     const token = localStorage.getItem("accessToken");
     const payloadDecoded = jwtDecode(token);
     const userId = payloadDecoded._id;
 
+
     const nameField = document.getElementById("name");
     const emailField = document.getElementById("email");
+
 
     const updatedData = {
       name: nameField ? nameField.value.trim() : "",
       email: emailField ? emailField.value.trim() : "",
     };
+
 
     const response = await fetch(
       `http://localhost:5000/api/authUser/updateInfo/${userId}`,
@@ -203,9 +249,11 @@ async function updateInformation() {
       }
     );
 
+
     if (response.status !== 200) {
       throw new Error("Không thể cập nhật thông tin");
     }
+
 
     const result = await response.json();
     showToast("Thay đổi đã được lưu");
@@ -219,15 +267,18 @@ async function updateInformation() {
   }
 }
 
+
 async function updatePassword() {
   try {
     const token = localStorage.getItem("accessToken");
     const payloadDecoded = jwtDecode(token);
     const userId = payloadDecoded._id;
 
+
     const currentPasswordField = document.getElementById("current-password");
     const newPasswordField = document.getElementById("new-password");
     const confirmPasswordField = document.getElementById("confirm-password");
+
 
     // Kiểm tra nhập hợp lệ trước khi gửi
     if (
@@ -239,20 +290,24 @@ async function updatePassword() {
       return;
     }
 
+
     if (newPasswordField.value !== confirmPasswordField.value) {
       showToast("Mật khẩu xác nhận không khớp");
       return;
     }
+
 
     if (newPasswordField.value.length < 6) {
       showToast("Mật khẩu phải có ít nhất 6 ký tự");
       return;
     }
 
+
     const updatedData = {
       currentPassword: currentPasswordField.value.trim(),
       newPassword: newPasswordField.value.trim(),
     };
+
 
     const response = await fetch(
       `http://localhost:5000/api/authUser/updatePassword/${userId}`,
@@ -266,10 +321,13 @@ async function updatePassword() {
       }
     );
 
+
     const result = await response.json();
+
 
     if (response.status === 200) {
       showToast(result.message || "Đổi mật khẩu thành công");
+
 
       // Reset ô input
       currentPasswordField.value = "";
@@ -284,10 +342,12 @@ async function updatePassword() {
   }
 }
 
+
 // Function to show toast message
 function showToast(message) {
   const toast = document.querySelector(".user-detail__toast");
   const toastText = toast.querySelector("span");
+
 
   if (toastText) {
     toastText.textContent = message;
@@ -295,7 +355,9 @@ function showToast(message) {
     toast.childNodes[0].textContent = message + " ";
   }
 
+
   toast.classList.add("user-detail__toast--show");
+
 
   // Auto hide after 3 seconds
   setTimeout(() => {
@@ -303,11 +365,13 @@ function showToast(message) {
   }, 3000);
 }
 
+
 // Function to show modal
 function showModal() {
   const modal = document.querySelector(".user-detail__modal-backdrop");
   modal.style.display = "flex";
 }
+
 
 // Function to hide modal
 function hideModal() {
@@ -315,9 +379,11 @@ function hideModal() {
   modal.style.display = "none";
 }
 
+
 // Function to validate form
 function validateForm() {
   let isValid = true;
+
 
   // Validate required fields
   const requiredFields = document.querySelectorAll("input[required]");
@@ -330,6 +396,7 @@ function validateForm() {
     }
   });
 
+
   // Validate email format
   const emailField = document.getElementById("email");
   if (emailField && emailField.value) {
@@ -340,9 +407,11 @@ function validateForm() {
     }
   }
 
+
   // Validate password match
   const newPassword = document.getElementById("new-password");
   const confirmPassword = document.getElementById("confirm-password");
+
 
   if (
     newPassword &&
@@ -356,8 +425,10 @@ function validateForm() {
     }
   }
 
+
   return isValid;
 }
+
 
 // Function to validate password field
 function validatePasswordField(field) {
@@ -370,9 +441,11 @@ function validatePasswordField(field) {
   }
 }
 
+
 // Function to show error message
 function showError(field, message) {
   field.classList.add("user-detail__input--invalid");
+
 
   // Remove existing error message
   const existingError = field.parentNode.querySelector(".user-detail__error");
@@ -380,24 +453,29 @@ function showError(field, message) {
     existingError.remove();
   }
 
+
   // Create and show error message
   const errorElement = document.createElement("div");
   errorElement.className = "user-detail__error";
   errorElement.textContent = message;
   errorElement.style.display = "block";
 
+
   field.parentNode.appendChild(errorElement);
 }
+
 
 // Function to clear error message
 function clearError(field) {
   field.classList.remove("user-detail__input--invalid");
+
 
   const errorElement = field.parentNode.querySelector(".user-detail__error");
   if (errorElement) {
     errorElement.remove();
   }
 }
+
 
 // Function to handle navigation between sections
 function handleNavigation(sectionId) {
@@ -407,12 +485,14 @@ function handleNavigation(sectionId) {
     section.classList.remove("user-detail__section--active");
   });
 
+
   // Show selected section
   const targetSection = document.getElementById(`${sectionId}-section`);
   if (targetSection) {
     targetSection.classList.add("user-detail__section--active");
   }
 }
+
 
 // Function to update user avatar
 function updateAvatar(imageUrl) {
@@ -422,16 +502,19 @@ function updateAvatar(imageUrl) {
   }
 }
 
+
 // Function to update user information
 function updateUserInfo(userData) {
   const nameField = document.getElementById("name");
   const emailField = document.getElementById("email");
   const userName = document.querySelector(".user-detail__name");
 
+
   if (nameField && userData.name) nameField.value = userData.name;
   if (emailField && userData.email) emailField.value = userData.email;
   if (userName && userData.name) userName.textContent = userData.name;
 }
+
 
 // Lấy thông tin user từ server
 async function fetchUserDetail() {
@@ -442,9 +525,12 @@ async function fetchUserDetail() {
       },
     });
 
+
     if (!res.ok) throw new Error("Lỗi khi lấy dữ liệu");
 
+
     const data = await res.json();
+
 
     // Cập nhật thông tin lên giao diện
     updateUserInfo({
@@ -455,6 +541,7 @@ async function fetchUserDetail() {
       avatar: data.user.avatar, // nếu có
     });
 
+
     // Nếu có danh sách yêu thích
     if (data.user.favoriteFilm) {
       renderFavorites(data.user.favoriteFilm);
@@ -464,6 +551,7 @@ async function fetchUserDetail() {
   }
 }
 
+
 // Render danh sách phim yêu thích
 function renderFavorites(favorites) {
   const container = document.querySelector(".favorites-list");
@@ -472,7 +560,9 @@ function renderFavorites(favorites) {
     return;
   }
 
+
   container.innerHTML = "";
+
 
   if (!favorites || favorites.length === 0) {
     container.innerHTML = `
@@ -485,6 +575,7 @@ function renderFavorites(favorites) {
     return;
   }
 
+
   const uniqueFavorites = favorites.filter(
     (film, index, self) =>
       index ===
@@ -495,6 +586,7 @@ function renderFavorites(favorites) {
           (f.title === film.title && f.originalName === film.originalName)
       )
   );
+
 
   if (uniqueFavorites.length === 0) {
     container.innerHTML = `
@@ -507,19 +599,24 @@ function renderFavorites(favorites) {
     return;
   }
 
+
   const grid = document.createElement("div");
   grid.className = "favorites-grid";
 
+
   uniqueFavorites.forEach((film, index) => {
     const filmId = film.id;
+
 
     const filmCard = document.createElement("div");
     filmCard.className = "favorite-card";
     filmCard.setAttribute("data-film-id", filmId);
 
+
     if (!filmId) {
       return;
     }
+
 
     // FIX: Check type properly
     const typeStr = String(film.type || "")
@@ -528,19 +625,22 @@ function renderFavorites(favorites) {
     const isTV =
       typeStr === "tv" || typeStr === "tvshow" || typeStr === "series";
 
+
     const typeBadge = isTV
       ? `<div class="favorite-card__episode-badge">TV Show</div>`
       : `<div class="favorite-card__episode-badge">Movie</div>`;
+
 
     const detailHref = isTV
       ? `../pages/TvShowDetail.html`
       : `../pages/MovieDetail.html`;
 
+
     filmCard.innerHTML = `
       <div class="favorite-card__container">
-        <img 
-          src="${film.posterPath || "/images/default-poster.jpg"}" 
-          alt="${film.title || film.originalName || "Unknown"}" 
+        <img
+          src="${film.posterPath || "/images/default-poster.jpg"}"
+          alt="${film.title || film.originalName || "Unknown"}"
           class="favorite-card__poster"
           onerror="this.src='/images/default-poster.jpg'"
         />
@@ -561,6 +661,7 @@ function renderFavorites(favorites) {
       </div>
     `;
 
+
     const poster = filmCard.querySelector(".favorite-card__poster");
     if (poster) {
       poster.addEventListener("click", function (e) {
@@ -570,6 +671,7 @@ function renderFavorites(favorites) {
         window.location.href = url;
       });
     }
+
 
     const removeBtn = filmCard.querySelector(".favorite-card__remove-btn");
     if (removeBtn) {
@@ -590,11 +692,14 @@ function renderFavorites(favorites) {
       });
     }
 
+
     grid.appendChild(filmCard);
   });
 
+
   container.appendChild(grid);
 }
+
 
 // Function để xóa phim khỏi danh sách yêu thích
 async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
@@ -605,6 +710,7 @@ async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
   ) {
     return;
   }
+
 
   try {
     const token = localStorage.getItem("accessToken");
@@ -620,6 +726,7 @@ async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
       }),
     });
 
+
     if (response.ok) {
       const data = await response.json();
       showToast("Đã xóa phim khỏi danh sách yêu thích");
@@ -634,8 +741,10 @@ async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
   }
 }
 
+
 // Gọi khi load trang
 document.addEventListener("DOMContentLoaded", fetchUserDetail);
+
 
 // Export functions for use in other modules
 if (typeof module !== "undefined" && module.exports) {
@@ -647,3 +756,6 @@ if (typeof module !== "undefined" && module.exports) {
     updateUserInfo,
   };
 }
+
+
+
