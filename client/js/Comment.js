@@ -17,6 +17,60 @@ function updateStats() {
   document.getElementById("total-comments").textContent = totalComments;
 }
 
+// Kiểm tra trạng thái đăng nhập
+function checkLoginStatus() {
+  const token =
+    localStorage.getItem("accessToken") || localStorage.getItem("token");
+  return !!token;
+}
+
+// Hiển thị thông báo đơn giản
+function showSimpleNotification(message, type = "info") {
+  const toast = document.createElement("div");
+  toast.className = `toast-notification ${type}`;
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 300px;
+  `;
+
+  if (type === "success") {
+    toast.style.backgroundColor = "#4CAF50";
+  } else if (type === "error") {
+    toast.style.backgroundColor = "#f44336";
+  } else {
+    toast.style.backgroundColor = "#2196F3";
+  }
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.transform = "translateX(0)";
+    toast.style.opacity = "1";
+  }, 100);
+
+  setTimeout(() => {
+    toast.style.transform = "translateX(100%)";
+    toast.style.opacity = "0";
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, 3000);
+}
+
+// Tạo comment
 // Tạo comment
 function createComment(comment) {
   const stars = Array(5)
@@ -28,7 +82,9 @@ function createComment(comment) {
     )
     .join("");
 
-  const avatar = comment.userName.charAt(0).toUpperCase();
+  // Lấy avatar từ thư mục public, nếu không có thì dùng avatar mặc định
+  const avatarUrl = "../../../public/assets/image/vn_flag.svg";
+
   const date = new Date(comment.date).toLocaleDateString("vi-VN", {
     day: "2-digit",
     month: "2-digit",
@@ -41,7 +97,9 @@ function createComment(comment) {
     <div class="comment-item" data-id="${comment.id}">
       <div class="comment-item__header">
         <div class="comment-item__user">
-          <div class="comment-item__avatar">${avatar}</div>
+          <div class="comment-item__avatar">
+            <img src="${avatarUrl}" alt="${comment.userName}" />
+          </div>
           <div class="comment-item__info">
             <div class="comment-item__name">${comment.userName}</div>
             <div class="comment-item__date">${date}</div>
@@ -88,6 +146,12 @@ function renderComments() {
 
 // Xử lý like
 function handleLike(commentId) {
+  // Kiểm tra đăng nhập trước khi like
+  if (!checkLoginStatus()) {
+    showSimpleNotification("Vui lòng đăng nhập để thích đánh giá", "info");
+    return;
+  }
+
   const comment = commentsData.find((c) => c.id === commentId);
 
   if (comment) {
@@ -120,6 +184,12 @@ function initStarRating() {
     });
 
     star.addEventListener("click", function () {
+      // Kiểm tra đăng nhập khi chọn sao
+      if (!checkLoginStatus()) {
+        showSimpleNotification("Vui lòng đăng nhập để đánh giá", "info");
+        return;
+      }
+
       currentRating = index + 1;
       stars.forEach((s, i) => {
         if (i < currentRating) {
@@ -148,88 +218,106 @@ function initCommentForm() {
   const submitBtn = document.getElementById("submit-comment");
   const commentText = document.getElementById("comment-text");
 
-  submitBtn.addEventListener("click", function () {
-    const text = commentText.value.trim();
+  // Kiểm tra và disable form nếu chưa đăng nhập
+  function updateFormState() {
+    const isLoggedIn = checkLoginStatus();
 
-    // Validate
-    if (currentRating === 0) {
-      alert("Vui lòng chọn số sao đánh giá!");
-      return;
+    if (!isLoggedIn) {
+      if (commentText) {
+        commentText.disabled = true;
+        commentText.placeholder = "Vui lòng đăng nhập để đánh giá...";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = true;
+      }
+    } else {
+      if (commentText) {
+        commentText.disabled = false;
+        commentText.placeholder = "Nhập đánh giá của bạn...";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+      }
     }
+  }
 
-    if (text === "") {
-      alert("Vui lòng nhập nội dung đánh giá!");
-      return;
-    }
+  // Cập nhật trạng thái form khi load
+  updateFormState();
 
-    if (text.length < 10) {
-      alert("Đánh giá phải có ít nhất 10 ký tự!");
-      return;
-    }
-
-    // Tạo comment mới
-    const newComment = {
-      id: Date.now().toString(),
-      userName: generateRandomName(),
-      rating: currentRating,
-      text: text,
-      date: new Date().toISOString(),
-      likes: 0,
-      likedByUser: false,
-    };
-
-    commentsData.push(newComment);
-
-    renderComments();
-    updateStats();
-
-    // Reset form
-    commentText.value = "";
-    currentRating = 0;
-    document.querySelectorAll("#star-rating i").forEach((s) => {
-      s.classList.remove("active");
+  // Kiểm tra lại khi focus vào textarea
+  if (commentText) {
+    commentText.addEventListener("focus", function () {
+      if (!checkLoginStatus()) {
+        showSimpleNotification("Vui lòng đăng nhập để đánh giá", "info");
+        this.blur();
+      }
     });
+  }
 
-    alert("Cảm ơn bạn đã đánh giá!");
+  if (submitBtn) {
+    submitBtn.addEventListener("click", function () {
+      // Kiểm tra đăng nhập đầu tiên
+      if (!checkLoginStatus()) {
+        showSimpleNotification("Vui lòng đăng nhập để đánh giá", "info");
+        return;
+      }
 
-    setTimeout(() => {
-      const commentsList = document.getElementById("comments-list");
-      commentsList.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+      const text = commentText.value.trim();
+
+      // Validate
+      if (currentRating === 0) {
+        showSimpleNotification("Vui lòng chọn số sao đánh giá!", "error");
+        return;
+      }
+
+      if (text === "") {
+        showSimpleNotification("Vui lòng nhập nội dung đánh giá!", "error");
+        return;
+      }
+
+      if (text.length < 10) {
+        showSimpleNotification("Đánh giá phải có ít nhất 10 ký tự!", "error");
+        return;
+      }
+
+      // Tạo comment mới
+      const newComment = {
+        id: Date.now().toString(),
+        userName: localStorage.getItem("userName") || "Người dùng",
+        rating: currentRating,
+        text: text,
+        date: new Date().toISOString(),
+        likes: 0,
+        likedByUser: false,
+      };
+
+      commentsData.push(newComment);
+
+      renderComments();
+      updateStats();
+
+      // Reset form
+      commentText.value = "";
+      currentRating = 0;
+      document.querySelectorAll("#star-rating i").forEach((s) => {
+        s.classList.remove("active");
+      });
+
+      showSimpleNotification("Cảm ơn bạn đã đánh giá!", "success");
+
+      setTimeout(() => {
+        const commentsList = document.getElementById("comments-list");
+        commentsList.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    });
+  }
+
+  // Lắng nghe sự kiện thay đổi trạng thái đăng nhập
+  window.addEventListener("storage", (e) => {
+    if (e.key === "accessToken" || e.key === "token") {
+      updateFormState();
+    }
   });
-}
-
-// Tạo tên ngẫu nhiên
-function generateRandomName() {
-  const firstNames = [
-    "Nguyễn",
-    "Trần",
-    "Lê",
-    "Phạm",
-    "Hoàng",
-    "Phan",
-    "Vũ",
-    "Đặng",
-    "Bùi",
-    "Đỗ",
-  ];
-  const lastNames = [
-    "Anh",
-    "Minh",
-    "Hùng",
-    "Dũng",
-    "Tùng",
-    "Linh",
-    "Hương",
-    "Mai",
-    "Lan",
-    "Hoa",
-  ];
-
-  const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-  const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-
-  return `${firstName} ${lastName}`;
 }
 
 // Khởi tạo comments

@@ -273,33 +273,27 @@ export async function Auth_Modaljs() {
       showErrorMessage(loginForm, "Vui lòng nhập đầy đủ thông tin!");
       return;
     }
-
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       if (res.ok) {
         const data = await res.json();
         const token = data.accessToken;
         const decoded = jwtDecode(token);
-
         if (decoded.status === "Banned") {
           showErrorMessage(loginForm, "Tài khoản của bạn đã bị chặn.");
           return;
         }
-
         localStorage.setItem("accessToken", token);
         localStorage.setItem("userName", decoded.username);
         localStorage.setItem("userEmail", decoded.email);
-
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
         modal.classList.add("hidden");
-
         if (decoded.role === "Admin") {
           window.location.href = "/client/view/pages/AdminUsers.html";
         } else {

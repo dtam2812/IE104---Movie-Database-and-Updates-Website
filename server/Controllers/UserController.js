@@ -15,7 +15,7 @@ const getUser = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    // ✅ NORMALIZE type của favorites trước khi gửi về client
+    // NORMALIZE type của favorites trước khi gửi về client
     const normalizedFavorites = user.favoriteFilm.map((film) => ({
       ...(film.toObject ? film.toObject() : film),
       type: normalizeFilmType(film.type), // Gọi hàm normalize
@@ -30,7 +30,7 @@ const getUser = async (req, res) => {
         role: user.role,
         status: user.status,
         joinDate: user.joinDate,
-        favoriteFilm: normalizedFavorites, // ✅ Dùng normalized
+        favoriteFilm: normalizedFavorites, //Dùng normalized
         phone: user.phone || "",
         birthday: user.birthday || "",
       },
@@ -44,7 +44,7 @@ const getUser = async (req, res) => {
   }
 };
 
-// ✅ Thêm hàm normalize type
+// Thêm hàm normalize type
 function normalizeFilmType(type) {
   if (!type) return "Movie";
 
@@ -154,7 +154,7 @@ const toggleFavorite = async (req, res) => {
       });
     }
 
-    // ✅ Sửa: So sánh đúng - convert thành string
+    // Sửa: So sánh đúng - convert thành string
     const existingIndex = user.favoriteFilm.findIndex(
       (film) => film.id.toString() === id.toString() && film.type === type
     );
