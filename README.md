@@ -105,7 +105,7 @@ npm start
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/4eebaaf4d35bb6cba6908330b899c7b7c135aa62/image.png)
 
-# Bước 5. Mở trình duyệt và vào trang HomePage trong mục view/pages ở bên client:
+# Bước 5. Mở trình duyệt và vào trang HomePage trong mục view/pages ở bên client (nếu Link Deploy gặp lỗi):
 
 ![image alt](https://github.com/MinhThienMina/Image/blob/030136bd51c4a07ec58894204e00724f19515081/s.png)
 
