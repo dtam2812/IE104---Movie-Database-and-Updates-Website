@@ -71,7 +71,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 
 # Mở link Deploy Frontend
 
-[https://teal-entremet-dcc01a.netlify.app/client/view/pages/homepage]
+[https://gilded-concha-1aa96d.netlify.app/client/view/pages/homepage]
 
 # Bước 1. **Clone repository**
 git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
