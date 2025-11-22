@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (logoutButton) {
     logoutButton.addEventListener("click", function (e) {
       e.preventDefault();
-      console.log("User signing out");
 
       // Xóa tất cả thông tin user khỏi localStorage
       localStorage.removeItem("accessToken");
@@ -413,8 +412,6 @@ function handleNavigation(sectionId) {
   if (targetSection) {
     targetSection.classList.add("user-detail__section--active");
   }
-
-  console.log("Navigated to:", sectionId);
 }
 
 // Function to update user avatar
@@ -447,8 +444,7 @@ async function fetchUserDetail() {
 
     if (!res.ok) throw new Error("Lỗi khi lấy dữ liệu");
 
-    const data = await res.json(); // ✅ khai báo const
-    console.log("User data:", data.user);
+    const data = await res.json();
 
     // Cập nhật thông tin lên giao diện
     updateUserInfo({
@@ -489,7 +485,6 @@ function renderFavorites(favorites) {
     return;
   }
 
-  // Lọc các phim trùng lặp
   const uniqueFavorites = favorites.filter(
     (film, index, self) =>
       index ===
@@ -523,14 +518,23 @@ function renderFavorites(favorites) {
     filmCard.setAttribute("data-film-id", filmId);
 
     if (!filmId) {
-      console.warn("Film missing ID:", film);
       return;
     }
 
-    const typeBadge =
-      film.type === "TV" || film.media_type === "tv"
-        ? `<div class="favorite-card__episode-badge">TV Show</div>`
-        : `<div class="favorite-card__episode-badge">Movie</div>`;
+    // FIX: Check type properly
+    const typeStr = String(film.type || "")
+      .toLowerCase()
+      .trim();
+    const isTV =
+      typeStr === "tv" || typeStr === "tvshow" || typeStr === "series";
+
+    const typeBadge = isTV
+      ? `<div class="favorite-card__episode-badge">TV Show</div>`
+      : `<div class="favorite-card__episode-badge">Movie</div>`;
+
+    const detailHref = isTV
+      ? `../pages/TvShowDetail.html`
+      : `../pages/MovieDetail.html`;
 
     filmCard.innerHTML = `
       <div class="favorite-card__container">
@@ -543,10 +547,9 @@ function renderFavorites(favorites) {
         <div class="favorite-card__info-top">
           ${typeBadge}
         </div>
-        
-          <button class="favorite-card__remove-btn" title="Remove from Favorites">
-            <i class="bx bx-trash"></i>
-          </button>
+        <button class="favorite-card__remove-btn" title="Remove from Favorites">
+          <i class="bx bx-trash"></i>
+        </button>
       </div>
       <div class="favorite-card__info">
         <div class="favorite-card__vietnamese-title">
@@ -558,23 +561,32 @@ function renderFavorites(favorites) {
       </div>
     `;
 
-    // Event listener để chuyển đến trang chi tiết
     const poster = filmCard.querySelector(".favorite-card__poster");
     if (poster) {
       poster.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = `../pages/MovieDetail.html?id=${filmId}`;
+        const url = `${detailHref}?id=${filmId}${isTV ? "&type=tv" : ""}`;
+        window.location.href = url;
       });
     }
 
-    // Event listener cho nút xóa
     const removeBtn = filmCard.querySelector(".favorite-card__remove-btn");
     if (removeBtn) {
       removeBtn.addEventListener("click", async function (e) {
         e.preventDefault();
         e.stopPropagation();
-        await removeFromFavorites(filmId, film.title || film.originalName);
+        console.log(
+          "Remove clicked for film:",
+          filmId,
+          "type:",
+          isTV ? "TV" : "Movie"
+        );
+        await removeFromFavorites(
+          filmId,
+          film.title || film.originalName,
+          isTV ? "TV" : "Movie"
+        );
       });
     }
 
@@ -585,7 +597,7 @@ function renderFavorites(favorites) {
 }
 
 // Function để xóa phim khỏi danh sách yêu thích
-async function removeFromFavorites(filmId, filmTitle) {
+async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
   if (
     !confirm(
       `Bạn có chắc chắn muốn xóa "${filmTitle}" khỏi danh sách yêu thích?`
@@ -604,7 +616,7 @@ async function removeFromFavorites(filmId, filmTitle) {
       },
       body: JSON.stringify({
         id: filmId.toString(),
-        type: "Movie",
+        type: type, // use passed type (Movie or TV)
       }),
     });
 
