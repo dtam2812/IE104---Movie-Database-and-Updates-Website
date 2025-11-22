@@ -274,6 +274,18 @@ function renderInfo(tv) {
     ? `<img src="https://flagcdn.com/48x36/${countryFlag}.png" style="width:32px;height:24px;vertical-align:middle;">`
     : t("common.unknown") || "Không rõ";
 
+  // Dịch trạng thái TV Show
+  function translateStatus(status) {
+    const statusMap = {
+      "Returning Series": "tvshow.status.returning",
+      "Ended": "tvshow.status.ended",
+      "Canceled": "tvshow.status.canceled",
+      "In Production": "tvshow.status.inproduction",
+      "Planned": "tvshow.status.planned"
+    };
+    return t(statusMap[status]) || status || t("common.unknown");
+  }
+
   infoGrid.innerHTML = `
     <h3 class="tab-panel__title">${
       t("detail.infoTitle") || "Thông tin phim"
@@ -293,9 +305,7 @@ function renderInfo(tv) {
     }:</div><div class="info-item__value">${flagHTML}</div></div>
     <div class="info-item"><div class="info-item__label">${
       t("detail.status") || "Trạng thái"
-    }:</div><div class="info-item__value">${
-    tv.status || t("common.unknown")
-  }</div></div>
+    }:</div><div class="info-item__value">${translateStatus(tv.status)}</div></div>
     <div class="info-item"><div class="info-item__label">${
       t("detail.firstAirDate") || "Ngày phát sóng đầu"
     }:</div><div class="info-item__value">${firstAirDate}</div></div>

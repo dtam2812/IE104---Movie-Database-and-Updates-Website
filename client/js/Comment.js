@@ -1,6 +1,11 @@
 let commentsData = [];
 let currentRating = 0;
 
+// Helper function to get translation
+function t(key) {
+  return window.translations?.[key] || key;
+}
+
 // Tính điểm trung bình
 function calculateAverage(comments) {
   if (comments.length === 0) return 0;
@@ -71,7 +76,6 @@ function showSimpleNotification(message, type = "info") {
 }
 
 // Tạo comment
-// Tạo comment
 function createComment(comment) {
   const stars = Array(5)
     .fill(0)
@@ -82,16 +86,18 @@ function createComment(comment) {
     )
     .join("");
 
-  // Lấy avatar từ thư mục public, nếu không có thì dùng avatar mặc định
   const avatarUrl = "../../../public/assets/image/vn_flag.svg";
 
-  const date = new Date(comment.date).toLocaleDateString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const date = new Date(comment.date).toLocaleDateString(
+    localStorage.getItem("language") === "vi" ? "vi-VN" : "en-US",
+    {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  );
 
   return `
     <div class="comment-item" data-id="${comment.id}">
@@ -111,7 +117,7 @@ function createComment(comment) {
       <div class="comment-item__actions">
         <button class="comment-item__action-btn" data-id="${comment.id}">
           <i class="fas fa-thumbs-up"></i>
-          <span>Hữu ích (${comment.likes || 0})</span>
+          <span>${t("comment.helpful")} (${comment.likes || 0})</span>
         </button>
       </div>
     </div>
@@ -123,8 +129,9 @@ function renderComments() {
   const commentsList = document.getElementById("comments-list");
 
   if (commentsData.length === 0) {
-    commentsList.innerHTML =
-      '<div class="comments-list__empty">Chưa có đánh giá nào. Hãy là người đầu tiên!</div>';
+    commentsList.innerHTML = `<div class="comments-list__empty">${t(
+      "comment.noReviews"
+    )}</div>`;
     return;
   }
 
@@ -148,7 +155,7 @@ function renderComments() {
 function handleLike(commentId) {
   // Kiểm tra đăng nhập trước khi like
   if (!checkLoginStatus()) {
-    showSimpleNotification("Vui lòng đăng nhập để thích đánh giá", "info");
+    showSimpleNotification(t("comment.loginToLike"), "info");
     return;
   }
 
@@ -186,7 +193,7 @@ function initStarRating() {
     star.addEventListener("click", function () {
       // Kiểm tra đăng nhập khi chọn sao
       if (!checkLoginStatus()) {
-        showSimpleNotification("Vui lòng đăng nhập để đánh giá", "info");
+        showSimpleNotification(t("comment.loginToRate"), "info");
         return;
       }
 
@@ -225,7 +232,7 @@ function initCommentForm() {
     if (!isLoggedIn) {
       if (commentText) {
         commentText.disabled = true;
-        commentText.placeholder = "Vui lòng đăng nhập để đánh giá...";
+        commentText.placeholder = t("comment.loginToReview");
       }
       if (submitBtn) {
         submitBtn.disabled = true;
@@ -233,7 +240,7 @@ function initCommentForm() {
     } else {
       if (commentText) {
         commentText.disabled = false;
-        commentText.placeholder = "Nhập đánh giá của bạn...";
+        commentText.placeholder = t("comment.enterReview");
       }
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -248,7 +255,7 @@ function initCommentForm() {
   if (commentText) {
     commentText.addEventListener("focus", function () {
       if (!checkLoginStatus()) {
-        showSimpleNotification("Vui lòng đăng nhập để đánh giá", "info");
+        showSimpleNotification(t("comment.loginToRate"), "info");
         this.blur();
       }
     });
@@ -258,7 +265,7 @@ function initCommentForm() {
     submitBtn.addEventListener("click", function () {
       // Kiểm tra đăng nhập đầu tiên
       if (!checkLoginStatus()) {
-        showSimpleNotification("Vui lòng đăng nhập để đánh giá", "info");
+        showSimpleNotification(t("comment.loginToRate"), "info");
         return;
       }
 
@@ -266,24 +273,24 @@ function initCommentForm() {
 
       // Validate
       if (currentRating === 0) {
-        showSimpleNotification("Vui lòng chọn số sao đánh giá!", "error");
+        showSimpleNotification(t("comment.selectStars"), "error");
         return;
       }
 
       if (text === "") {
-        showSimpleNotification("Vui lòng nhập nội dung đánh giá!", "error");
+        showSimpleNotification(t("comment.enterContent"), "error");
         return;
       }
 
       if (text.length < 10) {
-        showSimpleNotification("Đánh giá phải có ít nhất 10 ký tự!", "error");
+        showSimpleNotification(t("comment.minLength"), "error");
         return;
       }
 
       // Tạo comment mới
       const newComment = {
         id: Date.now().toString(),
-        userName: localStorage.getItem("userName") || "Người dùng",
+        userName: localStorage.getItem("userName") || t("comment.defaultUser"),
         rating: currentRating,
         text: text,
         date: new Date().toISOString(),
@@ -303,7 +310,7 @@ function initCommentForm() {
         s.classList.remove("active");
       });
 
-      showSimpleNotification("Cảm ơn bạn đã đánh giá!", "success");
+      showSimpleNotification(t("comment.thankYou"), "success");
 
       setTimeout(() => {
         const commentsList = document.getElementById("comments-list");

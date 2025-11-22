@@ -547,6 +547,10 @@
   "userdetail.confirmMessage": "Bạn có chắc chắn muốn thay đổi thông tin?",
   "userdetail.actionConfirmed": "Hành động đã được xác nhận",
   "userdetail.close": "Đóng",
+  "userdetail.removeConfirm": "Bạn có chắc chắn muốn xóa \"{title}\" khỏi danh sách yêu thích?",
+  "userdetail.removeSuccess": "Đã xóa phim khỏi danh sách yêu thích",
+  "userdetail.removeError": "Có lỗi xảy ra khi xóa phim",
+  "userdetail.browseMovies": "Khám phá phim",
 
   "userdetail.console.foundSaveBtn": "Đã tìm thấy nút lưu thông tin",
   "userdetail.console.notFoundSaveBtn": "Không tìm thấy nút lưu thông tin",
@@ -626,5 +630,17 @@
   "admin.users.modal.passwordPlaceholder": "Mật khẩu",
   "admin.users.modal.confirmPasswordPlaceholder": "Xác nhận mật khẩu",
   "admin.users.errors.passwordMismatch": "Mật khẩu không khớp.",
-  "admin.pagination.total": "/ 10"
+  "admin.pagination.total": "/ 10",
+
+  "comment.helpful": "Hữu ích",
+  "comment.noReviews": "Chưa có đánh giá nào. Hãy là người đầu tiên!",
+  "comment.loginToLike": "Vui lòng đăng nhập để thích đánh giá",
+  "comment.loginToRate": "Vui lòng đăng nhập để đánh giá",
+  "comment.loginToReview": "Vui lòng đăng nhập để đánh giá...",
+  "comment.enterReview": "Nhập đánh giá của bạn...",
+  "comment.selectStars": "Vui lòng chọn số sao đánh giá!",
+  "comment.enterContent": "Vui lòng nhập nội dung đánh giá!",
+  "comment.minLength": "Đánh giá phải có ít nhất 10 ký tự!",
+  "comment.defaultUser": "Người dùng",
+  "comment.thankYou": "Cảm ơn bạn đã đánh giá!"
 }

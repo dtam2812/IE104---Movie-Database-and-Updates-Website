@@ -2,7 +2,7 @@
 <div class="user-detail">
   <!-- Sidebar -->
   <div class="user-detail__sidebar">
-    <h3 class="user-detail__sidebar-title">Tài khoản</h3>
+    <h3 class="user-detail__sidebar-title" data-i18n="userdetail.account">Tài khoản</h3>
     <div class="user-detail__avatar">
       <img
         class="user-detail__avatar-img"
@@ -18,17 +18,17 @@
         data-section="personal-info"
       >
         <i class="bx bx-user"></i>
-        Thông tin cá nhân
+        <span data-i18n="userdetail.personalInfo">Thông tin cá nhân</span>
       </button>
       <button class="user-detail__nav-btn" data-section="favorites">
         <i class="bx bx-heart"></i>
-        Yêu thích
+        <span data-i18n="userdetail.favorites">Yêu thích</span>
       </button>
     </div>
 
     <button class="user-detail__logout">
       <i class="bx bx-log-out"></i>
-      Đăng xuất
+      <span data-i18n="userdetail.logout">Đăng xuất</span>
     </button>
   </div>
 
@@ -36,31 +36,31 @@
   <div class="user-detail__main">
     <!-- Personal Information Section -->
           <div class="user-detail__section user-detail__section--active" id="personal-info-section">
-            <h1 class="user-detail__title">Thông tin cá nhân</h1>
-            <p class="user-detail__subtitle">
+            <h1 class="user-detail__title" data-i18n="userdetail.title">Thông tin cá nhân</h1>
+            <p class="user-detail__subtitle" data-i18n="userdetail.subtitle">
               Quản lý thông tin cá nhân và tài khoản của bạn
             </p>
 
             <div class="user-detail__card">
               <div class="user-detail__grid">
                 <div class="user-detail__form-group">
-                  <label class="user-detail__label" for="name">Họ và tên</label>
+                  <label class="user-detail__label" for="name" data-i18n="userdetail.fullName">Họ và tên</label>
                   <input class="user-detail__input" type="text" id="name" />
                 </div>
 
                 <div class="user-detail__form-group">
-                  <label class="user-detail__label" for="email">Email</label>
+                  <label class="user-detail__label" for="email" data-i18n="userdetail.email">Email</label>
                   <input class="user-detail__input" type="email" id="email" />
                 </div>
 
                 <div class="user-detail__form-group">
-                  <label class="user-detail__label" for="joinDate">Ngày tham gia</label>
+                  <label class="user-detail__label" for="joinDate" data-i18n="userdetail.joinDate">Ngày tham gia</label>
                   <input class="user-detail__input" type="text" id="joinDate" />
                 </div>
               </div>
 
               <div class="user-detail__actions">
-                <button class="user-detail__btn save-personal-info">
+                <button class="user-detail__btn save-personal-info" data-i18n="userdetail.saveChanges">
                   Lưu thay đổi
                 </button>
               </div>
@@ -68,26 +68,26 @@
 
             <!-- Password Change Section -->
             <div class="user-detail__card">
-              <h3 class="user-detail__title">Đổi mật khẩu</h3>
+              <h3 class="user-detail__title" data-i18n="userdetail.changePassword">Đổi mật khẩu</h3>
               <div class="user-detail__grid">
                 <div class="user-detail__form-group">
-                  <label class="user-detail__label" for="current-password">Mật khẩu hiện tại</label>
+                  <label class="user-detail__label" for="current-password" data-i18n="userdetail.currentPassword">Mật khẩu hiện tại</label>
                   <input class="user-detail__input" type="password" id="current-password" />
                 </div>
 
                 <div class="user-detail__form-group">
-                  <label class="user-detail__label" for="new-password">Mật khẩu mới</label>
+                  <label class="user-detail__label" for="new-password" data-i18n="userdetail.newPassword">Mật khẩu mới</label>
                   <input class="user-detail__input" type="password" id="new-password" />
                 </div>
 
                 <div class="user-detail__form-group">
-                  <label class="user-detail__label" for="confirm-password">Xác nhận mật khẩu</label>
+                  <label class="user-detail__label" for="confirm-password" data-i18n="userdetail.confirmPassword">Xác nhận mật khẩu</label>
                   <input class="user-detail__input" type="password" id="confirm-password" />
                 </div>
               </div>
 
               <div class="user-detail__actions">
-                <button class="user-detail__btn update-password">
+                <button class="user-detail__btn update-password" data-i18n="userdetail.updatePassword">
                   Cập nhật mật khẩu
                 </button>
               </div>
@@ -96,8 +96,8 @@
 
           <!-- Favorites Section -->
           <div class="user-detail__section" id="favorites-section">
-            <h1 class="user-detail__title">Phim yêu thích</h1>
-            <p class="user-detail__subtitle">
+            <h1 class="user-detail__title" data-i18n="userdetail.favoritesTitle">Phim yêu thích</h1>
+            <p class="user-detail__subtitle" data-i18n="userdetail.favoritesSubtitle">
               Danh sách các bộ phim bạn đã thêm vào yêu thích
             </p>
 

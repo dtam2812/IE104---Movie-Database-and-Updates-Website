@@ -214,12 +214,25 @@ function renderInfo(movie) {
     ? new Date(movie.release_date).toLocaleDateString("vi-VN")
     : t("common.unknown");
 
+  // Dịch trạng thái phim
+  function translateStatus(status) {
+    const statusMap = {
+      "Released": "detail.status.released",
+      "Post Production": "detail.status.postproduction",
+      "In Production": "detail.status.inproduction",
+      "Planned": "detail.status.planned",
+      "Rumored": "detail.status.rumored",
+      "Canceled": "detail.status.canceled"
+    };
+    return t(statusMap[status]) || status || t("common.unknown");
+  }
+
   panel.innerHTML = `
     <h3>${t("detail.infoTitle") || "Thông tin phim"}</h3>
     <div class="movie-info"><div class="movie-info__label">${
       t("detail.runtime") || "Thời lượng"
     }:</div><div class="movie-info__value">${
-    movie.runtime ? movie.runtime + " phút" : t("common.unknown")
+    movie.runtime ? movie.runtime + " " + t("common.minutes") : t("common.unknown")
   }</div></div>
     <div class="movie-info"><div class="movie-info__label">${
       t("detail.country") || "Quốc gia"
@@ -241,9 +254,7 @@ function renderInfo(movie) {
   }</div></div>
     <div class="movie-info"><div class="movie-info__label">${
       t("detail.status") || "Trạng thái"
-    }:</div><div class="movie-info__value">${
-    movie.status || t("common.unknown")
-  }</div></div>
+    }:</div><div class="movie-info__value">${translateStatus(movie.status)}</div></div>
   `;
 }
 

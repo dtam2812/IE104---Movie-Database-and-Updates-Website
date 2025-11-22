@@ -548,6 +548,10 @@
   "userdetail.confirmMessage": "Are you sure you want to change the information?",
   "userdetail.actionConfirmed": "Action has been confirmed",
   "userdetail.close": "Close",
+  "userdetail.removeConfirm": "Are you sure you want to remove \"{title}\" from your favorites?",
+  "userdetail.removeSuccess": "Removed from favorites",
+  "userdetail.removeError": "An error occurred while removing the movie",
+  "userdetail.browseMovies": "Browse Movies",
 
   "userdetail.console.foundSaveBtn": "Found save personal info button",
   "userdetail.console.notFoundSaveBtn": "Save personal info button not found",
@@ -609,7 +613,7 @@
   "admin.tvshows.season": "season",
   "admin.tvshows.seasons": "seasons",
   "admin.tvshows": "TV Shows",
-   "admin.tvshows.status.released" : "Released",
+  "admin.tvshows.status.released" : "Released",
   "admin.tvshows.status.comingSoon" : "Coming Soon",
 
   "admin.movies.modal.manageActors": "Manage Actors",
@@ -622,12 +626,23 @@
   "admin.movies.noActors": "No actors added yet. Click \"Add Actor\" to start.",
 
 
-   "admin.users.modal.name": "User Name:", 
-    "admin.users.modal.namePlaceholder": "User name",
-    "admin.users.modal.emailPlaceholder": "Email",
-    "admin.users.modal.passwordPlaceholder": "Password",
-    "admin.users.modal.confirmPasswordPlaceholder": "Confirm password",
-    "admin.users.errors.passwordMismatch": "Passwords do not match.",
-    "admin.pagination.total": "/ 10"
+  "admin.users.modal.name": "User Name:", 
+  "admin.users.modal.namePlaceholder": "User name",
+  "admin.users.modal.emailPlaceholder": "Email",
+  "admin.users.modal.passwordPlaceholder": "Password",
+  "admin.users.modal.confirmPasswordPlaceholder": "Confirm password",
+  "admin.users.errors.passwordMismatch": "Passwords do not match.",
+  "admin.pagination.total": "/ 10",
 
+  "comment.helpful": "Helpful",
+  "comment.noReviews": "No reviews yet. Be the first!",
+  "comment.loginToLike": "Please login to like reviews",
+  "comment.loginToRate": "Please login to rate",
+  "comment.loginToReview": "Please login to review...",
+  "comment.enterReview": "Enter your review...",
+  "comment.selectStars": "Please select star rating!",
+  "comment.enterContent": "Please enter review content!",
+  "comment.minLength": "Review must be at least 10 characters!",
+  "comment.defaultUser": "User",
+  "comment.thankYou": "Thank you for your review!"
 }

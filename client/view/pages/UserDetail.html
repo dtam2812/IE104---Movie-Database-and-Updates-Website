@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tài khoản — UIT FILM</title>
+    <title data-i18n="userdetail.title">Tài khoản — UIT FILM</title>
     <link
       rel="icon"
       type="image/png"
@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="../../Style/SearchBar.css" />
     <link rel="stylesheet" href="../../Services/reset.css" />
     <link rel="stylesheet" href="../../Style/UserDetail.css" />
+    
+    <!-- Check login first -->
     <script type="module">
       import { checkAndShowLoginPopup } from "../../js/AutoLoginPopup.js";
       checkAndShowLoginPopup();
@@ -33,6 +35,7 @@
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
+      import { initTranslate } from "../../js/Translate.js";
 
       fetch("../components/Header.html")
         .then((res) => res.text())
@@ -45,17 +48,24 @@
         .then((searchHTML) => {
           document.querySelector(".search-box").innerHTML = searchHTML;
           searchBar();
+          // Re-translate after loading header/search
+          return initTranslate();
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
 
     <!-- main user detail -->
     <div id="userDetailMain"></div>
-    <script>
+    
+    <script type="module">
+      import { initTranslate } from "../../js/Translate.js";
+      
       fetch("../components/UserDetailMain.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("userDetailMain").innerHTML = html;
+          // Re-translate after loading component
+          return initTranslate();
         })
         .catch((err) => console.error("UserDetailMain load error:", err));
     </script>
@@ -64,10 +74,14 @@
     <div id="footer"></div>
 
     <script type="module">
+      import { initTranslate } from "../../js/Translate.js";
+      
       fetch("../components/Footer.html")
         .then((res) => res.text())
         .then((html) => {
           document.getElementById("footer").innerHTML = html;
+          // Re-translate after loading footer
+          return initTranslate();
         })
         .catch((error) => {
           console.error("Fetch footer failed:", error);
@@ -76,26 +90,39 @@
 
     <!-- Toast -->
     <div class="user-detail__toast">
-      Thay đổi đã được lưu
-      <button class="user-detail__toast-btn">Đóng</button>
+      <span data-i18n="userdetail.changesSaved">Thay đổi đã được lưu</span>
+      <button class="user-detail__toast-btn" data-i18n="userdetail.close">Đóng</button>
     </div>
 
     <!-- Modal -->
     <div class="user-detail__modal-backdrop">
       <div class="user-detail__modal">
-        <h3 class="user-detail__modal-title">Xác nhận</h3>
-        <p class="user-detail__modal-text">
+        <h3 class="user-detail__modal-title" data-i18n="userdetail.confirmAction">Xác nhận</h3>
+        <p class="user-detail__modal-text" data-i18n="userdetail.confirmMessage">
           Bạn có chắc chắn muốn thay đổi thông tin?
         </p>
         <div class="user-detail__actions">
-          <button class="user-detail__btn">Xác nhận</button>
-          <button class="user-detail__btn user-detail__btn--secondary">
+          <button class="user-detail__btn" data-i18n="userdetail.confirmAction">Xác nhận</button>
+          <button class="user-detail__btn user-detail__btn--secondary" data-i18n="userdetail.cancel">
             Hủy
           </button>
         </div>
       </div>
     </div>
 
-    <script type="module" src="../../js/UserDetail.js"></script>
+    <!-- Initialize UserDetail after everything is loaded -->
+    <script type="module">
+      import { initUserDetail } from "../../js/UserDetail.js";
+      
+      // Wait for DOM to be fully loaded
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          // Small delay to ensure all components are loaded
+          setTimeout(initUserDetail, 100);
+        });
+      } else {
+        setTimeout(initUserDetail, 100);
+      }
+    </script>
   </body>
 </html>

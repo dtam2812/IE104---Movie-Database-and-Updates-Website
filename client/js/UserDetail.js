@@ -1,15 +1,25 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
+import { initTranslate } from "./Translate.js";
 
+// Helper function to get translation
+function t(key) {
+  return window.translations?.[key] || key;
+}
 
-// UserDetail.js - Xử lý tương tác cho trang User Detail
-document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(() => getUserDetail(), 1500);
-
+// Hàm khởi tạo tất cả event listeners và chức năng
+export async function initUserDetail() {
+  // Load translations first
+  await initTranslate();
+  
+  // Load user detail và favorites
+  setTimeout(() => {
+    getUserDetail();
+    fetchUserDetail(); // Load favorites
+  }, 500);
 
   // Toast functionality
   const toast = document.querySelector(".user-detail__toast");
   const toastButton = document.querySelector(".user-detail__toast-btn");
-
 
   if (toastButton) {
     toastButton.addEventListener("click", function () {
@@ -17,35 +27,35 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-
   // Handle Save Personal Info button
   const savePersonalInfoBtn = document.querySelector(".save-personal-info");
   if (savePersonalInfoBtn) {
+    console.log(t("userdetail.console.foundSaveBtn"));
     savePersonalInfoBtn.addEventListener("click", function (e) {
       e.preventDefault();
       if (validateForm()) {
         updateInformation();
       }
     });
+  } else {
+    console.log(t("userdetail.console.notFoundSaveBtn"));
   }
-
 
   // Handle Update Password button
   const updatePasswordBtn = document.querySelector(".update-password");
   if (updatePasswordBtn) {
+    console.log(t("userdetail.console.foundPasswordBtn"));
     updatePasswordBtn.addEventListener("click", function (e) {
       e.preventDefault();
       updatePassword();
     });
+  } else {
+    console.log(t("userdetail.console.notFoundPasswordBtn"));
   }
-
 
   // Modal functionality
   const modal = document.querySelector(".user-detail__modal-backdrop");
-  const cancelButtons = document.querySelectorAll(
-    ".user-detail__btn--secondary"
-  );
-
+  const cancelButtons = document.querySelectorAll(".user-detail__btn--secondary");
 
   cancelButtons.forEach((button) => {
     if (!button.closest(".user-detail__modal")) {
@@ -55,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-
   // Close modal when clicking outside
   if (modal) {
     modal.addEventListener("click", function (e) {
@@ -63,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function () {
         hideModal();
       }
     });
-
 
     // Close modal with cancel button in modal
     const modalCancel = modal.querySelector(".user-detail__btn--secondary");
@@ -73,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-
     // Confirm action in modal
     const modalConfirm = modal.querySelector(
       ".user-detail__btn:not(.user-detail__btn--secondary)"
@@ -81,14 +88,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (modalConfirm) {
       modalConfirm.addEventListener("click", function () {
         hideModal();
-        showToast("Hành động đã được xác nhận");
+        showToast(t("userdetail.actionConfirmed"));
       });
     }
   }
 
-
   // Navigation functionality - Handle tab switching
   const navButtons = document.querySelectorAll(".user-detail__nav-btn");
+  console.log(t("userdetail.console.foundNavButtons").replace("{{count}}", navButtons.length));
+  
   navButtons.forEach((button) => {
     button.addEventListener("click", function () {
       navButtons.forEach((btn) =>
@@ -96,16 +104,13 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       this.classList.add("user-detail__nav-btn--active");
 
-
       const sectionId = this.getAttribute("data-section");
       handleNavigation(sectionId);
-
 
       // Cuộn lên khi mở Thông tin cá nhân
       if (sectionId === "personal-info") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-
 
       // Cuộn xuống khi mở Favorites
       if (sectionId === "favorites") {
@@ -121,7 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-
   // Form validation for password fields
   const passwordInputs = document.querySelectorAll('input[type="password"]');
   passwordInputs.forEach((input) => {
@@ -130,33 +134,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-
   // Logout functionality
   const logoutButton = document.querySelector(".user-detail__logout");
   if (logoutButton) {
+    console.log(t("userdetail.console.foundLogoutBtn"));
     logoutButton.addEventListener("click", function (e) {
       e.preventDefault();
 
+      if (confirm(t("userdetail.logoutConfirm"))) {
+        // Xóa tất cả thông tin user khỏi localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("refreshToken");
 
-      // Xóa tất cả thông tin user khỏi localStorage
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("userName");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("refreshToken");
-
-
-      window.location.href = "/client/view/pages/HomePage.html";
+        showToast(t("userdetail.logoutSuccess"));
+        
+        setTimeout(() => {
+          window.location.href = "/client/view/pages/HomePage.html";
+        }, 1000);
+      }
     });
   }
-});
 
+  console.log(t("userdetail.console.initialized"));
+}
 
-// Load user detail
+// Load user detail from basic endpoint
 async function getUserDetail() {
   try {
     const token = localStorage.getItem("accessToken");
-    const payloadDecoded = jwtDecode(token);
-    const userId = payloadDecoded._id;
     if (!token) {
       setTimeout(() => {
         window.location.href = "../../Pages/Login.html";
@@ -164,6 +171,8 @@ async function getUserDetail() {
       return;
     }
 
+    const payloadDecoded = jwtDecode(token);
+    const userId = payloadDecoded._id;
 
     const response = await fetch(
       `http://localhost:5000/api/authUser/userDetail/${userId}`,
@@ -176,18 +185,17 @@ async function getUserDetail() {
       }
     );
 
-
     if (response.status !== 200) {
-      throw new Error("Không thể tải thông tin người dùng");
+      throw new Error(t("userdetail.errors.cannotLoadUser"));
     }
+
     const userData = await response.json();
     displayUserInformation(userData);
   } catch (error) {
     console.error("Error loading user info:", error);
-    showToast("Lỗi khi tải thông tin người dùng");
+    showToast(t("userdetail.loadError"));
   }
 }
-
 
 function displayUserInformation(userData) {
   const nameField = document.getElementById("name");
@@ -195,13 +203,10 @@ function displayUserInformation(userData) {
   const joinDateField = document.getElementById("joinDate");
   const userName = document.querySelector(".user-detail__name");
 
-
   const user = userData.user || userData;
-
 
   if (nameField && user.userName) nameField.value = user.userName;
   if (emailField && user.email) emailField.value = user.email;
-
 
   if (joinDateField && user.joinDate) {
     try {
@@ -219,23 +224,19 @@ function displayUserInformation(userData) {
   if (userName && user.userName) userName.textContent = user.userName;
 }
 
-
 async function updateInformation() {
   try {
     const token = localStorage.getItem("accessToken");
     const payloadDecoded = jwtDecode(token);
     const userId = payloadDecoded._id;
 
-
     const nameField = document.getElementById("name");
     const emailField = document.getElementById("email");
-
 
     const updatedData = {
       name: nameField ? nameField.value.trim() : "",
       email: emailField ? emailField.value.trim() : "",
     };
-
 
     const response = await fetch(
       `http://localhost:5000/api/authUser/updateInfo/${userId}`,
@@ -249,24 +250,22 @@ async function updateInformation() {
       }
     );
 
-
     if (response.status !== 200) {
-      throw new Error("Không thể cập nhật thông tin");
+      throw new Error(t("userdetail.errors.cannotUpdateInfo"));
     }
 
-
     const result = await response.json();
-    showToast("Thay đổi đã được lưu");
+    showToast(t("userdetail.changesSaved"));
+    
     if (result.userName) {
       const userName = document.querySelector(".user-detail__name");
       if (userName) userName.textContent = result.userName;
     }
   } catch (error) {
     console.error("Error saving user info:", error);
-    showToast("Lỗi khi lưu thông tin");
+    showToast(t("userdetail.saveError"));
   }
 }
-
 
 async function updatePassword() {
   try {
@@ -274,40 +273,33 @@ async function updatePassword() {
     const payloadDecoded = jwtDecode(token);
     const userId = payloadDecoded._id;
 
-
     const currentPasswordField = document.getElementById("current-password");
     const newPasswordField = document.getElementById("new-password");
     const confirmPasswordField = document.getElementById("confirm-password");
 
-
-    // Kiểm tra nhập hợp lệ trước khi gửi
     if (
       !currentPasswordField.value.trim() ||
       !newPasswordField.value.trim() ||
       !confirmPasswordField.value.trim()
     ) {
-      showToast("Vui lòng nhập đầy đủ thông tin");
+      showToast(t("userdetail.fillAllFields"));
       return;
     }
-
 
     if (newPasswordField.value !== confirmPasswordField.value) {
-      showToast("Mật khẩu xác nhận không khớp");
+      showToast(t("userdetail.passwordMismatch"));
       return;
     }
-
 
     if (newPasswordField.value.length < 6) {
-      showToast("Mật khẩu phải có ít nhất 6 ký tự");
+      showToast(t("userdetail.passwordMinLength"));
       return;
     }
-
 
     const updatedData = {
       currentPassword: currentPasswordField.value.trim(),
       newPassword: newPasswordField.value.trim(),
     };
-
 
     const response = await fetch(
       `http://localhost:5000/api/authUser/updatePassword/${userId}`,
@@ -321,33 +313,28 @@ async function updatePassword() {
       }
     );
 
-
     const result = await response.json();
 
-
     if (response.status === 200) {
-      showToast(result.message || "Đổi mật khẩu thành công");
-
+      showToast(result.message || t("userdetail.passwordChangeSuccess"));
 
       // Reset ô input
       currentPasswordField.value = "";
       newPasswordField.value = "";
       confirmPasswordField.value = "";
     } else {
-      showToast(result.message || "Đổi mật khẩu thất bại");
+      showToast(result.message || t("userdetail.passwordChangeFailed"));
     }
   } catch (error) {
     console.error("Error updating password:", error);
-    showToast("Lỗi khi đổi mật khẩu");
+    showToast(t("userdetail.passwordError"));
   }
 }
-
 
 // Function to show toast message
 function showToast(message) {
   const toast = document.querySelector(".user-detail__toast");
   const toastText = toast.querySelector("span");
-
 
   if (toastText) {
     toastText.textContent = message;
@@ -355,9 +342,7 @@ function showToast(message) {
     toast.childNodes[0].textContent = message + " ";
   }
 
-
   toast.classList.add("user-detail__toast--show");
-
 
   // Auto hide after 3 seconds
   setTimeout(() => {
@@ -365,53 +350,40 @@ function showToast(message) {
   }, 3000);
 }
 
-
-// Function to show modal
 function showModal() {
   const modal = document.querySelector(".user-detail__modal-backdrop");
-  modal.style.display = "flex";
+  if (modal) modal.style.display = "flex";
 }
 
-
-// Function to hide modal
 function hideModal() {
   const modal = document.querySelector(".user-detail__modal-backdrop");
-  modal.style.display = "none";
+  if (modal) modal.style.display = "none";
 }
 
-
-// Function to validate form
 function validateForm() {
   let isValid = true;
 
-
-  // Validate required fields
   const requiredFields = document.querySelectorAll("input[required]");
   requiredFields.forEach((field) => {
     if (!field.value.trim()) {
-      showError(field, "Trường này là bắt buộc");
+      showError(field, t("userdetail.errors.fieldRequired"));
       isValid = false;
     } else {
       clearError(field);
     }
   });
 
-
-  // Validate email format
   const emailField = document.getElementById("email");
   if (emailField && emailField.value) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(emailField.value)) {
-      showError(emailField, "Email không hợp lệ");
+      showError(emailField, t("userdetail.errors.invalidEmail"));
       isValid = false;
     }
   }
 
-
-  // Validate password match
   const newPassword = document.getElementById("new-password");
   const confirmPassword = document.getElementById("confirm-password");
-
 
   if (
     newPassword &&
@@ -420,20 +392,17 @@ function validateForm() {
     confirmPassword.value
   ) {
     if (newPassword.value !== confirmPassword.value) {
-      showError(confirmPassword, "Mật khẩu xác nhận không khớp");
+      showError(confirmPassword, t("userdetail.errors.passwordNotMatch"));
       isValid = false;
     }
   }
 
-
   return isValid;
 }
 
-
-// Function to validate password field
 function validatePasswordField(field) {
   if (field.value && field.value.length < 6) {
-    showError(field, "Mật khẩu phải có ít nhất 6 ký tự");
+    showError(field, t("userdetail.errors.passwordTooShort"));
     return false;
   } else {
     clearError(field);
@@ -441,43 +410,26 @@ function validatePasswordField(field) {
   }
 }
 
-
-// Function to show error message
 function showError(field, message) {
   field.classList.add("user-detail__input--invalid");
 
-
-  // Remove existing error message
   const existingError = field.parentNode.querySelector(".user-detail__error");
-  if (existingError) {
-    existingError.remove();
-  }
+  if (existingError) existingError.remove();
 
-
-  // Create and show error message
   const errorElement = document.createElement("div");
   errorElement.className = "user-detail__error";
   errorElement.textContent = message;
   errorElement.style.display = "block";
 
-
   field.parentNode.appendChild(errorElement);
 }
 
-
-// Function to clear error message
 function clearError(field) {
   field.classList.remove("user-detail__input--invalid");
-
-
   const errorElement = field.parentNode.querySelector(".user-detail__error");
-  if (errorElement) {
-    errorElement.remove();
-  }
+  if (errorElement) errorElement.remove();
 }
 
-
-// Function to handle navigation between sections
 function handleNavigation(sectionId) {
   // Hide all sections
   const allSections = document.querySelectorAll(".user-detail__section");
@@ -485,38 +437,16 @@ function handleNavigation(sectionId) {
     section.classList.remove("user-detail__section--active");
   });
 
-
   // Show selected section
   const targetSection = document.getElementById(`${sectionId}-section`);
   if (targetSection) {
     targetSection.classList.add("user-detail__section--active");
+  } else {
+    console.log(t("userdetail.console.unknownSection"), sectionId);
   }
 }
 
-
-// Function to update user avatar
-function updateAvatar(imageUrl) {
-  const avatar = document.querySelector(".user-detail__avatar-img");
-  if (avatar) {
-    avatar.src = imageUrl;
-  }
-}
-
-
-// Function to update user information
-function updateUserInfo(userData) {
-  const nameField = document.getElementById("name");
-  const emailField = document.getElementById("email");
-  const userName = document.querySelector(".user-detail__name");
-
-
-  if (nameField && userData.name) nameField.value = userData.name;
-  if (emailField && userData.email) emailField.value = userData.email;
-  if (userName && userData.name) userName.textContent = userData.name;
-}
-
-
-// Lấy thông tin user từ server
+// Lấy thông tin user từ server (bao gồm favorites)
 async function fetchUserDetail() {
   try {
     const res = await fetch("http://localhost:5000/api/authUser/getUser", {
@@ -525,22 +455,9 @@ async function fetchUserDetail() {
       },
     });
 
-
-    if (!res.ok) throw new Error("Lỗi khi lấy dữ liệu");
-
+    if (!res.ok) throw new Error(t("userdetail.errors.loadUserFailed"));
 
     const data = await res.json();
-
-
-    // Cập nhật thông tin lên giao diện
-    updateUserInfo({
-      name: data.user.userName,
-      email: data.user.email,
-      phone: data.user.phone,
-      birthday: data.user.birthday,
-      avatar: data.user.avatar, // nếu có
-    });
-
 
     // Nếu có danh sách yêu thích
     if (data.user.favoriteFilm) {
@@ -551,7 +468,6 @@ async function fetchUserDetail() {
   }
 }
 
-
 // Render danh sách phim yêu thích
 function renderFavorites(favorites) {
   const container = document.querySelector(".favorites-list");
@@ -560,21 +476,18 @@ function renderFavorites(favorites) {
     return;
   }
 
-
   container.innerHTML = "";
-
 
   if (!favorites || favorites.length === 0) {
     container.innerHTML = `
       <div class="empty-favorites">
         <i class="bx bx-heart"></i>
-        <p>Chưa có phim nào trong danh sách yêu thích</p>
-        <a href="../pages/HomePage.html" class="btn browse-movies-btn">Khám phá phim</a>
+        <p data-i18n="userdetail.emptyFavorites">${t("userdetail.emptyFavorites")}</p>
+        <a href="../pages/HomePage.html" class="btn browse-movies-btn" data-i18n="userdetail.browseMovies">${t("userdetail.browseMovies")}</a>
       </div>
     `;
     return;
   }
-
 
   const uniqueFavorites = favorites.filter(
     (film, index, self) =>
@@ -587,80 +500,64 @@ function renderFavorites(favorites) {
       )
   );
 
-
   if (uniqueFavorites.length === 0) {
     container.innerHTML = `
       <div class="empty-favorites">
         <i class="bx bx-heart"></i>
-        <p>Chưa có phim nào trong danh sách yêu thích</p>
-        <a href="../pages/HomePage.html" class="btn browse-movies-btn">Khám phá phim</a>
+        <p data-i18n="userdetail.emptyFavorites">${t("userdetail.emptyFavorites")}</p>
+        <a href="../pages/HomePage.html" class="btn browse-movies-btn" data-i18n="userdetail.browseMovies">${t("userdetail.browseMovies")}</a>
       </div>
     `;
     return;
   }
 
-
   const grid = document.createElement("div");
   grid.className = "favorites-grid";
 
-
-  uniqueFavorites.forEach((film, index) => {
+  uniqueFavorites.forEach((film) => {
     const filmId = film.id;
-
+    if (!filmId) return;
 
     const filmCard = document.createElement("div");
     filmCard.className = "favorite-card";
     filmCard.setAttribute("data-film-id", filmId);
 
-
-    if (!filmId) {
-      return;
-    }
-
-
-    // FIX: Check type properly
-    const typeStr = String(film.type || "")
-      .toLowerCase()
-      .trim();
-    const isTV =
-      typeStr === "tv" || typeStr === "tvshow" || typeStr === "series";
-
+    // Check type properly
+    const typeStr = String(film.type || "").toLowerCase().trim();
+    const isTV = typeStr === "tv" || typeStr === "tvshow" || typeStr === "series";
 
     const typeBadge = isTV
-      ? `<div class="favorite-card__episode-badge">TV Show</div>`
-      : `<div class="favorite-card__episode-badge">Movie</div>`;
-
+      ? `<div class="favorite-card__episode-badge">${t("badge.tvshow")}</div>`
+      : `<div class="favorite-card__episode-badge">${t("badge.movie")}</div>`;
 
     const detailHref = isTV
       ? `../pages/TvShowDetail.html`
       : `../pages/MovieDetail.html`;
 
-
     filmCard.innerHTML = `
       <div class="favorite-card__container">
         <img
           src="${film.posterPath || "/images/default-poster.jpg"}"
-          alt="${film.title || film.originalName || "Unknown"}"
+          alt="${film.title || film.originalName || t("common.unknown")}"
           class="favorite-card__poster"
           onerror="this.src='/images/default-poster.jpg'"
         />
         <div class="favorite-card__info-top">
           ${typeBadge}
         </div>
-        <button class="favorite-card__remove-btn" title="Remove from Favorites">
+        <button class="favorite-card__remove-btn" title="${t("userdetail.removeFromFavorites")}">
           <i class="bx bx-trash"></i>
         </button>
       </div>
       <div class="favorite-card__info">
         <div class="favorite-card__vietnamese-title">
-          <span>${film.title || film.originalName || "Unknown Title"}</span>
+          <span>${film.title || film.originalName || t("common.unknown")}</span>
         </div>
         <div class="favorite-card__original-title">
           <span>${film.originalName || ""}</span>
         </div>
       </div>
     `;
-
 
     const poster = filmCard.querySelector(".favorite-card__poster");
     if (poster) {
@@ -672,18 +569,11 @@ function renderFavorites(favorites) {
       });
     }
 
-
     const removeBtn = filmCard.querySelector(".favorite-card__remove-btn");
     if (removeBtn) {
       removeBtn.addEventListener("click", async function (e) {
         e.preventDefault();
         e.stopPropagation();
-        console.log(
-          "Remove clicked for film:",
-          filmId,
-          "type:",
-          isTV ? "TV" : "Movie"
-        );
         await removeFromFavorites(
           filmId,
           film.title || film.originalName,
@@ -692,25 +582,19 @@ function renderFavorites(favorites) {
       });
     }
 
-
     grid.appendChild(filmCard);
   });
-
 
   container.appendChild(grid);
 }
 
-
 // Function để xóa phim khỏi danh sách yêu thích
 async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
-  if (
-    !confirm(
-      `Bạn có chắc chắn muốn xóa "${filmTitle}" khỏi danh sách yêu thích?`
-    )
-  ) {
+  const confirmMsg = t("userdetail.removeConfirm").replace("{title}", filmTitle);
+  
+  if (!confirm(confirmMsg)) {
     return;
   }
-
 
   try {
     const token = localStorage.getItem("accessToken");
@@ -722,14 +606,12 @@ async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
       },
       body: JSON.stringify({
         id: filmId.toString(),
-        type: type, // use passed type (Movie or TV)
+        type: type,
       }),
     });
 
-
     if (response.ok) {
-      const data = await response.json();
-      showToast("Đã xóa phim khỏi danh sách yêu thích");
+      showToast(t("userdetail.removeSuccess"));
       // Reload lại danh sách yêu thích
       fetchUserDetail();
     } else {
@@ -737,25 +619,13 @@ async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
     }
   } catch (error) {
     console.error("Remove from favorites error:", error);
-    showToast("Có lỗi xảy ra khi xóa phim");
+    showToast(t("userdetail.removeError"));
   }
 }
 
-
-// Gọi khi load trang
-document.addEventListener("DOMContentLoaded", fetchUserDetail);
-
-
-// Export functions for use in other modules
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    showToast,
-    showModal,
-    hideModal,
-    validateForm,
-    updateUserInfo,
-  };
+// Auto-init when DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initUserDetail);
+} else {
+  initUserDetail();
 }
-
-
-
