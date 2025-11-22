@@ -363,13 +363,6 @@ body {
 }
 
 /* Content Section */
-.user-detail__section {
-  display: none;
-}
-
-.user-detail__section--active {
-  display: block;
-}
 
 /* Favorites */
 .user-detail__favorites {

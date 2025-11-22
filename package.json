@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "node server/server.js",
-    "dev": "nodemon server/server.js"
+    "dev": "nodemon server/server.js",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
