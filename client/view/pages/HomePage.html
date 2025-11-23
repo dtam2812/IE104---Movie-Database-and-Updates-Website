@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UIT FILM</title>
-    <link rel="icon" type="image/png" href="../../../public/assets/image/logo-web-black.png"/>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css" />
-    <link rel="stylesheet" href="../../Services/reset.css" />
-    <link rel="stylesheet" href="../../Style/StarterMovie.css" />
-    <link rel="stylesheet" href="../../Style/MovieGrid.css" />
-    <link rel="stylesheet" href="../../Style/SearchBar.css" />
-    <link rel="stylesheet" href="../../Style/Trailer.css" />
-    <link rel="stylesheet" href="../../Style/FavoriteNot.css" />
+    <link rel="icon" type="image/png" href="../../../public/assets/image/logo-web-black.png">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
+    <link rel="stylesheet" href="../../Services/reset.css">
+    <link rel="stylesheet" href="../../Style/StarterMovie.css">
+    <link rel="stylesheet" href="../../Style/MovieGrid.css">
+    <link rel="stylesheet" href="../../Style/SearchBar.css">
+    <link rel="stylesheet" href="../../Style/Trailer.css">
+    <link rel="stylesheet" href="../../Style/FavoriteNot.css">
     <script type="module">
       import { checkAndShowLoginPopup } from "../../js/AutoLoginPopup.js";
       checkAndShowLoginPopup();
@@ -50,13 +50,13 @@
       <div class="container">
         <div class="stack">
           <div class="left">
-            <div id="brand" alt="Tiêu đề" class="brand" >
+            <div id="brand" class="brand" >
             <div class="en" id="en"></div>
             <div class="row" id="meta"></div>
             <div class="row" id="genres"></div>
             <p class="desc" id="desc"></p>
             <div class="controls">
-              <div class="play" id="trailer-btn" aria-label="Play">
+              <div class="play" id="trailer-btn">
                 <a class="play" href="#">
                   <i class="fa-solid fa-play"></i>
                   <span><strong>Trailer</strong></span>
@@ -102,18 +102,16 @@
         <iframe
           id="trailer-frame"
           class="trailer-modal__iframe"
-          width="100%"
-          height="500"
-          frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
-    </div>
+      </div>
       <div class="thumbs">
-        <div class="thumbs-inner" id="thumbs" aria-label="Thumbnails"></div>
+        <div class="thumbs-inner" id="thumbs"></div>
       </div>
       <div class="bottom-grad" aria-hidden="true"></div>
+      </div>
     </main>
 
     <script type="module" src="../../js/StarterMovie.js"></script>

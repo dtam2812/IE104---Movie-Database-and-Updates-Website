@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="admin.tvshows.title">Admin TV Shows Management</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="../../../public/assets/image/logo-web-black.png"/>
+    <link rel="icon" type="image/png" href="../../../public/assets/image/logo-web-black.png">
     <link rel="stylesheet" href="../../Services/reset.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../Style/AdminPage.css">
     <link rel="stylesheet" href="../../Style/HeaderAndFooter.css">
-    <link rel="stylesheet" href="../../Style/SearchBar.css" />
+    <link rel="stylesheet" href="../../Style/SearchBar.css">
 </head>
 
 <body>
@@ -109,7 +109,7 @@
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <input class="search-filter__input" data-i18n-placeholder="admin.tvshows.search"
-                               placeholder="Search by TV show name or ID (e.g. TV001)" autocomplete="off" />
+                               placeholder="Search by TV show name or ID (e.g. TV001)" autocomplete="off">
                     </div>
                     <div class="search-filter__filters">
                         <select class="search-filter__select">
@@ -192,7 +192,7 @@
                     </button>
                     <div class="form form--tvshow">
                         <div class="form__header mb2">
-                            <h1 class="form__title modal__title" data-i18n="admin.tvshows.modal.add">Add TV Show</h1>
+                            <h2 class="form__title modal__title" data-i18n="admin.tvshows.modal.add">Add TV Show</h2>
                         </div>
                     
                         <div class="form__body">
@@ -231,7 +231,7 @@
                                                 <span data-i18n="admin.movies.modal.banner">Banner (16:9):</span> 
                                                 <span style="color: red;" data-i18n="admin.required">*</span>
                                             </label>
-                                            <img src="../../public/assets/image/movie_banner_default.png" alt="Banner">
+                                            <img src="/public/assets/image/movie_banner_default.png" alt="Banner">
                                             <input type="file" class="media-form__banner-input" name="banner" accept="image/*">
                                             <small data-i18n="admin.movies.modal.bannerRatio">Ratio: 16:9 (e.g. 1920x1080)</small>
                                         </div>
@@ -240,7 +240,7 @@
                                                 <span data-i18n="admin.movies.modal.poster">Poster (2:3):</span> 
                                                 <span style="color: red;" data-i18n="admin.required">*</span>
                                             </label>
-                                            <img src="../../public/assets/image/0891b2.svg" alt="Poster">
+                                            <img src="/public/assets/image/movie_poster_default.jpg" alt="Poster">
                                             <input type="file" class="media-form__poster-input" name="poster" accept="image/*">
                                             <small data-i18n="admin.movies.modal.posterRatio">Ratio: 2:3 (e.g. 600x900)</small>
                                         </div>
@@ -373,6 +373,7 @@
                                                 <span style="color: red;" data-i18n="admin.required">*</span>
                                             </label>
                                             <select class="form__control" name="status" required>
+                                                <option value="" disabled selected data-i18n="admin.movies.allStatus">Select status</option>
                                                 <option value="Released" data-i18n="admin.movies.status.released">Released</option>
                                                 <option value="Coming Soon" data-i18n="admin.movies.status.comingSoon">Coming Soon</option>
                                             </select>
