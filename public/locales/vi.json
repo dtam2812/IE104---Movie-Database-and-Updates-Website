@@ -642,5 +642,10 @@
   "comment.enterContent": "Vui lòng nhập nội dung đánh giá!",
   "comment.minLength": "Đánh giá phải có ít nhất 10 ký tự!",
   "comment.defaultUser": "Người dùng",
-  "comment.thankYou": "Cảm ơn bạn đã đánh giá!"
+  "comment.thankYou": "Cảm ơn bạn đã đánh giá!",
+
+  "favorite.addSuccess": "Đã thêm vào yêu thích",
+  "favorite.removeSuccess": "Đã xóa khỏi yêu thích",
+  "favorite.loginRequired": "Vui lòng đăng nhập để thêm yêu thích",
+  "favorite.error": "Có lỗi xảy ra"
 }
