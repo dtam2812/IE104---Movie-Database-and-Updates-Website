@@ -225,7 +225,7 @@ function checkAdminRole() {
       const payloadDecoded = jwtDecode(accessToken);
       console.log("Checking admin role:", payloadDecoded.role);
 
-      if (payloadDecoded.role === "Admin") {
+      if (payloadDecoded.role === "admin") {
         createAdminMenu();
       } else {
         removeAdminMenu();
@@ -242,16 +242,22 @@ function checkAdminRole() {
 // Hàm đóng tất cả dropdowns
 function closeAllDropdowns() {
   // Đóng language switchers
-  document.querySelectorAll('.language-switcher').forEach(switcher => {
-    switcher.classList.remove('open');
-    switcher.querySelector('.swap-language')?.setAttribute('aria-expanded', 'false');
+  document.querySelectorAll(".language-switcher").forEach((switcher) => {
+    switcher.classList.remove("open");
+    switcher
+      .querySelector(".swap-language")
+      ?.setAttribute("aria-expanded", "false");
   });
 
   // Đóng user dropdown
-  document.querySelector('.user-dropdown-menu .dropdown-list')?.classList.remove('show');
+  document
+    .querySelector(".user-dropdown-menu .dropdown-list")
+    ?.classList.remove("show");
 
   // Đóng country dropdown
-  document.querySelector('.menu-film-type.dropdown')?.classList.remove('toggled');
+  document
+    .querySelector(".menu-film-type.dropdown")
+    ?.classList.remove("toggled");
 }
 
 // Main function
@@ -372,13 +378,13 @@ export async function headerjs() {
   if (dropdownBtn) {
     dropdownBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      
+
       // Lấy trạng thái hiện tại
       const wasOpen = dropdown.classList.contains("toggled");
-      
+
       // Đóng TẤT CẢ dropdowns trước
       closeAllDropdowns();
-      
+
       // Toggle dropdown này
       if (!wasOpen) {
         dropdown.classList.add("toggled");
@@ -390,13 +396,13 @@ export async function headerjs() {
   if (userDropdownMenu && dropdownList) {
     userDropdownMenu.addEventListener("click", (e) => {
       e.stopPropagation();
-      
+
       // Lấy trạng thái hiện tại
       const wasOpen = dropdownList.classList.contains("show");
-      
+
       // Đóng TẤT CẢ dropdowns trước
       closeAllDropdowns();
-      
+
       // Toggle dropdown này
       if (!wasOpen) {
         dropdownList.classList.add("show");
@@ -407,7 +413,9 @@ export async function headerjs() {
   // Click ngoài để đóng TẤT CẢ dropdowns
   document.addEventListener("click", (e) => {
     // Kiểm tra nếu click không phải vào bất kỳ dropdown nào
-    const isLanguageSwitcher = Array.from(languageSwitchers).some(ls => ls.contains(e.target));
+    const isLanguageSwitcher = Array.from(languageSwitchers).some((ls) =>
+      ls.contains(e.target)
+    );
     const isUserDropdown = userDropdownMenu?.contains(e.target);
     const isCountryDropdown = dropdown?.contains(e.target);
 
