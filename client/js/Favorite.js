@@ -3,6 +3,24 @@ class FavoritesManager {
     this.isInitialized = false;
     this.currentFilm = null;
     this.API_BASE_URL = "http://localhost:5000";
+    this.translations = {};
+    this.loadTranslations();
+  }
+
+  // Tải bản dịch
+  async loadTranslations() {
+    const lang = localStorage.getItem("language") || document.documentElement.lang || "vi";
+    try {
+      const res = await fetch(`../../../public/locales/${lang}.json`);
+      this.translations = await res.json();
+    } catch (err) {
+      console.error("Load translations error:", err);
+    }
+  }
+
+  // Hàm dịch
+  t(key) {
+    return this.translations[key] || key;
   }
 
   // Khởi tạo manager
@@ -114,8 +132,14 @@ class FavoritesManager {
 
       if (data.success) {
         this.updateButtonAppearance(button, data.action === "added");
+        
+        // Sử dụng bản dịch cho thông báo
+        const message = data.action === "added" 
+          ? this.t("favorite.addSuccess") 
+          : this.t("favorite.removeSuccess");
+        
         this.showNotification(
-          data.message,
+          message,
           data.action === "added" ? "success" : "info"
         );
 
@@ -126,7 +150,7 @@ class FavoritesManager {
         throw new Error(data.message);
       }
     } catch (error) {
-      let errorMessage = "Có lỗi xảy ra: " + error.message;
+      const errorMessage = this.t("favorite.error") + ": " + error.message;
       this.showNotification(errorMessage, "error");
     } finally {
       this.setButtonLoading(button, false);
@@ -152,11 +176,11 @@ class FavoritesManager {
     if (path) {
       if (isFavorite) {
         path.style.fill = "#ff4444";
-        button.setAttribute("aria-label", "Bỏ yêu thích");
+        button.setAttribute("aria-label", this.t("userdetail.removeSuccess"));
         button.classList.add("active");
       } else {
         path.style.fill = "#fff";
-        button.setAttribute("aria-label", "Yêu thích");
+        button.setAttribute("aria-label", this.t("detail.likeAria"));
         button.classList.remove("active");
       }
     }
@@ -176,7 +200,7 @@ class FavoritesManager {
   // Hiển thị thông báo đăng nhập
   showLoginPrompt() {
     this.showNotification(
-      "Vui lòng đăng nhập để sử dụng tính năng yêu thích",
+      this.t("favorite.loginRequired"),
       "info"
     );
   }

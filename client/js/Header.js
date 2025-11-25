@@ -12,7 +12,6 @@ function isTokenExpired(token) {
     const now = Date.now() / 1000;
 
     if (decoded.exp && decoded.exp < now) {
-      console.log("Token đã hết hạn!");
       return true;
     }
 
@@ -25,7 +24,6 @@ function isTokenExpired(token) {
 
 // Hàm xử lý khi token hết hạn
 function handleTokenExpiration() {
-  console.log("Token hết hạn - Đang xử lý logout...");
 
   // Set flag để AutoLoginPopup biết là token đã hết hạn
   sessionStorage.setItem("tokenExpired", "true");
@@ -51,15 +49,11 @@ function handleTokenExpiration() {
 
 // Hàm kiểm tra token định kỳ
 function startTokenExpirationCheck() {
-  console.log(
-    `Bắt đầu kiểm tra token expiration mỗi ${CHECK_INTERVAL_MS / 1000} giây...`
-  );
 
   const checkInterval = setInterval(() => {
     const accessToken = localStorage.getItem("accessToken");
 
     if (isTokenExpired(accessToken)) {
-      console.log("Token đã hết hạn!");
       clearInterval(checkInterval);
       handleTokenExpiration();
     } else {
@@ -67,7 +61,6 @@ function startTokenExpirationCheck() {
         const decoded = jwtDecode(accessToken);
         const now = Date.now() / 1000;
         const timeLeft = Math.floor(decoded.exp - now);
-        console.log(`Token còn ${timeLeft} giây`);
       } catch (error) {
         console.error("Error checking token:", error);
       }
@@ -83,7 +76,6 @@ function checkTokenOnPageLoad() {
   const accessToken = localStorage.getItem("accessToken");
 
   if (accessToken && isTokenExpired(accessToken)) {
-    console.log("Token đã hết hạn khi load trang");
     handleTokenExpiration();
     return false;
   }
@@ -159,7 +151,7 @@ function loadUserInfo() {
       const accessToken = localStorage.getItem("accessToken");
       if (accessToken) {
         const payloadDecoded = jwtDecode(accessToken);
-        console.log("User info:", payloadDecoded);
+        // console.log("User info:", payloadDecoded);
         userName.textContent = payloadDecoded.username || "User";
       } else {
         userName.textContent = "User";
@@ -223,7 +215,6 @@ function checkAdminRole() {
   if (accessToken) {
     try {
       const payloadDecoded = jwtDecode(accessToken);
-      console.log("Checking admin role:", payloadDecoded.role);
 
       if (payloadDecoded.role === "Admin") {
         createAdminMenu();
@@ -242,16 +233,22 @@ function checkAdminRole() {
 // Hàm đóng tất cả dropdowns
 function closeAllDropdowns() {
   // Đóng language switchers
-  document.querySelectorAll('.language-switcher').forEach(switcher => {
-    switcher.classList.remove('open');
-    switcher.querySelector('.swap-language')?.setAttribute('aria-expanded', 'false');
+  document.querySelectorAll(".language-switcher").forEach((switcher) => {
+    switcher.classList.remove("open");
+    switcher
+      .querySelector(".swap-language")
+      ?.setAttribute("aria-expanded", "false");
   });
 
   // Đóng user dropdown
-  document.querySelector('.user-dropdown-menu .dropdown-list')?.classList.remove('show');
+  document
+    .querySelector(".user-dropdown-menu .dropdown-list")
+    ?.classList.remove("show");
 
   // Đóng country dropdown
-  document.querySelector('.menu-film-type.dropdown')?.classList.remove('toggled');
+  document
+    .querySelector(".menu-film-type.dropdown")
+    ?.classList.remove("toggled");
 }
 
 // Main function
@@ -372,13 +369,13 @@ export async function headerjs() {
   if (dropdownBtn) {
     dropdownBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      
+
       // Lấy trạng thái hiện tại
       const wasOpen = dropdown.classList.contains("toggled");
-      
+
       // Đóng TẤT CẢ dropdowns trước
       closeAllDropdowns();
-      
+
       // Toggle dropdown này
       if (!wasOpen) {
         dropdown.classList.add("toggled");
@@ -390,13 +387,13 @@ export async function headerjs() {
   if (userDropdownMenu && dropdownList) {
     userDropdownMenu.addEventListener("click", (e) => {
       e.stopPropagation();
-      
+
       // Lấy trạng thái hiện tại
       const wasOpen = dropdownList.classList.contains("show");
-      
+
       // Đóng TẤT CẢ dropdowns trước
       closeAllDropdowns();
-      
+
       // Toggle dropdown này
       if (!wasOpen) {
         dropdownList.classList.add("show");
@@ -407,7 +404,9 @@ export async function headerjs() {
   // Click ngoài để đóng TẤT CẢ dropdowns
   document.addEventListener("click", (e) => {
     // Kiểm tra nếu click không phải vào bất kỳ dropdown nào
-    const isLanguageSwitcher = Array.from(languageSwitchers).some(ls => ls.contains(e.target));
+    const isLanguageSwitcher = Array.from(languageSwitchers).some((ls) =>
+      ls.contains(e.target)
+    );
     const isUserDropdown = userDropdownMenu?.contains(e.target);
     const isCountryDropdown = dropdown?.contains(e.target);
 

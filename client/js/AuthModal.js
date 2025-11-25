@@ -1,5 +1,10 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 
+// Helper function to get translation
+function t(key) {
+  return window.translations?.[key] || key;
+}
+
 export async function Auth_Modaljs() {
   const modal = document.querySelector(".modal");
   const backdrop = document.querySelector(".modal_backdrop");
@@ -21,7 +26,7 @@ export async function Auth_Modaljs() {
   let resendTimer = null;
   let resendCountdown = 0;
 
-  //  hiển thị thông báo lỗi / thành công
+  // Hiển thị thông báo lỗi / thành công
   function showErrorMessage(formWrapper, message, isSuccess = false) {
     const errorDiv = formWrapper.querySelector(".auth-error-message");
     const errorText = errorDiv?.querySelector(".error-text");
@@ -70,7 +75,7 @@ export async function Auth_Modaljs() {
     function updateTimer() {
       const m = Math.floor(resendCountdown / 60);
       const s = (resendCountdown % 60).toString().padStart(2, "0");
-      resendLink.textContent = `Gửi lại OTP (${m}:${s})`;
+      resendLink.textContent = t("auth.verify.resend_timer").replace("{time}", `${m}:${s}`);
       resendLink.style.color = "#ffffff80";
       resendLink.style.cursor = "not-allowed";
       resendLink.style.pointerEvents = "none";
@@ -82,7 +87,7 @@ export async function Auth_Modaljs() {
       resendCountdown--;
       if (resendCountdown <= 0) {
         clearInterval(resendTimer);
-        resendLink.textContent = "Gửi lại mã OTP";
+        resendLink.textContent = t("auth.verify.resend");
         resendLink.style.color = "#ffd875";
         resendLink.style.cursor = "pointer";
         resendLink.style.pointerEvents = "auto";
@@ -149,7 +154,6 @@ export async function Auth_Modaljs() {
       else if (key === "auth.login.forgot") window.openLRFModal("forgot");
       else if (key === "auth.verify.back_to_login")
         window.openLRFModal("login");
-      // Resend OTP
       else if (
         key === "auth.verify.resend" &&
         resendCountdown <= 0 &&
@@ -173,14 +177,13 @@ export async function Auth_Modaljs() {
       );
 
       if (res.ok) {
-        showErrorMessage(verifyForm, "Mã OTP mới đã được gửi!", true);
+        showErrorMessage(verifyForm, t("auth.messages.otp_resent"), true);
         startResendTimer();
       } else {
-        const txt = await res.text();
-        showErrorMessage(verifyForm, txt || "Không thể gửi lại OTP!");
+        showErrorMessage(verifyForm, t("auth.messages.otp_resend_failed"));
       }
     } catch (err) {
-      showErrorMessage(verifyForm, "Lỗi kết nối. Vui lòng thử lại!");
+      showErrorMessage(verifyForm, t("auth.messages.connection_error"));
     }
   }
 
@@ -249,15 +252,14 @@ export async function Auth_Modaljs() {
         window.openLRFModal("login");
         showErrorMessage(
           loginForm,
-          "Đăng ký thành công! Vui lòng đăng nhập.",
+          t("auth.messages.register_success"),
           true
         );
       } else {
-        const txt = await res.text();
-        showErrorMessage(registerForm, txt || "Không thể đăng ký!");
+        showErrorMessage(registerForm, t("auth.messages.register_failed"));
       }
     } catch (err) {
-      showErrorMessage(registerForm, "Lỗi kết nối. Vui lòng thử lại!");
+      showErrorMessage(registerForm, t("auth.messages.connection_error"));
     }
   });
 
@@ -270,7 +272,7 @@ export async function Auth_Modaljs() {
       .value.trim();
 
     if (!email || !password) {
-      showErrorMessage(loginForm, "Vui lòng nhập đầy đủ thông tin!");
+      showErrorMessage(loginForm, t("auth.messages.fill_all_fields"));
       return;
     }
     try {
@@ -283,28 +285,33 @@ export async function Auth_Modaljs() {
         const data = await res.json();
         const token = data.accessToken;
         const decoded = jwtDecode(token);
-        if (decoded.status === "Banned") {
-          showErrorMessage(loginForm, "Tài khoản của bạn đã bị chặn.");
+
+        if (decoded.status === "banned") {
+          showErrorMessage(loginForm, t("auth.messages.account_banned"));
+          localStorage.clear();
           return;
         }
+
         localStorage.setItem("accessToken", token);
         localStorage.setItem("userName", decoded.username);
         localStorage.setItem("userEmail", decoded.email);
+        localStorage.setItem("userStatus", decoded.status);
+
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
         modal.classList.add("hidden");
-        if (decoded.role === "Admin") {
+
+        if (decoded.role === "admin") {
           window.location.href = "/client/view/pages/AdminUsers.html";
         } else {
           window.location.href = "/client/view/pages/HomePage.html";
         }
       } else {
-        const txt = await res.text();
-        showErrorMessage(loginForm, txt || "Email hoặc mật khẩu không đúng!");
+        showErrorMessage(loginForm, t("auth.messages.login_failed"));
       }
     } catch (err) {
-      showErrorMessage(loginForm, "Lỗi kết nối. Vui lòng thử lại!");
+      showErrorMessage(loginForm, t("auth.messages.connection_error"));
     }
   });
 
@@ -314,12 +321,12 @@ export async function Auth_Modaljs() {
     const email = forgotFormEl
       .querySelector('input[name="email"]')
       .value.trim();
-    if (!email) return showErrorMessage(forgotForm, "Vui lòng nhập email!");
+    if (!email) return showErrorMessage(forgotForm, t("auth.messages.enter_email"));
 
     const btn = forgotFormEl.querySelector(".btn-primary");
     const orig = btn.textContent;
     btn.disabled = true;
-    btn.textContent = "Đang gửi...";
+    btn.textContent = t("auth.messages.sending");
 
     try {
       const res = await fetch("http://localhost:5000/api/auth/forgotPassword", {
@@ -334,15 +341,14 @@ export async function Auth_Modaljs() {
         window.openLRFModal("verify");
         showErrorMessage(
           verifyForm,
-          "Mã OTP đã được gửi đến email của bạn!",
+          t("auth.messages.otp_sent"),
           true
         );
       } else {
-        const txt = await res.text();
-        showErrorMessage(forgotForm, txt || "Không thể gửi yêu cầu!");
+        showErrorMessage(forgotForm, t("auth.messages.request_failed"));
       }
     } catch (err) {
-      showErrorMessage(forgotForm, "Lỗi kết nối!");
+      showErrorMessage(forgotForm, t("auth.messages.connection_error"));
     } finally {
       btn.disabled = false;
       btn.textContent = orig;
@@ -352,12 +358,12 @@ export async function Auth_Modaljs() {
   verifyFormEl.addEventListener("submit", async (e) => {
     e.preventDefault();
     const otp = verifyFormEl.querySelector('input[name="otp"]').value.trim();
-    if (!otp) return showErrorMessage(verifyForm, "Vui lòng nhập mã OTP!");
+    if (!otp) return showErrorMessage(verifyForm, t("auth.messages.enter_otp"));
 
     const btn = verifyFormEl.querySelector(".btn-primary");
     const orig = btn.textContent;
     btn.disabled = true;
-    btn.textContent = "Đang xác thực...";
+    btn.textContent = t("auth.messages.verifying");
 
     try {
       const res = await fetch("http://localhost:5000/api/auth/verifyOTP", {
@@ -372,15 +378,14 @@ export async function Auth_Modaljs() {
         window.openLRFModal("reset");
         showErrorMessage(
           resetForm,
-          "Xác thực thành công! Nhập mật khẩu mới.",
+          t("auth.messages.verify_success"),
           true
         );
       } else {
-        const txt = await res.text();
-        showErrorMessage(verifyForm, txt || "Mã OTP không đúng!");
+        showErrorMessage(verifyForm, t("auth.messages.otp_incorrect"));
       }
     } catch (err) {
-      showErrorMessage(verifyForm, "Lỗi kết nối!");
+      showErrorMessage(verifyForm, t("auth.messages.connection_error"));
     } finally {
       btn.disabled = false;
       btn.textContent = orig;
@@ -398,7 +403,7 @@ export async function Auth_Modaljs() {
     const btn = resetSubmitBtn;
     const orig = btn.textContent;
     btn.disabled = true;
-    btn.textContent = "Đang xử lý...";
+    btn.textContent = t("auth.messages.processing");
 
     try {
       const res = await fetch("http://localhost:5000/api/auth/resetPassword", {
@@ -413,15 +418,14 @@ export async function Auth_Modaljs() {
         window.openLRFModal("login");
         showErrorMessage(
           loginForm,
-          "Đặt lại mật khẩu thành công! Vui lòng đăng nhập.",
+          t("auth.messages.reset_success"),
           true
         );
       } else {
-        const txt = await res.text();
-        showErrorMessage(resetForm, txt || "Không thể đặt lại mật khẩu!");
+        showErrorMessage(resetForm, t("auth.messages.reset_failed"));
       }
     } catch (err) {
-      showErrorMessage(resetForm, "Lỗi kết nối!");
+      showErrorMessage(resetForm, t("auth.messages.connection_error"));
     } finally {
       btn.disabled = false;
       btn.textContent = orig;
@@ -437,5 +441,17 @@ export function isTokenExpired(token) {
     return decoded.exp && decoded.exp < Date.now() / 1000;
   } catch {
     return true;
+  }
+}
+
+export function checkUserBanned() {
+  const token = localStorage.getItem("accessToken");
+  if (!token) return false;
+
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.status === "banned";
+  } catch {
+    return false;
   }
 }
