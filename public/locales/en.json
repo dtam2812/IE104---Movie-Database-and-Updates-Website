@@ -644,5 +644,10 @@
   "comment.enterContent": "Please enter review content!",
   "comment.minLength": "Review must be at least 10 characters!",
   "comment.defaultUser": "User",
-  "comment.thankYou": "Thank you for your review!"
+  "comment.thankYou": "Thank you for your review!",
+
+  "favorite.addSuccess": "Added to favorites",
+  "favorite.removeSuccess": "Removed from favorites",
+  "favorite.loginRequired": "Please login to add favorites",
+  "favorite.error": "An error occurred"
 }

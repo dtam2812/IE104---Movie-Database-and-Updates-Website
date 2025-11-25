@@ -27,6 +27,32 @@ function currentLang() {
   );
 }
 
+// ===== THÊM: HÀM DỊCH THỂ LOẠI =====
+function translateGenre(genreName) {
+  // Map tên thể loại tiếng Anh sang key trong file translation
+  const genreMap = {
+    "Action & Adventure": "genre.action_adventure",
+    "Animation": "genre.animation",
+    "Comedy": "genre.comedy",
+    "Crime": "genre.crime",
+    "Documentary": "genre.documentary",
+    "Drama": "genre.drama",
+    "Family": "genre.family",
+    "Kids": "genre.kids",
+    "Mystery": "genre.mystery",
+    "News": "genre.news",
+    "Reality": "genre.reality",
+    "Sci-Fi & Fantasy": "genre.scifi_fantasy",
+    "Soap": "genre.soap",
+    "Talk": "genre.talk",
+    "War & Politics": "genre.war_politics",
+    "Western": "genre.western"
+  };
+
+  const key = genreMap[genreName];
+  return key ? t(key) : genreName;
+}
+
 // Dịch bằng MyMemory + cache 30 ngày
 async function translateText(text, target = "vi") {
   if (!text || target === "en") return text;
@@ -137,10 +163,13 @@ async function fetchTvDetails(tvId) {
       ageRatingElement.textContent = "N/A";
     }
 
-    // Genres (TMDB đã có dịch)
-    document.querySelector(".detail__genres").innerHTML =
-      tv.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
-      `<span>${t("common.unknown") || "Không rõ"}</span>`;
+    // ===== SỬA: THỂ LOẠI - DỊCH BẰNG translateGenre() =====
+    const genresContainer = document.querySelector(".detail__genres");
+    if (genresContainer) {
+      genresContainer.innerHTML = tv.genres
+        ?.map((g) => `<span>${translateGenre(g.name)}</span>`)
+        .join("") || `<span>${t("common.unknown") || "Không rõ"}</span>`;
+    }
 
     // Nhà sản xuất (created_by)
     document.querySelector(".detail__director p").innerHTML = `
@@ -257,8 +286,8 @@ function renderActors(actors) {
     viewMoreBtn.style.display = remain <= 0 ? "none" : "block";
     viewMoreBtn.textContent =
       remain > 0
-        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ⮟`
-        : `${t("detail.viewMore") || "Xem thêm"} ⮟`;
+        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ▼`
+        : `${t("detail.viewMore") || "Xem thêm"} ▼`;
   }
 }
 
@@ -337,8 +366,8 @@ function renderSeasons(seasons) {
     viewMoreBtn.style.display = remain <= 0 ? "none" : "block";
     viewMoreBtn.textContent =
       remain > 0
-        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ⮟`
-        : `${t("detail.viewMore") || "Xem thêm"} ⮟`;
+        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ▼`
+        : `${t("detail.viewMore") || "Xem thêm"} ▼`;
   }
 }
 
@@ -424,7 +453,6 @@ async function loadRecommendedTvShows(tvId) {
 }
 
 // FAVORITE FUNCTIONS
-// Cập nhật trạng thái nút yêu thích
 async function updateFavoriteButtonState() {
   const favoriteBtn = document.querySelector(
     ".detail__btn--like, .favorite-btn, .favorite"
@@ -448,7 +476,6 @@ async function updateFavoriteButtonState() {
   }
 }
 
-// Cập nhật giao diện nút yêu thích
 function updateFavoriteButtonAppearance(button, isFavorite) {
   const svg = button.querySelector("svg");
   const path = svg?.querySelector("path");
@@ -462,7 +489,6 @@ function updateFavoriteButtonAppearance(button, isFavorite) {
   }
 }
 
-// Khởi tạo event listener cho nút yêu thích
 function initFavoriteButton() {
   const favoriteBtn = document.querySelector(
     ".detail__btn--like, .favorite-btn, .favorite"
@@ -484,14 +510,6 @@ function initFavoriteButton() {
     }
 
     try {
-      console.log("📤 Sending favorite request:", {
-        id: window.currentMovie.id.toString(),
-        type: "TV",
-        title: window.currentMovie.title,
-        originalName: window.currentMovie.originalName,
-        posterPath: IMG_URL + window.currentMovie.posterPath,
-      });
-
       await favoritesManager.handleFavoriteClick(favoriteBtn, {
         id: window.currentMovie.id.toString(),
         type: "TV",
@@ -500,7 +518,6 @@ function initFavoriteButton() {
         posterPath: IMG_URL + window.currentMovie.posterPath,
       });
 
-      // Cập nhật lại trạng thái nút
       updateFavoriteButtonState();
     } catch (error) {
       console.error("Lỗi khi xử lý yêu thích:", error);
@@ -553,8 +570,8 @@ function initViewMore(buttonSelector, contentSelector) {
     btn.textContent = isExpanded
       ? `${t("detail.viewMore") || "Xem thêm"} ${
           remain > 0 ? `(${remain})` : ""
-        } ⮟`
-      : `${t("detail.collapse") || "Thu gọn"} ⮝`;
+        } ▼`
+      : `${t("detail.collapse") || "Thu gọn"} ▲`;
   });
 }
 
