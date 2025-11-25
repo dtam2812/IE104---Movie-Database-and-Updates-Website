@@ -13,7 +13,6 @@ async function loadTranslations(lang) {
     const res = await fetch(`../../../public/locales/${lang}.json`);
     translations = await res.json();
   } catch (err) {
-    console.error("Load translations error:", err);
   }
 }
 
@@ -68,7 +67,7 @@ window.addEventListener("storage", (e) => {
   if (e.key === "language") location.reload();
 });
 
-// FETCH CHI TIẾT TV SHOW
+// Fetch chi tiết TV Show
 async function fetchTvDetails(tvId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -169,11 +168,10 @@ async function fetchTvDetails(tvId) {
     // Khởi tạo event listener cho nút yêu thích
     initFavoriteButton();
   } catch (error) {
-    console.error("Lỗi khi tải chi tiết TV Show:", error);
   }
 }
 
-// CÁC HÀM RENDER
+// Các hàm render
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -444,7 +442,6 @@ async function updateFavoriteButtonState() {
     );
     updateFavoriteButtonAppearance(favoriteBtn, isFavorite);
   } catch (error) {
-    console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
   }
 }
 
@@ -484,7 +481,7 @@ function initFavoriteButton() {
     }
 
     try {
-      console.log("📤 Sending favorite request:", {
+      console.log("", {
         id: window.currentMovie.id.toString(),
         type: "TV",
         title: window.currentMovie.title,
@@ -503,7 +500,6 @@ function initFavoriteButton() {
       // Cập nhật lại trạng thái nút
       updateFavoriteButtonState();
     } catch (error) {
-      console.error("Lỗi khi xử lý yêu thích:", error);
     }
   });
 }
@@ -558,7 +554,7 @@ function initViewMore(buttonSelector, contentSelector) {
   });
 }
 
-// KHỞI ĐỘNG
+// Khởi động
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();

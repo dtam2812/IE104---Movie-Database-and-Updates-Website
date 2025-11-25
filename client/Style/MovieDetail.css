@@ -134,6 +134,7 @@ body {
   z-index: -10;
 }
 
+/* Tối dần từ trên xuống dưới */
 .movie-banner__background::after {
   content: "";
   position: absolute;
@@ -184,7 +185,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Movie Button */
+/* Nút Like */
 .movie-banner__button {
   display: inline-flex;
   justify-content: center;
@@ -633,7 +634,7 @@ body {
     max-height: var(--tab-max-height);
     touch-action: pan-x;
   }
-
+  /* Thanh cuộn mỏng vàng */
   .movie-tabs::-webkit-scrollbar {
     height: var(--scrollbar-height);
     width: 0px;

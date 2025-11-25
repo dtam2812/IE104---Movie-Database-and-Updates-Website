@@ -13,7 +13,6 @@ async function loadTranslations(lang) {
     const res = await fetch(`../../../public/locales/${lang}.json`);
     translations = await res.json();
   } catch (err) {
-    console.error("Load translations error:", err);
   }
 }
 
@@ -143,11 +142,10 @@ async function fetchMovieDetails(movieId) {
     // Khởi tạo event listener cho nút yêu thích
     initFavoriteButton();
   } catch (error) {
-    console.error("Lỗi khi tải chi tiết phim:", error);
   }
 }
 
-// Render functions
+// Render diễn viên
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -378,7 +376,6 @@ async function updateFavoriteButtonState() {
     );
     updateFavoriteButtonAppearance(favoriteBtn, isFavorite);
   } catch (error) {
-    console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
   }
 }
 
@@ -427,7 +424,6 @@ function initFavoriteButton() {
       // Cập nhật lại trạng thái nút
       updateFavoriteButtonState();
     } catch (error) {
-      console.error("Lỗi khi xử lý yêu thích:", error);
     }
   });
 }

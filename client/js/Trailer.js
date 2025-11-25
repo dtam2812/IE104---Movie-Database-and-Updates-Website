@@ -6,9 +6,11 @@ const trailerModal = document.getElementById("trailer-modal");
 const trailerContainer = document.getElementById("trailer-container");
 const closeTrailer = document.getElementById("close-trailer");
 
+/* Xác định loại nội dung: movie hay tv */
 const currentPage = window.location.pathname;
 let type = currentPage.includes("TvShowDetail") ? "tv" : "movie";
 
+/* Lấy tham số type và id từ URL */
 const params = new URLSearchParams(window.location.search);
 const contentId = params.get("id");
 const typeParam = params.get("type");
@@ -28,7 +30,6 @@ async function getTrailerKey() {
 
     return (trailer || teaser || anyYT)?.key ?? null;
   } catch (err) {
-    console.error("Lỗi lấy trailer:", err);
     return null;
   }
 }
