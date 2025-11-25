@@ -149,7 +149,6 @@ export async function Auth_Modaljs() {
       else if (key === "auth.login.forgot") window.openLRFModal("forgot");
       else if (key === "auth.verify.back_to_login")
         window.openLRFModal("login");
-      // Resend OTP
       else if (
         key === "auth.verify.resend" &&
         resendCountdown <= 0 &&
@@ -283,18 +282,24 @@ export async function Auth_Modaljs() {
         const data = await res.json();
         const token = data.accessToken;
         const decoded = jwtDecode(token);
-        if (decoded.status === "Banned") {
+
+        if (decoded.status === "banned") {
           showErrorMessage(loginForm, "Tài khoản của bạn đã bị chặn.");
+          localStorage.clear();
           return;
         }
+
         localStorage.setItem("accessToken", token);
         localStorage.setItem("userName", decoded.username);
         localStorage.setItem("userEmail", decoded.email);
+        localStorage.setItem("userStatus", decoded.status);
+
         document.dispatchEvent(
           new CustomEvent("userLoggedIn", { detail: data })
         );
         modal.classList.add("hidden");
-        if (decoded.role === "Admin") {
+
+        if (decoded.role === "admin") {
           window.location.href = "/client/view/pages/AdminUsers.html";
         } else {
           window.location.href = "/client/view/pages/HomePage.html";
@@ -437,5 +442,17 @@ export function isTokenExpired(token) {
     return decoded.exp && decoded.exp < Date.now() / 1000;
   } catch {
     return true;
+  }
+}
+
+export function checkUserBanned() {
+  const token = localStorage.getItem("accessToken");
+  if (!token) return false;
+
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.status === "banned";
+  } catch {
+    return false;
   }
 }
