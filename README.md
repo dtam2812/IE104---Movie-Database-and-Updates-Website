@@ -113,7 +113,7 @@ Tài khoản mẫu
 
 Admin
 
-Email: 23521384@uit.edu.gm.vn
+Email: 23521384@gm.uit.edu.vn
 
 Mật khẩu: 123456
 
