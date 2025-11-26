@@ -10,7 +10,7 @@ async function loadTranslations(lang) {
     const data = await res.json();
 
     // Lưu vào window.translations để các module khác dùng
-    window.translations = flattenTranslations(data);
+    window.translations = data;
 
     return window.translations;
   } catch (error) {
@@ -18,23 +18,6 @@ async function loadTranslations(lang) {
     window.translations = {};
     return {};
   }
-}
-
-// Flatten nested translations object thành flat object
-function flattenTranslations(obj, prefix = "") {
-  let result = {};
-
-  for (const [key, value] of Object.entries(obj)) {
-    const newKey = prefix ? `${prefix}.${key}` : key;
-
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      Object.assign(result, flattenTranslations(value, newKey));
-    } else {
-      result[newKey] = value;
-    }
-  }
-
-  return result;
 }
 
 // Áp bản dịch cho text và các thuộc tính có prefix data-i18n-

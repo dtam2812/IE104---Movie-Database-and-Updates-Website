@@ -13,6 +13,7 @@ async function loadTranslations(lang) {
     const res = await fetch(`../../../public/locales/${lang}.json`);
     translations = await res.json();
   } catch (err) {
+    console.error("Load translations error:", err);
   }
 }
 
@@ -90,10 +91,31 @@ async function fetchMovieDetails(movieId) {
     document.querySelector(".movie-banner__title h3").textContent =
       movie.title || movie.original_title;
 
-    // Mô tả
+    // XỬ LÝ OVERVIEW với fallback
+    let overview = movie.overview;
+    
+    // Nếu không có overview hoặc overview bị thiếu và đang dùng tiếng Việt
+    if ((!overview || overview.trim() === "") && lang === "vi") {
+      try {
+        // Gọi lại API tiếng Anh để lấy overview
+        const resEn = await fetch(
+          `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`
+        );
+        const movieEn = await resEn.json();
+        
+        if (movieEn.overview) {
+          // Dịch overview từ tiếng Anh sang tiếng Việt
+          overview = await translateText(movieEn.overview, "vi");
+        }
+      } catch (error) {
+        console.error("Error fetching English overview:", error);
+      }
+    }
+
+    // Render overview
     document.querySelector(".movie-banner__overview").innerHTML = `
       <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${
-      movie.overview || ""
+      overview || t("detail.noOverview") || "Chưa có thông tin giới thiệu."
     }
     `;
 
@@ -142,6 +164,7 @@ async function fetchMovieDetails(movieId) {
     // Khởi tạo event listener cho nút yêu thích
     initFavoriteButton();
   } catch (error) {
+    console.error("Error fetching movie details:", error);
   }
 }
 
@@ -193,7 +216,7 @@ function renderActors(actors) {
     btn.style.display = remain <= 0 ? "none" : "block";
     btn.textContent =
       remain > 0
-        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ⮟`
+        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ▟`
         : t("detail.viewMore") || "Xem thêm";
   }
 }
@@ -311,7 +334,6 @@ async function loadRecommendedMovies(movieId) {
 
 // Render tabs and view more
 function initTabs() {
-  // Code tab giữ nguyên như file 2 cũ của bạn
   const tabs = document.querySelectorAll(".movie-tabs__item");
   const tabContents = document.querySelectorAll(".movie-tabs__content");
 
@@ -351,8 +373,8 @@ function initViewMore() {
       grid.insertAdjacentHTML("beforeend", createActorHTML(a))
     );
     btn.textContent = expanded
-      ? `${t("detail.collapse") || "Thu gọn"} ⮝`
-      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ⮟`;
+      ? `${t("detail.collapse") || "Thu gọn"} ▴`
+      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ▟`;
   });
 }
 
@@ -376,6 +398,7 @@ async function updateFavoriteButtonState() {
     );
     updateFavoriteButtonAppearance(favoriteBtn, isFavorite);
   } catch (error) {
+    console.error("Error checking favorite status:", error);
   }
 }
 
@@ -424,6 +447,7 @@ function initFavoriteButton() {
       // Cập nhật lại trạng thái nút
       updateFavoriteButtonState();
     } catch (error) {
+      console.error("Error handling favorite click:", error);
     }
   });
 }
