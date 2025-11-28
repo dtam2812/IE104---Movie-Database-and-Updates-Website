@@ -63,7 +63,7 @@
     --content-min-height: calc(80vh - var(--header-height));
 }
 
-/* BASE */
+/* Base */
 body {
     background-color: var(--color-bg-main);
     margin: 0;
@@ -79,7 +79,7 @@ body {
     min-height: var(--content-min-height); 
 }
 
-/* UTILITY CLASSES */
+/* Utility classes */
 .mb1 { margin-bottom: var(--spacing-xs); }
 .mb2 { margin-bottom: var(--spacing-sm); }
 .mb3 { margin-bottom: var(--spacing-md); }
@@ -87,7 +87,7 @@ body {
 .mt3 { margin-top: var(--spacing-md); }
 .hidden { display: none; }
 
-/* ADMIN SIDEBAR MENU */
+/* Admin Sidebar Menu */
 .admin-menu {
     position: absolute;
     width: var(--sidebar-width);
@@ -147,7 +147,7 @@ body {
     font-size: var(--font-lg);
 }
 
-/* ADMIN MAIN CONTENT */
+/* Admin main content */
 .admin-content {
     position: relative;
     margin-left: var(--sidebar-width);
@@ -191,7 +191,7 @@ body {
     opacity: 0.9;
 }
 
-/* SEARCH & FILTER BAR */
+/* Search & filter bar */
 .search-filter {
     display: flex;
     align-items: center;
@@ -248,7 +248,7 @@ body {
     cursor: pointer;
 }
 
-/* DATA TABLE */
+/* Data table */
 .data-table {
     width: 100%;
     color: var(--color-text-tertiary);
@@ -367,7 +367,7 @@ body {
     color: var(--color-danger);
 }
 
-/* STATUS TOGGLE SWITCH */
+/* Status toggle switch */
 .status-toggle {
     position: relative;
     display: inline-block;
@@ -454,7 +454,7 @@ body {
     opacity: 0.9;
 }
 
-/* PAGINATION */
+/* Pagination */
 .pagination {
     margin: var(--spacing-2xl) 0;
     display: flex;
@@ -508,7 +508,7 @@ body {
     text-align: center;
 }
 
-/* MODAL */
+/* Modal */
 .modal--movie.hidden,
 .modal--tvshow.hidden,
 .modal--user.hidden {
@@ -597,7 +597,7 @@ body {
     color: white;
 }
 
-/* FORM ELEMENTS */
+/* Form elements */
 .form {
     display: none;
 }
@@ -710,7 +710,7 @@ body {
     margin-top: 4px;
 }
 
-/* USER FORM */
+/* User form */
 .form__user-avatar {
     display: flex;
     align-items: center;
@@ -740,7 +740,7 @@ body {
     cursor: pointer;
 }
 
-/* MOVIE/TV SHOW FORM */
+/* Movie/TV show form */
 .media-form__section--top {
     display: grid;
     grid-template-columns: 1fr 300px;
@@ -820,7 +820,7 @@ body {
     flex-direction: column;
 }
 
-/* SUB-MODAL (Seasons/Actors) */
+/* Sub-modal (Seasons/Actors) */
 .sub-modal__backdrop {
     position: fixed;
     top: 0;
@@ -927,7 +927,7 @@ body {
     color: #ff4444;
 }
 
-/* SEASON ITEM */
+/* Season item */
 .season {
     border: 1px solid var(--color-border-medium);
     border-radius: var(--radius-md);
@@ -992,7 +992,7 @@ body {
     border: 1px solid var(--color-border-medium);
 }
 
-/* ACTOR ITEM */
+/* Actor item */
 .actor {
     border: 1px solid var(--color-border-medium);
     border-radius: var(--radius-md);
@@ -1085,7 +1085,7 @@ body {
     box-sizing: border-box;
 }
 
-/* RESPONSIVE */
+/* Responsive */
 @media only screen and (max-width: 1100px) {
     :root {
         --sidebar-width: 100%;

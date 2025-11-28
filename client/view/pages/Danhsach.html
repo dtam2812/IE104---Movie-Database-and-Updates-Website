@@ -16,7 +16,7 @@
   </head>
 
   <body>
-    <!-- start-header -->
+    <!-- start header -->
     <div id="header"></div>
 
     <script type="module">
@@ -40,7 +40,7 @@
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
-    <!-- end-header -->
+    <!-- end header -->
 
     <!-- Main -->
     <main class="main">
@@ -58,7 +58,7 @@
 
         <!-- filter open -->
         <div class="filter__select hidden">
-          <!-- Quốc gia -->
+          <!-- Country -->
           <div class="filter__select-nav">
             <div class="filter__select-name" data-i18n="list.country.label">
               Quốc gia:
@@ -109,7 +109,7 @@
             </div>
           </div>
 
-          <!-- Loại phim -->
+          <!-- Film genre -->
           <div class="filter__select-nav">
             <div class="filter__select-name" data-i18n="list.type.label">
               Loại phim:
@@ -139,7 +139,7 @@
             </div>
           </div>
 
-          <!-- Thể loại -->
+          <!-- Genre -->
           <div class="filter__select-nav">
             <div class="filter__select-name" data-i18n="list.genre.label">
               Thể loại:
@@ -153,7 +153,7 @@
                 Tất cả
               </div>
 
-              <!-- Chung -->
+              <!-- Common -->
               <div
                 class="filter__select-list-item"
                 data-genre="16"
@@ -211,7 +211,7 @@
                 Viễn Tây
               </div>
 
-              <!-- Chỉ phim lẻ -->
+              <!-- Only movies -->
               <div
                 class="filter__select-list-item"
                 data-genre="28"
@@ -283,7 +283,7 @@
                 Chiến tranh
               </div>
 
-              <!-- Chỉ phim bộ -->
+              <!-- Only TV shows -->
               <div
                 class="filter__select-list-item"
                 data-genre="10759"
@@ -343,7 +343,7 @@
             </div>
           </div>
 
-          <!-- Sắp xếp -->
+          <!-- Sort -->
           <div class="filter__select-nav">
             <div class="filter__select-name" data-i18n="list.sort.label">
               Sắp xếp:
@@ -389,7 +389,7 @@
       <!-- Movie card -->
       <div class="movie"></div>
 
-      <!-- Phân trang -->
+      <!-- pagination -->
       <div class="content__pagination">
         <button class="pagination-left-arrow disable">
           <i class="fa-solid fa-arrow-left"></i>

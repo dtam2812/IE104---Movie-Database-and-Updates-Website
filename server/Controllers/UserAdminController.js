@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 
+//Get list user
 const getListUser = async (req, res) => {
   const bearerHeader = req.headers["authorization"];
   const accessToken = bearerHeader?.split(" ")[1];
@@ -22,6 +23,7 @@ const getListUser = async (req, res) => {
   }
 };
 
+//Create user
 const createUser = async (req, res) => {
   const bearerHeader = req.headers["authorization"];
   const accessToken = bearerHeader?.split(" ")[1];
@@ -68,6 +70,7 @@ const createUser = async (req, res) => {
   }
 };
 
+//Update user
 const updateUser = async (req, res) => {
   const bearerHeader = req.headers["authorization"];
   const accessToken = bearerHeader?.split(" ")[1];
@@ -104,6 +107,7 @@ const updateUser = async (req, res) => {
   }
 };
 
+//Delete user
 const deleteUser = async (req, res) => {
   const bearerHeader = req.headers["authorization"];
   const accessToken = bearerHeader?.split(" ")[1];

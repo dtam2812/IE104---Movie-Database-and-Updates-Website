@@ -2,10 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
   try {
-    // console.log("=== Middleware Auth Debug ===");
 
     const authHeader = req.header("Authorization");
-    // console.log("Authorization Header:", authHeader);
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       console.log("No Bearer token found");
@@ -16,7 +14,6 @@ const authMiddleware = (req, res, next) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    // console.log("Token extracted:", token ? "Có" : "Không");
 
     if (!token) {
       console.log("Không có token");
@@ -31,7 +28,6 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    // console.log("Token verification error:", error.message);
     res.status(401).json({
       success: false,
       message: "Token không hợp lệ",

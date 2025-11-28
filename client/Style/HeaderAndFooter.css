@@ -78,7 +78,7 @@
   display: none !important;
 }
 
-/* HEADER - DESKTOP  */
+/* Header - Desktop */
 .header .header-container {
   position: fixed;
   width: 100%;
@@ -120,7 +120,7 @@
   display: flex;
 }
 
-/* SEARCH BOX  */
+/* Search box */
 .search {
   width: 100%;
   max-width: 420px;
@@ -130,7 +130,7 @@
   position: relative;
 }
 
-/* LOGO  */
+/* Logo */
 .header .header-logo img {
   display: flex;
   align-items: center;
@@ -141,7 +141,7 @@
   object-fit: cover;
 }
 
-/* MENU */
+/* Menu */
 .menu .menu-film-type i {
   color: var(--color-white);
   margin-left: 10px;
@@ -327,7 +327,7 @@
   align-items: center;
 }
 
-/* USER SECTION */
+/* User section */
 #user_guest {
   display: inline-flex;
   align-items: center;
@@ -451,8 +451,7 @@
   background-color: var(--color-hover-bg);
 }
 
-/* RESPONSIVE */
-/* 1301px - 1514px : Tránh vỡ layout */
+/* Responsive */
 @media only screen and (min-width: 1301px) and (max-width: 1514px) {
   .header .header-container {
     padding: 0 var(--spacing-md);
@@ -502,7 +501,6 @@
   }
 }
 
-/* 1101px - 1300px : Tránh vỡ layout */
 @media only screen and (min-width: 1101px) and (max-width: 1300px) {
   .header .header-container {
     padding: 0 var(--spacing-sm);
@@ -548,7 +546,7 @@
   }
 }
 
-/* MOBILE (<= 1100px) */
+/* Mobile  */
 @media only screen and (max-width: 1100px) {
   .header .header-container {
     display: flex;
@@ -855,7 +853,7 @@
   }
 }
 
-/* FOOTER  */
+/* Footer  */
 .footer .footer-container {
   background-color: var(--color-black);
 }
@@ -959,8 +957,8 @@
   color: var(--color-text-light);
 }
 
-/* RESPONSIVE */
-/* MOBILE (<= 1120px) */
+/* Responsive */
+/* Mobile  */
 @media only screen and (max-width: 1120px) {
   .footer-container {
     padding: 0px var(--spacing-md);

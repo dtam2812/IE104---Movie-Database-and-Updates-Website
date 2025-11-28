@@ -9,7 +9,7 @@ a {
   color: inherit;
 }
 
-/* GRID WRAPPER CHUNG */
+/* Grid wrapper */
 .background {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -18,7 +18,7 @@ a {
   padding: 30px;
 }
 
-/* CAST BOX */
+/* Cast box */
 .cast-box {
   width: 100%;
   display: flex;
@@ -29,7 +29,7 @@ a {
   color: #fff;
 }
 
-/* CAST CARD */
+/* Cast card */
 .cast-card {
   display: block;
   width: 140px;
@@ -56,7 +56,7 @@ a {
   display: block;
 }
 
-/* INFO TEXT */
+/* Info text */
 .cast-box .info {
   min-height: 42px;
 }
@@ -77,7 +77,7 @@ a {
   color: #aaa;
 }
 
-/* ==================== RESPONSIVE ==================== */
+/*  Responsive  */
 
 @media only screen and (min-width: 1920px) {
   .background {

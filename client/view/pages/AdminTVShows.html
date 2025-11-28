@@ -17,17 +17,17 @@
     <!-- Header -->
     <div id="header"></div>
 
-        <!-- SCRIPTS - Load theo thứ tự đúng -->
+        <!-- Scripts-->
     <script type="module">
       import { headerjs } from "../../js/Header.js";
       import { searchBar } from "../../js/SearchBar.js";
       import { initTranslate } from "../../js/Translate.js";
       import { AdminTVShows_js } from '../../js/AdminTVShows.js';
 
-      // Đợi DOM load xong
+      // DOM 
       document.addEventListener('DOMContentLoaded', async () => {
         try {
-          // 1. Init translate trước
+          // 1. Init translate 
           await initTranslate();
           
           // 2. Load header
@@ -47,7 +47,7 @@
           const footerHTML = await footerResponse.text();
           document.getElementById("footer").innerHTML = footerHTML;
           
-          // 5. QUAN TRỌNG: Chạy AdminTVShows_js() sau cùng
+          // 5.  AdminTVShows_js() 
           AdminTVShows_js();
           
         } catch (error) {
