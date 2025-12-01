@@ -216,7 +216,7 @@ function renderActors(actors) {
     btn.style.display = remain <= 0 ? "none" : "block";
     btn.textContent =
       remain > 0
-        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ▟`
+        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ▼`
         : t("detail.viewMore") || "Xem thêm";
   }
 }
@@ -373,8 +373,8 @@ function initViewMore() {
       grid.insertAdjacentHTML("beforeend", createActorHTML(a))
     );
     btn.textContent = expanded
-      ? `${t("detail.collapse") || "Thu gọn"} ▴`
-      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ▟`;
+      ? `${t("detail.collapse") || "Thu gọn"} ▲`
+      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ▼`;
   });
 }
 
