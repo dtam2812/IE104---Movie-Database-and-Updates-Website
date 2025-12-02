@@ -71,7 +71,7 @@ Vì vậy, nhóm quyết định chọn đề tài "Xây dựng website giới t
 
 # Mở link Deploy Frontend
 
-[https://resilient-crumble-44b2bd.netlify.app/client/view/pages/homepage]
+[https://heroic-strudel-517f05.netlify.app/client/view/pages/homepage]
 
 # Bước 1. **Clone repository**
 git clone https://github.com/dtam2812/IE104---Movie-Database-and-Updates-Website.git
