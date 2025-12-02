@@ -6,12 +6,12 @@ function t(key) {
   return window.translations?.[key] || key;
 }
 
-// Hàm khởi tạo tất cả event listeners và chức năng
+// Function to initialize all event listeners and functionalities
 export async function initUserDetail() {
   // Load translations first
   await initTranslate();
   
-  // Load user detail và favorites
+  // Load user detail and favorites
   setTimeout(() => {
     getUserDetail();
     fetchUserDetail(); // Load favorites
@@ -107,12 +107,12 @@ export async function initUserDetail() {
       const sectionId = this.getAttribute("data-section");
       handleNavigation(sectionId);
 
-      // Cuộn lên khi mở Thông tin cá nhân
+      // Scroll up when opening Personal Info
       if (sectionId === "personal-info") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
-      // Cuộn xuống khi mở Favorites
+      // Scroll down when opening Favorites
       if (sectionId === "favorites") {
         setTimeout(() => {
           requestAnimationFrame(() => {
@@ -318,7 +318,7 @@ async function updatePassword() {
     if (response.status === 200) {
       showToast(result.message || t("userdetail.passwordChangeSuccess"));
 
-      // Reset ô input
+      // Reset input fields
       currentPasswordField.value = "";
       newPasswordField.value = "";
       confirmPasswordField.value = "";
@@ -446,7 +446,7 @@ function handleNavigation(sectionId) {
   }
 }
 
-// Lấy thông tin user từ server (bao gồm favorites)
+// Fetch user detail from server (including favorites)
 async function fetchUserDetail() {
   try {
     const res = await fetch("http://localhost:5000/api/authUser/getUser", {
@@ -459,7 +459,7 @@ async function fetchUserDetail() {
 
     const data = await res.json();
 
-    // Nếu có danh sách yêu thích
+    // If there is a list of favorites
     if (data.user.favoriteFilm) {
       renderFavorites(data.user.favoriteFilm);
     }
@@ -468,7 +468,7 @@ async function fetchUserDetail() {
   }
 }
 
-// Render danh sách phim yêu thích
+// Render favorite movies list
 function renderFavorites(favorites) {
   const container = document.querySelector(".favorites-list");
   if (!container) {
@@ -588,7 +588,7 @@ function renderFavorites(favorites) {
   container.appendChild(grid);
 }
 
-// Function để xóa phim khỏi danh sách yêu thích
+// Function to remove a movie from the favorites list
 async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
   const confirmMsg = t("userdetail.removeConfirm").replace("{title}", filmTitle);
   
@@ -612,7 +612,7 @@ async function removeFromFavorites(filmId, filmTitle, type = "Movie") {
 
     if (response.ok) {
       showToast(t("userdetail.removeSuccess"));
-      // Reload lại danh sách yêu thích
+      // Reload favorite movies list
       fetchUserDetail();
     } else {
       throw new Error("Lỗi khi xóa phim yêu thích");

@@ -13,11 +13,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Hàm tạo OTP ngẫu nhiên 6 số
+// Random 6-digit OTP generator
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+//Register
 const register = async (req, res) => {
   try {
     const { userName, email, password } = req.body;
@@ -43,6 +44,7 @@ const register = async (req, res) => {
   }
 };
 
+//Login
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -75,6 +77,7 @@ const login = async (req, res) => {
   }
 };
 
+//Forgot password
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -123,6 +126,7 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+//Verify OTP
 const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -154,6 +158,7 @@ const verifyOTP = async (req, res) => {
   }
 };
 
+//Reset password
 const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;

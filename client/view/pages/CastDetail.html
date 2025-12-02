@@ -16,7 +16,7 @@
   </head>
 
   <body>
-    <!-- start-header -->
+    <!-- start header -->
     <div id="header"></div>
     <script type="module">
       import { headerjs } from "../../js/Header.js";
@@ -35,9 +35,9 @@
         })
         .catch((error) => console.error("Fetch header/search failed:", error));
     </script>
-    <!-- end-header -->
+    <!-- end header -->
     <div class="person-detail">
-      <!-- Cột trái -->
+      <!-- Left column -->
       <div class="person-detail__info">
         <img id="person-image" src="https://ui-avatars.com/api/?name=Unknown&size=300&background=1a1a2e&color=0891b2" alt="Ảnh diễn viên" class="person-detail__image">
         <h2 id="person-name" class="person-detail__name">Tên diễn viên</h2>
@@ -60,13 +60,13 @@
           </p>
         </div>
       </div>
-      <!-- Cột phải -->
+      <!-- Right column -->
       <div class="person-detail__movies">
         <h3 class="person-detail__movies-title" data-i18n="cast.movies">Các phim đã tham gia</h3>
         <div id="movies-grid" class="movies-grid"></div>
       </div>
     </div>
-    <!-- start-footer -->
+    <!-- start footer -->
     <div id="footer"></div>
     <script type="module">
       fetch("../components/Footer.html")
@@ -78,7 +78,7 @@
           console.error("Fetch footer failed:", error);
         });
     </script>
-    <!-- end-footer -->
+    <!-- end footer -->
     <script type="module" src="../../js/CastDetail.js"></script>
   </body>
 </html>

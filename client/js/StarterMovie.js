@@ -1,4 +1,4 @@
-// StarterMovie.js - Sửa phần favorite để hỗ trợ đa ngôn ngữ
+// StarterMovie.js - Fix favorite part to support multiple languages
 import { TMDB_API_KEY } from "../../config.js";
 import { favoritesManager } from "../js/Favorite.js";
 
@@ -8,7 +8,7 @@ const IMG_W780 = "https://image.tmdb.org/t/p/w780";
 const IMG_ORI = "https://image.tmdb.org/t/p/original";
 const FALLBACK_POSTER = "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Image";
 
-// ========== DOM Elements ==========
+// DOM Elements
 const slidesEl = document.getElementById("slides");
 const brandEl = document.getElementById("brand");
 const enEl = document.getElementById("en");
@@ -28,10 +28,10 @@ let movies = [];
 let index = 0;
 let timer;
 
-// ========== THÊM: Biến lưu bản dịch ==========
+// Add: Variable to store translations
 // let translations = {};
 
-// ========== THÊM: Hàm lấy bản dịch ==========
+// Add: Function to load translations
 let translations = {};
 
 async function loadTranslations() {
@@ -45,12 +45,12 @@ async function loadTranslations() {
   }
 }
 
-// Hàm dịch theo key
+// Function to translate by key
 function t(key) {
   return translations[key] || key;
 }
 
-// ========== Language & Cache ==========
+// Language & Cache
 function getLang() {
   const stored = localStorage.getItem("language");
   const htmlLang = document.documentElement.lang;
@@ -173,7 +173,7 @@ async function translateWithCache(text, movieId, targetLang) {
   return translated;
 }
 
-// ========== DOM Creation ==========
+// DOM Creation
 const createEl = (tag, cls, html) => {
   const el = document.createElement(tag);
   if (cls) el.className = cls;
@@ -292,7 +292,7 @@ function next() {
   update();
 }
 
-// ========== Trailer Logic ==========
+// Trailer Logic
 async function getTrailerKey(movieId, type = "movie") {
   try {
     const res = await fetch(
@@ -316,7 +316,7 @@ async function getTrailerKey(movieId, type = "movie") {
   }
 }
 
-// ========== Logic Yêu thích ==========
+// Logic Favorite
 async function updateFavoriteButtonState() {
   const currentMovie = movies[index];
   if (!currentMovie || !favoriteBtn) return;
@@ -353,7 +353,7 @@ function resetFavoriteButton() {
   if (path) path.style.fill = "#fff";
 }
 
-// ========== SỬA: Hàm notification sử dụng bản dịch ==========
+// Fix: Function notification use translation
 function showSimpleNotification(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast-notification ${type}`;
@@ -497,12 +497,11 @@ async function fetchMovies() {
       console.warn("No valid movies to display");
     }
   } catch (err) {
-    console.error("❌ Fetch TMDB failed:", err);
+    console.error(" Fetch TMDB failed:", err);
   }
 }
 
-// ========== Event Listeners ==========
-
+// Event Listeners
 // Trailer Button Event
 if (trailerBtn) {
   trailerBtn.addEventListener("click", async () => {
@@ -537,7 +536,7 @@ if (trailerModal) {
   });
 }
 
-// ========== SỬA: Favorite Button Event với đa ngôn ngữ ==========
+// Fix: Favorite Button Event with multiple languages
 if (favoriteBtn) {
   favoriteBtn.addEventListener("click", async (e) => {
     e.stopPropagation();
@@ -551,7 +550,7 @@ if (favoriteBtn) {
 
     const token = localStorage.getItem("accessToken") || localStorage.getItem("token");
     if (!token) {
-      // SỬA: Sử dụng t() để lấy bản dịch
+      // Fix: Use t() to get translation
       showSimpleNotification(t("favorite.loginRequired"), "info");
       return;
     }
@@ -579,13 +578,13 @@ if (favoriteBtn) {
       const data = await response.json();
 
       if (response.ok) {
-        // SỬA: Sử dụng t() để lấy bản dịch
+        // Fix: Use t() to get translation
         const message = data.action === "added" 
           ? t("favorite.addSuccess")
           : t("favorite.removeSuccess");
         showSimpleNotification(message, "success");
         
-        // Cập nhật giao diện nút
+        // Update button UI
         const path = favoriteBtn.querySelector("path");
         if (path) {
           if (data.action === "added") {
@@ -597,12 +596,12 @@ if (favoriteBtn) {
           }
         }
       } else {
-        // SỬA: Sử dụng t() để lấy bản dịch
+        // Fix: Use t() to get translation
         showSimpleNotification(data.message || t("favorite.error"), "error");
       }
     } catch (error) {
       console.error("Favorite error:", error);
-      // SỬA: Sử dụng t() để lấy bản dịch
+      // Fix: Use t() to get translation
       showSimpleNotification(t("favorite.error"), "error");
     } finally {
       favoriteBtn.disabled = false;
@@ -625,7 +624,7 @@ window.addEventListener("languagechange", async () => {
   clearInterval(timer);
   movies = [];
   index = 0;
-  await loadTranslations(); // SỬA: Load lại bản dịch
+  await loadTranslations(); // Fix: Reload translations
   await fetchMovies();
 });
 
@@ -636,14 +635,14 @@ window.addEventListener("storage", async (e) => {
     clearInterval(timer);
     movies = [];
     index = 0;
-    await loadTranslations(); // SỬA: Load lại bản dịch
+    await loadTranslations(); // Fix: Reload translations
     await fetchMovies();
   }
 });
 
-// ========== Khởi tạo ==========
+// Initialization
 document.addEventListener("DOMContentLoaded", async () => {
-  await loadTranslations(); // SỬA: Load bản dịch trước
+  await loadTranslations(); // Fix: Load translations first
   await fetchMovies();
 });
 

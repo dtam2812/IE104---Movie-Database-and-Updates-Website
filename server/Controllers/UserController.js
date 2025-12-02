@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const userModel = require("../Models/UserModel");
 
-// Lấy thông tin user hiện tại từ token
+// Get user info
 const getUser = async (req, res) => {
   try {
     console.log("GetUser called with user ID:", req.user._id);
@@ -15,10 +15,10 @@ const getUser = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    // NORMALIZE type của favorites trước khi gửi về client
+    // Normalize type of favorites before sending to client
     const normalizedFavorites = user.favoriteFilm.map((film) => ({
       ...(film.toObject ? film.toObject() : film),
-      type: normalizeFilmType(film.type), // Gọi hàm normalize
+      type: normalizeFilmType(film.type), // normalize
     }));
 
     return res.status(200).json({
@@ -30,7 +30,7 @@ const getUser = async (req, res) => {
         role: user.role,
         status: user.status,
         joinDate: user.joinDate,
-        favoriteFilm: normalizedFavorites, //Dùng normalized
+        favoriteFilm: normalizedFavorites, // Use normalized
         phone: user.phone || "",
         birthday: user.birthday || "",
       },
@@ -44,13 +44,12 @@ const getUser = async (req, res) => {
   }
 };
 
-// Thêm hàm normalize type
+// Normalize film type
 function normalizeFilmType(type) {
   if (!type) return "Movie";
 
   const typeStr = String(type).trim().toLowerCase();
 
-  // Nếu là TV Show, trả về "TV"
   if (
     typeStr.includes("tv") ||
     typeStr.includes("tvshow") ||
@@ -62,6 +61,7 @@ function normalizeFilmType(type) {
   return "Movie";
 }
 
+//Get user detail
 const getUserDetail = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -79,6 +79,7 @@ const getUserDetail = async (req, res) => {
   }
 };
 
+//Update user info
 const updateInfoUser = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -104,6 +105,7 @@ const updateInfoUser = async (req, res) => {
   }
 };
 
+//Update user password
 const updatePasswordUser = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -133,7 +135,7 @@ const updatePasswordUser = async (req, res) => {
   }
 };
 
-// Thêm hoặc xóa phim yêu thích
+// Add or remove favorite film
 const toggleFavorite = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -154,7 +156,7 @@ const toggleFavorite = async (req, res) => {
       });
     }
 
-    // Sửa: So sánh đúng - convert thành string
+    // Correct comparison - convert to string
     const existingIndex = user.favoriteFilm.findIndex(
       (film) => film.id.toString() === id.toString() && film.type === type
     );
@@ -212,7 +214,7 @@ const toggleFavorite = async (req, res) => {
   }
 };
 
-// Lấy danh sách phim yêu thích của user
+// Get user favorite films
 const getUserFavorites = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -238,7 +240,7 @@ const getUserFavorites = async (req, res) => {
   }
 };
 
-// Kiểm tra trạng thái yêu thích của một phim
+// Check favorite status of a film
 const checkFavoriteStatus = async (req, res) => {
   try {
     const userId = req.user._id;

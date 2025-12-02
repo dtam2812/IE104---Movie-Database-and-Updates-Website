@@ -8,7 +8,7 @@
   --badge-green: #2ca35d;
 }
 
-/* RESET */
+/* Reset */
 * {
   box-sizing: border-box;
 }
@@ -49,7 +49,7 @@ body {
   margin: 0;
 }
 
-/* GRID WRAP */
+/* Grid wrap */
 .grid-wrap {
   position: relative;
 }
@@ -71,7 +71,7 @@ body {
   overflow: hidden;
 }
 
-/* BLOCK */
+/* Block */
 .movie-box {
   width: 100%;
   display: flex;
@@ -80,7 +80,7 @@ body {
   position: relative;
 }
 
-/* ELEMENT: card */
+/* Movie card */
 .movie-box__card {
   width: 100%;
   position: relative;
@@ -97,7 +97,7 @@ body {
   transform: translateY(-5%);
 }
 
-/* ELEMENT: card image */
+/* Card image */
 .movie-box__poster-img {
   position: absolute;
   width: 100%;
@@ -106,7 +106,7 @@ body {
   object-fit: cover;
 }
 
-/* ELEMENT: info top */
+/* Info top */
 .movie-box__info-top {
   position: absolute;
   top: 0;
@@ -128,13 +128,13 @@ body {
   border-radius: 5px;
 }
 
-/* ELEMENT: info bottom */
+/* Info bottom */
 .movie-box__info {
   min-height: 42px;
   text-align: center;
 }
 
-/* TITLES */
+/* Titles */
 .movie-box__vietnam-title a {
   cursor: pointer;
   color: #fff;
@@ -150,7 +150,7 @@ body {
   color: #aaa;
 }
 
-/* MEDIA QUERIES */
+/* Responsive */
 @media (max-width: 1024px) {
   .grid {
     grid-template-columns: repeat(5, 1fr);

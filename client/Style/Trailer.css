@@ -1,4 +1,4 @@
-/* ====== NỀN MODAL ====== */
+/* Modal */
 .trailer-modal {
   display: none;
   position: fixed;
@@ -38,7 +38,7 @@
   border: none;
 }
 
-/* ====== HIỆU ỨNG HIỆN DẦN ====== */
+/* Fade In Effect */
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -7,7 +7,7 @@ class FavoritesManager {
     this.loadTranslations();
   }
 
-  // Tải bản dịch
+  // Download translations
   async loadTranslations() {
     const lang = localStorage.getItem("language") || document.documentElement.lang || "vi";
     try {
@@ -18,12 +18,12 @@ class FavoritesManager {
     }
   }
 
-  // Hàm dịch
+  // Translation function
   t(key) {
     return this.translations[key] || key;
   }
 
-  // Khởi tạo manager
+  // Initialize manager
   init() {
     if (this.isInitialized) return;
 
@@ -31,7 +31,7 @@ class FavoritesManager {
     this.isInitialized = true;
   }
 
-  // Thiết lập event listeners
+  // Setup event listeners
   setupEventListeners() {
     document.addEventListener("click", (e) => {
       const favoriteBtn = e.target.closest(
@@ -53,12 +53,12 @@ class FavoritesManager {
     });
   }
 
-  // Phương thức lấy token từ nhiều nguồn
+  // Method to get token from multiple sources
   getToken() {
     return localStorage.getItem("accessToken") || localStorage.getItem("token");
   }
 
-  // Kiểm tra token hợp lệ
+  // Check if token is valid
   isValidToken(token) {
     if (!token) return false;
 
@@ -81,13 +81,13 @@ class FavoritesManager {
     }
   }
 
-  // Xóa token không hợp lệ
+  // Clear invalid token
   clearInvalidToken() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("token");
   }
 
-  // Xử lý khi click nút favorite
+  // Handle favorite button click
   async handleFavoriteClick(button, filmData = null) {
     const token = this.getToken();
     if (!token || !this.isValidToken(token)) {
@@ -95,7 +95,7 @@ class FavoritesManager {
       return;
     }
 
-    // Sử dụng filmData nếu được truyền vào, nếu không dùng currentFilm
+    // Use filmData if provided, otherwise use currentFilm
     const film = filmData || this.currentFilm;
 
     if (!film) {
@@ -133,7 +133,7 @@ class FavoritesManager {
       if (data.success) {
         this.updateButtonAppearance(button, data.action === "added");
         
-        // Sử dụng bản dịch cho thông báo
+        // Use translations for notifications
         const message = data.action === "added" 
           ? this.t("favorite.addSuccess") 
           : this.t("favorite.removeSuccess");
@@ -157,7 +157,7 @@ class FavoritesManager {
     }
   }
 
-  // Cập nhật trạng thái nút favorite
+  // Update favorite button state
   async updateFavoriteButtonState() {
     if (!this.currentFilm) return;
 
@@ -168,7 +168,7 @@ class FavoritesManager {
     }
   }
 
-  // Cập nhật giao diện nút
+  // Update button appearance
   updateButtonAppearance(button, isFavorite) {
     const svg = button.querySelector("svg");
     const path = svg?.querySelector("path");
@@ -186,7 +186,7 @@ class FavoritesManager {
     }
   }
 
-  // Thiết lập trạng thái loading cho nút
+  // Set loading state for button
   setButtonLoading(button, isLoading) {
     if (isLoading) {
       button.classList.add("loading");
@@ -197,7 +197,7 @@ class FavoritesManager {
     }
   }
 
-  // Hiển thị thông báo đăng nhập
+  // Show login prompt
   showLoginPrompt() {
     this.showNotification(
       this.t("favorite.loginRequired"),
@@ -205,7 +205,7 @@ class FavoritesManager {
     );
   }
 
-  // Hiển thị thông báo
+  // Show notification
   showNotification(message, type = "info") {
     const toast = document.createElement("div");
     toast.className = `toast-notification ${type}`;
@@ -251,7 +251,7 @@ class FavoritesManager {
     }, 3000);
   }
 
-  // Kiểm tra trạng thái yêu thích của film
+  // Check favorite status of a film
   async checkFavoriteStatus(filmId) {
     const token = this.getToken();
     if (!token || !this.isValidToken(token)) {
@@ -281,8 +281,8 @@ class FavoritesManager {
   }
 }
 
-// Khởi tạo instance global
+// Initialize global instance
 const favoritesManager = new FavoritesManager();
 
-// Export cho module
+// Export for module
 export { favoritesManager };

@@ -1,5 +1,5 @@
 export async function AdminTVShows_js() {
-  // Load dữ liệu từ file Data.js
+  // Load data from file Data.js
   let tvShowsData = [];
   try {
     const module = await import("./Data.js");
@@ -8,7 +8,7 @@ export async function AdminTVShows_js() {
     console.log("No initial TV show data, starting empty");
   }
 
-  // DOM ELEMENTS
+  // DOM Elements
   // Modal elements
   const modalTV = document.querySelector(".modal--tvshow");
   const backdrop = document.querySelector(".modal--tvshow .modal__backdrop");
@@ -68,7 +68,7 @@ export async function AdminTVShows_js() {
   );
   const emptyActorsTemplate = document.getElementById("empty-actors-template");
 
-  // SIGN OUT FUNCTIONALITY
+  // Sign Out Functionality
   const signOutLink = document.querySelector(
     ".admin-menu__item:last-child .admin-menu__link"
   );
@@ -78,18 +78,18 @@ export async function AdminTVShows_js() {
 
       console.log("Admin signing out");
 
-      // Xóa tất cả thông tin user khỏi localStorage
+      // Remove all user information from localStorage
       localStorage.removeItem("accessToken");
       localStorage.removeItem("userName");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("refreshToken");
 
-      // Redirect về trang HomePage
+      // Redirect back to page HomePage
       window.location.href = "/client/view/pages/HomePage.html";
     });
   }
 
-  // STATE MANAGEMENT
+  // State Management
   let allTVShows = [...tvShowsData];
   let filteredTVShows = [...allTVShows];
   let currentSeasons = [];
@@ -99,7 +99,7 @@ export async function AdminTVShows_js() {
   let isEditMode = false;
   const tvPerPage = 5;
 
-  // Tạo ID tự động theo format TV001, TV002, ...
+  // Generate ID automatically in the format TV001, TV002, ...
   const generateTVId = () => {
     if (allTVShows.length === 0) return "TV001";
 
@@ -111,7 +111,7 @@ export async function AdminTVShows_js() {
     return "TV" + String(maxNum + 1).padStart(3, "0");
   };
 
-  // Tạo ID cho actor theo format TV001-AC001, TV001-AC002, ...
+  // Generate ID for actor in the format TV001-AC001, TV001-AC002, ...
   const generateActorId = (tvId) => {
     if (currentActors.length === 0) return `${tvId}-AC001`;
 
@@ -123,16 +123,16 @@ export async function AdminTVShows_js() {
     return `${tvId}-AC` + String(maxNum + 1).padStart(3, "0");
   };
 
-  // Tính tổng số trang
+  // Calculate total pages
   const getTotalPages = () => Math.ceil(filteredTVShows.length / tvPerPage);
 
-  // Lấy danh sách TV shows cho trang hiện tại
+  // Get TV shows for the current page
   const getTVShowsForCurrentPage = () => {
     const start = (currentPage - 1) * tvPerPage;
     return filteredTVShows.slice(start, start + tvPerPage);
   };
 
-  // Đọc file ảnh thành base64
+  // Read image file as base64
   const readFileAsDataURL = (file) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -141,8 +141,8 @@ export async function AdminTVShows_js() {
     });
   };
 
-  // FILTER & SEARCH
-  // Lọc TV shows theo search và filter
+  // Filter and search TV shows
+  // Filter TV shows by search and filter
   const filterTVShows = () => {
     const search = searchInput.value.toLowerCase().trim();
     const country = countryFilter.value;
@@ -166,8 +166,8 @@ export async function AdminTVShows_js() {
     renderTVShows();
   };
 
-  // RENDER FUNCTIONS
-  // Tạo một row trong bảng TV shows
+  // Render Functions
+  // Create a row in the TV shows table
   const createTVRow = (show, no) => {
     const seasonsCount = Array.isArray(show.seasonsData)
       ? show.seasonsData.length
@@ -224,7 +224,7 @@ export async function AdminTVShows_js() {
     return row;
   };
 
-  // Render toàn bộ bảng TV shows
+  // Render the entire TV shows table
   const renderTVShows = () => {
     const tvToShow = getTVShowsForCurrentPage();
     const startNo = (currentPage - 1) * tvPerPage + 1;
@@ -243,7 +243,7 @@ export async function AdminTVShows_js() {
     updatePaginationButtons();
   };
 
-  // Cập nhật số lượng TV shows hiển thị
+  // Update the count of displayed TV shows
   const updateTVCount = () => {
     tvCountHeading.textContent =
       filteredTVShows.length === allTVShows.length
@@ -251,7 +251,7 @@ export async function AdminTVShows_js() {
         : `TV Shows (${filteredTVShows.length} / ${allTVShows.length})`;
   };
 
-  // Cập nhật trạng thái các nút phân trang
+  // Update the status of pagination buttons
   const updatePaginationButtons = () => {
     const totalPages = getTotalPages();
 
@@ -271,8 +271,8 @@ export async function AdminTVShows_js() {
     paginationRight.disabled = currentPage >= totalPages || totalPages === 0;
   };
 
-  // SEASONS SUB-MODAL
-  // Tạo season item từ template
+  // Seasons Sub-Modal
+  // Create season item from template
   const createSeasonItem = (season, index) => {
     const seasonItem = seasonTemplate.content.cloneNode(true);
     const seasonDiv = seasonItem.querySelector(".season");
@@ -294,13 +294,13 @@ export async function AdminTVShows_js() {
     overviewInput.value = season.overview || "";
     posterImg.src = season.poster || "/public/assets/image/movie_poster_default.jpg";
 
-    // Toggle hiển thị
+    // Toggle display
     header.addEventListener("click", (e) => {
       if (e.target.closest(".season__delete-btn")) return;
       body.style.display = body.style.display === "none" ? "block" : "none";
     });
 
-    // Xóa season
+    // Delete season
     deleteBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (confirm("Delete this season?")) {
@@ -337,7 +337,7 @@ export async function AdminTVShows_js() {
     return seasonItem;
   };
 
-  // Render danh sách seasons trong sub-modal
+  // Render seasons list in sub-modal
   const renderSeasonsList = () => {
     if (!seasonsListEl) return;
 
@@ -353,7 +353,7 @@ export async function AdminTVShows_js() {
     });
   };
 
-  // Mở sub-modal quản lý seasons
+  // Open seasons management sub-modal
   const openSeasonsModal = () => {
     if (!subModal || !subModalBackdrop) return;
     renderSeasonsList();
@@ -361,11 +361,11 @@ export async function AdminTVShows_js() {
     subModalBackdrop.classList.remove("hidden");
   };
 
-  // Đóng sub-modal và cập nhật dữ liệu
+  // Close sub-modal and update data
   const closeSeasonsModal = () => {
     if (!subModal || !subModalBackdrop) return;
 
-    // Cập nhật số seasons và tổng episodes vào form chính
+    // Update number of seasons and total episodes in main form
     tvFormEl.querySelector('input[name="seasons"]').value =
       currentSeasons.length;
     const totalEps = currentSeasons.reduce(
@@ -378,8 +378,8 @@ export async function AdminTVShows_js() {
     subModalBackdrop.classList.add("hidden");
   };
 
-  // ACTORS SUB-MODAL
-  // Tạo actor item từ template
+  // Actors Sub-Modal
+  // Create actor item from template
   const createActorItem = (actor, index) => {
     const actorItem = actorTemplate.content.cloneNode(true);
     const actorDiv = actorItem.querySelector(".actor");
@@ -400,13 +400,13 @@ export async function AdminTVShows_js() {
     photoImg.src =
       actor.photo || "/public/assets/image/user_avatar_default.jpg";
 
-    // Toggle hiển thị
+    // Toggle display
     header.addEventListener("click", (e) => {
       if (e.target.closest(".actor__delete-btn")) return;
       body.style.display = body.style.display === "none" ? "block" : "none";
     });
 
-    // Xóa actor
+    // Delete actor
     deleteBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (confirm("Delete this actor?")) {
@@ -433,7 +433,7 @@ export async function AdminTVShows_js() {
     return actorItem;
   };
 
-  // Render danh sách actors trong sub-modal
+  // Render actors list in sub-modal
   const renderActorsList = () => {
     if (!actorsListEl) return;
 
@@ -449,7 +449,7 @@ export async function AdminTVShows_js() {
     });
   };
 
-  // Mở sub-modal quản lý actors
+  // Open actors management sub-modal
   const openActorsModal = () => {
     if (!actorsSubModal || !actorsSubModalBackdrop) return;
     renderActorsList();
@@ -457,11 +457,11 @@ export async function AdminTVShows_js() {
     actorsSubModalBackdrop.classList.remove("hidden");
   };
 
-  // Đóng sub-modal và cập nhật dữ liệu
+  // Close actors sub-modal and update data
   const closeActorsModal = () => {
     if (!actorsSubModal || !actorsSubModalBackdrop) return;
 
-    // Cập nhật số actors vào form chính
+    // Update number of actors in main form
     const actorNames = currentActors
       .map((a) => a.name)
       .filter(Boolean)
@@ -474,8 +474,8 @@ export async function AdminTVShows_js() {
     actorsSubModalBackdrop.classList.add("hidden");
   };
 
-  // MODAL ADD/EDIT TV SHOW
-  // Mở modal thêm TV show mới
+  // Modal add/edit TV show
+  // Open modal to add new TV show
   const openAddTVModal = () => {
     isEditMode = false;
     modalTitle.textContent = "Add TV Show";
@@ -498,7 +498,7 @@ export async function AdminTVShows_js() {
     document.querySelector(".form--tvshow").classList.add("form--active");
   };
 
-  // Mở modal chỉnh sửa TV show
+  // Open modal to edit TV show
   const openEditTVModal = (row) => {
     isEditMode = true;
     currentEditRow = row;
@@ -519,7 +519,7 @@ export async function AdminTVShows_js() {
       idDisplayInput.value = show.id;
     }
 
-    // Điền dữ liệu vào form
+    // Fill data into form
     const fields = {
       id: show.id,
       title: show.title,
@@ -569,7 +569,7 @@ export async function AdminTVShows_js() {
     document.querySelector(".form--tvshow").classList.add("form--active");
   };
 
-  // Đóng modal chính
+  // Close main modal
   const closeModal = () => {
     modalTV.classList.add("hidden");
     document.querySelector(".form--tvshow").classList.remove("form--active");
@@ -582,7 +582,7 @@ export async function AdminTVShows_js() {
     posterInput.value = "";
   };
 
-  // EVENT LISTENERS
+  // Event listeners
   // Search & Filter
   searchInput.addEventListener("input", filterTVShows);
   countryFilter.addEventListener("change", filterTVShows);
@@ -604,7 +604,7 @@ export async function AdminTVShows_js() {
     }
   });
 
-  // Modal chính
+  // Main modal
   document
     .querySelector(".admin-content__add-btn")
     .addEventListener("click", openAddTVModal);
@@ -626,7 +626,7 @@ export async function AdminTVShows_js() {
     }
   });
 
-  // Upload ảnh
+  // Upload images
   bannerInput.addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (file) bannerPreviewImg.src = await readFileAsDataURL(file);
@@ -743,7 +743,7 @@ export async function AdminTVShows_js() {
     } else {
       tvData.id = generateTVId();
 
-      // Cập nhật actor IDs
+      // Update actor IDs
       currentActors.forEach((actor, i) => {
         actor.id = `${tvData.id}-AC${String(i + 1).padStart(3, "0")}`;
       });

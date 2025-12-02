@@ -6,14 +6,14 @@ function t(key) {
   return window.translations?.[key] || key;
 }
 
-// Tính điểm trung bình
+// average rating calculation
 function calculateAverage(comments) {
   if (comments.length === 0) return 0;
   const total = comments.reduce((sum, comment) => sum + comment.rating, 0);
   return (total / comments.length).toFixed(1);
 }
 
-// Cập nhật thống kê
+// Update statistics
 function updateStats() {
   const avgRating = calculateAverage(commentsData);
   const totalComments = commentsData.length;
@@ -22,14 +22,14 @@ function updateStats() {
   document.getElementById("total-comments").textContent = totalComments;
 }
 
-// Kiểm tra trạng thái đăng nhập
+// Check login status
 function checkLoginStatus() {
   const token =
     localStorage.getItem("accessToken") || localStorage.getItem("token");
   return !!token;
 }
 
-// Hiển thị thông báo đơn giản
+// Show simple notification
 function showSimpleNotification(message, type = "info") {
   const toast = document.createElement("div");
   toast.className = `toast-notification ${type}`;
@@ -75,7 +75,7 @@ function showSimpleNotification(message, type = "info") {
   }, 3000);
 }
 
-// Tạo comment
+// Create comment
 function createComment(comment) {
   const stars = Array(5)
     .fill(0)
@@ -124,7 +124,7 @@ function createComment(comment) {
   `;
 }
 
-// Hiển thị danh sách comment
+// Render list of comments
 function renderComments() {
   const commentsList = document.getElementById("comments-list");
 
@@ -135,14 +135,14 @@ function renderComments() {
     return;
   }
 
-  // Sắp xếp theo thời gian mới nhất
+  // Sort by newest date
   const sortedComments = [...commentsData].sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
 
   commentsList.innerHTML = sortedComments.map(createComment).join("");
 
-  // Thêm sự kiện cho nút like
+  // Add event listeners for like buttons
   commentsList.querySelectorAll(".comment-item__action-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
       const commentId = this.getAttribute("data-id");
@@ -151,9 +151,9 @@ function renderComments() {
   });
 }
 
-// Xử lý like
+// Handle like
 function handleLike(commentId) {
-  // Kiểm tra đăng nhập trước khi like
+  // Check login before liking
   if (!checkLoginStatus()) {
     showSimpleNotification(t("comment.loginToLike"), "info");
     return;
@@ -174,7 +174,7 @@ function handleLike(commentId) {
   }
 }
 
-// Xử lý chọn sao
+// Handle star rating
 function initStarRating() {
   const stars = document.querySelectorAll("#star-rating i");
 
@@ -191,7 +191,7 @@ function initStarRating() {
     });
 
     star.addEventListener("click", function () {
-      // Kiểm tra đăng nhập khi chọn sao
+      // Check login when selecting stars
       if (!checkLoginStatus()) {
         showSimpleNotification(t("comment.loginToRate"), "info");
         return;
@@ -220,12 +220,12 @@ function initStarRating() {
   });
 }
 
-// Xử lý comment form
+// Handle comment form
 function initCommentForm() {
   const submitBtn = document.getElementById("submit-comment");
   const commentText = document.getElementById("comment-text");
 
-  // Kiểm tra và disable form nếu chưa đăng nhập
+  // Check and disable form if not logged in
   function updateFormState() {
     const isLoggedIn = checkLoginStatus();
 
@@ -248,10 +248,10 @@ function initCommentForm() {
     }
   }
 
-  // Cập nhật trạng thái form khi load
+  // Update form state on load
   updateFormState();
 
-  // Kiểm tra lại khi focus vào textarea
+  // Check again when focusing on textarea
   if (commentText) {
     commentText.addEventListener("focus", function () {
       if (!checkLoginStatus()) {
@@ -263,7 +263,7 @@ function initCommentForm() {
 
   if (submitBtn) {
     submitBtn.addEventListener("click", function () {
-      // Kiểm tra đăng nhập đầu tiên
+      // Check login first
       if (!checkLoginStatus()) {
         showSimpleNotification(t("comment.loginToRate"), "info");
         return;
@@ -287,7 +287,7 @@ function initCommentForm() {
         return;
       }
 
-      // Tạo comment mới
+      // Create new comment
       const newComment = {
         id: Date.now().toString(),
         userName: localStorage.getItem("userName") || t("comment.defaultUser"),
@@ -319,7 +319,7 @@ function initCommentForm() {
     });
   }
 
-  // Lắng nghe sự kiện thay đổi trạng thái đăng nhập
+  // Listen for login state changes
   window.addEventListener("storage", (e) => {
     if (e.key === "accessToken" || e.key === "token") {
       updateFormState();
@@ -327,7 +327,7 @@ function initCommentForm() {
   });
 }
 
-// Khởi tạo comments
+// Initialize comments
 export function initComments() {
   initStarRating();
   initCommentForm();

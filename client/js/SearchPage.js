@@ -18,7 +18,7 @@ let castCardTemplate = "";
 
 let translations = {};
 
-// Load file ngôn ngữ JSON tương ứng
+// Load corresponding language JSON file
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
@@ -28,19 +28,19 @@ async function loadTranslations(lang) {
   }
 }
 
-// Lấy text theo key trong file dịch
+// Function to get text by key from translation file
 function t(key) {
   return translations[key] || key;
 }
 
-// Lấy ngôn ngữ hiện tại từ LocalStorage hoặc thẻ HTML
+// Function to get current language from LocalStorage or HTML tag
 function currentLang() {
   return (
     localStorage.getItem("language") || document.documentElement.lang || "vi"
   );
 }
 
-// Dịch toàn bộ DOM có thuộc tính [data-i18n]
+// Function to translate entire DOM elements with [data-i18n] attribute
 function translateDOM() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
@@ -48,7 +48,7 @@ function translateDOM() {
   });
 }
 
-// Lấy tiêu đề đã dịch sang tiếng Việt (nếu cần), có cache
+// Function to get localized title in Vietnamese (if needed), with caching
 async function getLocalizedTitle(item) {
   const lang = currentLang();
   if (lang !== "vi") {
@@ -84,7 +84,7 @@ async function getLocalizedTitle(item) {
   }
 }
 
-// Load các template thẻ card rồi khởi chạy ứng dụng
+// Load card templates then start the app
 Promise.all([
   fetch("../components/MovieCardRender.html").then((r) => r.text()),
   fetch("../components/TvShowCardRender.html").then((r) => r.text()),
@@ -98,7 +98,7 @@ Promise.all([
   })
   .catch((err) => console.error("Không tải được component:", err));
 
-// Load danh sách kết quả theo loại (all, movie, tv, person)
+// Load results list by type (all, movie, tv, person)
 async function loadResults(type = "all") {
   grid.innerHTML = `<p class="searchPage__placeholder">${
     t("search.loading") || "Đang tải..."
@@ -109,7 +109,7 @@ async function loadResults(type = "all") {
     let results = [];
     let totalPages = 1;
 
-    // Trường hợp search "all": search thêm movie + tv và gộp lại
+    // Case search "all": search movie + tv and merge results
     if (type === "all") {
       const [movieRes, tvRes] = await Promise.all([
         fetch(
@@ -146,7 +146,7 @@ async function loadResults(type = "all") {
         tvData.total_pages || 1
       );
     } else {
-      // Search theo từng loại cụ thể
+      // Search by specific type
       const endpoint = {
         movie: "search/movie",
         tv: "search/tv",
@@ -167,10 +167,10 @@ async function loadResults(type = "all") {
       totalPages = data.total_pages || 1;
     }
 
-    // Giới hạn 18 kết quả render
+    // Limit to 18 results for rendering
     allResults = results.slice(0, 18);
 
-    // Load tiêu đề dịch song song
+    // Load localized titles in parallel
     const titlePromises = allResults.map((item) => getLocalizedTitle(item));
     const titles = await Promise.all(titlePromises);
 
@@ -184,7 +184,7 @@ async function loadResults(type = "all") {
   }
 }
 
-// Gắn sự kiện click khi chuyển bộ lọc xem kết quả
+// Attach click event when switching result filter
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     filterButtons.forEach((b) =>
@@ -197,7 +197,7 @@ filterButtons.forEach((btn) => {
   });
 });
 
-// Render danh sách kết quả ra màn hình
+// Render results list to the screen
 function renderResults(titles) {
   grid.innerHTML = "";
 
@@ -253,7 +253,7 @@ function renderResults(titles) {
   });
 }
 
-// Render pagination (trang trước / trang sau)
+// Render pagination (previous page / next page)
 function renderPagination(page, total, type) {
   const old = document.querySelector(".content__pagination");
   if (old) old.remove();
@@ -306,26 +306,26 @@ function renderPagination(page, total, type) {
   pagination.after(wrapper);
 }
 
-// Khởi chạy ứng dụng: dịch UI, load kết quả, load lang
+// Boot the app: translate UI, load results, load language
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();
   loadResults(currentFilter);
 }
 
-// Reload khi đổi ngôn ngữ trong browser
+// Reload when language changes in the browser
 window.addEventListener("languagechange", async () => {
   await boot();
 });
 
-// Reload trang nếu language lưu trong localStorage thay đổi
+// Reload page if language stored in localStorage changes
 window.addEventListener("storage", (e) => {
   if (e.key === "language") {
     location.reload();
   }
 });
 
-// Khi DOM load xong, nếu template đã sẵn sàng thì khởi động app
+// When DOM is fully loaded, if templates are ready then boot the app
 document.addEventListener("DOMContentLoaded", () => {
   if (movieCardTemplate) boot();
 });

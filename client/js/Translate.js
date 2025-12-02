@@ -1,16 +1,16 @@
-// Translate.js — i18n cho text + mọi thuộc tính data-i18n-*
+// Translate.js — i18n for text + all data-i18n-* attributes
 
 let currentLang = localStorage.getItem("language") || "vi";
 let listenersBound = false;
 
-// Nạp file ngôn ngữ
+// Load language file
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
     const data = await res.json();
 
-    // Lưu vào window.translations để các module khác dùng
-    window.translations = flattenTranslations(data);
+    // Save to window.translations for other modules to use
+    window.translations = data;
 
     return window.translations;
   } catch (error) {
@@ -20,24 +20,7 @@ async function loadTranslations(lang) {
   }
 }
 
-// Flatten nested translations object thành flat object
-function flattenTranslations(obj, prefix = "") {
-  let result = {};
-
-  for (const [key, value] of Object.entries(obj)) {
-    const newKey = prefix ? `${prefix}.${key}` : key;
-
-    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-      Object.assign(result, flattenTranslations(value, newKey));
-    } else {
-      result[newKey] = value;
-    }
-  }
-
-  return result;
-}
-
-// Áp bản dịch cho text và các thuộc tính có prefix data-i18n-
+// Apply translations to text and attributes with data-i18n- prefix
 function translatePage(translations) {
   // text node
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -47,7 +30,7 @@ function translatePage(translations) {
     }
   });
 
-  // thuộc tính bất kỳ: data-i18n-attrName="key"
+  // any attribute: data-i18n-attrName="key"
   document.querySelectorAll("*").forEach((el) => {
     for (const attr of el.attributes) {
       if (!attr.name.startsWith("data-i18n-") || attr.name === "data-i18n")
@@ -60,7 +43,7 @@ function translatePage(translations) {
   });
 }
 
-// Cập nhật label và trạng thái nút ngôn ngữ
+// Update language label and button states
 function updateLanguageLabel(lang) {
   const langLabel = document.querySelector(".current-lang-label");
   const langOptions = document.querySelectorAll(".lang-option");
@@ -72,7 +55,7 @@ function updateLanguageLabel(lang) {
   });
 }
 
-// Khởi tạo
+// Initialization
 export async function initTranslate() {
   document.documentElement.lang = currentLang;
   const translations = await loadTranslations(currentLang);

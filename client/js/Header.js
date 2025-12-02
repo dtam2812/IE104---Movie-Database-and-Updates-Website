@@ -1,9 +1,9 @@
 import { jwtDecode } from "https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/+esm";
 import { checkAndShowLoginPopup } from "./AutoLoginPopup.js";
 
-const CHECK_INTERVAL_MS = 10000; // 10 giây
+const CHECK_INTERVAL_MS = 10000; 
 
-// Hàm kiểm tra token có hết hạn chưa
+// Function to check if token is expired
 function isTokenExpired(token) {
   if (!token) return true;
 
@@ -22,32 +22,32 @@ function isTokenExpired(token) {
   }
 }
 
-// Hàm xử lý khi token hết hạn
+// Function to handle token expiration
 function handleTokenExpiration() {
 
-  // Set flag để AutoLoginPopup biết là token đã hết hạn
+  // Set flag for AutoLoginPopup to know token has expired
   sessionStorage.setItem("tokenExpired", "true");
 
-  // Xóa tất cả thông tin user
+  // Clear all user information
   localStorage.removeItem("accessToken");
   localStorage.removeItem("userName");
   localStorage.removeItem("userEmail");
   localStorage.removeItem("refreshToken");
 
-  // Lấy đường dẫn hiện tại
+  // Get current path
   const currentPath = window.location.pathname;
   const isHomePage = currentPath.includes("HomePage.html");
 
-  // Luôn redirect về HomePage
+  // Always redirect to HomePage
   window.location.href = "/client/view/pages/HomePage.html";
 
-  // Nếu đang ở HomePage → reload và mở popup
+  // If on HomePage → reload and show popup
   if (isHomePage) {
     window.location.reload();
   }
 }
 
-// Hàm kiểm tra token định kỳ
+// Function to periodically check token expiration
 function startTokenExpirationCheck() {
 
   const checkInterval = setInterval(() => {
@@ -71,7 +71,7 @@ function startTokenExpirationCheck() {
   return checkInterval;
 }
 
-// Hàm kiểm tra token khi vừa load trang
+// Function to check token on page load
 function checkTokenOnPageLoad() {
   const accessToken = localStorage.getItem("accessToken");
 
@@ -83,17 +83,17 @@ function checkTokenOnPageLoad() {
   return true;
 }
 
-// Hàm lưu ngôn ngữ đã chọn
+// Function to save selected language
 function saveLanguagePreference(lang) {
   localStorage.setItem("selectedLanguage", lang);
 }
 
-// Hàm load ngôn ngữ đã chọn
+// Function to load selected language
 function loadLanguagePreference() {
   return localStorage.getItem("selectedLanguage");
 }
 
-// Hàm cập nhật UI theo ngôn ngữ đã lưu
+// Function to update UI based on saved language
 function applyLanguagePreference(languageSwitchers) {
   const savedLang = loadLanguagePreference();
 
@@ -101,10 +101,10 @@ function applyLanguagePreference(languageSwitchers) {
     const allOptions = switcher.querySelectorAll(".lang-option");
     const currentFlag = switcher.querySelector(".current-flag");
 
-    // Xóa active khỏi tất cả options
+    // Remove active from all options
     allOptions.forEach((o) => o.classList.remove("is-active"));
 
-    // Thêm active vào option tương ứng
+    // Add active to the matching option
     const matchingOption = Array.from(allOptions).find(
       (o) => o.getAttribute("data-lang") === savedLang
     );
@@ -112,7 +112,7 @@ function applyLanguagePreference(languageSwitchers) {
     if (matchingOption) {
       matchingOption.classList.add("is-active");
 
-      // Cập nhật cờ hiện tại từ option
+      // Update current flag from option
       if (currentFlag) {
         const optionFlag = matchingOption.querySelector(".flag-icon");
         if (optionFlag) {
@@ -125,7 +125,7 @@ function applyLanguagePreference(languageSwitchers) {
   });
 }
 
-// Hàm kiểm tra trạng thái đăng nhập
+// Function to check authentication status
 function checkAuthStatus() {
   const accessToken = localStorage.getItem("accessToken");
   const guest = document.getElementById("user_guest");
@@ -143,7 +143,7 @@ function checkAuthStatus() {
   }
 }
 
-// Hàm load thông tin user
+// Function to load user information
 function loadUserInfo() {
   const userName = document.querySelector(".user-name span");
   if (userName) {
@@ -163,7 +163,7 @@ function loadUserInfo() {
   }
 }
 
-// Hàm xóa menu Admin
+// Function to remove Admin menu
 function removeAdminMenu() {
   const existingAdminMenu = document.getElementById("admin-menu-item");
   if (existingAdminMenu) existingAdminMenu.remove();
@@ -172,7 +172,7 @@ function removeAdminMenu() {
   if (existingSeparator) existingSeparator.remove();
 }
 
-// Hàm tạo menu Admin động
+// Function to create dynamic Admin menu
 function createAdminMenu() {
   removeAdminMenu();
 
@@ -208,7 +208,7 @@ function createAdminMenu() {
   dropdownList.appendChild(adminMenuItem);
 }
 
-// Hàm kiểm tra role Admin
+// Function to check Admin role
 function checkAdminRole() {
   const accessToken = localStorage.getItem("accessToken");
 
@@ -230,9 +230,9 @@ function checkAdminRole() {
   }
 }
 
-// Hàm đóng tất cả dropdowns
+// Function to close all dropdowns
 function closeAllDropdowns() {
-  // Đóng language switchers
+  // Close language switchers
   document.querySelectorAll(".language-switcher").forEach((switcher) => {
     switcher.classList.remove("open");
     switcher
@@ -240,12 +240,12 @@ function closeAllDropdowns() {
       ?.setAttribute("aria-expanded", "false");
   });
 
-  // Đóng user dropdown
+  // Close user dropdown
   document
     .querySelector(".user-dropdown-menu .dropdown-list")
     ?.classList.remove("show");
 
-  // Đóng country dropdown
+  // Close country dropdown
   document
     .querySelector(".menu-film-type.dropdown")
     ?.classList.remove("toggled");
@@ -273,19 +273,19 @@ export async function headerjs() {
     return;
   }
 
-  // Start token check nếu có token
+  // Start token check if token exists
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     startTokenExpirationCheck();
   }
 
-  // Check và show popup nếu token expired
+  // Check and show popup if token expired
   checkAndShowLoginPopup();
 
-  // Kiểm tra trạng thái đăng nhập
+  // Check authentication status
   checkAuthStatus();
 
-  // Khôi phục ngôn ngữ đã chọn ngay sau khi khởi tạo
+  // Restore selected language immediately after initialization
   applyLanguagePreference(languageSwitchers);
 
   menuToggle.addEventListener("click", () => {
@@ -293,22 +293,22 @@ export async function headerjs() {
     searchGroup.classList.toggle("toggled");
   });
 
-  // Xử lý language switcher cho cả 2 nút (mobile và desktop)
+  // Handle language switcher for both buttons (mobile and desktop)
   languageSwitchers.forEach((languageSwitch) => {
     const langBtn = languageSwitch.querySelector(".swap-language");
     const langOptions = languageSwitch.querySelectorAll(".lang-option");
 
-    // Mở/đóng menu
+    // Open/close menu
     langBtn.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      // Lấy trạng thái hiện tại trước khi toggle
+      // Get current state before toggle
       const wasOpen = languageSwitch.classList.contains("open");
 
-      // Đóng TẤT CẢ dropdowns trước
+      // Close ALL dropdowns first
       closeAllDropdowns();
 
-      // Nếu menu đang đóng thì mở nó, nếu đang mở thì giữ đóng
+      // If the menu was closed, open it; if it was open, keep it closed
       if (!wasOpen) {
         languageSwitch.classList.add("open");
         langBtn.setAttribute("aria-expanded", "true");
@@ -321,18 +321,18 @@ export async function headerjs() {
         const selectedLang = opt.getAttribute("data-lang");
         const selectedFlagSrc = opt.querySelector(".flag-icon").src;
 
-        // Lưu ngôn ngữ đã chọn vào localStorage
+        // Save selected language to localStorage
         saveLanguagePreference(selectedLang);
 
-        // Cập nhật tất cả language switchers (mobile + desktop)
+        // Update all language switchers (mobile + desktop)
         languageSwitchers.forEach((switcher) => {
           const allOptions = switcher.querySelectorAll(".lang-option");
           const currentFlag = switcher.querySelector(".current-flag");
 
-          // Xóa active khỏi tất cả options
+          // Remove active from all options
           allOptions.forEach((o) => o.classList.remove("is-active"));
 
-          // Thêm active vào option tương ứng
+          // Add active to the corresponding option
           const matchingOption = Array.from(allOptions).find(
             (o) => o.getAttribute("data-lang") === selectedLang
           );
@@ -340,14 +340,14 @@ export async function headerjs() {
             matchingOption.classList.add("is-active");
           }
 
-          // Cập nhật cờ hiện tại
+          // Update current flag
           if (currentFlag) {
             currentFlag.src = selectedFlagSrc;
             currentFlag.alt = selectedLang === "vi" ? "VN" : "UK";
             currentFlag.setAttribute("data-lang", selectedLang);
           }
 
-          // Đóng menu
+          // Close menu
           switcher.classList.remove("open");
           switcher
             .querySelector(".swap-language")
@@ -370,13 +370,13 @@ export async function headerjs() {
     dropdownBtn.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      // Lấy trạng thái hiện tại
+      // Take current state
       const wasOpen = dropdown.classList.contains("toggled");
 
-      // Đóng TẤT CẢ dropdowns trước
+      // Close ALL dropdowns first
       closeAllDropdowns();
 
-      // Toggle dropdown này
+      // Toggle this dropdown
       if (!wasOpen) {
         dropdown.classList.add("toggled");
       }
@@ -388,22 +388,22 @@ export async function headerjs() {
     userDropdownMenu.addEventListener("click", (e) => {
       e.stopPropagation();
 
-      // Lấy trạng thái hiện tại
+      // Take current state
       const wasOpen = dropdownList.classList.contains("show");
 
-      // Đóng TẤT CẢ dropdowns trước
+      // Close ALL dropdowns first
       closeAllDropdowns();
 
-      // Toggle dropdown này
+      // Toggle this dropdown
       if (!wasOpen) {
         dropdownList.classList.add("show");
       }
     });
   }
 
-  // Click ngoài để đóng TẤT CẢ dropdowns
+  // Click outside to close ALL dropdowns
   document.addEventListener("click", (e) => {
-    // Kiểm tra nếu click không phải vào bất kỳ dropdown nào
+    // Check if click is not on any dropdown
     const isLanguageSwitcher = Array.from(languageSwitchers).some((ls) =>
       ls.contains(e.target)
     );
@@ -457,7 +457,7 @@ export async function headerjs() {
           }
         });
 
-        // Khởi tạo lại hệ thống dịch cho modal
+        // Reinitialize translation system for modal
         const { initTranslate } = await import("./Translate.js");
         await initTranslate();
 

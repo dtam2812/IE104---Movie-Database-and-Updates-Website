@@ -388,7 +388,7 @@ body {
   border: 0;
 }
 
-/* responsive mobile thêm */
+/* Mobile responsive */
 @media (max-width: 640px) {
   .hero {
     height: 560px;

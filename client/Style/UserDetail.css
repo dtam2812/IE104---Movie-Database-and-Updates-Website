@@ -443,7 +443,7 @@ body {
   }
 }
 
-/* UserDetail.css - Phần favorites grid */
+/* UserDetail.css -  favorites grid */
 
 /* Favorites Section */
 .favorites-list {
@@ -461,7 +461,7 @@ body {
   padding: 0;
 }
 
-/* Favorite Movie Card - Áp dụng style từ movie-box */
+/* Favorite Movie Card -  movieCard style applied */
 .favorite-card {
   width: 100%;
   display: flex;
@@ -719,7 +719,7 @@ body {
     font-size: 9px;
   }
 }
-/* Nút xóa yêu thích */
+/* Remove favorite film button*/
 .favorite-card__remove-btn {
   position: absolute;
   top: 8px;

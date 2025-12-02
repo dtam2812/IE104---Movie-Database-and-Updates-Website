@@ -1,8 +1,4 @@
-// ==================== COMBINED DATA FILE ====================
-// File: AppData.js
-// Chứa tất cả data cho Movies, TV Shows và Users
-
-// ==================== MOVIES DATA ====================
+// Movies Data
 export const moviesData = [
   {
     id: "MV001",
@@ -120,7 +116,7 @@ export const moviesData = [
   },
 ];
 
-// ==================== TV SHOWS DATA ====================
+// Tv shows Data
 export const tvShowsData = [
   {
     id: "TV001",

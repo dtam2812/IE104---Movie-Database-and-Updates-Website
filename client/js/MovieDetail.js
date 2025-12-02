@@ -7,12 +7,13 @@ const BG_URL = "https://image.tmdb.org/t/p/original";
 
 let translations = {};
 
-// Hệ thống dịch
+// System translation
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
     translations = await res.json();
   } catch (err) {
+    console.error("Load translations error:", err);
   }
 }
 
@@ -38,7 +39,7 @@ function translateDOM() {
   });
 }
 
-// MyMemory Translation + Cache 30 ngày
+// MyMemory Translation + Cache 30 days
 async function translateText(text, target = "vi") {
   if (!text || target === "en") return text;
   const key = `trans_${btoa(
@@ -72,7 +73,7 @@ async function fetchMovieDetails(movieId) {
     );
     const movie = await res.json();
 
-    // Lưu thông tin phim vào currentMovie để sử dụng cho favorite
+    // Save movie information to currentMovie for favorite use
     window.currentMovie = {
       id: movieId,
       title: movie.title || movie.original_title,
@@ -81,27 +82,48 @@ async function fetchMovieDetails(movieId) {
       type: "Movie",
     };
 
-    // Ảnh poster
+    // Poster image
     document.querySelector(".movie-banner__poster img").src = movie.poster_path
       ? `${IMG_URL}${movie.poster_path}`
       : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
-    // Tiêu đề
+    // Title
     document.querySelector(".movie-banner__title h3").textContent =
       movie.title || movie.original_title;
 
-    // Mô tả
+    // Handle overview with fallback
+    let overview = movie.overview;
+    
+    // If no overview or overview is missing and using Vietnamese
+    if ((!overview || overview.trim() === "") && lang === "vi") {
+      try {
+        // Call English API to get overview
+        const resEn = await fetch(
+          `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`
+        );
+        const movieEn = await resEn.json();
+        
+        if (movieEn.overview) {
+          // Dịch overview từ tiếng Anh sang tiếng Việt
+          overview = await translateText(movieEn.overview, "vi");
+        }
+      } catch (error) {
+        console.error("Error fetching English overview:", error);
+      }
+    }
+
+    // Render overview
     document.querySelector(".movie-banner__overview").innerHTML = `
       <span>${t("detail.intro") || "Giới thiệu"}:</span><br>${
-      movie.overview || ""
+      overview || t("detail.noOverview") || "Chưa có thông tin giới thiệu."
     }
     `;
 
-    // Điểm IMDb
+    // IMDb rating
     document.querySelector(".movie-banner__rating span").textContent =
       movie.vote_average?.toFixed(1) || "N/A";
 
-    // Độ tuổi
+    // Age rating
     const ratings = movie.release_dates?.results || [];
     const ratingObj =
       ratings.find((r) => r.iso_3166_1 === "US") ||
@@ -111,12 +133,12 @@ async function fetchMovieDetails(movieId) {
     const ageEl = document.querySelector(".movie-banner__age strong");
     if (ageEl) ageEl.textContent = ageRating;
 
-    // Thể loại (TMDB có dịch → dùng luôn, không cần map thủ công)
+    // Genres (TMDB provides translations → use directly, no manual mapping needed)
     document.querySelector(".movie-banner__genres").innerHTML =
       movie.genres?.map((g) => `<span>${g.name}</span>`).join("") ||
       `<span>${t("common.unknown")}</span>`;
 
-    // Đạo diễn
+    // Director
     const director =
       movie.credits?.crew?.find((p) => p.job === "Director")?.name ||
       t("common.unknown");
@@ -132,20 +154,21 @@ async function fetchMovieDetails(movieId) {
       bg.style.backgroundPosition = "center";
     }
 
-    // Render các phần khác
+    // Render other sections
     renderActors(movie.credits?.cast || []);
     renderInfo(movie);
 
-    // Cập nhật trạng thái nút yêu thích
+    // Update favorite button state
     updateFavoriteButtonState();
 
-    // Khởi tạo event listener cho nút yêu thích
+    // Initialize event listener for favorite button
     initFavoriteButton();
   } catch (error) {
+    console.error("Error fetching movie details:", error);
   }
 }
 
-// Render diễn viên
+// Render actors
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -193,7 +216,7 @@ function renderActors(actors) {
     btn.style.display = remain <= 0 ? "none" : "block";
     btn.textContent =
       remain > 0
-        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ⮟`
+        ? `${t("detail.viewMore") || "Xem thêm"} (${remain}) ▼`
         : t("detail.viewMore") || "Xem thêm";
   }
 }
@@ -212,7 +235,7 @@ function renderInfo(movie) {
     ? new Date(movie.release_date).toLocaleDateString("vi-VN")
     : t("common.unknown");
 
-  // Dịch trạng thái phim
+  // Translate movie status
   function translateStatus(status) {
     const statusMap = {
       "Released": "detail.status.released",
@@ -311,7 +334,6 @@ async function loadRecommendedMovies(movieId) {
 
 // Render tabs and view more
 function initTabs() {
-  // Code tab giữ nguyên như file 2 cũ của bạn
   const tabs = document.querySelectorAll(".movie-tabs__item");
   const tabContents = document.querySelectorAll(".movie-tabs__content");
 
@@ -319,16 +341,16 @@ function initTabs() {
     tab.addEventListener("click", function () {
       const targetTab = this.getAttribute("data-tab");
 
-      // Bỏ active của tất cả tabs và contents
+      // Remove active from all tabs and contents
       tabs.forEach((t) => t.classList.remove("movie-tabs__item--active"));
       tabContents.forEach((content) =>
         content.classList.remove("movie-tabs__content--active")
       );
 
-      // Thêm active cho tab được chọn
+      // Add active to the selected tab
       this.classList.add("movie-tabs__item--active");
 
-      // Thêm active cho content tương ứng
+      // Add active to the corresponding content
       const targetContent = document.getElementById(targetTab);
       if (targetContent) {
         targetContent.classList.add("movie-tabs__content--active");
@@ -351,12 +373,12 @@ function initViewMore() {
       grid.insertAdjacentHTML("beforeend", createActorHTML(a))
     );
     btn.textContent = expanded
-      ? `${t("detail.collapse") || "Thu gọn"} ⮝`
-      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ⮟`;
+      ? `${t("detail.collapse") || "Thu gọn"} ▲`
+      : `${t("detail.viewMore") || "Xem thêm"} (${all.length - 5}) ▼`;
   });
 }
 
-// Cập nhật trạng thái nút yêu thích
+// Update favorite button state
 async function updateFavoriteButtonState() {
   const favoriteBtn = document.querySelector(
     ".movie-banner__button--like, .favorite-btn, .favorite"
@@ -376,10 +398,11 @@ async function updateFavoriteButtonState() {
     );
     updateFavoriteButtonAppearance(favoriteBtn, isFavorite);
   } catch (error) {
+    console.error("Error checking favorite status:", error);
   }
 }
 
-// Cập nhật giao diện nút yêu thích
+// Update favorite button appearance
 function updateFavoriteButtonAppearance(button, isFavorite) {
   const svg = button.querySelector("svg");
   const path = svg?.querySelector("path");
@@ -393,7 +416,7 @@ function updateFavoriteButtonAppearance(button, isFavorite) {
   }
 }
 
-// Khởi tạo event listener cho nút yêu thích
+// Initialize event listener for favorite button
 function initFavoriteButton() {
   const favoriteBtn = document.querySelector(
     ".movie-banner__button--like, .favorite-btn, .favorite"
@@ -421,14 +444,15 @@ function initFavoriteButton() {
         posterPath: IMG_URL + window.currentMovie.posterPath,
       });
 
-      // Cập nhật lại trạng thái nút
+      // Update button state
       updateFavoriteButtonState();
     } catch (error) {
+      console.error("Error handling favorite click:", error);
     }
   });
 }
 
-// Khởi chạy
+// Initialize
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const movieId = urlParams.get("id") || 1242404;

@@ -39,7 +39,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Đảm bảo không có validation lỗi
 userSchema.set("validateBeforeSave", false);
 
 const UserModel = mongoose.model("User", userSchema);

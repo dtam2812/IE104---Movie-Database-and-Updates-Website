@@ -3,7 +3,7 @@ import { TMDB_API_KEY } from "../../config.js";
 let movieCardTemplate = "";
 let tvCardTemplate = "";
 
-//  Hàm lấy ngôn ngữ
+//  Function to get language
 function getLang() {
   return (
     localStorage.getItem("language") || document.documentElement.lang || "vi"
@@ -18,7 +18,7 @@ Promise.all([
   .then(([movieHtml, tvHtml]) => {
     movieCardTemplate = movieHtml;
     tvCardTemplate = tvHtml;
-    loadMovieGrids(); // Bắt đầu render khi đã có template
+    loadMovieGrids(); // Start rendering when templates are loaded
   })
   .catch((err) => console.error("Không tải được template:", err));
 
@@ -28,7 +28,7 @@ function createCard(item, type) {
     ? `https://image.tmdb.org/t/p/w300${item.poster_path}`
     : "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 
-  // Xử lý title theo ngôn ngữ
+  // Handle title according to language
   const titleDisplay =
     type === "tv"
       ? item.name || item.original_name
@@ -36,10 +36,10 @@ function createCard(item, type) {
   const originalTitle =
     type === "tv" ? item.original_name : item.original_title;
 
-  // Chọn template tương ứng (movie hoặc tv)
+  // Choose the corresponding template (movie or tv)
   const template = type === "tv" ? tvCardTemplate : movieCardTemplate;
 
-  // Thay thế placeholder trong template HTML
+  // Replace placeholders in the HTML template
   return template
     .replace(/{{id}}/g, item.id)
     .replace(/{{poster}}/g, poster)
@@ -47,7 +47,7 @@ function createCard(item, type) {
     .replace(/{{original_title}}/g, originalTitle);
 }
 
-//Render grid ra giao diện
+// Render grid to the interface
 function renderGrid(gridId, items = [], type = "movie") {
   const grid = document.getElementById(gridId);
   if (!grid) {
@@ -62,7 +62,7 @@ function renderGrid(gridId, items = [], type = "movie") {
     return;
   }
 
-  // Chỉ hiển thị 12 phần tử đầu tiên
+  // Show only 12 first items
   const limitedItems = items.slice(0, 12);
 
   limitedItems.forEach((item) => {
@@ -71,10 +71,10 @@ function renderGrid(gridId, items = [], type = "movie") {
   });
 }
 
-//Fetch dữ liệu TMDB
+//Fetch data from TMDB
 async function fetchTMDB(endpoint) {
   try {
-    //  Lấy ngôn ngữ động
+    //  Get dynamic language
     const lang = getLang();
     const tmdbLang = lang === "vi" ? "vi-VN" : "en-US";
 
@@ -95,15 +95,15 @@ async function fetchTMDB(endpoint) {
   }
 }
 
-//Load tất cả các grid phim/truyền hình
+//Load all movie/TV grids
 async function loadMovieGrids() {
   try {
     const [newMovies, trendingSeries, highRated, popularTV] = await Promise.all(
       [
-        fetchTMDB("movie/now_playing"), // Phim mới ra rạp
-        fetchTMDB("trending/tv/week"), // Series phim xu hướng
-        fetchTMDB("movie/top_rated"), // Phim điện ảnh được đánh giá cao
-        fetchTMDB("tv/popular"), // Phim bộ đình đám
+        fetchTMDB("movie/now_playing"), // New movies in theaters
+        fetchTMDB("trending/tv/week"), // Trending TV series
+        fetchTMDB("movie/top_rated"), // Highly rated movies
+        fetchTMDB("tv/popular"), // Popular TV shows
       ]
     );
 
@@ -116,10 +116,10 @@ async function loadMovieGrids() {
   }
 }
 
-// Lắng nghe sự kiện đổi ngôn ngữ
+// Listen for language change event
 window.addEventListener("languagechange", () => {
   loadMovieGrids();
 });
 
-// Xuất ra cho module khác có thể gọi
+// Export for other modules to use
 export const movieGrid = { renderGrid, createCard, loadMovieGrids };
