@@ -1,19 +1,19 @@
 import { TMDB_API_KEY } from "../../config.js";
 
-// Hàm khởi tạo Search Bar và các sự kiện
+// Function to initialize Search Bar and events
 export function searchBar() {
   const input = document.querySelector(".search__input");
   const dropdown = document.querySelector(".search__dropdown");
   let timer;
 
-  // Hàm lấy ngôn ngữ hiện tại để gọi API
+  // Function to get current language for API call
   function getCurrentLanguage() {
     const lang =
       localStorage.getItem("language") || document.documentElement.lang || "vi";
     return lang === "vi" ? "vi-VN" : "en-US";
   }
 
-  // Hàm lấy text theo key và theo ngôn ngữ đã lưu
+  // Function to get text by key and saved language
   function getTranslatedText(key) {
     const lang = localStorage.getItem("language") || "vi";
     const translations = {
@@ -33,7 +33,7 @@ export function searchBar() {
     return translations[lang]?.[key] || translations.vi[key];
   }
 
-  // Hàm gọi API để lấy danh sách tìm kiếm từ Movie, TV, Person
+  // Function to call API to get search results from Movie, TV, Person
   async function fetchResults(query) {
     const language = getCurrentLanguage();
 
@@ -79,7 +79,7 @@ export function searchBar() {
     );
   }
 
-  // Sự kiện khi nhập text vào ô search --> debounce và fetch data
+  // Event when typing in the search input --> debounce and fetch data
   input.addEventListener("input", () => {
     const query = input.value.trim();
     clearTimeout(timer);
@@ -100,7 +100,7 @@ export function searchBar() {
     }, 400);
   });
 
-  // Sự kiện Enter --> chuyển sang trang SearchPage
+  // Event Enter --> navigate to SearchPage
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -112,7 +112,7 @@ export function searchBar() {
     }
   });
 
-  // Hàm hiển thị danh sách kết quả xuống dropdown
+  // Function to render the list of results to the dropdown
   function renderResults(results) {
     dropdown.innerHTML = "";
     if (!results.length)
@@ -174,7 +174,7 @@ export function searchBar() {
     });
   }
 
-  // Ẩn dropdown khi click ra ngoài
+  // Hide dropdown when clicking outside
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".search"))
       dropdown.classList.remove("search__dropdown--active");

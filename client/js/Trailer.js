@@ -6,17 +6,17 @@ const trailerModal = document.getElementById("trailer-modal");
 const trailerContainer = document.getElementById("trailer-container");
 const closeTrailer = document.getElementById("close-trailer");
 
-/* Xác định loại nội dung: movie hay tv */
+// Determine the content type: movie or tv
 const currentPage = window.location.pathname;
 let type = currentPage.includes("TvShowDetail") ? "tv" : "movie";
 
-/* Lấy tham số type và id từ URL */
+// Get type and id parameters from URL
 const params = new URLSearchParams(window.location.search);
 const contentId = params.get("id");
 const typeParam = params.get("type");
 if (typeParam) type = typeParam;
 
-// Lấy trailer key
+// Get trailer key
 async function getTrailerKey() {
   try {
     const url = `${BASE_URL}/${type}/${contentId}/videos?api_key=${TMDB_API_KEY}&language=en-US`;
@@ -34,7 +34,7 @@ async function getTrailerKey() {
   }
 }
 
-// Mở trailer
+// Open trailer
 trailerBtn.addEventListener("click", async () => {
   const key = await getTrailerKey();
   if (!key) {
@@ -42,7 +42,7 @@ trailerBtn.addEventListener("click", async () => {
     return;
   }
 
-  // Không load iframe trước khi mở modal
+  // not loading iframe before opening modal 
   trailerContainer.innerHTML = `
     <iframe
       width="100%"
@@ -57,11 +57,11 @@ trailerBtn.addEventListener("click", async () => {
   trailerModal.style.display = "flex";
   document.body.style.overflow = "hidden";
 
-  // Xóa history entry nếu có
+  // Clear history entry if any
   history.replaceState(history.state, "", window.location.pathname + window.location.search);
 });
 
-// Đóng trailer
+// Close trailer
 function closeModal() {
   trailerModal.style.display = "none";
   trailerContainer.innerHTML = ""; 

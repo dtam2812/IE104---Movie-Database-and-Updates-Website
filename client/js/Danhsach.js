@@ -1,13 +1,13 @@
 import { TMDB_API_KEY } from "../../config.js";
 
-// Cấu hình chung
+// General configuration
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w300";
 const PLACEHOLDER_IMAGE =
   "https://placehold.co/300x450/1a1a2e/0891b2?text=No+Poster";
 let LANGUAGE = getLang();
 
-// Lưu thông tin filter hiện tại
+// Save current filter information
 let currentPage = 1;
 let currentMovieType = "all";
 let currentCountry = "";
@@ -15,11 +15,11 @@ let currentGenre = [];
 let currentArrange = "new";
 let totalPages = 100;
 
-// Template Card cho movie và tvShows
+// Template Card for movie and tvShows
 let movieCardTemplate = "";
 let tvShowCardTemplate = "";
 
-// Genres chỉ dành cho phim lẻ và phim bộ
+// Genres only for movies and tv shows
 const movieOnlyGenres = [
   "28",
   "12",
@@ -43,50 +43,50 @@ const tvOnlyGenres = [
   "10768",
 ];
 
-// Khai báo các DOM hay dùng
+// Declare commonly used DOM elements
 
-// Các DOM bên trong bộ lọc
-const filterToggle = document.querySelector(".filter__toggle"); // Nút "Bộ lọc"
-const filterSelect = document.querySelector(".filter__select"); // Toàn bộ bộ lọc khi mở
-const faFilter = document.querySelector(".fa-solid.fa-filter"); // Icon filter bên cạnh chữ "Bộ lọc"
-const filterCloseBtn = document.querySelector(".filter__close-btn"); // Nút "Đóng"
-const filterBtn = document.querySelector(".filter__select-btn"); // Nút "Lọc kết quả"
+// DOM elements inside the filter
+const filterToggle = document.querySelector(".filter__toggle"); 
+const filterSelect = document.querySelector(".filter__select"); 
+const faFilter = document.querySelector(".fa-solid.fa-filter"); 
+const filterCloseBtn = document.querySelector(".filter__close-btn"); 
+const filterBtn = document.querySelector(".filter__select-btn"); 
 
 const selectListItemCountry = document.querySelectorAll(
   ".filter__select-list.country .filter__select-list-item"
-); // Danh sách các item trong mục "Quốc gia"
+); // List of items in the "Country" section
 const selectListItemCountryAll = document.querySelector(
   ".filter__select-list.country .all"
-); // Item "Tất cả" trong mục "Quốc gia"
+); // "All" item in the "Country" section
 const itemMovieType = document.querySelectorAll(
   ".filter__select-list.movie-type .filter__select-list-item"
-); // Danh sách các item trong mục "Loại phim"
+); // List of items in the "Movie Type" section
 const itemMovieGenre = document.querySelectorAll(
   ".filter__select-list.movie-genre .filter__select-list-item"
-); // Danh sách các item trong mục "Thể loại"
+); // List of items in the "Genre" section
 const itemMovieGenreAll = document.querySelector(
   ".filter__select-list.movie-genre .all"
-); // Item "Tất cả" trong mục "Thể loại"
+); // "All" item in the "Genre" section
 const itemArrange = document.querySelectorAll(
   ".filter__select-list.arrange .filter__select-list-item"
-); // Danh sách các item trong mục "Sắp xếp"
+); // List of items in the "Arrange" section
 
-// Các DOM phần khung phim và phân trang
-const movieContainer = document.querySelector(".movie"); // Khung chứa các phim
-const pageCurrentSpan = document.querySelector(".pagination-page-current"); // Số trang hiện tại
+// DOM elements for movie container and pagination
+const movieContainer = document.querySelector(".movie"); // Movie container
+const pageCurrentSpan = document.querySelector(".pagination-page-current"); // Current page number
 const pageTotalSpan = document.querySelector(
   ".pagination__main span:last-child"
-); // Tổng số trang
-const leftPag = document.querySelector(".pagination-left-arrow"); // Nút chuyển về trang trước
-const rightPag = document.querySelector(".pagination-right-arrow"); // Nút chuyển ra trang sau
+); // Total number of pages
+const leftPag = document.querySelector(".pagination-left-arrow"); // Previous page button
+const rightPag = document.querySelector(".pagination-right-arrow"); // Next page button
 
-// Ẩn hiện filter toggle
+// Toggle filter visibility
 filterToggle.addEventListener("click", () => {
   filterSelect.classList.toggle("hidden");
   faFilter.classList.toggle("fa-filter-active");
 });
 
-// Đóng filter toggle khi click nút "Lọc kết quả"
+// Close filter toggle when clicking the "Filter results" button
 filterCloseBtn.addEventListener("click", () => {
   filterSelect.classList.add("hidden");
   faFilter.classList.remove("fa-filter-active");
@@ -98,7 +98,7 @@ function getLang() {
   return lang === "vi" ? "vi-VN" : "en-US";
 }
 
-// Active 1 item duy nhất trong mục "Quốc gia"
+// Active 1 item only in the "Country" section
 selectListItemCountry.forEach((current) => {
   current.addEventListener("click", () => {
     const currentActive = document.querySelector(
@@ -111,7 +111,7 @@ selectListItemCountry.forEach((current) => {
   });
 });
 
-// Hàm thay đổi các item "Thể loại" tương ứng với từng "Loại phim"
+// Function to update "Genre" items visibility based on the selected "Movie Type"
 function updateGenreVisibility(type) {
   const allGenreItems = document.querySelectorAll(
     ".filter__select-list.movie-genre .filter__select-list-item"
@@ -122,7 +122,7 @@ function updateGenreVisibility(type) {
 
     if (genreId === "all") return;
 
-    // Nếu "Loại phim" là phim lẻ thì ẩn các item chỉ có ở phim bộ, là phim bộ thì ẩn các item chỉ có ở phim lẻ, là tất cả thì hiện hết
+    // If "Movie Type" is movie, hide items only available for TV shows; if TV, hide items only available for movies; if all, show all
     if (type === "movie") {
       if (tvOnlyGenres.includes(genreId)) {
         item.classList.add("hidden");
@@ -145,7 +145,7 @@ function updateGenreVisibility(type) {
   checkGenreLastActive();
 }
 
-// Hàm active item "Tất cả" nếu không còn item nào active trong mục "Thể loại"
+// Function to activate the "All" item if no other item is active in the "Genre" section
 function checkGenreLastActive() {
   const lastActive = document.querySelector(
     ".filter__select-list.movie-genre .filter__select--active"
@@ -156,7 +156,7 @@ function checkGenreLastActive() {
   }
 }
 
-// Active 1 item duy nhất trong mục "Loại phim"
+// Active 1 item only in the "Movie Type" section
 itemMovieType.forEach((current) => {
   current.addEventListener("click", () => {
     const itemMovieTypeActive = document.querySelector(
@@ -173,7 +173,7 @@ itemMovieType.forEach((current) => {
   });
 });
 
-// Active item "Tất cả" sẽ xoá active của các item khác trong "Thể loại"
+// Active "All" item will remove active from other items in the "Genre" section
 itemMovieGenreAll.addEventListener("click", () => {
   itemMovieGenre.forEach((current) => {
     current.classList.remove("filter__select--active");
@@ -181,7 +181,7 @@ itemMovieGenreAll.addEventListener("click", () => {
   itemMovieGenreAll.classList.add("filter__select--active");
 });
 
-// Cho phép active nhiều item trừ item "Tất cả" trong mục "Thể loại"
+// Allow multiple items to be active except the "All" item in the "Genre" section
 itemMovieGenre.forEach((current) => {
   current.addEventListener("click", () => {
     itemMovieGenreAll.classList.remove("filter__select--active");
@@ -191,7 +191,7 @@ itemMovieGenre.forEach((current) => {
   });
 });
 
-// Active 1 item trong mục "Sắp xếp"
+// Active 1 item only in the "Arrange" section
 itemArrange.forEach((current) => {
   current.addEventListener("click", () => {
     const itemArrangeActive = document.querySelector(
@@ -205,7 +205,7 @@ itemArrange.forEach((current) => {
   });
 });
 
-// Hàm lấy params từ URL
+// Function to get params from URL
 function getUrlParams() {
   const params = new URLSearchParams(window.location.search);
 
@@ -216,15 +216,15 @@ function getUrlParams() {
   };
 }
 
-// Reset tất cả các mục trong filter về mặc định
+// Reset all filter items to default
 function resetFiltersToDefault() {
-  // Active item "Tất cả" trong mục "Quốc gia"
+  // Active item "All" in the "Country" section
   selectListItemCountry.forEach((item) => {
     item.classList.remove("filter__select--active");
   });
   selectListItemCountryAll.classList.add("filter__select--active");
 
-  // Active item "Tất cả" trong mục "Loại phim"
+  // Active item "All" in the "Movie Type" section
   itemMovieType.forEach((item) => {
     item.classList.remove("filter__select--active");
   });
@@ -232,13 +232,13 @@ function resetFiltersToDefault() {
     .querySelector('.filter__select-list.movie-type [data-type="all"]')
     .classList.add("filter__select--active");
 
-  // Active item "Tất cả" trong mục "Thể loại"
+  // Active item "All" in the "Genre" section
   itemMovieGenre.forEach((item) => {
     item.classList.remove("filter__select--active");
   });
   itemMovieGenreAll.classList.add("filter__select--active");
 
-  // Active item "Mới nhất" trong mục "Sắp xếp"
+  // Active item "Newest" in the "Arrange" section
   itemArrange.forEach((item) => {
     item.classList.remove("filter__select--active");
   });
@@ -256,13 +256,13 @@ function resetFiltersToDefault() {
   updateGenreVisibility("all");
 }
 
-// Hàm áp dụng params từ URL
+// Function to apply params from URL
 function applyUrlParams() {
   const params = getUrlParams();
 
   resetFiltersToDefault();
 
-  // Active theo "Loại phim" tương ứng lấy từ URL
+  // Activate the corresponding "Movie Type" from the URL
   if (params.type) {
     currentMovieType = params.type;
 
@@ -280,7 +280,7 @@ function applyUrlParams() {
     updateGenreVisibility(params.type);
   }
 
-  // Active theo "Thể loại" tương ứng lấy từ URL
+  // Activate the corresponding "Genre" from the URL
   if (params.genre) {
     currentGenre = [params.genre];
 
@@ -294,7 +294,7 @@ function applyUrlParams() {
     }
   }
 
-  // Active theo "Quốc gia" tương ứng lấy từ URL
+  // Activate the corresponding "Country" from the URL
   if (params.country) {
     currentCountry = params.country;
 
@@ -309,10 +309,10 @@ function applyUrlParams() {
   }
 }
 
-// Khởi tạo danh sách phim
+// Initialize movie list
 async function initApp() {
   try {
-    // Load 2 khung hiển thị cho phim lẻ và phim bộ
+    // Load 2 templates for movies and TV shows
     const [movieResponse, tvResponse] = await Promise.all([
       fetch("../components/MovieCardRender.html"),
       fetch("../components/TvShowCardRender.html"),
@@ -321,7 +321,7 @@ async function initApp() {
     movieCardTemplate = await movieResponse.text();
     tvShowCardTemplate = await tvResponse.text();
 
-    // Nếu là mục "Bộ lọc" thì mở filter toggle
+    // If it's the "Filter" section, open the filter toggle
     const params = getUrlParams();
     const isFilterNav =
       params.type === "all" && !params.genre && !params.country;
@@ -341,7 +341,7 @@ async function initApp() {
 
 initApp();
 
-// Render phim theo "Loại phim"
+// Render movies according to "Movie Type"
 async function render() {
   try {
     if (currentMovieType === "all") {
@@ -354,7 +354,7 @@ async function render() {
   }
 }
 
-// Render 1 loại là phim lẻ hoặc phim bộ
+// Render one type, either movie or TV show
 async function renderOneType() {
   try {
     const apiUrl = createApiUrl(currentMovieType, currentPage);
@@ -372,7 +372,7 @@ async function renderOneType() {
   }
 }
 
-// Render cả phim lẻ và phim bộ
+// Render both movies and TV shows
 async function renderBothMovieAndTV() {
   try {
     const movieApiUrl = createApiUrl("movie", currentPage);
@@ -386,12 +386,12 @@ async function renderBothMovieAndTV() {
     const movieData = await movieResponse.json();
     const tvData = await tvResponse.json();
 
-    // Lấy 10 phim đầu mỗi loại rồi trộn theo thuật toán xào bài Fisher-Yates
+    // Take the first 10 movies of each type and shuffle them using the Fisher-Yates algorithm
     const movie10 = movieData.results.slice(0, 10);
     const tv10 = tvData.results.slice(0, 10);
     let mergeAll = [...movie10, ...tv10];
 
-    // Nếu chỉ có một loại thì dùng toàn bộ kết quả của loại đó
+    // If there is only one type, use all results of that type
     if (movie10.length !== 0 && tv10.length == 0) {
       mergeAll = movieData.results;
     } else if (movie10.length == 0 && tv10.length !== 0) {
@@ -416,7 +416,7 @@ async function renderBothMovieAndTV() {
   }
 }
 
-// Tạo API theo bộ lọc người dùng chọn
+// Create API according to user-selected filters
 function createApiUrl(type, page) {
   let url = `${BASE_URL}/discover/${type}?api_key=${TMDB_API_KEY}&language=${LANGUAGE}&page=${page}`;
 
@@ -447,21 +447,21 @@ function createApiUrl(type, page) {
 function displayMovies(movieList) {
   const paginationElement = document.querySelector(".content__pagination");
 
-  // Kiểm tra nếu không có kết quả
+  // Check if there are no results
   if (!movieList || movieList.length === 0) {
     movieContainer.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #aaa;">
         <div style="font-size: 20px; margin-bottom: 8px;">Không có kết quả</div>
       </div>
     `;
-    // Ẩn pagination
+    // Hide pagination
     if (paginationElement) {
       paginationElement.style.display = "none";
     }
     return;
   }
 
-  // Hiện pagination nếu có kết quả
+  // Show pagination if there are results
   if (paginationElement) {
     paginationElement.style.display = "flex";
   }
@@ -471,7 +471,7 @@ function displayMovies(movieList) {
   for (let i = 0; i < movieList.length; i++) {
     const movie = movieList[i];
 
-    // Xác định phim lẻ hay phim bộ
+    // Determine if it's a movie or a TV show
     const isMovie = movie.title !== undefined;
     const movieId = movie.id;
     const movieName = isMovie
@@ -479,15 +479,15 @@ function displayMovies(movieList) {
       : movie.name || movie.original_name;
     const originalName = isMovie ? movie.original_title : movie.original_name;
 
-    // Xử lý poster: Nếu không có thì dùng placeholder
+    // Handle poster: Use placeholder if not available
     const posterPath = movie.poster_path
       ? IMAGE_URL + movie.poster_path
       : PLACEHOLDER_IMAGE;
 
-    // Chọn khung phù hợp
+    // Choose the appropriate template
     const template = isMovie ? movieCardTemplate : tvShowCardTemplate;
 
-    // Replace các giá trị
+    // Replace values
     let cardHtml = template
       .replace(/{{id}}/g, movieId)
       .replace(/{{poster}}/g, posterPath)
@@ -502,29 +502,29 @@ function displayMovies(movieList) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// Cập nhật số trang
+// Update page number
 function updatePageNumber() {
   pageCurrentSpan.textContent = currentPage;
-  pageTotalSpan.textContent = totalPages; // Bỏ dấu "/" vì CSS sẽ tự thêm
+  pageTotalSpan.textContent = totalPages; // Remove "/" because CSS will add it
   updatePaginationButtons();
 }
 
-// DOM khi người dùng click nút "Lọc kết quả"
+// DOM when the user clicks the "Filter results" button
 filterBtn.addEventListener("click", async () => {
-  // Lọc theo mục "Quốc gia" đã chọn
+  // Filter by selected "Country"
   const selectedCountry = document.querySelector(
     ".filter__select-list.country .filter__select--active"
   );
   const countryCode = selectedCountry.getAttribute("data-country");
   currentCountry = countryCode === "all" ? "" : countryCode;
 
-  // Lọc theo mục "Loại phim" đã chọn
+  // Filter by selected "Movie type"
   const selectedType = document.querySelector(
     ".filter__select-list.movie-type .filter__select--active"
   );
   currentMovieType = selectedType.getAttribute("data-type");
 
-  // Lọc theo mục "Thể loại" đã chọn
+  // Filter by selected "Genre"
   const selectedGenres = document.querySelectorAll(
     ".filter__select-list.movie-genre .filter__select--active"
   );
@@ -536,24 +536,24 @@ filterBtn.addEventListener("click", async () => {
     }
   });
 
-  // Lọc theo mục "Sắp xếp" đã chọn
+  // Filter by selected "Arrange"
   const selectedArrange = document.querySelector(
     ".filter__select-list.arrange .filter__select--active"
   );
   currentArrange = selectedArrange.getAttribute("data-arrange");
 
-  // Reset về trang 1
+  // Reset to page 1
   currentPage = 1;
   pageCurrentSpan.textContent = "1";
 
-  // Đóng filter
+  // Close filter
   filterSelect.classList.add("hidden");
   faFilter.classList.remove("fa-filter-active");
 
   await render();
 });
 
-// Kiểm tra xem nút sang trái sang phải có được click không
+// Check if the left and right buttons are clickable
 function updatePaginationButtons() {
   if (currentPage <= 1) {
     leftPag.classList.add("disable");
@@ -568,7 +568,7 @@ function updatePaginationButtons() {
   }
 }
 
-// Click nút sang trang tiếp theo
+// Click the button to go to the next page
 rightPag.addEventListener("click", async () => {
   if (currentPage < totalPages) {
     currentPage++;
@@ -577,7 +577,7 @@ rightPag.addEventListener("click", async () => {
   }
 });
 
-// Click quay về trang trước
+// Click the button to go to the previous page
 leftPag.addEventListener("click", async () => {
   if (currentPage > 1) {
     currentPage--;
@@ -586,9 +586,9 @@ leftPag.addEventListener("click", async () => {
   }
 });
 
-// Khi ngôn ngữ bị thay đổi từ Translate.js
+// When the language is changed from Translate.js
 window.addEventListener("languagechange", (e) => {
-  LANGUAGE = getLang(); // cập nhật ngôn ngữ API TMDB
-  currentPage = 1; // đưa về trang 1
+  LANGUAGE = getLang(); // update TMDB API language
+  currentPage = 1; // reset to page 1
   render();
 });

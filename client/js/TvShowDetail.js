@@ -7,7 +7,7 @@ const BG_URL = "https://image.tmdb.org/t/p/original";
 
 let translations = {};
 
-// HỆ THỐNG DỊCH
+// Translation functions
 async function loadTranslations(lang) {
   try {
     const res = await fetch(`../../../public/locales/${lang}.json`);
@@ -26,9 +26,9 @@ function currentLang() {
   );
 }
 
-// ===== THÊM: HÀM DỊCH THỂ LOẠI =====
+// Add: Genre Translation Function
 function translateGenre(genreName) {
-  // Map tên thể loại tiếng Anh sang key trong file translation
+  // Map English genre names to keys in the translation file
   const genreMap = {
     "Action & Adventure": "genre.action_adventure",
     "Animation": "genre.animation",
@@ -52,7 +52,7 @@ function translateGenre(genreName) {
   return key ? t(key) : genreName;
 }
 
-// Dịch bằng MyMemory + cache 30 ngày
+// Translate using MyMemory + cache 30 days
 async function translateText(text, target = "vi") {
   if (!text || target === "en") return text;
   const key = `trans_${btoa(
@@ -87,13 +87,13 @@ function translateDOM() {
   });
 }
 
-// CHẠY LẠI KHI ĐỔI NGÔN NGỮ
+// Reload on language change
 window.addEventListener("languagechange", () => location.reload());
 window.addEventListener("storage", (e) => {
   if (e.key === "language") location.reload();
 });
 
-// Fetch chi tiết TV Show
+// Fetch TV Show details
 async function fetchTvDetails(tvId) {
   const lang = currentLang();
   const apiLang = lang === "vi" ? "vi-VN" : "en-US";
@@ -104,7 +104,7 @@ async function fetchTvDetails(tvId) {
     );
     const tv = await res.json();
 
-    // Lưu thông tin TV show vào window.currentMovie để sử dụng cho favorite
+    // Save TV show info to window.currentMovie for favorite use
     window.currentMovie = {
       id: tvId,
       title: tv.name || tv.original_name,
@@ -113,13 +113,13 @@ async function fetchTvDetails(tvId) {
       type: "TV",
     };
 
-    // TIÊU ĐỀ: Nếu không có bản dịch Việt → dịch thủ công
+    // Title: If no Vietnamese translation → translate manually
     let displayTitle = tv.name || tv.original_name;
     if (lang === "vi" && tv.name === tv.original_name) {
       displayTitle = await translateText(tv.original_name, "vi");
     }
 
-    // MÔ TẢ: Nếu không có hoặc quá ngắn → lấy tiếng Anh rồi dịch
+    // Overview: If not available or too short → fetch English then translate
     let overview = tv.overview || "";
     if (lang === "vi" && (!overview || overview.length < 30)) {
       const enRes = await fetch(
@@ -135,7 +135,7 @@ async function fetchTvDetails(tvId) {
       ? `${IMG_URL}${tv.poster_path}`
       : "https://placehold.co/500x750/1a1a2e/0891b2?text=No+Poster";
 
-    // Tiêu đề
+    // Title
     document.querySelector(".detail__title h3").textContent =
       displayTitle || "Không rõ";
 
@@ -162,7 +162,7 @@ async function fetchTvDetails(tvId) {
       ageRatingElement.textContent = "N/A";
     }
 
-    // ===== SỬA: THỂ LOẠI - DỊCH BẰNG translateGenre() =====
+    // Fix: GENRES - TRANSLATE USING translateGenre() 
     const genresContainer = document.querySelector(".detail__genres");
     if (genresContainer) {
       genresContainer.innerHTML = tv.genres
@@ -170,7 +170,7 @@ async function fetchTvDetails(tvId) {
         .join("") || `<span>${t("common.unknown") || "Không rõ"}</span>`;
     }
 
-    // Nhà sản xuất (created_by)
+    // Creator (created_by)
     document.querySelector(".detail__director p").innerHTML = `
       <span>${t("tvshow.creator") || "Nhà sản xuất"}:</span> ${
       tv.created_by?.[0]?.name || t("common.unknown") || "Không rõ"
@@ -185,22 +185,22 @@ async function fetchTvDetails(tvId) {
       bg.style.backgroundPosition = "center";
     }
 
-    // Các phần render khác
+    // Other render parts
     renderActors(tv.credits?.cast || []);
     renderInfo(tv);
     renderSeasons(tv.seasons || []);
     renderProducers(tv.production_companies || []);
 
-    // Cập nhật trạng thái nút yêu thích
+    // Update favorite button state
     updateFavoriteButtonState();
 
-    // Khởi tạo event listener cho nút yêu thích
+    // Initialize event listener for favorite button
     initFavoriteButton();
   } catch (error) {
   }
 }
 
-// Các hàm render
+// Render functions
 function createActorHTML(actor) {
   const img = actor.profile_path
     ? `${IMG_URL}${actor.profile_path}`
@@ -301,7 +301,7 @@ function renderInfo(tv) {
     ? `<img src="https://flagcdn.com/48x36/${countryFlag}.png" style="width:32px;height:24px;vertical-align:middle;">`
     : t("common.unknown") || "Không rõ";
 
-  // Dịch trạng thái TV Show
+  // Translate TV Show status
   function translateStatus(status) {
     const statusMap = {
       "Returning Series": "tvshow.status.returning",
@@ -450,7 +450,7 @@ async function loadRecommendedTvShows(tvId) {
   }
 }
 
-// FAVORITE FUNCTIONS
+// Favorite button
 async function updateFavoriteButtonState() {
   const favoriteBtn = document.querySelector(
     ".detail__btn--like, .favorite-btn, .favorite"
@@ -572,7 +572,7 @@ function initViewMore(buttonSelector, contentSelector) {
   });
 }
 
-// Khởi động
+// Initialization
 async function boot() {
   await loadTranslations(currentLang());
   translateDOM();

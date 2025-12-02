@@ -1,14 +1,14 @@
 
 export async function checkAndShowLoginPopup() {
-  // Kiểm tra xem có flag "tokenExpired" trong sessionStorage không
+  // Check if "tokenExpired" flag exists in sessionStorage
   const tokenExpired = sessionStorage.getItem("tokenExpired");
   
   if (tokenExpired === "true") {
     
-    // Xóa flag
+    // Remove flag
     sessionStorage.removeItem("tokenExpired");
     
-    // Đợi một chút để đảm bảo trang đã load xong
+    // Wait a bit to ensure the page has fully loaded
     setTimeout(async () => {
       let modal = document.querySelector(".modal");
       
@@ -39,12 +39,12 @@ export async function checkAndShowLoginPopup() {
           const { Auth_Modaljs } = await import("./AuthModal.js");
           Auth_Modaljs();
           
-          // Mở popup login
+          // Open login popup
           setTimeout(() => {
             if (window.openLRFModal) {
               window.openLRFModal("login");
               
-              // Hiện thông báo cho user
+              // Show message to user
               showTokenExpiredMessage();
             }
           }, 100);
@@ -52,7 +52,7 @@ export async function checkAndShowLoginPopup() {
           console.error("Error loading auth modal:", error);
         }
       } else {
-        // Modal đã tồn tại, chỉ cần mở
+        // Modal already exists, just open it
         if (window.openLRFModal) {
           window.openLRFModal("login");
           showTokenExpiredMessage();

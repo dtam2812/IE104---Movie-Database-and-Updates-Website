@@ -30,7 +30,7 @@ export async function AdminUsers_js() {
     ".pagination__info span:last-child"
   );
 
-  // SEARCH & FILTER
+  // Search and filter elements
   const searchInput = document.querySelector(".search-filter__input");
   const roleFilter = document.querySelector(
     ".search-filter__select:nth-child(1)"
@@ -41,18 +41,18 @@ export async function AdminUsers_js() {
 
   let allUsers = [];
 
-  // PASSWORD VALIDATION
+  // Password validation
   const pwdInput = userFormEl.querySelector('input[name="password"]');
   const cfPwdInput = userFormEl.querySelector('input[name="cf_password"]');
   const errorMessage = userFormEl.querySelector(".form__error");
 
-  // API BASE URL
+  // API base URL
   const API_BASE = "http://localhost:5000";
 
-  // GET TOKEN
+  // Get token
   const getToken = () => localStorage.getItem("accessToken");
 
-  // SIGN OUT FUNCTIONALITY
+  // Sign out functionality
   const signOutLink = document.querySelector(
     ".admin-menu__item:last-child .admin-menu__link"
   );
@@ -67,7 +67,7 @@ export async function AdminUsers_js() {
     });
   }
 
-  // LOAD USERS FROM API
+  // Load users from API
   const getListUser = async () => {
     try {
       const token = getToken();
@@ -97,7 +97,7 @@ export async function AdminUsers_js() {
     }
   };
 
-  // UPDATE USER VIA API
+  // Update user via API
   const updateUserAPI = async (userId, userData) => {
     try {
       const token = getToken();
@@ -125,7 +125,7 @@ export async function AdminUsers_js() {
     }
   };
 
-  // DELETE USER VIA API
+  // Delete user via API
   const deleteUserAPI = async (userId) => {
     try {
       const token = getToken();
@@ -151,7 +151,7 @@ export async function AdminUsers_js() {
     }
   };
 
-  // CREATE USER VIA API
+  // Create user via API
   const createUserAPI = async (userData) => {
     try {
       const token = getToken();
@@ -185,7 +185,7 @@ export async function AdminUsers_js() {
   let currentPage = 1;
   const usersPerPage = 5;
 
-  // FORMAT DATE HELPER
+  // Format date helper
   function formatDate(dateString) {
     if (!dateString) return "N/A";
 
@@ -206,7 +206,7 @@ export async function AdminUsers_js() {
     }
   }
 
-  // PAGINATION
+  // Pagination
   function getTotalPages() {
     return Math.ceil(filteredUsers.length / usersPerPage);
   }
@@ -217,7 +217,7 @@ export async function AdminUsers_js() {
     return filteredUsers.slice(startIndex, endIndex);
   }
 
-  // FILTER USERS
+  // Filter users
   function filterUsers() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     const roleValue = roleFilter.value;
@@ -249,7 +249,7 @@ export async function AdminUsers_js() {
     renderUsers();
   }
 
-  // CREATE USER ROW
+  // Create user row
   function createUserRow(user, no) {
     const newRow = document.createElement("tr");
     newRow.dataset.userId = user._id || user.id;
@@ -398,7 +398,7 @@ export async function AdminUsers_js() {
     return newRow;
   }
 
-  // RENDER USERS
+  // Render users
   function renderUsers() {
     tableBody.innerHTML = "";
 
@@ -457,7 +457,7 @@ export async function AdminUsers_js() {
     }
   }
 
-  // PAGINATION EVENTS
+  // Pagination events
   paginationLeft.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
@@ -472,12 +472,12 @@ export async function AdminUsers_js() {
     }
   });
 
-  // SEARCH & FILTER EVENTS
+  // Search and filter events
   searchInput.addEventListener("input", filterUsers);
   roleFilter.addEventListener("change", filterUsers);
   statusFilter.addEventListener("change", filterUsers);
 
-  // MODAL - ADD USER
+  // Modal - Add user
   addUserBtn.addEventListener("click", () => {
     console.log("Add button clicked");
 
@@ -511,7 +511,7 @@ export async function AdminUsers_js() {
     userForm.classList.add("form--active");
   });
 
-  // MODAL - EDIT USER
+  // Modal - Edit user
   function openEditModal(row) {
     console.log("Opening edit modal");
     console.log("Row dataset:", row.dataset);
@@ -564,7 +564,7 @@ export async function AdminUsers_js() {
     userForm.classList.add("form--active");
   }
 
-  // MODAL - CLOSE
+  // Modal - Close
   function closeModal() {
     modalUser.classList.add("hidden");
     userForm.classList.remove("form--active");
@@ -584,7 +584,7 @@ export async function AdminUsers_js() {
     }
   });
 
-  // PASSWORD VALIDATION
+  // Password validation
   function validatePasswords() {
     if (
       !isEditMode &&
@@ -605,7 +605,7 @@ export async function AdminUsers_js() {
   pwdInput.addEventListener("input", validatePasswords);
   cfPwdInput.addEventListener("input", validatePasswords);
 
-  // FORM SUBMIT
+  // Form submit
   userFormEl.addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -687,7 +687,7 @@ export async function AdminUsers_js() {
     }
   });
 
-  // LANGUAGE CHANGE LISTENER
+  // Language change listener
   window.addEventListener("languagechange", async (e) => {
     console.log("Language change detected in AdminUsers");
 
@@ -705,7 +705,7 @@ export async function AdminUsers_js() {
     }
   });
 
-  // INITIAL RENDER
+  // Initial render
   renderUsers();
   console.log("AdminUsers initialized");
 }

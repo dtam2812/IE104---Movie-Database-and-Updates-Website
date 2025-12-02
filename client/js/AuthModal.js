@@ -26,7 +26,7 @@ export async function Auth_Modaljs() {
   let resendTimer = null;
   let resendCountdown = 0;
 
-  // Hiển thị thông báo lỗi / thành công
+  // Show / hide error message/success message
   function showErrorMessage(formWrapper, message, isSuccess = false) {
     const errorDiv = formWrapper.querySelector(".auth-error-message");
     const errorText = errorDiv?.querySelector(".error-text");
@@ -104,7 +104,7 @@ export async function Auth_Modaljs() {
     }
   }
 
-  // Mở / đóng modal
+  // Open / close modal
   window.openLRFModal = function (target = "login") {
     modal.classList.remove("hidden");
 
@@ -136,7 +136,7 @@ export async function Auth_Modaljs() {
     (e) => e.key === "Escape" && closeLRFModal()
   );
 
-  // Switch form bằng data-i18n (không phụ thuộc vào text)
+  // Switch form bằng data-i18n (dont depend on text)
   switchLinks.forEach((link) => {
     link.addEventListener("click", () => {
       [loginForm, registerForm, forgotForm, resetForm, verifyForm].forEach(
@@ -187,7 +187,7 @@ export async function Auth_Modaljs() {
     }
   }
 
-  // Validate mật khẩu (register + reset)
+  // Validate passwords (register + reset)
   const pwdInput = registerFormEl.querySelector('input[name="password"]');
   const cfPwdInput = registerFormEl.querySelector('input[name="cf_password"]');
   const regSubmitBtn = registerFormEl.querySelector(".btn.btn-primary");
@@ -433,7 +433,7 @@ export async function Auth_Modaljs() {
   });
 }
 
-// Kiểm tra token hết hạn
+// Check if token is expired
 export function isTokenExpired(token) {
   if (!token) return true;
   try {
